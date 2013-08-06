@@ -23,4 +23,4 @@ Features:
   * Double
 * Less macros, nicer looking names.
 * Easy to read, easy to parse. It is fully supported by intellicenses unlike the C OpenGL or oglplus.
-* Built in error checking and debug information.  
+* Built in conditional error checking for every OpenGL call, so you can exactly know when and where did the error happen. The checking only happens if you #define OGLWRAP_DEBUG as it might make you loose up to 5 FPS.
