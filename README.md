@@ -3,8 +3,9 @@ oglwrap
 
 Oglwrap is a lightweight header-only C++ wrapper for the core OpenGL 3.3. 
 
-It highly inspired by [oglplus](https://github.com/matus-chochlik/oglplus) has similar interface (though there are lot of
-changes) with oglplus, however the implementation is entirely different. This is made to be a simple library.
+It highly inspired by [oglplus](https://github.com/matus-chochlik/oglplus), has similar interface (though there are lot of
+changes) with oglplus, however the implementation is entirely different. It doesn't provide as much feature as oglplus does,
+but oglwrap's simplicity may actually count as an advantage.
 
 Features:
 -------------
