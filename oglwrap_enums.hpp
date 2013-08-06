@@ -1,6 +1,10 @@
 #ifndef OGLWRAP_ENUMS_H
 #define OGLWRAP_ENUMS_H
 
+// easter egg :)
+#define ToRadian(x) ((x) * M_PI / 180.0f)
+#define ToDegree(x) ((x) * 180.0f / M_PI)
+
 namespace oglwrap {
 
 // -------======{[ Shaders ]}======-------
@@ -310,7 +314,7 @@ enum Enum {
     LinearMipmapLinear = GL_LINEAR_MIPMAP_LINEAR
 };
 }
-typedef _MinFilter::Enum MinFilter;
+typedef _MinFilter::Enum MinF;
 
 namespace _MagFilter {
 enum Enum {
@@ -318,7 +322,7 @@ enum Enum {
     Linear = GL_LINEAR
 };
 }
-typedef _MagFilter::Enum MagFilter;
+typedef _MagFilter::Enum MagF;
 
 namespace _Swizzle {
 enum Enum {
