@@ -13,7 +13,7 @@ Features:
 * A lot of default parameters, often used function take about half as much parameter than with C OpenGL
 * RAII resource handling. You won't have to generate or delete the resources yourself, it happens in the constructor & destructor.
 * Typesafety, functions do not take GLenum or GLuint, but for ex. VertexAttribArray::Pointer takes a DataType enum value,
-  that can be either of the followings, instead of a GLenum that can be any integer
+  that can be either of the followings, instead of a GLenum that could be anything from 0 to 4,294,967,295.
   * (Unsigned)Byte
   * (Unsigned)Short
   * (Unsigned)Int
