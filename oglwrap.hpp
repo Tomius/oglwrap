@@ -12,6 +12,10 @@
 #include <GL/gl.h>
 #include "oglwrap_enums.hpp"
 
+// Config
+//#define OGLWRAP_DEBUG
+#define OGLWRAP_IMAGEMAGICK 1
+
 // External libraries
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -23,8 +27,6 @@
 #if OGLWRAP_IMAGEMAGICK
 #include <ImageMagick/Magick++.h>
 #endif
-
-#define OGLWRAP_DEBUG
 
 #ifdef OGLWRAP_DEBUG
 #define CheckError() oglwrap_CheckError(__FILE__, __FUNCTION__, __LINE__)
@@ -299,7 +301,7 @@ public:
     void operator=(const GLtype& value) {
         Set(value);
     }
-    operator GLuint() {
+    GLuint Expose() {
         return location;
     }
 };
@@ -457,12 +459,13 @@ public:
         }
 
         UniformObject<GLtype>::Set(value);
+        CheckError();
     }
     void operator=(const GLtype& value) {
         Set(value);
     }
 };
-typedef LazyUniform<GLuint> LazyUniformSampler;
+typedef LazyUniform<GLint> LazyUniformSampler;
 
 // -------======{[ VertexArray ]}======-------
 
