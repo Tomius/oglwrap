@@ -11,6 +11,7 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "oglwrap_enums.hpp"
 
@@ -478,19 +479,23 @@ public:
 
     // Data uploads
     template<typename GLtype>
-    static void Data(GLsizei count, const GLtype* data, GLenum usage = GL_STATIC_DRAW) {
+    static void Data(GLsizei count, const GLtype* data,
+                     BufferUsage usage = BufferUsage::StaticDraw) {
         glBufferData(buffer_t, count * sizeof(GLtype), data, usage);
     }
     template<typename GLtype>
-    static void Data(const std::vector<GLtype>& data, GLenum usage = GL_STATIC_DRAW) {
+    static void Data(const std::vector<GLtype>& data,
+                     BufferUsage usage = BufferUsage::StaticDraw) {
         glBufferData(buffer_t, data.size() * sizeof(GLtype), data.data(), usage);
     }
     template<typename GLtype>
-    static void SubData(GLsizei count, GLintptr offset, const GLtype* data, GLenum usage = GL_STATIC_DRAW) {
+    static void SubData(GLsizei count, GLintptr offset, const GLtype* data,
+                        BufferUsage usage = BufferUsage::StaticDraw) {
         glBufferSubData(buffer_t, offset, count * sizeof(GLtype), data, usage);
     }
     template<typename GLtype>
-    static void SubData(const std::vector<GLtype>& data, GLintptr offset, GLenum usage = GL_STATIC_DRAW) {
+    static void SubData(const std::vector<GLtype>& data, GLintptr offset,
+                        BufferUsage usage = BufferUsage::StaticDraw) {
         glBufferData(buffer_t, offset, data.size() * sizeof(GLtype), data.data(), usage);
     }
 
