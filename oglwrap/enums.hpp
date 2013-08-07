@@ -1,6 +1,8 @@
 #ifndef OGLWRAP_ENUMS_H
 #define OGLWRAP_ENUMS_H
 
+#include <GL/glew.h>
+
 // easter egg :)
 #define ToRadian(x) ((x) * M_PI / 180.0f)
 #define ToDegree(x) ((x) * 180.0f / M_PI)
@@ -20,6 +22,10 @@ enum Enum {
 };
 };
 typedef _ShaderType::Enum ShaderType;
+
+// -------======{[ Uniforms ]}======-------
+
+#define INVALID_LOCATION 0xFFFFFFFF
 
 // -------======{[ Vertex Attrib Array ]}======-------
 
