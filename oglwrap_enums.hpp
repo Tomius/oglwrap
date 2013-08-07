@@ -135,12 +135,15 @@ typedef _ExtraTexType::Enum ExtraTexType;
 
 namespace _PixelDataInternalFormat {
 enum Enum {
+    // Base internal
     DepthComponent = GL_DEPTH_COMPONENT,
     DepthStencil = GL_DEPTH_STENCIL,
     Red = GL_RED,
     RG = GL_RG,
     RGB = GL_RGB,
     RGBA = GL_RGBA,
+
+    // Sized Internal
     R8 = GL_R8,
     R8_SNorm = GL_R8_SNORM,
     R16 = GL_R16,
@@ -204,12 +207,8 @@ enum Enum {
     RGBA16UI = GL_RGBA16UI,
     RGBA32I = GL_RGBA32I,
     RGBA32UI = GL_RGBA32UI,
-    DepthComponent16 = GL_DEPTH_COMPONENT16,
-    DepthComponent24 = GL_DEPTH_COMPONENT24,
-    DepthComponent32 = GL_DEPTH_COMPONENT32,
-    DepthComponent32F = GL_DEPTH_COMPONENT32F,
-    Depth24_Stencil8 = GL_DEPTH24_STENCIL8,
-    Depth32f_Stencil8 = GL_DEPTH32F_STENCIL8,
+
+    // Compressed
     Compressed_Red = GL_COMPRESSED_RED,
     Compressed_RG = GL_COMPRESSED_RG,
     Compressed_RGB = GL_COMPRESSED_RGB,
@@ -224,16 +223,6 @@ enum Enum {
     Compressed_SRGBA_BPTC_UNorm = GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM,
     Compressed_RGB_BPTC_Signed_Float = GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT,
     Compressed_RGB_BPTC_Unsigned_Float = GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT,
-    Compressed_RGB8_ETC2 = GL_COMPRESSED_RGB8_ETC2,
-    Compressed_SRGB8_ETC2 = GL_COMPRESSED_SRGB8_ETC2,
-    Compressed_RGB8_Punchthrough_Alpha1_ETC2 = GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2,
-    Compressed_SRGB8_Punchthrough_Alpha1_ETC2 = GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2,
-    Compressed_RGBA8_ETC2_EAC = GL_COMPRESSED_RGBA8_ETC2_EAC,
-    Compressed_SRGBA8_ETC2_EAC = GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,
-    Compressed_R11_EAC = GL_COMPRESSED_R11_EAC,
-    Compressed_Signed_R11_EAC = GL_COMPRESSED_SIGNED_R11_EAC,
-    Compressed_RG11_EAC = GL_COMPRESSED_RG11_EAC,
-    Compressed_Signed_RG11_EAC = GL_COMPRESSED_SIGNED_RG11_EAC
 };
 }
 typedef _PixelDataInternalFormat::Enum PixelDataInternalFormat;
