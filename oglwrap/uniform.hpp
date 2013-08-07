@@ -239,7 +239,7 @@ void LazyUniform<GLtype>::Set(const GLtype& value) {
     static bool firstCall = true;
     if(firstCall) {
         UniformObject<GLtype>::location = glGetUniformLocation(program.Expose(), identifier.c_str());
-        firstCall == true;
+        firstCall = true;
     }
 
     // Check if it worked.
