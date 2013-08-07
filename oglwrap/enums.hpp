@@ -69,24 +69,6 @@ enum Enum{
 }
 typedef _BufferType::Enum BufferType;
 
-namespace _NotIndexedBufferType{
-enum Enum{
-    Array = GL_ARRAY_BUFFER,
-    CopyRead = GL_COPY_READ_BUFFER,
-    CopyWrite = GL_COPY_WRITE_BUFFER,
-    DispatchIndirect = GL_DISPATCH_INDIRECT_BUFFER,
-    DrawIndirect = GL_DRAW_INDIRECT_BUFFER,
-    ElementArray = GL_ELEMENT_ARRAY_BUFFER,
-    PixelPack = GL_PIXEL_PACK_BUFFER,
-    PixelUnpack = GL_PIXEL_UNPACK_BUFFER,
-    Texture = GL_TEXTURE_BUFFER,
-    Query = GL_QUERY_BUFFER_AMD,
-    ExternalVirtualMemory = GL_EXTERNAL_VIRTUAL_MEMORY_BUFFER_AMD,
-};
-}
-typedef _NotIndexedBufferType::Enum NotIndexedBufferType;
-
-
 namespace _IndexedBufferType{
 enum Enum{
     AtomicCounter = GL_ATOMIC_COUNTER_BUFFER,

@@ -13,23 +13,23 @@ namespace oglwrap {
 
 // -------======{[ Buffer definitions ]}======-------
 
+template<BufferType buffer_t>
 /** Buffer Objects are OpenGL Objects that store an array
     of unformatted memory allocated by the OpenGL context (aka: the GPU).
     These can be used to store vertex data, pixel data retrieved from
     images or the framebuffer, and a variety of other things.
 **/
-template<BufferType buffer_t>
-class GeneralBufferObject : protected RefCounted {
+class BufferObject : protected RefCounted {
 protected:
     GLuint buffer;
 public:
     /// Generates a buffer object.
     /// @see glGenBuffers
-    GeneralBufferObject();
+    BufferObject();
 
     /// Deletes the buffer generated in the constructor.
     /// @see glDeleteBuffers
-    ~GeneralBufferObject();
+    ~BufferObject();
 
     // Binds
     /// Bind a buffer object to its default target.
@@ -83,22 +83,28 @@ public:
     GLint Expose() const;
 };
 
-/** Buffer Objects are OpenGL Objects that store an array
-    of unformatted memory allocated by the OpenGL context (aka: the GPU).
-    These can be used to store vertex data, pixel data retrieved from
-    images or the framebuffer, and a variety of other things.
-**/
-template<NotIndexedBufferType buffer_t>
-class BufferObject : public GeneralBufferObject<BufferType(buffer_t)>
-{};
+typedef BufferObject<BufferType::Array>          Buffer;
+/// The buffer will be used as a source for vertex data, but only when VertexAttribArray::Pointer​ is called.
+/// @see GL_ARRAY_BUFFER
+
+typedef BufferObject<BufferType::ElementArray>   IndexBuffer;
+/// All rendering functions of the form gl*Draw*Elements*​ will use the pointer field as a byte offset from
+/// the beginning of the buffer object bound to this target. The indices used for indexed rendering will be
+/// taken from the buffer object. Note that this binding target is part of a Vertex Array Objects state, so a
+/// VAO must be bound before binding a buffer here.
+/// @see GL_ELEMENT_ARRAY_BUFFER
+
+typedef BufferObject<BufferType::Texture>        TextureBuffer;
+/// This buffer has no special semantics, it is intended to use as a buffer object for Buffer Textures.
+/// @see GL_TEXTURE_BUFFER
 
 
+template<IndexedBufferType buffer_t>
 /** Buffer Objects are OpenGL Objects that store an array
     of unformatted memory allocated by the OpenGL context (aka: the GPU).
     IndexBufferObject is a buffer that is bound to an indexed target.
 **/
-template<IndexedBufferType buffer_t>
-class IndexedBufferObject : public GeneralBufferObject<BufferType(buffer_t)> {
+class IndexedBufferObject : public BufferObject<BufferType(buffer_t)> {
 public:
     /// Bind a buffer object to an index.
     /// @param index - Specify the index of the binding point within the array.
@@ -118,35 +124,13 @@ public:
     static void UnbindBase(GLuint index);
 };
 
-/** Buffer Objects are OpenGL Objects that store an array
-    of unformatted memory allocated by the OpenGL context (aka: the GPU).
-    These can be used to store vertex data, pixel data retrieved from
-    images or the framebuffer, and a variety of other things.
-**/
-typedef BufferObject<NotIndexedBufferType::Array>          Buffer;
-/** Buffer Objects are OpenGL Objects that store an array
-    of unformatted memory allocated by the OpenGL context (aka: the GPU).
-    These can be used to store vertex data, pixel data retrieved from
-    images or the framebuffer, and a variety of other things.
-**/
-typedef BufferObject<NotIndexedBufferType::ElementArray>   IndexBuffer;
-/** Buffer Objects are OpenGL Objects that store an array
-    of unformatted memory allocated by the OpenGL context (aka: the GPU).
-    These can be used to store vertex data, pixel data retrieved from
-    images or the framebuffer, and a variety of other things.
-**/
-typedef BufferObject<NotIndexedBufferType::Texture>        TextureBuffer;
-
-/** Buffer Objects are OpenGL Objects that store an array
-    of unformatted memory allocated by the OpenGL context (aka: the GPU).
-    IndexBufferObject is a buffer that is bound to an indexed target.
-**/
 typedef IndexedBufferObject<IndexedBufferType::Uniform>             UniformBuffer;
-/** Buffer Objects are OpenGL Objects that store an array
-    of unformatted memory allocated by the OpenGL context (aka: the GPU).
-    IndexBufferObject is a buffer that is bound to an indexed target.
-**/
+/// An indexed buffer binding for buffers used as storage for uniform blocks.
+/// @see GL_UNIFORM_BUFFER
+
 typedef IndexedBufferObject<IndexedBufferType::TransformFeedback>   TransformFeedbackBuffer;
+/// An indexed buffer binding for buffers used in Transform Feedback operations.
+/// @see GL_TRANSFORM_FEEDBACK_BUFFER
 
 
 
@@ -156,16 +140,16 @@ typedef IndexedBufferObject<IndexedBufferType::TransformFeedback>   TransformFee
 
 
 
-// -------======{[ GeneralBufferObject definitions ]}======-------
+// -------======{[ BufferObject definitions ]}======-------
 
 template<BufferType buffer_t>
-GeneralBufferObject<buffer_t>::GeneralBufferObject() {
+BufferObject<buffer_t>::BufferObject() {
     glGenBuffers(1, &buffer);
     oglwrap_CheckError();
 }
 
 template<BufferType buffer_t>
-GeneralBufferObject<buffer_t>::~GeneralBufferObject() {
+BufferObject<buffer_t>::~BufferObject() {
     if(!isDeleteable())
         return;
     glDeleteBuffers(1, &buffer);
@@ -174,14 +158,14 @@ GeneralBufferObject<buffer_t>::~GeneralBufferObject() {
 
 // Binds
 template<BufferType buffer_t>
-void GeneralBufferObject<buffer_t>::Bind() {
+void BufferObject<buffer_t>::Bind() {
     glBindBuffer(buffer_t, buffer);
     oglwrap_CheckError();
 }
 
 // Unbinds
 template<BufferType buffer_t>
-void GeneralBufferObject<buffer_t>::Unbind() {
+void BufferObject<buffer_t>::Unbind() {
     glBindBuffer(buffer_t, 0);
     oglwrap_CheckError();
 }
@@ -189,35 +173,35 @@ void GeneralBufferObject<buffer_t>::Unbind() {
 // Data uploads
 template<BufferType buffer_t>
 template<typename GLtype>
-void GeneralBufferObject<buffer_t>::Data(GLsizei size, const GLtype* data, BufferUsage usage) {
+void BufferObject<buffer_t>::Data(GLsizei size, const GLtype* data, BufferUsage usage) {
     glBufferData(buffer_t, size, data, usage);
     oglwrap_CheckError();
 }
 
 template<BufferType buffer_t>
 template<typename GLtype>
-void GeneralBufferObject<buffer_t>::Data(const std::vector<GLtype>& data, BufferUsage usage) {
+void BufferObject<buffer_t>::Data(const std::vector<GLtype>& data, BufferUsage usage) {
     glBufferData(buffer_t, data.size() * sizeof(GLtype), data.data(), usage);
     oglwrap_CheckError();
 }
 
 template<BufferType buffer_t>
 template<typename GLtype>
-void GeneralBufferObject<buffer_t>::SubData(GLintptr offset, GLsizei size, const GLtype* data) {
+void BufferObject<buffer_t>::SubData(GLintptr offset, GLsizei size, const GLtype* data) {
     glBufferSubData(buffer_t, offset, size, data);
     oglwrap_CheckError();
 }
 
 template<BufferType buffer_t>
 template<typename GLtype>
-void GeneralBufferObject<buffer_t>::SubData(GLintptr offset, const std::vector<GLtype>& data) {
+void BufferObject<buffer_t>::SubData(GLintptr offset, const std::vector<GLtype>& data) {
     glBufferSubData(buffer_t, offset, data.size() * sizeof(GLtype), data.data());
     oglwrap_CheckError();
 }
 
 // Size
 template<BufferType buffer_t>
-size_t GeneralBufferObject<buffer_t>::Size() {
+size_t BufferObject<buffer_t>::Size() {
     GLint data;
     glGetBufferParameteriv(buffer_t, GL_BUFFER_SIZE, &data);
     oglwrap_CheckError();
@@ -225,7 +209,7 @@ size_t GeneralBufferObject<buffer_t>::Size() {
 }
 
 template<BufferType buffer_t>
-GLint GeneralBufferObject<buffer_t>::Expose() const {
+GLint BufferObject<buffer_t>::Expose() const {
     return buffer;
 }
 
@@ -233,13 +217,13 @@ GLint GeneralBufferObject<buffer_t>::Expose() const {
 
 template<IndexedBufferType buffer_t>
 void IndexedBufferObject<buffer_t>::BindBase(GLuint index) {
-    glBindBufferBase(buffer_t, index, GeneralBufferObject<buffer_t>::buffer);
+    glBindBufferBase(buffer_t, index, BufferObject<buffer_t>::buffer);
     oglwrap_CheckError();
 }
 
 template<IndexedBufferType buffer_t>
 void IndexedBufferObject<buffer_t>::BindRange(GLuint index, GLintptr offset, GLsizeiptr size) {
-    glBindBufferRange(buffer_t, index, offset, size, GeneralBufferObject<buffer_t>::buffer);
+    glBindBufferRange(buffer_t, index, offset, size, BufferObject<buffer_t>::buffer);
     oglwrap_CheckError();
 }
 
