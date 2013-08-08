@@ -76,6 +76,32 @@ public:
     }
 
     // Setup functions
+    /// Sets up an attribute for arbitrary data type.
+    /// @param values_per_vertex - The dimension of the attribute data. For example is 3 for a vec3. The initial value is 4.
+    /// @param type - The data type of each component in the array.
+    /// @param stride - Specifies the byte offset between consecutive generic vertex attributes. If stride is 0, the generic vertex attributes are understood to be tightly packed in the array. The initial value is 0.
+    /// @param pointer - Specifies a offset of the first component of the first generic vertex attribute in the array in the data store of the buffer currently bound to the GL_ARRAY_BUFFER target. The initial value is 0.
+    /// @see glVertexAttribPointer, glVertexAttribIPointer, glVertexAttribLPointer
+    const VertexAttribArray& Setup(GLuint values_per_vertex = 4,
+                                   DataType type = DataType::Float,
+                                   GLsizei stride = 0,
+                                   void *offset_pointer = nullptr) const {
+        switch (type) {
+            case DataType::Float:
+            case DataType::HalfFloat:
+            case DataType::Fixed:
+                Pointer(values_per_vertex, FloatDataType(type), false, stride, offset_pointer);
+                break;
+            case DataType::Double:
+                LPointer(values_per_vertex, stride, nullptr);
+                break;
+            default:
+                IPointer(values_per_vertex, WholeDataType(type), stride, offset_pointer);
+                break;
+        }
+        return *this;
+    }
+
     /// Sets up an attribute for float type data.
     /// @param values_per_vertex - The dimension of the attribute data. For example is 3 for a vec3. The initial value is 4.
     /// @param type - The data type of each component in the array.

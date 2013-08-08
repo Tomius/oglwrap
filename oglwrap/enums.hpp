@@ -57,6 +57,7 @@ enum Enum {
 }
 typedef _WholeDataType::Enum WholeDataType;
 
+// SinglePrecisionRealDataType if I wanted to be correct...
 namespace _FloatDataType {
 enum Enum {
     Fixed = GL_FIXED,
