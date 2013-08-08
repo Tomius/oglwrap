@@ -5,13 +5,11 @@
 #include <string>
 #include <GL/glew.h>
 
-#include "error.h"
+#include "error.hpp"
 #include "enums.hpp"
 #include "general.hpp"
 
 namespace oglwrap {
-
-// -------======{[ Buffer definitions ]}======-------
 
 template<BufferType buffer_t>
 /** Buffer Objects are OpenGL Objects that store an array
@@ -25,21 +23,35 @@ protected:
 public:
     /// Generates a buffer object.
     /// @see glGenBuffers
-    BufferObject();
+    BufferObject() {
+        glGenBuffers(1, &buffer);
+        oglwrap_CheckError();
+    }
 
     /// Deletes the buffer generated in the constructor.
     /// @see glDeleteBuffers
-    ~BufferObject();
+    ~BufferObject() {
+        if(!isDeletable())
+            return;
+        glDeleteBuffers(1, &buffer);
+        oglwrap_CheckError();
+    }
 
     // Binds
     /// Bind a buffer object to its default target.
     /// @see glBindBuffer
-    void Bind();
+    void Bind() {
+        glBindBuffer(buffer_t, buffer);
+        oglwrap_CheckError();
+    }
 
     // Unbinds
     /// Unbind a buffer object from its default target.
     /// @see glBindBuffer
-    static void Unbind();
+    static void Unbind() {
+        glBindBuffer(buffer_t, 0);
+        oglwrap_CheckError();
+    }
 
     // Data uploads
     /// Creates and initializes a buffer object's data store.
@@ -49,7 +61,10 @@ public:
     /// @see glBufferData
     template<typename GLtype>
     static void Data(GLsizei size, const GLtype* data,
-                     BufferUsage usage = BufferUsage::StaticDraw);
+                     BufferUsage usage = BufferUsage::StaticDraw) {
+        glBufferData(buffer_t, size, data, usage);
+        oglwrap_CheckError();
+    }
 
     /// Creates and initializes a buffer object's data store.
     /// @param data - Specifies a vector of data to upload.
@@ -57,7 +72,10 @@ public:
     /// @see glBufferData
     template<typename GLtype>
     static void Data(const std::vector<GLtype>& data,
-                     BufferUsage usage = BufferUsage::StaticDraw);
+                     BufferUsage usage = BufferUsage::StaticDraw) {
+        glBufferData(buffer_t, data.size() * sizeof(GLtype), data.data(), usage);
+        oglwrap_CheckError();
+    }
 
     /// Updates a subset of a buffer object's data store.
     /// @param offset - Specifies the offset into the buffer object's data store where data replacement will begin, measured in bytes.
@@ -65,22 +83,35 @@ public:
     /// @param data - Specifies a pointer to the new data that will be copied into the data store.
     /// @see glBufferSubData
     template<typename GLtype>
-    static void SubData(GLintptr offset, GLsizei size, const GLtype* data);
+    static void SubData(GLintptr offset, GLsizei size, const GLtype* data) {
+        glBufferSubData(buffer_t, offset, size, data);
+        oglwrap_CheckError();
+    }
 
     /// Updates a subset of a buffer object's data store.
     /// @param offset - Specifies the offset into the buffer object's data store where data replacement will begin, measured in bytes.
     /// @param data - Specifies a vector containing the new data that will be copied into the data store.
     /// @see glBufferSubData
     template<typename GLtype>
-    static void SubData(GLintptr offset, const std::vector<GLtype>& data);
+    static void SubData(GLintptr offset, const std::vector<GLtype>& data) {
+        glBufferSubData(buffer_t, offset, data.size() * sizeof(GLtype), data.data());
+        oglwrap_CheckError();
+    }
 
     // Size
     /// A getter for the buffer's size.
     /// @return The size of the buffer currently bound to the buffer objects default target in bytes.
     /// @see glGetBufferParameteriv, GL_BUFFER_SIZE
-    static size_t Size();
+    static size_t Size() {
+        GLint data;
+        glGetBufferParameteriv(buffer_t, GL_BUFFER_SIZE, &data);
+        oglwrap_CheckError();
+        return data;
+    }
     /// Returns the GLint handle for the buffer used by the C OpenGL API.
-    GLint Expose() const;
+    GLint Expose() const {
+        return buffer;
+    }
 };
 
 typedef BufferObject<BufferType::Array>          Buffer;
@@ -109,19 +140,28 @@ public:
     /// Bind a buffer object to an index.
     /// @param index - Specify the index of the binding point within the array.
     /// @see glBindBufferBase
-    void BindBase(GLuint index);
+    void BindBase(GLuint index) {
+        glBindBufferBase(buffer_t, index, BufferObject<buffer_t>::buffer);
+        oglwrap_CheckError();
+    }
 
     /// Bind a range within a buffer object to an index.
     /// @param index - Specify the index of the binding point within the array.
     /// @param offset - The starting offset in basic machine units into the buffer object.
     /// @param size - The amount of data in machine units that can be read from the buffet object while used as an indexed target.
     /// @see glBindBufferRange
-    void BindRange(GLuint index, GLintptr offset, GLsizeiptr size);
+    void BindRange(GLuint index, GLintptr offset, GLsizeiptr size) {
+        glBindBufferRange(buffer_t, index, offset, size, BufferObject<buffer_t>::buffer);
+        oglwrap_CheckError();
+    }
 
     /// Unbind a buffer object from an index.
     /// @param index - Specify the index of the binding point within the array.
     /// @see glBindBufferBase
-    static void UnbindBase(GLuint index);
+    static void UnbindBase(GLuint index) {
+        glBindBufferBase(buffer_t, index, 0);
+        oglwrap_CheckError();
+    }
 };
 
 typedef IndexedBufferObject<IndexedBufferType::Uniform>             UniformBuffer;
@@ -133,106 +173,6 @@ typedef IndexedBufferObject<IndexedBufferType::TransformFeedback>   TransformFee
 /// @see GL_TRANSFORM_FEEDBACK_BUFFER
 
 
-
-//         //=====:==-==-==:=====\\                                   //=====:==-==-==:=====\\
-//  <---<}>==~=~=~==--==--==~=~=~==<{>----- Class definitions -----<}>==~=~=~==--==--==~=~=~==<{>--->
-//         \\=====:==-==-==:=====//                                   \\=====:==-==-==:=====//
-
-
-
-// -------======{[ BufferObject definitions ]}======-------
-
-template<BufferType buffer_t>
-BufferObject<buffer_t>::BufferObject() {
-    glGenBuffers(1, &buffer);
-    oglwrap_CheckError();
-}
-
-template<BufferType buffer_t>
-BufferObject<buffer_t>::~BufferObject() {
-    if(!isDeleteable())
-        return;
-    glDeleteBuffers(1, &buffer);
-    oglwrap_CheckError();
-}
-
-// Binds
-template<BufferType buffer_t>
-void BufferObject<buffer_t>::Bind() {
-    glBindBuffer(buffer_t, buffer);
-    oglwrap_CheckError();
-}
-
-// Unbinds
-template<BufferType buffer_t>
-void BufferObject<buffer_t>::Unbind() {
-    glBindBuffer(buffer_t, 0);
-    oglwrap_CheckError();
-}
-
-// Data uploads
-template<BufferType buffer_t>
-template<typename GLtype>
-void BufferObject<buffer_t>::Data(GLsizei size, const GLtype* data, BufferUsage usage) {
-    glBufferData(buffer_t, size, data, usage);
-    oglwrap_CheckError();
-}
-
-template<BufferType buffer_t>
-template<typename GLtype>
-void BufferObject<buffer_t>::Data(const std::vector<GLtype>& data, BufferUsage usage) {
-    glBufferData(buffer_t, data.size() * sizeof(GLtype), data.data(), usage);
-    oglwrap_CheckError();
-}
-
-template<BufferType buffer_t>
-template<typename GLtype>
-void BufferObject<buffer_t>::SubData(GLintptr offset, GLsizei size, const GLtype* data) {
-    glBufferSubData(buffer_t, offset, size, data);
-    oglwrap_CheckError();
-}
-
-template<BufferType buffer_t>
-template<typename GLtype>
-void BufferObject<buffer_t>::SubData(GLintptr offset, const std::vector<GLtype>& data) {
-    glBufferSubData(buffer_t, offset, data.size() * sizeof(GLtype), data.data());
-    oglwrap_CheckError();
-}
-
-// Size
-template<BufferType buffer_t>
-size_t BufferObject<buffer_t>::Size() {
-    GLint data;
-    glGetBufferParameteriv(buffer_t, GL_BUFFER_SIZE, &data);
-    oglwrap_CheckError();
-    return data;
-}
-
-template<BufferType buffer_t>
-GLint BufferObject<buffer_t>::Expose() const {
-    return buffer;
-}
-
-// -------======{[ Index Buffers ]}======-------
-
-template<IndexedBufferType buffer_t>
-void IndexedBufferObject<buffer_t>::BindBase(GLuint index) {
-    glBindBufferBase(buffer_t, index, BufferObject<buffer_t>::buffer);
-    oglwrap_CheckError();
-}
-
-template<IndexedBufferType buffer_t>
-void IndexedBufferObject<buffer_t>::BindRange(GLuint index, GLintptr offset, GLsizeiptr size) {
-    glBindBufferRange(buffer_t, index, offset, size, BufferObject<buffer_t>::buffer);
-    oglwrap_CheckError();
-}
-
-template<IndexedBufferType buffer_t>
-void IndexedBufferObject<buffer_t>::UnbindBase(GLuint index) {
-    glBindBufferBase(buffer_t, index, 0);
-    oglwrap_CheckError();
-}
-
-}
+} // namespace oglwrap
 
 #endif // BUFFER_HPP

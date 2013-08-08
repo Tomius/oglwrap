@@ -4,7 +4,7 @@
 #include <string>
 #include <GL/glew.h>
 
-#include "error.h"
+#include "error.hpp"
 #include "enums.hpp"
 #include "shader.hpp"
 
@@ -14,77 +14,149 @@
 
 namespace oglwrap {
 
-// -------======{[ UniformObject declaration ]}======-------
+// -------======{[ UniformObject ]}======-------
 
 template<class GLtype>
+/// An object implementing the base features for the Uniform and
+/// LazyUniform classes. You shouldn't use this class directly.
 class UniformObject {
 protected:
-    GLuint location;
+    GLuint location; ///< The C handle for the uniform's location
+
+    /// The handle defaults to INVALID_LOCATION
+    UniformObject()
+        : location(INVALID_LOCATION) { }
+
+    /// Sets the location handle.
+    UniformObject(GLuint location)
+        : location(location) { }
+
+    /// Sets the uniform to a GLtype variable's value. It finds the appropriate glUniform*
+    /// using template specialization. If it is called with not an OpenGL type, it throws
+    /// std::invalid argument.
+    /// @see glUniform*
+    void Set(const GLtype& value) { // See the specializations at the end of this file.
+        throw std::invalid_argument("Trying to set a uniform to a value that is not an OpenGL type.");
+    }
+
+    /// Sets the uniform to 'value', via the Set() function.
+    /// @see Set
+    void operator=(const GLtype& value) {
+        Set(value);
+    }
+
 public:
-    UniformObject();
-    UniformObject(GLuint location);
-    void Set(const GLtype& value);
-    void operator=(const GLtype& value);
-    GLuint Expose() const;
+    /// Returns the C OpenGL handle for the uniform's location.
+    GLuint Expose() const {
+        return location;
+    }
 };
 
-// -------======{[ Uniform declaration ]}======-------
+// -------======{[ Uniform ]}======-------
 
 template<typename GLtype>
+/// Uniform is used to set a uniform variable's value in a specified program.
+/// It queries the location of the uniform in the constructor and also notifies on the
+/// stderr, if setting the variable didn't work.
 class Uniform : public UniformObject<GLtype> {
 public:
-    Uniform(Program& program, const std::string& identifier);
-    void Set(const GLtype& value);
-    void operator=(const GLtype& value);
+    /// Queries a variable named 'identifier' in the 'program', and stores it's location,
+    /// or writes to stderr if it didn't work. Also changes the currently active program to
+    /// the program given as a parameter.
+    /// @param program - The program to seek the uniform in. Will call program.Use().
+    /// @param identifier - The name of the uniform that is to be set.
+    /// @see glGetUniformLocation
+    Uniform(Program& program, const std::string& identifier) {
+        program.Use();
+        UniformObject<GLtype>::location = glGetUniformLocation(program.Expose(), identifier.c_str());
+
+        if(UniformObject<GLtype>::location == INVALID_LOCATION) {
+            std::cerr << "Error getting the location of uniform '" << identifier << "'" << std::endl;
+        }
+        oglwrap_CheckError();
+    }
+
+    /// Sets the uniform to value if it is an OpenGL type or a glm vector or matrix.
+    /// It throws std::invalid_argument if it is an unrecognized type.
+    /// @param value - Specifies the new value to be used for the uniform variable.
+    /// @see glUniform*
+    void Set(const GLtype& value) {
+        UniformObject<GLtype>::Set(value);
+        oglwrap_CheckError();
+    }
+
+    /// Sets the uniform to value if it is an OpenGL type or a glm vector or matrix.
+    /// It throws std::invalid_argument if it is an unrecognized type.
+    /// @param value - Specifies the new value to be used for the uniform variable.
+    /// @see glUniform*
+    void operator=(const GLtype& value) {
+        Set(value);
+    }
 };
 
 typedef Uniform<GLint> UniformSampler;
 
 
-// -------======{[ LazyUniform declaration ]}======-------
+// -------======{[ LazyUniform ]}======-------
 
 template<typename GLtype>
+/// LazyUniform is used to set uniform variables in shaders. It takes
+/// a program reference and the uniform's name as a constructor, but
+/// but the program doesn't have to be valid at that time. The variable's
+/// locations will only be queried at the first Set call (or op=), so
+/// it have to query the location all the time, like how the normal
+/// Uniform class works. It also has the advantage, that you only have
+/// to write program's and the uniform's name once, not matter how many
+/// times you set it.
 class LazyUniform : public UniformObject<GLtype> {
-    Program& program;
-    const std::string identifier;
+    Program& program; ///< The program in which the uniform should be set.
+    const std::string identifier; ///< The uniform's name.
 public:
-    LazyUniform(Program& program, const std::string& identifier);
-    void Set(const GLtype& value);
-    void operator=(const GLtype& value);
+    /// Stores the uniform's information. It will only be used at the first
+    /// Set or op= call, so the program doesn't have to be valid at the time
+    /// this constructor is called.
+    /// @param program - The program in which the uniform is to be set.
+    /// @param identifier - The uniform's name.
+    LazyUniform(Program& program, const std::string& identifier)
+        : UniformObject<GLtype>(INVALID_LOCATION)
+        , program(program)
+        , identifier(identifier)
+    { }
+
+    /// At the first call, queries the uniform's location. It writes to stderr if it was unable to get it.
+    /// At every call it sets the uniform to the specified value. It also changes the active program
+    /// to the one specified in the constructor.
+    /// @param Specifies the new value to be used for the uniform variable.
+    void Set(const GLtype& value) {
+        program.Use();
+
+        // Get the uniform's location only at the first Set call.
+        static bool firstCall = true;
+        if(firstCall) {
+            UniformObject<GLtype>::location = glGetUniformLocation(program.Expose(), identifier.c_str());
+            firstCall = true;
+        }
+
+        // Check if it worked.
+        if(UniformObject<GLtype>::location == INVALID_LOCATION) {
+            std::cerr << "Error getting the location of uniform '" << identifier << "'" << std::endl;
+        }
+
+        UniformObject<GLtype>::Set(value);
+        oglwrap_CheckError();
+    }
+
+    /// At the first call, queries the uniform's location. It writes to stderr if it was unable to get it.
+    /// At every call it sets the uniform to the specified value. It also changes the active program
+    /// to the one specified in the constructor.
+    /// @param Specifies the new value to be used for the uniform variable.
+    void operator=(const GLtype& value) {
+        Set(value);
+    }
 };
 
 typedef LazyUniform<GLint> LazyUniformSampler;
 
-
-
-//         //=====:==-==-==:=====\\                                   //=====:==-==-==:=====\\
-//  <---<}>==~=~=~==--==--==~=~=~==<{>----- Class definitions -----<}>==~=~=~==--==--==~=~=~==<{>--->
-//         \\=====:==-==-==:=====//                                   \\=====:==-==-==:=====//
-
-
-
-// -------======{[ Uniform object definition ]}======-------
-
-template<class GLtype>
-UniformObject<GLtype>::UniformObject() : location(INVALID_LOCATION) { }
-
-template<class GLtype>
-UniformObject<GLtype>::UniformObject(GLuint loc) : location(loc) { }
-
-template<class GLtype>
-void UniformObject<GLtype>::Set(const GLtype& value) {
-    throw std::invalid_argument("Trying to set a uniform to a value that is not an OpenGL type.");
-}
-
-template<class GLtype>
-void UniformObject<GLtype>::operator=(const GLtype& value) {
-    Set(value);
-}
-
-template<class GLtype>
-GLuint UniformObject<GLtype>::Expose() const {
-    return location;
-}
 
 // -------======{[ UniformObject::Set specializations ]}======-------
 
@@ -197,64 +269,6 @@ template<>
 inline void UniformObject<glm::dmat4>::Set(const glm::dmat4& mat) {
     glUniformMatrix4dv(location, 1, GL_FALSE, glm::value_ptr(mat));
 };
-
-// -------======{[ Uniform ]}======-------
-
-template<typename GLtype>
-Uniform<GLtype>::Uniform(Program& program, const std::string& identifier)
-        : UniformObject<GLtype>(glGetUniformLocation(program.Expose(), identifier.c_str())) {
-    if(UniformObject<GLtype>::location == INVALID_LOCATION) {
-        std::cerr << "Error getting the location of uniform '" << identifier << "'" << std::endl;
-    }
-    oglwrap_CheckError();
-}
-
-template<typename GLtype>
-void Uniform<GLtype>::Set(const GLtype& value) {
-    UniformObject<GLtype>::Set(value);
-    oglwrap_CheckError();
-}
-
-template<typename GLtype>
-void Uniform<GLtype>::operator=(const GLtype& value) {
-    Set(value);
-}
-
-// -------======{[ LazyUniform ]}======-------
-
-template<typename GLtype>
-LazyUniform<GLtype>::LazyUniform(Program& program, const std::string& identifier)
-        : UniformObject<GLtype>(INVALID_LOCATION)
-        , program(program)
-        , identifier(identifier)
-    { }
-
-template<typename GLtype>
-void LazyUniform<GLtype>::Set(const GLtype& value) {
-    // Use the program first. C'mon it's called LazyUniform,
-    // caller will forget to do this anyway :)
-    program.Use();
-
-    // Get the uniform's location only at the first Set call.
-    static bool firstCall = true;
-    if(firstCall) {
-        UniformObject<GLtype>::location = glGetUniformLocation(program.Expose(), identifier.c_str());
-        firstCall = true;
-    }
-
-    // Check if it worked.
-    if(UniformObject<GLtype>::location == INVALID_LOCATION) {
-        std::cerr << "Error getting the location of uniform '" << identifier << "'" << std::endl;
-    }
-
-    UniformObject<GLtype>::Set(value);
-    oglwrap_CheckError();
-}
-
-template<typename GLtype>
-void LazyUniform<GLtype>::operator=(const GLtype& value) {
-    Set(value);
-}
 
 } // namespace oglwrap
 

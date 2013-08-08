@@ -13,7 +13,7 @@
 
 namespace oglwrap {
 
-// -------======{[ Shader declaration ]}======-------
+// -------======{[ Shader ]}======-------
 
 template<ShaderType shader_t>
 /// A GLSL shader object used to control the drawing process.
@@ -24,36 +24,121 @@ class Shader : protected RefCounted {
 public:
     /// Creates the an empty shader object.
     /// @see glCreateShader
-    Shader();
+    Shader() : compiled(false) {
+        shader = glCreateShader(shader_t);
+    }
 
     /// Creates the a shader and sets the file as the shader source.
     /// @param file - The file to load and set as shader source.
     /// @see glCreateShader, glShaderSource
-    Shader(const std::string& file);
+    Shader(const std::string& file)
+            : compiled(false), filename(file) {
+        shader = glCreateShader(shader_t);
+        SourceFile(file);
+    }
 
     /// Uploads a string as the shader's source.
     /// @param source - string containing the shader code.
     /// @see glShaderSource
-    void Source(const std::string& source);
+    void Source(const std::string& source)  {
+        const char *str = source.c_str();
+        glShaderSource(shader, 1, &str, nullptr);
+        oglwrap_CheckError();
+    }
 
     /// Loads a file and uploads it as shader source
     /// @param file - the shader file's path
     /// @see glShaderSource
-    void SourceFile(const std::string& file);
+    void SourceFile(const std::string& file)  {
+        filename = file;
+        std::ifstream shaderFile(file.c_str());
+        if(!shaderFile.is_open()) {
+            shaderFile.open("shaders/" + file);
+        }
+        if(!shaderFile.is_open()) {
+            throw std::runtime_error("File: " + file + " not found.");
+        }
+        std::stringstream shaderString;
+        shaderString << shaderFile.rdbuf();
+
+        // Remove the EOF from the end of the string
+        std::string fileData = shaderString.str();
+        fileData.pop_back();
+
+        // Add the shader source & compile
+        const char *strFileData = fileData.c_str();
+        glShaderSource(shader, 1, &strFileData, nullptr);
+        oglwrap_CheckError();
+    }
 
     /// Compiles the shader code. If the compilation fails, it throws a std::runtime_error,
     /// containing the compilation info as .what(). The compilation happens automatically
     /// when the shader gets attached a program.
     /// @see glCompileShader
-    void Compile();
+    void Compile()  {
+        if(compiled) {
+            return;
+        }
+        glCompileShader(shader);
+        compiled = true;
+
+        // Get compilation status
+        GLint status;
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+        if(status == GL_FALSE) {
+            GLint infoLogLength;
+            glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+            GLchar *strInfoLog = new GLchar[infoLogLength + 1];
+            glGetShaderInfoLog(shader, infoLogLength, nullptr, strInfoLog);
+
+            const char * strShaderType = nullptr;
+            switch(shader_t) {
+                case ShaderType::Compute:
+                    strShaderType = "compute";
+                    break;
+                case ShaderType::Vertex:
+                    strShaderType = "vertex";
+                    break;
+                case ShaderType::Geometry:
+                    strShaderType = "geometry";
+                    break;
+                case ShaderType::Fragment:
+                    strShaderType = "fragment";
+                    break;
+                case ShaderType::TessControl:
+                    strShaderType = "tessellation control";
+                    break;
+                case ShaderType::TessEval:
+                    strShaderType = "tessellation evaluation";
+                    break;
+            }
+
+            std::stringstream str;
+            str << "Compile failure in " << strShaderType << "shader '";
+            str << filename << "' :" << std::endl << strInfoLog << std::endl;
+            delete[] strInfoLog;
+
+            throw std::runtime_error(str.str());
+        }
+        oglwrap_CheckError();
+    }
 
     /// If only one instance of this shader exists, marks the shader for deletion. The shader
     /// won't be deleted until the shader is attached to at least one program.
     /// @see glDeleteShader
-    ~Shader();
+    ~Shader() {
+        if(!isDeletable()) {
+            return;
+        }
+        glDeleteShader(shader);
+        oglwrap_CheckError();
+    }
 
     /// Returns the C OpenGL handle for the shader.
-    GLuint Expose() const;
+    GLuint Expose() const  {
+        return shader;
+    }
 };
 
 
@@ -111,7 +196,7 @@ typedef Shader<ShaderType::TessEval> TessEvalShader;
 /// @version It is core since OpenGL 4.0.
 /// @see GL_TESS_EVALUATION_SHADER
 
-// -------======{[ Shader Program declaration ]}======-------
+// -------======{[ Shader Program ]}======-------
 
 /// The program object can combine multiple shader stages
 /// (built from shader objects) into a single, linked whole.
@@ -122,230 +207,96 @@ class Program : protected RefCounted {
 public:
     /// Generates an empty program object.
     /// @see glCreateProgram
-    Program();
+    Program() : program(glCreateProgram()), linked(false) {
+        oglwrap_CheckError();
+    }
 
     /// If only one instance of this program exists, detaches all the shader objects
     /// currently attached to this program, and deletes the program.
     /// @see glDetachShader, glDeleteShader
-    ~Program();
+    ~Program() {
+        if(!isDeletable()) {
+            return;
+        }
+        for(size_t i = 0; i < shaders.size(); i++) {
+            glDetachShader(program, shaders[i]);
+        }
+        glDeleteProgram(program);
+        oglwrap_CheckError();
+    }
 
     template<ShaderType shader_t>
     /// Attaches a shader to this program object.
     /// @param shader Specifies the shader object that is to be attached.
     /// @see glAttachShader
-    void AttachShader(Shader<shader_t>& shader);
+    void AttachShader(Shader<shader_t>& shader) {
+        shader.Compile();
+        shaders.push_back(shader.Expose());
+        glAttachShader(program, shader.Expose());
+        oglwrap_CheckError();
+    }
 
     template<ShaderType shader_t>
     /// Attaches a shader object to the program.
     /// @param shader Specifies the shader object that is to be attached.
     /// @see glAttachShader
-    Program& operator<<(Shader<shader_t>& shader);
+    Program& operator<<(Shader<shader_t>& shader) {
+        AttachShader(shader);
+        return *this;
+    }
 
     /// Links the program. If the linking fails, it throws
     /// a std::runtime_error containing the linking info.
     /// @see glLinkProgram
-    Program& Link();
+    Program& Link() {
+        if(linked) {
+            return *this;
+        }
+        glLinkProgram(program);
+        linked = true;
+
+        GLint status;
+        glGetProgramiv(program, GL_LINK_STATUS, &status);
+        if(status == GL_FALSE) {
+            GLint infoLogLength;
+            glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+            GLchar *strInfoLog = new GLchar[infoLogLength + 1];
+            glGetProgramInfoLog(program, infoLogLength, NULL, strInfoLog);
+            std::stringstream str;
+            str << "OpenGL program linker failure: " << strInfoLog << std::endl;
+            delete[] strInfoLog;
+
+            throw std::runtime_error(str.str());
+        }
+        oglwrap_CheckError();
+        return *this;
+    }
 
     /// Installs the program as a part of the current rendering state
     /// @see glUseProgram
-    Program& Use();
+    Program& Use() {
+        if(!linked) {
+            Link();
+        }
+        glUseProgram(program);
+        oglwrap_CheckError();
+        return *this;
+    }
 
     /// Installs the default OpenGL shading program to the current rendering state
     /// @see glUseProgram
-    Program& Unuse();
-
-    /// Returns the C OpenGL handle for the program.
-    GLuint Expose() const;
-};
-
-
-//         //=====:==-==-==:=====\\                                   //=====:==-==-==:=====\\
-//  <---<}>==~=~=~==--==--==~=~=~==<{>----- Class definitions -----<}>==~=~=~==--==--==~=~=~==<{>--->
-//         \\=====:==-==-==:=====//                                   \\=====:==-==-==:=====//
-
-
-
-// -------======{[ Shader definition ]}======-------
-
-template<ShaderType shader_t>
-Shader<shader_t>::Shader() : compiled(false) {
-    shader = glCreateShader(shader_t);
-}
-
-template<ShaderType shader_t>
-Shader<shader_t>::Shader(const std::string& file)
-        : compiled(false)
-        , filename(file) {
-    shader = glCreateShader(shader_t);
-    SourceFile(file);
-}
-
-template<ShaderType shader_t>
-void Shader<shader_t>::Source(const std::string& source) {
-    const char *str = source.c_str();
-    glShaderSource(shader, 1, &str, nullptr);
-    oglwrap_CheckError();
-}
-
-template<ShaderType shader_t>
-void Shader<shader_t>::SourceFile(const std::string& file) {
-    filename = file;
-    std::ifstream shaderFile(file.c_str());
-    if(!shaderFile.is_open()) {
-        shaderFile.open("shaders/" + file);
-    }
-    if(!shaderFile.is_open()) {
-        throw std::runtime_error("File: " + file + " not found.");
-    }
-    std::stringstream shaderString;
-    shaderString << shaderFile.rdbuf();
-
-    // Remove the EOF from the end of the string
-    std::string fileData = shaderString.str();
-    fileData.pop_back();
-
-    // Add the shader source & compile
-    const char *strFileData = fileData.c_str();
-    glShaderSource(shader, 1, &strFileData, nullptr);
-    oglwrap_CheckError();
-}
-
-template<ShaderType shader_t>
-void Shader<shader_t>::Compile() {
-    if(compiled) {
-        return;
-    }
-    glCompileShader(shader);
-    compiled = true;
-
-    // Get compilation status
-    GLint status;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
-    if(status == GL_FALSE) {
-        GLint infoLogLength;
-        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
-
-        GLchar *strInfoLog = new GLchar[infoLogLength + 1];
-        glGetShaderInfoLog(shader, infoLogLength, nullptr, strInfoLog);
-
-        const char * strShaderType = nullptr;
-        switch(shader_t) {
-            case ShaderType::Compute:
-                strShaderType = "compute";
-                break;
-            case ShaderType::Vertex:
-                strShaderType = "vertex";
-                break;
-            case ShaderType::Geometry:
-                strShaderType = "geometry";
-                break;
-            case ShaderType::Fragment:
-                strShaderType = "fragment";
-                break;
-            case ShaderType::TessControl:
-                strShaderType = "tessellation control";
-                break;
-            case ShaderType::TessEval:
-                strShaderType = "tessellation evaluation";
-                break;
-        }
-
-        std::stringstream str;
-        str << "Compile failure in " << strShaderType << "shader '";
-        str << filename << "' :" << std::endl << strInfoLog << std::endl;
-        delete[] strInfoLog;
-
-        throw std::runtime_error(str.str());
-    }
-    oglwrap_CheckError();
-}
-
-template<ShaderType shader_t>
-Shader<shader_t>::~Shader() {
-    if(!isDeleteable())
-        return;
-    glDeleteShader(shader);
-    oglwrap_CheckError();
-}
-
-template<ShaderType shader_t>
-GLuint Shader<shader_t>::Expose() const {
-    return shader;
-}
-
-// -------======{[ Shader program definition ]}======-------
-
-inline Program::Program()
-        : program(glCreateProgram()), linked(false) {
-    oglwrap_CheckError();
-}
-
-inline Program::~Program() {
-    if(!isDeleteable())
-        return;
-    for(size_t i = 0; i < shaders.size(); i++) {
-        glDetachShader(program, shaders[i]);
-    }
-    glDeleteProgram(program);
-    oglwrap_CheckError();
-}
-
-template<ShaderType shader_t>
-void Program::AttachShader(Shader<shader_t>& shader) {
-    shader.Compile();
-    shaders.push_back(shader.Expose());
-    glAttachShader(program, shader.Expose());
-    oglwrap_CheckError();
-}
-
-template<ShaderType shader_t>
-Program& Program::operator<<(Shader<shader_t>& shader) {
-    AttachShader(shader);
-    return *this;
-}
-
-inline Program& Program::Link() {
-    if(linked) {
+    Program& Unuse() {
+        glUseProgram(0);
+        oglwrap_CheckError();
         return *this;
     }
-    glLinkProgram(program);
-    linked = true;
 
-    GLint status;
-    glGetProgramiv(program, GL_LINK_STATUS, &status);
-    if(status == GL_FALSE) {
-        GLint infoLogLength;
-        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
-
-        GLchar *strInfoLog = new GLchar[infoLogLength + 1];
-        glGetProgramInfoLog(program, infoLogLength, NULL, strInfoLog);
-        std::stringstream str;
-        str << "OpenGL program linker failure: " << strInfoLog << std::endl;
-        delete[] strInfoLog;
-
-        throw std::runtime_error(str.str());
+    /// Returns the C OpenGL handle for the program.
+    GLuint Expose() const {
+        return program;
     }
-    oglwrap_CheckError();
-    return *this;
-}
-
-inline Program& Program::Use() {
-    if(!linked)
-        Link();
-    glUseProgram(program);
-    oglwrap_CheckError();
-    return *this;
-}
-
-inline Program& Program::Unuse() {
-    glUseProgram(0);
-    oglwrap_CheckError();
-    return *this;
-}
-
-inline GLuint Program::Expose() const {
-    return program;
-}
+};
 
 } // namespace oglwrap
 

@@ -47,9 +47,9 @@ public:
     static void Buffer(PixelDataInternalFormat internalFormat, const TextureBuffer& buffer);
 };
 
-//         //=====:==-==-==:=====\\                                   //=====:==-==-==:=====\\
-//  <---<}>==~=~=~==--==--==~=~=~==<{>----- Class definitions -----<}>==~=~=~==--==--==~=~=~==<{>--->
-//         \\=====:==-==-==:=====//                                   \\=====:==-==-==:=====//
+/*         //=====:==-==-==:=====\\                                   //=====:==-==-==:=====\\
+    <---<}>==~=~=~==--==--==~=~=~==<{>----- Class definitions -----<}>==~=~=~==--==--==~=~=~==<{>--->
+           \\=====:==-==-==:=====//                                   \\=====:==-==-==:=====//         */
 
 
 // -------======{[ TextureBase definition ]}======-------
@@ -62,7 +62,7 @@ TextureBase<texture_t>::TextureBase() {
 
 template <TexType texture_t>
 TextureBase<texture_t>::~TextureBase() {
-    if(!isDeleteable())
+    if(!isDeletable())
         return;
     glDeleteTextures(1, &texture);
     oglwrap_CheckError();

@@ -20,7 +20,7 @@ enum Enum {
     TessControl = GL_TESS_CONTROL_SHADER,
     TessEval = GL_TESS_EVALUATION_SHADER
 };
-};
+}
 typedef _ShaderType::Enum ShaderType;
 
 // -------======{[ Uniforms ]}======-------
@@ -42,9 +42,30 @@ enum Enum {
     UnsignedShort = GL_UNSIGNED_SHORT,
     UnsignedInt = GL_UNSIGNED_INT
 };
-};
-
+}
 typedef _DataType::Enum DataType;
+
+namespace _WholeDataType {
+enum Enum {
+    Byte = GL_BYTE,
+    Short = GL_SHORT,
+    Int = GL_INT,
+    UnsignedByte = GL_UNSIGNED_BYTE,
+    UnsignedShort = GL_UNSIGNED_SHORT,
+    UnsignedInt = GL_UNSIGNED_INT
+};
+}
+typedef _WholeDataType::Enum WholeDataType;
+
+namespace _FloatDataType {
+enum Enum {
+    Fixed = GL_FIXED,
+    Float = GL_FLOAT,
+    HalfFloat = GL_HALF_FLOAT,
+};
+}
+typedef _FloatDataType::Enum FloatDataType;
+
 
 // -------======{[ Buffers ]}======-------
 

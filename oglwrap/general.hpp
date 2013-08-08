@@ -1,48 +1,46 @@
+/// \file Implementation of the Reference counter class
+
 #ifndef GENERAL_HPP
 #define GENERAL_HPP
 
 namespace oglwrap {
 
-// -------======{[ Reference Counter declaration ]}======-------
-
-// OpenGL RAII needs to be reference counted.
-// So classes with allocated data inherit from this.
+/// A simple reference counter that you should use with inheritance.
+/// If your class inherit from this class (protected inheritance recommended),
+/// at your class' destructor you can call isDeletable(), which returns true
+/// if exactly one instance of that object exists. Note that OpenGL RAII needs
+/// to be reference counted!
 class RefCounted {
     int *numInstances;
 protected:
-    bool isDeleteable();
-public:
-    RefCounted();
-    RefCounted(const RefCounted& rhs);
-    RefCounted& operator=(const RefCounted& rhs);
-    ~RefCounted();
+    bool isDeletable() {
+        return *numInstances == 1;
+    }
+
+    RefCounted() {
+        numInstances = new int;
+        *numInstances = 1;
+    }
+
+    RefCounted(const RefCounted& rhs) {
+        numInstances = rhs.numInstances;
+        (*numInstances)++;
+    }
+
+    RefCounted& operator=(const RefCounted& rhs) {
+        numInstances = rhs.numInstances;
+        (*numInstances)++;
+        return *this;
+    }
+
+    ~RefCounted() {
+        if(isDeletable())
+            delete numInstances;
+        else
+            (*numInstances)--;
+    }
 };
 
-// -------======{[ Reference Counter definition ]}======-------
-
-inline bool RefCounted::isDeleteable() {
-    return *numInstances == 1;
-}
-inline RefCounted::RefCounted() {
-    numInstances = new int;
-    *numInstances = 1;
-}
-inline RefCounted::RefCounted(const RefCounted& rhs) {
-    numInstances = rhs.numInstances;
-    (*numInstances)++;
-}
-inline RefCounted& RefCounted::operator=(const RefCounted& rhs) {
-    numInstances = rhs.numInstances;
-    (*numInstances)++;
-    return *this;
-}
-inline RefCounted::~RefCounted() {
-    if(isDeleteable())
-        delete numInstances;
-    else
-        (*numInstances)--;
-}
-
-}
+} // namespace oglwrap
 
 #endif // GENERAL_HPP

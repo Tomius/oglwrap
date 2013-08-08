@@ -10,6 +10,11 @@
 #endif
 
 #if OGLWRAP_DEBUG
+/// An error checking macro used for debugging purposes. If OGLWRAP_DEBUG
+/// is defined to be a number different than 0, than it oglwrap will
+/// check for OpenGL related errors after every gl* function call, and
+/// prints out where did the error happen to stderr.
+/// @see glGetError
 #define oglwrap_CheckError() _CheckError(__FILE__, __FUNCTION__, __LINE__)
 inline void _CheckError(const char *file, const char *func, int line) {
     GLenum glErr = glGetError();
