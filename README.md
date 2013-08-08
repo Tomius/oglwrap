@@ -9,18 +9,14 @@ but oglwrap's simplicity may actually count as an advantage.
 
 Features:
 -------------
+* It has full glm support, it is treated as a GL type vector. You can use Uniform<vec2> to upload with glUniform2fv, 
+  you can upload vec2 to buffers, setup attribute arrays with Setup<vec2>() instead of Pointer(2, GLfloat, ...)
 * Portable, and easy to use as it is only 2 header files
 * A lot of default parameters, often used function take about half as much parameter than with C OpenGL
 * RAII resource handling. You won't have to generate or delete the resources yourself, it happens in the constructor & destructor.
-* Typesafety, functions do not take GLenum or GLuint, but for ex. VertexAttribArray::Pointer takes a DataType enum value,
-  that can be either of the followings, instead of a GLenum that could be anything from 0 to 4,294,967,295.
-  * (Unsigned)Byte
-  * (Unsigned)Short
-  * (Unsigned)Int
-  * Fixed
-  * Float
-  * HalfFloat
-  * Double
+* Typesafety, functions do not take GLenum or GLuint, but for ex. VertexAttribArray::Pointer takes a FloatDataType enum value, so
+  you can't call Pointer for Ints, you only can IPointer with int parameter. But VertexAttribArray also has a setup template which 
+  figures this out for you, so you don't even have to bother with that 'I'.
 * Less macros, nicer looking names.
 * Easy to read, easy to parse. It is fully supported by intellicenses unlike the C OpenGL or oglplus.
 * Built in conditional error checking for every OpenGL call, so you can exactly know when and where did the error happen. The checking only happens if you #define OGLWRAP_DEBUG as it might make you loose up to 5 FPS.
