@@ -7,6 +7,7 @@
 #include "buffer.hpp"
 #include "texture.hpp"
 #include "vertexAttrib.hpp"
+#include "global.hpp"
 
 #endif // header guard
 

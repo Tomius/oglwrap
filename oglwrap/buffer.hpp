@@ -21,7 +21,7 @@ template<BufferType buffer_t>
 **/
 class BufferObject : protected RefCounted {
 protected:
-    GLuint buffer;
+    GLuint buffer; ///< The C API handle for the buffer.
 public:
     /// Generates a buffer object.
     /// @see glGenBuffers
