@@ -85,8 +85,6 @@ enum Enum{
     Texture = GL_TEXTURE_BUFFER,
     TransformFeedback = GL_TRANSFORM_FEEDBACK_BUFFER,
     Uniform = GL_UNIFORM_BUFFER,
-    Query = GL_QUERY_BUFFER_AMD,
-    ExternalVirtualMemory = GL_EXTERNAL_VIRTUAL_MEMORY_BUFFER_AMD,
 };
 }
 typedef _BufferType::Enum BufferType;
@@ -258,10 +256,6 @@ enum Enum {
     Compressed_Signed_Red_RGTC1 = GL_COMPRESSED_SIGNED_RED_RGTC1,
     Compressed_RG_RGTC2 = GL_COMPRESSED_RG_RGTC2,
     Compressed_Signed_RG_RGTC2 = GL_COMPRESSED_SIGNED_RG_RGTC2,
-    Compressed_RGBA_BPTC_UNorm = GL_COMPRESSED_RGBA_BPTC_UNORM,
-    Compressed_SRGBA_BPTC_UNorm = GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM,
-    Compressed_RGB_BPTC_Signed_Float = GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT,
-    Compressed_RGB_BPTC_Unsigned_Float = GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT,
 };
 }
 typedef _PixelDataInternalFormat::Enum PixelDataInternalFormat;
