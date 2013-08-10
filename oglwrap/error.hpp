@@ -15,6 +15,7 @@
 /// check for OpenGL related errors after every gl* function call, and
 /// prints out where did the error happen to stderr.
 /// @see glGetError
+#define oglwrap_assert(x) assert(x)
 #define oglwrap_CheckError() _CheckError(__FILE__, __FUNCTION__, __LINE__)
 inline void _CheckError(const char *file, const char *func, int line) {
     GLenum glErr = glGetError();
@@ -50,6 +51,7 @@ inline void _CheckError(const char *file, const char *func, int line) {
     }
 }
 #else
+#define oglwrap_assert(x)
 #define oglwrap_CheckError()
 #endif
 
