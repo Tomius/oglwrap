@@ -9,13 +9,6 @@
 #include "../general.hpp"
 #include "texture_base.hpp"
 
-#ifndef OGLWRAP_IMAGEMAGICK
-#define OGLWRAP_IMAGEMAGICK 0
-#endif
-#if OGLWRAP_IMAGEMAGICK
-#include <ImageMagick/Magick++.h>
-#endif
-
 namespace oglwrap {
 
 // -------======{[ Texture1D declaration ]}======-------
