@@ -9,8 +9,8 @@ but oglwrap's simplicity may actually count as an advantage.
 
 Features:
 -------------
-* It has full glm support, it is treated as a GL type vector. You can use Uniform<vec2> to upload with glUniform2fv, 
-  you can upload vec2 to buffers, setup attribute arrays with Setup<vec2>() instead of Pointer(2, GLfloat, ...)
+* It has full glm support, it is treated as a GL type vector. You can use Uniform< vec2 > to upload with glUniform2fv, 
+  you can upload vec2 to buffers, setup attribute arrays with Setup< vec2 >() instead of Pointer(2, GLfloat, ...)
 * Portable, and easy to use header only.
 * A lot of default parameters, often used function take about half as much parameter than with C OpenGL
 * RAII resource handling. You won't have to generate or delete the resources yourself, it happens in the constructor & destructor.
