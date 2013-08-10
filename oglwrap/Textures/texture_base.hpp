@@ -190,6 +190,7 @@ public:
     /// Assigns a buffer storing the texel data to the texture.
     /// @param internalFormat - Specifies the internal format of the data in the store belonging to buffer. It must be a sized, uncompressed internal format.
     /// @param buffer - Specifies the name of the buffer object whose storage to attach to the active buffer texture.
+    /// @see glTexBuffer
     static void Buffer(PixelDataInternalFormat internalFormat, const TextureBuffer& buffer) {
         glTexBuffer(texture_t, internalFormat, buffer.Expose());
         oglwrap_CheckError();

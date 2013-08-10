@@ -20,3 +20,6 @@ Features:
 * Less macros, nicer looking names.
 * Easy to read, easy to parse. It is fully supported by intellicenses unlike the C OpenGL or oglplus.
 * Built in conditional error checking for every OpenGL call, so you can exactly know when and where did the error happen. The checking only happens if you #define OGLWRAP_DEBUG 1 as it might make you loose up to 5 FPS.
+* Documented inside the code, so with intellicense you won't ever have to google OpenGL functions again.
+For example:
+![screenshot](http://oi42.tinypic.com/hrmv7c.jpg)
