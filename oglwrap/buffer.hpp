@@ -24,33 +24,45 @@ public:
     /// Generates a buffer object.
     /// @see glGenBuffers
     BufferObject() {
+        oglwrap_PreCheckError();
+
         glGenBuffers(1, &buffer);
-        oglwrap_CheckError();
     }
 
     /// Deletes the buffer generated in the constructor.
     /// @see glDeleteBuffers
     ~BufferObject() {
+        oglwrap_PreCheckError();
+
         if(!isDeletable())
             return;
         glDeleteBuffers(1, &buffer);
-        oglwrap_CheckError();
     }
 
     // Binds
     /// Bind a buffer object to its default target.
     /// @see glBindBuffer
     void Bind() {
+        oglwrap_PreCheckError();
+
         glBindBuffer(buffer_t, buffer);
+
         oglwrap_CheckError();
+        oglwrap_PrintError(
+            GL_INVALID_VALUE,
+            "Was unable to create buffer object. Probably tried to initialize it \n"
+            "before creating the OpenGL context. Did you declare the buffer global or \n"
+            "static?"
+        );
     }
 
     // Unbinds
     /// Unbind a buffer object from its default target.
     /// @see glBindBuffer
     static void Unbind() {
+        oglwrap_PreCheckError();
+
         glBindBuffer(buffer_t, 0);
-        oglwrap_CheckError();
     }
 
     // Data uploads
@@ -62,8 +74,23 @@ public:
     template<typename GLtype>
     static void Data(GLsizei size, const GLtype* data,
                      BufferUsage usage = BufferUsage::StaticDraw) {
+        oglwrap_PreCheckError();
+
         glBufferData(buffer_t, size, data, usage);
+
         oglwrap_CheckError();
+        oglwrap_PrintError(
+            GL_INVALID_VALUE,
+            "BufferObject::Data was called with a negative size parameter."
+        );
+        oglwrap_PrintError(
+            GL_INVALID_OPERATION,
+            "BufferObject::Data was called without a bound buffer for this target."
+        );
+        oglwrap_PrintError(
+            GL_OUT_OF_MEMORY,
+            "BufferObject::Data - GL was unable to create a data store with the specified size."
+        );
     }
 
     /// Creates and initializes a buffer object's data store.
@@ -73,8 +100,19 @@ public:
     template<typename GLtype>
     static void Data(const std::vector<GLtype>& data,
                      BufferUsage usage = BufferUsage::StaticDraw) {
+        oglwrap_PreCheckError();
+
         glBufferData(buffer_t, data.size() * sizeof(GLtype), data.data(), usage);
+
         oglwrap_CheckError();
+        oglwrap_PrintError(
+            GL_INVALID_OPERATION,
+            "BufferObject::Data was called without a bound buffer for this target."
+        );
+        oglwrap_PrintError(
+            GL_OUT_OF_MEMORY,
+            "BufferObject::Data - GL was unable to create a data store with the specified size."
+        );
     }
 
     /// Updates a subset of a buffer object's data store.
@@ -84,8 +122,20 @@ public:
     /// @see glBufferSubData
     template<typename GLtype>
     static void SubData(GLintptr offset, GLsizei size, const GLtype* data) {
+        oglwrap_PreCheckError();
+
         glBufferSubData(buffer_t, offset, size, data);
+
         oglwrap_CheckError();
+        oglwrap_PrintError(
+            GL_INVALID_VALUE,
+            "BufferObject::Data was called with negative size or offset parameter."
+        );
+        oglwrap_PrintError(
+            GL_INVALID_OPERATION,
+            "BufferObject::Data was either called without a bound buffer "
+            "for this target, or the bound target was mapped."
+        );
     }
 
     /// Updates a subset of a buffer object's data store.
@@ -94,8 +144,20 @@ public:
     /// @see glBufferSubData
     template<typename GLtype>
     static void SubData(GLintptr offset, const std::vector<GLtype>& data) {
+        oglwrap_PreCheckError();
+
         glBufferSubData(buffer_t, offset, data.size() * sizeof(GLtype), data.data());
+
         oglwrap_CheckError();
+        oglwrap_PrintError(
+            GL_INVALID_VALUE,
+            "BufferObject::Data was called with offset parameter."
+        );
+        oglwrap_PrintError(
+            GL_INVALID_OPERATION,
+            "BufferObject::Data was either called without a bound buffer "
+            "for this target, or the bound target was mapped."
+        );
     }
 
     // Size
@@ -103,13 +165,22 @@ public:
     /// @return The size of the buffer currently bound to the buffer objects default target in bytes.
     /// @see glGetBufferParameteriv, GL_BUFFER_SIZE
     static size_t Size() {
+        oglwrap_PreCheckError();
+
         GLint data;
         glGetBufferParameteriv(buffer_t, GL_BUFFER_SIZE, &data);
+
         oglwrap_CheckError();
+        oglwrap_PrintError(
+            GL_INVALID_OPERATION,
+            "BufferObject::Size was called without a bound buffer."
+        );
         return data;
     }
     /// Returns the GLint handle for the buffer used by the C OpenGL API.
     GLint Expose() const {
+        oglwrap_PreCheckError();
+
         return buffer;
     }
 };
@@ -141,8 +212,18 @@ public:
     /// @param index - Specify the index of the binding point within the array.
     /// @see glBindBufferBase
     void BindBase(GLuint index) {
+        oglwrap_PreCheckError();
+
         glBindBufferBase(buffer_t, index, BufferObject<buffer_t>::buffer);
+
         oglwrap_CheckError();
+        oglwrap_PrintError(
+            GL_INVALID_VALUE,
+            "IndexedBufferObject::BindBase was called either with an index greater "
+            "than the number of target-specific indexed binding points, or the "
+            "buffer does not have an associated data store, or the size of that "
+            "store is zero"
+        );
     }
 
     /// Bind a range within a buffer object to an index.
@@ -151,16 +232,27 @@ public:
     /// @param size - The amount of data in machine units that can be read from the buffet object while used as an indexed target.
     /// @see glBindBufferRange
     void BindRange(GLuint index, GLintptr offset, GLsizeiptr size) {
+        oglwrap_PreCheckError();
+
         glBindBufferRange(buffer_t, index, offset, size, BufferObject<buffer_t>::buffer);
+
         oglwrap_CheckError();
+        oglwrap_PrintError(
+            GL_INVALID_VALUE,
+            "IndexedBufferObject::glBindBufferRange was called either with an index greater "
+            "than the number of target-specific indexed binding points, or the "
+            "buffer does not have an associated data store, or the size of that "
+            "store is zero"
+        );
     }
 
     /// Unbind a buffer object from an index.
     /// @param index - Specify the index of the binding point within the array.
     /// @see glBindBufferBase
     static void UnbindBase(GLuint index) {
+        oglwrap_PreCheckError();
+
         glBindBufferBase(buffer_t, index, 0);
-        oglwrap_CheckError();
     }
 };
 

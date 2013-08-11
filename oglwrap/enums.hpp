@@ -170,15 +170,24 @@ enum Enum {
 }
 typedef _ExtraTexType::Enum ExtraTexType;
 
+#define _BasePixelDataInternalFormat \
+    DepthComponent = GL_DEPTH_COMPONENT, \
+    DepthStencil = GL_DEPTH_STENCIL, \
+    Red = GL_RED, \
+    RG = GL_RG, \
+    RGB = GL_RGB, \
+    RGBA = GL_RGBA
+
 namespace _PixelDataInternalFormat {
 enum Enum {
-    // Base internal
+    _BasePixelDataInternalFormat,
+    /*// Base internal
     DepthComponent = GL_DEPTH_COMPONENT,
     DepthStencil = GL_DEPTH_STENCIL,
     Red = GL_RED,
     RG = GL_RG,
     RGB = GL_RGB,
-    RGBA = GL_RGBA,
+    RGBA = GL_RGBA,*/
 
     // Sized Internal
     R8 = GL_R8,

@@ -1,7 +1,15 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 
-//#define OGLWRAP_DEBUG 1
+#ifndef OGLWRAP_DEBUG
+#define OGLWRAP_DEBUG 1
+#endif
+#ifndef OGLWRAP_DEBUG_FULL
+#define OGLWRAP_DEBUG_FULL 0
+#endif
+#ifndef OGLWRAP_IMAGEMAGICK
 #define OGLWRAP_IMAGEMAGICK 1
+#endif
+
 
 #endif // CONFIG_HPP
