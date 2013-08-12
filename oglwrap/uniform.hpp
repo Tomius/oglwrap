@@ -105,12 +105,11 @@ public:
         oglwrap_CheckError();
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
-            std::string("Uniform::Set was called") +
+            std::string("Uniform::Set is called ") +
             #if OGLWRAP_DEBUG
             "for uniform '" + identifier + "'" +
             #endif
-            " and there were either no active " +
-            "program objects, or the uniform template parameter and the actual uniform type mismatched."
+            " but the uniform template parameter and the actual uniform type mismatches."
         )
     }
 
@@ -179,12 +178,11 @@ public:
         oglwrap_CheckError();
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
-            std::string("Uniform::Set was called") +
+            std::string("Uniform::Set is called ") +
             #if OGLWRAP_DEBUG
             "for uniform '" + identifier + "'" +
             #endif
-            " and there were either no active " +
-            "program objects, or the uniform template parameter and the actual uniform type mismatched."
+            " but the uniform template parameter and the actual uniform type mismatches."
         )
     }
 
@@ -248,12 +246,19 @@ public:
             std::cerr << "Error getting the location of uniform '" << identifier << "'" << std::endl;
         }
 
+        oglwrap_CheckError();
+        oglwrap_PrintError(
+            GL_INVALID_OPERATION,
+            "Tried to get a uniform's location from a"
+            "program that hasn't been linked successfully."
+        );
+
         UniformObject<GLtype>::Set(value);
         oglwrap_CheckError();
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
-            "Uniform::Set was called for uniform '" + identifier + "' and there were either no active " +
-            "program objects, or the uniform template parameter and the actual uniform type mismatched."
+            "Uniform::Set is called for uniform '" + identifier + "' but the "
+            "uniform template parameter and the actual uniform type mismatches."
         )
     }
 
@@ -268,8 +273,8 @@ public:
     /// Is used to set an element of a uniform array. For example if you have a mat4 myMatrix[10];
     /// and you created a lazyUniform myMatUnif(prog, "myMatrix), you can call myMatUnif[5].Set()
     /// to set myMatrix[5].
-    IndexedUniform operator[](size_t idx) {
-        return IndexedUniform(program, identifier, idx);
+    IndexedUniform<GLtype> operator[](size_t idx) {
+        return IndexedUniform<GLtype>(program, identifier, idx);
     }
 };
 

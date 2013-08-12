@@ -323,7 +323,7 @@ public:
         oglwrap_CheckError();
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
-            "Program::Use is called, but the program could not be made
+            "Program::Use is called, but the program could not be made "
             "part of current state. (Is transform feedback mode active?) "
         );
 
