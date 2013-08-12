@@ -46,14 +46,6 @@ public:
         oglwrap_PreCheckError();
 
         glBindBuffer(buffer_t, buffer);
-
-        oglwrap_CheckError();
-        oglwrap_PrintError(
-            GL_INVALID_VALUE,
-            "Was unable to create buffer object. Probably tried to initialize it \n"
-            "before creating the OpenGL context. Did you declare the buffer global or \n"
-            "static?"
-        );
     }
 
     // Unbinds

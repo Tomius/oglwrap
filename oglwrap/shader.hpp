@@ -49,13 +49,6 @@ public:
 
         const char *str = source.c_str();
         glShaderSource(shader, 1, &str, nullptr);
-        oglwrap_CheckError();
-        oglwrap_PrintError(
-            GL_INVALID_VALUE,
-            "Was unable to create shader object. Probably tried to initialize it \n"
-            "before creating the OpenGL context. Did you declare the shader global or \n"
-            "static?"
-        );
     }
 
     /// Loads a file and uploads it as shader source
@@ -82,13 +75,6 @@ public:
         // Add the shader source & compile
         const char *strFileData = fileData.c_str();
         glShaderSource(shader, 1, &strFileData, nullptr);
-        oglwrap_CheckError();
-        oglwrap_PrintError(
-            GL_INVALID_VALUE,
-            "Was unable to create shader object. Probably tried to initialize it \n"
-            "before creating the OpenGL context. Did you declare the shader global or \n"
-            "static?"
-        );
     }
 
     /// Compiles the shader code. If the compilation fails, it throws a std::runtime_error,
