@@ -26,7 +26,7 @@ public:
     /// Uploads the vertex positions data to an attribute array, and sets it up for use.
     /// Calling this function changes the currently active VAO and Buffer.
     /// @param attrib - The attribute array to use as destination.
-    void Position(VertexAttribArray& attrib) {
+    void Position(VertexAttribArray attrib) {
 
         /*       (F)-----(B)
                  /|      /|
@@ -56,14 +56,14 @@ public:
             A, B, D,    C, A, D,
             A, F, B,    E, F, A,
             A, C, E,    G, E, C,
-            F, G, F,    H, F, G,
+            E, G, F,    H, F, G,
             H, G, D,    C, D, G,
             F, H, B,    D, B, H
         };
 
         vao.Bind();
         positions.Bind();
-        positions.Data(108, pos);
+        positions.Data(sizeof(pos), pos);
         attrib.Setup<glm::vec3>().Enable();
         vao.Unbind();
 
@@ -73,7 +73,7 @@ public:
     /// Uploads the vertex normals data to an attribute array, and sets it up for use.
     /// Calling this function changes the currently active VAO and Buffer.
     /// @param attrib - The attribute array to use as destination.
-    void Normals(VertexAttribArray& attrib) {
+    void Normals(VertexAttribArray attrib) {
         const float n[6][3] = {
             {+1,  0,  0},
             { 0, +1,  0},
@@ -103,7 +103,7 @@ public:
     /// Uploads the vertex normals data to an attribute array, and sets it up for use.
     /// Calling this function changes the currently active VAO and Buffer.
     /// @param attrib - The attribute array to use as destination.
-    void TexCoordinates(VertexAttribArray& attrib) {
+    void TexCoordinates(VertexAttribArray attrib) {
 
         const float n[6][2] = {
             {+1, +1},
@@ -135,7 +135,7 @@ public:
     /// Uploads the tangents normals data to an attribute array, and sets it up for use.
     /// Calling this function changes the currently active VAO and Buffer.
     /// @param attrib - The attribute array to use as destination.
-    void Tangents(VertexAttribArray& attrib) {
+    void Tangents(VertexAttribArray attrib) {
         const float n[6][3] = {
             { 0,  0, -1},
             {+1,  0,  0},
@@ -165,7 +165,7 @@ public:
     void Draw() {
         if(rdy2draw) {
             vao.Bind();
-            glDrawArrays(GL_TRIANGLES, 0, 108);
+            glDrawArrays(GL_TRIANGLES, 0, 108 * sizeof(float));
             vao.Unbind();
         }
     }
