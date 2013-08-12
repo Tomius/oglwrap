@@ -1,10 +1,10 @@
 #ifndef TEXTURE_HPP
 #define TEXTURE_HPP
 
-#include "Textures/texture_base.hpp"
-#include "Textures/texture_1D.hpp"
-#include "Textures/texture_2D.hpp"
-#include "Textures/texture_cube.hpp"
-#include "Textures/texture_3D.hpp"
+#include "textures/texture_base.hpp"
+#include "textures/texture_1D.hpp"
+#include "textures/texture_2D.hpp"
+#include "textures/texture_cube.hpp"
+#include "textures/texture_3D.hpp"
 
 #endif // TEXTURE_HPP
