@@ -1,7 +1,15 @@
-/// \file Implementation of the Reference counter class
+/** @file general.hpp
+    @brief Contains codes that aren't related to OpenGL
+*/
 
 #ifndef GENERAL_HPP
 #define GENERAL_HPP
+
+/// Macro to convert an angle value from degrees to radians
+#define ToRadian(x) ((x) * M_PI / 180.0f)
+
+/// Macro to convert an angle value from radians to degrees
+#define ToDegree(x) ((x) * 180.0f / M_PI)
 
 namespace oglwrap {
 

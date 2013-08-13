@@ -1,18 +1,18 @@
+/** @file enums.hpp
+    @brief Contains enumeration wrappers for GLenums.
+*/
+
 #ifndef OGLWRAP_ENUMS_H
 #define OGLWRAP_ENUMS_H
 
 #include <GL/glew.h>
-
-// easter egg :)
-#define ToRadian(x) ((x) * M_PI / 180.0f)
-#define ToDegree(x) ((x) * 180.0f / M_PI)
 
 namespace oglwrap {
 
 // -------======{[ Shaders ]}======-------
 
 namespace _ShaderType {
-enum Enum {
+enum ShaderType {
     Compute = GL_COMPUTE_SHADER,
     Vertex = GL_VERTEX_SHADER,
     Geometry = GL_GEOMETRY_SHADER,
@@ -21,7 +21,7 @@ enum Enum {
     TessEval = GL_TESS_EVALUATION_SHADER
 };
 }
-typedef _ShaderType::Enum ShaderType;
+typedef _ShaderType::ShaderType ShaderType;
 
 // -------======{[ Uniforms ]}======-------
 
@@ -30,7 +30,7 @@ typedef _ShaderType::Enum ShaderType;
 // -------======{[ Vertex Attrib Array ]}======-------
 
 namespace _DataType {
-enum Enum {
+enum DataType {
     Byte = GL_BYTE,
     Short = GL_SHORT,
     Int = GL_INT,
@@ -43,10 +43,10 @@ enum Enum {
     UnsignedInt = GL_UNSIGNED_INT
 };
 }
-typedef _DataType::Enum DataType;
+typedef _DataType::DataType DataType;
 
 namespace _WholeDataType {
-enum Enum {
+enum WholeDataType {
     Byte = GL_BYTE,
     Short = GL_SHORT,
     Int = GL_INT,
@@ -55,23 +55,23 @@ enum Enum {
     UnsignedInt = GL_UNSIGNED_INT
 };
 }
-typedef _WholeDataType::Enum WholeDataType;
+typedef _WholeDataType::WholeDataType WholeDataType;
 
 // SinglePrecisionRealDataType if I wanted to be correct...
 namespace _FloatDataType {
-enum Enum {
+enum FloatDataType {
     Fixed = GL_FIXED,
     Float = GL_FLOAT,
     HalfFloat = GL_HALF_FLOAT,
 };
 }
-typedef _FloatDataType::Enum FloatDataType;
+typedef _FloatDataType::FloatDataType FloatDataType;
 
 
 // -------======{[ Buffers ]}======-------
 
-namespace _BufferType{
-enum Enum{
+namespace _BufferType {
+enum BufferType {
     Array = GL_ARRAY_BUFFER,
     AtomicCounter = GL_ATOMIC_COUNTER_BUFFER,
     CopyRead = GL_COPY_READ_BUFFER,
@@ -87,21 +87,21 @@ enum Enum{
     Uniform = GL_UNIFORM_BUFFER,
 };
 }
-typedef _BufferType::Enum BufferType;
+typedef _BufferType::BufferType BufferType;
 
-namespace _IndexedBufferType{
-enum Enum{
+namespace _IndexedBufferType {
+enum IndexedBufferType {
     AtomicCounter = GL_ATOMIC_COUNTER_BUFFER,
     ShaderStorage = GL_SHADER_STORAGE_BUFFER,
     TransformFeedback = GL_TRANSFORM_FEEDBACK_BUFFER,
     Uniform = GL_UNIFORM_BUFFER
 };
 }
-typedef _IndexedBufferType::Enum IndexedBufferType;
+typedef _IndexedBufferType::IndexedBufferType IndexedBufferType;
 
 
-namespace _BufferUsage{
-enum Enum{
+namespace _BufferUsage {
+enum BufferUsage {
     StreamDraw = GL_STREAM_DRAW,
     StreamRead = GL_STREAM_READ,
     StreamCopy = GL_STREAM_COPY,
@@ -113,13 +113,13 @@ enum Enum{
     DynamicCopy = GL_DYNAMIC_COPY
 };
 }
-typedef _BufferUsage::Enum BufferUsage;
+typedef _BufferUsage::BufferUsage BufferUsage;
 
 
 // -------======{[ Textures ]}======-------
 
 namespace _TexType {
-enum Enum {
+enum TexType {
     Tex1D = GL_TEXTURE_1D,
     Tex2D = GL_TEXTURE_2D,
     Tex3D = GL_TEXTURE_3D,
@@ -129,19 +129,19 @@ enum Enum {
     TexCubeMap = GL_TEXTURE_CUBE_MAP,
 };
 }
-typedef _TexType::Enum TexType;
+typedef _TexType::TexType TexType;
 
 namespace _Tex2DType {
-enum Enum {
+enum Tex2DType {
     Tex2D = GL_TEXTURE_2D,
     Tex1DArray = GL_TEXTURE_1D_ARRAY,
     TexRect = GL_TEXTURE_RECTANGLE
 };
 }
-typedef _Tex2DType::Enum Tex2DType;
+typedef _Tex2DType::Tex2DType Tex2DType;
 
 namespace _CubeTarget {
-enum Enum {
+enum CubeTarget {
     PosX = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
     NegX = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
     PosY = GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
@@ -150,44 +150,35 @@ enum Enum {
     NegZ = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
 };
 }
-typedef _CubeTarget::Enum CubeTarget;
+typedef _CubeTarget::CubeTarget CubeTarget;
 
 namespace _Tex3DType {
-enum Enum {
+enum Tex3DType {
     Tex3D = GL_TEXTURE_3D,
     Tex2DArray = GL_TEXTURE_2D_ARRAY,
 };
 }
-typedef _Tex3DType::Enum Tex3DType;
+typedef _Tex3DType::Tex3DType Tex3DType;
 
 // These aren't supported yet.. sorry :(
 namespace _ExtraTexType {
-enum Enum {
+enum ExtraTexType {
     TexCubeMapArray = GL_TEXTURE_CUBE_MAP_ARRAY,
     Tex2DMultisample = GL_TEXTURE_2D_MULTISAMPLE,
     Tex2DMultisampleArray = GL_TEXTURE_2D_MULTISAMPLE_ARRAY
 };
 }
-typedef _ExtraTexType::Enum ExtraTexType;
-
-#define _BasePixelDataInternalFormat \
-    DepthComponent = GL_DEPTH_COMPONENT, \
-    DepthStencil = GL_DEPTH_STENCIL, \
-    Red = GL_RED, \
-    RG = GL_RG, \
-    RGB = GL_RGB, \
-    RGBA = GL_RGBA
+typedef _ExtraTexType::ExtraTexType ExtraTexType;
 
 namespace _PixelDataInternalFormat {
-enum Enum {
-    _BasePixelDataInternalFormat,
-    /*// Base internal
+enum PixelDataInternalFormat {
+    // Base internal
     DepthComponent = GL_DEPTH_COMPONENT,
     DepthStencil = GL_DEPTH_STENCIL,
     Red = GL_RED,
     RG = GL_RG,
     RGB = GL_RGB,
-    RGBA = GL_RGBA,*/
+    RGBA = GL_RGBA,
 
     // Sized Internal
     R8 = GL_R8,
@@ -267,11 +258,11 @@ enum Enum {
     Compressed_Signed_RG_RGTC2 = GL_COMPRESSED_SIGNED_RG_RGTC2,
 };
 }
-typedef _PixelDataInternalFormat::Enum PixelDataInternalFormat;
+typedef _PixelDataInternalFormat::PixelDataInternalFormat PixelDataInternalFormat;
 
 
 namespace _PixelDataFormat {
-enum Enum {
+enum PixelDataFormat {
     StencilIndex = GL_STENCIL_INDEX,
     DepthComponent = GL_DEPTH_COMPONENT,
     DepthStencil = GL_DEPTH_STENCIL,
@@ -293,10 +284,10 @@ enum Enum {
     BGRA_Integer = GL_BGRA_INTEGER
 };
 };
-typedef _PixelDataFormat::Enum PixelDataFormat;
+typedef _PixelDataFormat::PixelDataFormat PixelDataFormat;
 
 namespace _PixelDataType {
-enum Enum {
+enum PixelDataType {
     UnsignedByte = GL_UNSIGNED_BYTE,
     Byte = GL_BYTE,
     UnsignedShort = GL_UNSIGNED_SHORT,
@@ -323,20 +314,20 @@ enum Enum {
     Float_32UnsignedInt_24_8_Rev = GL_FLOAT_32_UNSIGNED_INT_24_8_REV
 };
 };
-typedef _PixelDataType::Enum PixelDataType;
+typedef _PixelDataType::PixelDataType PixelDataType;
 
 namespace _Wrap {
-enum Enum {
+enum Wrap {
     ClampToEdge = GL_CLAMP_TO_EDGE,
     Repeat = GL_REPEAT,
     ClampToBorder = GL_CLAMP_TO_BORDER,
     MirroredRepeat = GL_MIRRORED_REPEAT
 };
 }
-typedef _Wrap::Enum Wrap;
+typedef _Wrap::Wrap Wrap;
 
 namespace _MinFilter {
-enum Enum {
+enum MinF {
     Nearest = GL_NEAREST,
     Linear = GL_LINEAR,
     NearestMipmapNearest = GL_NEAREST_MIPMAP_NEAREST,
@@ -345,18 +336,18 @@ enum Enum {
     LinearMipmapLinear = GL_LINEAR_MIPMAP_LINEAR
 };
 }
-typedef _MinFilter::Enum MinF;
+typedef _MinFilter::MinF MinF;
 
 namespace _MagFilter {
-enum Enum {
+enum MagF {
     Nearest = GL_NEAREST,
     Linear = GL_LINEAR
 };
 }
-typedef _MagFilter::Enum MagF;
+typedef _MagFilter::MagF MagF;
 
 namespace _Swizzle {
-enum Enum {
+enum Swizzle {
     Red = GL_RED,
     Green = GL_GREEN,
     Blue = GL_BLUE,
@@ -365,7 +356,7 @@ enum Enum {
     One = GL_ONE
 };
 }
-typedef _Swizzle::Enum Swizzle;
+typedef _Swizzle::Swizzle Swizzle;
 
 } // Namespace oglwrap
 

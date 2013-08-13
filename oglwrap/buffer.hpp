@@ -1,3 +1,6 @@
+/** @file buffer.hpp
+    @brief Implements wrappers around OpenGL Buffer Objects.
+*/
 #ifndef BUFFER_HPP
 #define BUFFER_HPP
 
@@ -12,14 +15,14 @@
 namespace oglwrap {
 
 template<BufferType buffer_t>
+/// Buffer Objects are OpenGL data stores, arrays on the server memory.
 /** Buffer Objects are OpenGL Objects that store an array
-    of unformatted memory allocated by the OpenGL context (aka: the GPU).
-    These can be used to store vertex data, pixel data retrieved from
-    images or the framebuffer, and a variety of other things.
-**/
+  * of unformatted memory allocated by the OpenGL context (aka: the GPU).
+  * These can be used to store vertex data, pixel data retrieved from
+  * images or the framebuffer, and a variety of other things. */
 class BufferObject : protected RefCounted {
 protected:
-    GLuint buffer; ///< The C API handle for the buffer.
+    GLuint buffer; /// The C API handle for the buffer.
 public:
     /// Generates a buffer object.
     /// @see glGenBuffers
@@ -39,7 +42,6 @@ public:
         glDeleteBuffers(1, &buffer);
     }
 
-    // Binds
     /// Bind a buffer object to its default target.
     /// @see glBindBuffer
     void Bind() {
@@ -48,7 +50,6 @@ public:
         glBindBuffer(buffer_t, buffer);
     }
 
-    // Unbinds
     /// Unbind a buffer object from its default target.
     /// @see glBindBuffer
     static void Unbind() {
@@ -57,7 +58,6 @@ public:
         glBindBuffer(buffer_t, 0);
     }
 
-    // Data uploads
     /// Creates and initializes a buffer object's data store.
     /// @param size - Specifies the size in bytes of the buffer object's new data store.
     /// @param data - Specifies a pointer to data that will be copied into the data store for initialization, or NULL if no data is to be copied.
@@ -152,7 +152,6 @@ public:
         );
     }
 
-    // Size
     /// A getter for the buffer's size.
     /// @return The size of the buffer currently bound to the buffer objects default target in bytes.
     /// @see glGetBufferParameteriv, GL_BUFFER_SIZE
@@ -169,6 +168,7 @@ public:
         );
         return data;
     }
+
     /// Returns the GLint handle for the buffer used by the C OpenGL API.
     GLint Expose() const {
         oglwrap_PreCheckError();
@@ -177,27 +177,31 @@ public:
     }
 };
 
-typedef BufferObject<BufferType::Array>          Buffer;
-/// The buffer will be used as a source for vertex data, but only when VertexAttribArray::Pointer​ is called.
+typedef BufferObject<BufferType::Array> ArrayBuffer;
+/// A Buffer that stores vertex attribute data.
+/** The buffer will be used as a source for vertex data,
+  * but only when VertexAttribArray::Pointer​ is called. */
 /// @see GL_ARRAY_BUFFER
 
-typedef BufferObject<BufferType::ElementArray>   IndexBuffer;
-/// All rendering functions of the form gl*Draw*Elements*​ will use the pointer field as a byte offset from
-/// the beginning of the buffer object bound to this target. The indices used for indexed rendering will be
-/// taken from the buffer object. Note that this binding target is part of a Vertex Array Objects state, so a
-/// VAO must be bound before binding a buffer here.
+typedef BufferObject<BufferType::ElementArray> IndexBuffer;
+/// A buffer that stores the order of the vertices for a draw call.
+/** All rendering functions of the form gl*Draw*Elements*​ will use the pointer field as a byte offset from
+  * the beginning of the buffer object bound to this target. The indices used for indexed rendering will be
+  * taken from the buffer object. Note that this binding target is part of a Vertex Array Objects state, so a
+  * VAO must be bound before binding a buffer here. */
 /// @see GL_ELEMENT_ARRAY_BUFFER
 
-typedef BufferObject<BufferType::Texture>        TextureBuffer;
-/// This buffer has no special semantics, it is intended to use as a buffer object for Buffer Textures.
+typedef BufferObject<BufferType::Texture> TextureBuffer;
+/// A Buffer that stores texture pixels.
+/** This buffer has no special semantics, it is intended to use as a buffer object for Buffer Textures. */
 /// @see GL_TEXTURE_BUFFER
 
 
 template<IndexedBufferType buffer_t>
+/// Buffer objects that have an array of binding targets, like UniformBuffers
 /** Buffer Objects are OpenGL Objects that store an array
-    of unformatted memory allocated by the OpenGL context (aka: the GPU).
-    IndexBufferObject is a buffer that is bound to an indexed target.
-**/
+  * of unformatted memory allocated by the OpenGL context (aka: the GPU).
+  * IndexBufferObject is a buffer that is bound to an indexed target. */
 class IndexedBufferObject : public BufferObject<BufferType(buffer_t)> {
 public:
     /// Bind a buffer object to an index.
@@ -248,11 +252,11 @@ public:
     }
 };
 
-typedef IndexedBufferObject<IndexedBufferType::Uniform>             UniformBuffer;
+typedef IndexedBufferObject<IndexedBufferType::Uniform> UniformBuffer;
 /// An indexed buffer binding for buffers used as storage for uniform blocks.
 /// @see GL_UNIFORM_BUFFER
 
-typedef IndexedBufferObject<IndexedBufferType::TransformFeedback>   TransformFeedbackBuffer;
+typedef IndexedBufferObject<IndexedBufferType::TransformFeedback> TransformFeedbackBuffer;
 /// An indexed buffer binding for buffers used in Transform Feedback operations.
 /// @see GL_TRANSFORM_FEEDBACK_BUFFER
 
