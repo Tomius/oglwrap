@@ -6,6 +6,7 @@
 #define OGLWRAP_ENUMS_H
 
 #include <GL/glew.h>
+#include "config.hpp"
 
 namespace oglwrap {
 
@@ -13,12 +14,16 @@ namespace oglwrap {
 
 namespace _ShaderType {
 enum ShaderType {
+    #if !OGLWRAP_COREONLY
     Compute = GL_COMPUTE_SHADER,
+    #endif
     Vertex = GL_VERTEX_SHADER,
     Geometry = GL_GEOMETRY_SHADER,
     Fragment = GL_FRAGMENT_SHADER,
+    #if !OGLWRAP_COREONLY
     TessControl = GL_TESS_CONTROL_SHADER,
     TessEval = GL_TESS_EVALUATION_SHADER
+    #endif
 };
 }
 typedef _ShaderType::ShaderType ShaderType;
@@ -73,15 +78,21 @@ typedef _FloatDataType::FloatDataType FloatDataType;
 namespace _BufferType {
 enum BufferType {
     Array = GL_ARRAY_BUFFER,
+    #if !OGLWRAP_COREONLY
     AtomicCounter = GL_ATOMIC_COUNTER_BUFFER,
+    #endif
     CopyRead = GL_COPY_READ_BUFFER,
     CopyWrite = GL_COPY_WRITE_BUFFER,
+    #if !OGLWRAP_COREONLY
     DispatchIndirect = GL_DISPATCH_INDIRECT_BUFFER,
+    #endif
     DrawIndirect = GL_DRAW_INDIRECT_BUFFER,
     ElementArray = GL_ELEMENT_ARRAY_BUFFER,
     PixelPack = GL_PIXEL_PACK_BUFFER,
     PixelUnpack = GL_PIXEL_UNPACK_BUFFER,
+    #if !OGLWRAP_COREONLY
     ShaderStorage = GL_SHADER_STORAGE_BUFFER,
+    #endif
     Texture = GL_TEXTURE_BUFFER,
     TransformFeedback = GL_TRANSFORM_FEEDBACK_BUFFER,
     Uniform = GL_UNIFORM_BUFFER,
@@ -91,8 +102,10 @@ typedef _BufferType::BufferType BufferType;
 
 namespace _IndexedBufferType {
 enum IndexedBufferType {
+    #if !OGLWRAP_COREONLY
     AtomicCounter = GL_ATOMIC_COUNTER_BUFFER,
     ShaderStorage = GL_SHADER_STORAGE_BUFFER,
+    #endif
     TransformFeedback = GL_TRANSFORM_FEEDBACK_BUFFER,
     Uniform = GL_UNIFORM_BUFFER
 };

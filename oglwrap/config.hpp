@@ -4,6 +4,11 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 
+/// Loads core profile only
+#ifndef OGLWRAP_COREONLY
+#define OGLWRAP_COREONLY 1
+#endif
+
 /// Catches errors that happens inside an oglwrap function.
 #ifndef OGLWRAP_DEBUG
 #define OGLWRAP_DEBUG 1

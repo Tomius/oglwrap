@@ -31,7 +31,7 @@ public:
     /** Uploads the vertex positions data to an attribute array, and sets it up for use.
       * Calling this function changes the currently active VAO and ArrayBuffer. */
     /// @param attrib - The attribute array to use as destination.
-    void Position(VertexAttribArray attrib) {
+    void Positions(VertexAttribArray attrib) {
 
         /*       (F)-----(B)
                  /|      /|
@@ -93,7 +93,7 @@ public:
         auto iter = dest.begin();
         for(int face = 0; face < 6; ++face) {
             for(int vertex = 0; vertex < 6; ++vertex) {
-                for(int i = 0; i != 3; ++i) {
+                for(int i = 0; i < 3; ++i) {
                     *iter++ = n[face][i];
                 }
             }
@@ -110,8 +110,7 @@ public:
     /** Uploads the vertex normals data to an attribute array, and sets it up for use.
       * Calling this function changes the currently active VAO and ArrayBuffer. */
     /// @param attrib - The attribute array to use as destination.
-    void TexCoordinates(VertexAttribArray attrib) {
-
+    void TexCoords(VertexAttribArray attrib) {
         const float n[6][2] = {
             {+1, +1},
             {+1,  0},
@@ -125,7 +124,7 @@ public:
         auto iter = dest.begin();
         for(int face = 0; face < 6; ++face) {
             for(int vertex = 0; vertex < 6; ++vertex) {
-                for(int i = 0; i != 3; ++i) {
+                for(int i = 0; i < 2; ++i) {
                     *iter++ = n[vertex][i];
                 }
                 *iter++ = face;
@@ -135,7 +134,7 @@ public:
         vao.Bind();
         texcoords.Bind();
         texcoords.Data(dest);
-        attrib.Setup<glm::vec3>().Enable();
+        attrib.Setup<glm::vec2>().Enable();
         vao.Unbind();
     }
 
@@ -157,7 +156,7 @@ public:
         auto iter = dest.begin();
         for(int face = 0; face < 6; ++face) {
             for(int vertex = 0; vertex < 6; ++vertex) {
-                for(int i = 0; i != 3; ++i) {
+                for(int i = 0; i < 3; ++i) {
                     *iter++ = n[face][i];
                 }
             }

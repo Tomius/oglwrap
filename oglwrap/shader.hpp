@@ -102,9 +102,11 @@ public:
 
             const char * strShaderType = nullptr;
             switch(shader_t) {
+                #if !OGLWRAP_COREONLY
                 case ShaderType::Compute:
                     strShaderType = "compute";
                     break;
+                #endif
                 case ShaderType::Vertex:
                     strShaderType = "vertex";
                     break;
@@ -114,12 +116,14 @@ public:
                 case ShaderType::Fragment:
                     strShaderType = "fragment";
                     break;
+                #if !OGLWRAP_COREONLY
                 case ShaderType::TessControl:
                     strShaderType = "tessellation control";
                     break;
                 case ShaderType::TessEval:
                     strShaderType = "tessellation evaluation";
                     break;
+                #endif
             }
 
             std::stringstream str;
@@ -152,12 +156,14 @@ public:
 };
 
 
+#if !OGLWRAP_COREONLY
 typedef Shader<ShaderType::Compute> ComputeShader;
 /// A Compute Shader is a Shader Stage that is used entirely for computing arbitrary information.
 /// While it can do rendering, it is generally used for tasks not directly related to drawing
 /// triangles and pixels.
 /// @version It is core since OpenGL 4.3.
 /// @see GL_COMPUTE_SHADER
+#endif
 
 typedef Shader<ShaderType::Vertex> VertexShader;
 /// The Vertex Shader is the programmable Shader stage in the rendering pipeline that handles the
@@ -186,6 +192,7 @@ typedef Shader<ShaderType::Fragment> FragmentShader;
 /// @version It is core since OpenGL 2.1
 /// @see GL_FRAGMENT_SHADER
 
+#if !OGLWRAP_COREONLY
 typedef Shader<ShaderType::TessControl> TessControlShader;
 /// The Tessellation Control Shader (TCS) is a Shader program written in GLSL. It sits between the Vertex
 /// Shader and the Tessellation Evaluation Shader. The TCS controls how much tessellation a particular patch
@@ -205,6 +212,7 @@ typedef Shader<ShaderType::TessEval> TessEvalShader;
 /// per-patch data provided by the Tessellation Control Shader.
 /// @version It is core since OpenGL 4.0.
 /// @see GL_TESS_EVALUATION_SHADER
+#endif
 
 // -------======{[ Shader Program ]}======-------
 
