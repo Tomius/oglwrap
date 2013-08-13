@@ -212,6 +212,7 @@ template<typename GLtype>
 class LazyUniform : public UniformObject<GLtype> {
     Program& program; ///< The program in which the uniform should be set.
     const std::string identifier; ///< The uniform's name.
+    bool firstCall;
 public:
     /// Stores the uniform's information. It will only be used at the first
     /// Set or op= call, so the program doesn't have to be valid at the time
@@ -221,7 +222,8 @@ public:
     LazyUniform(Program& program, const std::string& identifier)
         : UniformObject<GLtype>(INVALID_LOCATION)
         , program(program)
-        , identifier(identifier) {
+        , identifier(identifier)
+        , firstCall(true) {
         oglwrap_PreCheckError();
     }
 
@@ -235,15 +237,15 @@ public:
         program.Use();
 
         // Get the uniform's location only at the first Set call.
-        static bool firstCall = true;
         if(firstCall) {
             UniformObject<GLtype>::location = glGetUniformLocation(program.Expose(), identifier.c_str());
-            firstCall = true;
-        }
 
-        // Check if it worked.
-        if(UniformObject<GLtype>::location == INVALID_LOCATION) {
-            std::cerr << "Error getting the location of uniform '" << identifier << "'" << std::endl;
+            // Check if it worked.
+            if(UniformObject<GLtype>::location == INVALID_LOCATION) {
+                std::cerr << "Error getting the location of uniform '" << identifier << "'" << std::endl;
+            }
+
+            firstCall = false;
         }
 
         oglwrap_CheckError();
