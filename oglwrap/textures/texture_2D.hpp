@@ -9,20 +9,13 @@
 #include "../general.hpp"
 #include "texture_base.hpp"
 
-#ifndef OGLWRAP_IMAGEMAGICK
-#define OGLWRAP_IMAGEMAGICK 0
-#endif
-#if OGLWRAP_IMAGEMAGICK
-#include <ImageMagick/Magick++.h>
-#endif
-
 namespace oglwrap {
 
 // -------======{[ 2D Textures' declaration ]}======-------
 
 template<Tex2DType texture_t>
 /// The base class describing functionality for all 2D textures.
-/// You should rather use the typedefed versions than this template.
+/** You should rather use the typedefed versions than this template. */
 class _Texture2D : public TextureBase<TexType(texture_t)> {
 public:
     /// Uploads the base image.
