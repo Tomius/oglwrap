@@ -153,7 +153,7 @@ public:
             "VertexAttribArray::Pointer is called with size different "
             "than 1, 2, 3, 4, or stride is negative."
         );
-        GL_INVALID_OPERATION(
+        oglwrap_PrintError(
             GL_INVALID_OPERATION,
             "VertexAttribArray::Pointer is called, but type and values_per_vertex mismatch."
         );
@@ -179,14 +179,13 @@ public:
             "VertexAttribArray::IPointer is called with size different "
             "than 1, 2, 3, 4, or stride is negative."
         );
-        GL_INVALID_OPERATION(
+        oglwrap_PrintError(
             GL_INVALID_OPERATION,
             "VertexAttribArray::IPointer is called, but type and values_per_vertex mismatch."
         );
         return *this;
     }
 
-    #if !OGLWRAP_COREONLY
     /// Sets up an attribute for double type data.
     /// @param values_per_vertex - The dimension of the attribute data. For example is 3 for a vec3. The initial value is 4.
     /// @param stride - Specifies the byte offset between consecutive generic vertex attributes. If stride is 0, the generic vertex attributes are understood to be tightly packed in the array. The initial value is 0.
@@ -204,13 +203,12 @@ public:
             "VertexAttribArray::LPointer is called with size different "
             "than 1, 2, 3, 4, or stride is negative."
         );
-        GL_INVALID_OPERATION(
+        oglwrap_PrintError(
             GL_INVALID_OPERATION,
             "VertexAttribArray::LPointer is called, but type and values_per_vertex mismatch."
         );
         return *this;
     }
-    #endif
 
     // Enable & Disable
     /// Enables the attribute array slot
