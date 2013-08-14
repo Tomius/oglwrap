@@ -1,3 +1,7 @@
+/** @file shader.hpp
+    @brief Implements GLSL shaders related classes.
+*/
+
 #ifndef SHADER_HPP
 #define SHADER_HPP
 
