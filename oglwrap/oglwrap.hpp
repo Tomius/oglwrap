@@ -8,6 +8,7 @@
 #include "buffer.hpp"
 #include "vertexAttrib.hpp"
 #include "global.hpp"
+#include "framebuffer.hpp"
 
 #endif // header guard
 

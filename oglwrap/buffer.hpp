@@ -260,7 +260,6 @@ typedef IndexedBufferObject<IndexedBufferType::TransformFeedback> TransformFeedb
 /// An indexed buffer binding for buffers used in Transform Feedback operations.
 /// @see GL_TRANSFORM_FEEDBACK_BUFFER
 
-
 } // namespace oglwrap
 
 #endif // BUFFER_HPP

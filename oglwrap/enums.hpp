@@ -14,16 +14,16 @@ namespace oglwrap {
 
 namespace _ShaderType {
 enum ShaderType {
-    #if !OGLWRAP_COREONLY
+#if !OGLWRAP_COREONLY
     Compute = GL_COMPUTE_SHADER,
-    #endif
+#endif
     Vertex = GL_VERTEX_SHADER,
     Geometry = GL_GEOMETRY_SHADER,
     Fragment = GL_FRAGMENT_SHADER,
-    #if !OGLWRAP_COREONLY
+#if !OGLWRAP_COREONLY
     TessControl = GL_TESS_CONTROL_SHADER,
     TessEval = GL_TESS_EVALUATION_SHADER
-    #endif
+#endif
 };
 }
 typedef _ShaderType::ShaderType ShaderType;
@@ -78,21 +78,21 @@ typedef _FloatDataType::FloatDataType FloatDataType;
 namespace _BufferType {
 enum BufferType {
     Array = GL_ARRAY_BUFFER,
-    #if !OGLWRAP_COREONLY
+#if !OGLWRAP_COREONLY
     AtomicCounter = GL_ATOMIC_COUNTER_BUFFER,
-    #endif
+#endif
     CopyRead = GL_COPY_READ_BUFFER,
     CopyWrite = GL_COPY_WRITE_BUFFER,
-    #if !OGLWRAP_COREONLY
+#if !OGLWRAP_COREONLY
     DispatchIndirect = GL_DISPATCH_INDIRECT_BUFFER,
-    #endif
+#endif
     DrawIndirect = GL_DRAW_INDIRECT_BUFFER,
     ElementArray = GL_ELEMENT_ARRAY_BUFFER,
     PixelPack = GL_PIXEL_PACK_BUFFER,
     PixelUnpack = GL_PIXEL_UNPACK_BUFFER,
-    #if !OGLWRAP_COREONLY
+#if !OGLWRAP_COREONLY
     ShaderStorage = GL_SHADER_STORAGE_BUFFER,
-    #endif
+#endif
     Texture = GL_TEXTURE_BUFFER,
     TransformFeedback = GL_TRANSFORM_FEEDBACK_BUFFER,
     Uniform = GL_UNIFORM_BUFFER,
@@ -102,10 +102,10 @@ typedef _BufferType::BufferType BufferType;
 
 namespace _IndexedBufferType {
 enum IndexedBufferType {
-    #if !OGLWRAP_COREONLY
+#if !OGLWRAP_COREONLY
     AtomicCounter = GL_ATOMIC_COUNTER_BUFFER,
     ShaderStorage = GL_SHADER_STORAGE_BUFFER,
-    #endif
+#endif
     TransformFeedback = GL_TRANSFORM_FEEDBACK_BUFFER,
     Uniform = GL_UNIFORM_BUFFER
 };
@@ -128,6 +128,59 @@ enum BufferUsage {
 }
 typedef _BufferUsage::BufferUsage BufferUsage;
 
+// -------======{[ FrameBuffers ]}======-------
+
+namespace _FrameBufferTarget {
+enum FrameBufferTarget {
+    Read = GL_READ_FRAMEBUFFER,
+    Draw = GL_DRAW_FRAMEBUFFER,
+    Read_Draw = GL_FRAMEBUFFER,
+};
+}
+typedef _FrameBufferTarget::FrameBufferTarget FrameBufferTarget;
+typedef _FrameBufferTarget::FrameBufferTarget FBO_Target;
+
+namespace _FrameBufferStatus {
+enum FrameBufferStatus {
+    Complete = GL_FRAMEBUFFER_COMPLETE,
+    Undefined = GL_FRAMEBUFFER_UNDEFINED,
+    Incomplete_Attachment = GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT,
+    Incomplete_MissingAttachment = GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT,
+    Incomplete_DrawBuffer = GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER,
+    Incomplete_ReadBuffer = GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER,
+    Unsupported = GL_FRAMEBUFFER_UNSUPPORTED,
+    Incomplete_Multisample = GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE,
+    Incomplete_LayerTargets = GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS
+};
+}
+typedef _FrameBufferStatus::FrameBufferStatus FrameBufferStatus;
+typedef _FrameBufferStatus::FrameBufferStatus FBO_Status;
+
+namespace _FrameBufferAttachment {
+enum FrameBufferAttachment {
+    Color = GL_COLOR_ATTACHMENT0,
+    Color1 = GL_COLOR_ATTACHMENT1,
+    Color2 = GL_COLOR_ATTACHMENT2,
+    Color3 = GL_COLOR_ATTACHMENT3,
+    Color4 = GL_COLOR_ATTACHMENT4,
+    Color5 = GL_COLOR_ATTACHMENT5,
+    Color6 = GL_COLOR_ATTACHMENT6,
+    Color7 = GL_COLOR_ATTACHMENT7,
+    Color8 = GL_COLOR_ATTACHMENT8,
+    Color9 = GL_COLOR_ATTACHMENT9,
+    Color10 = GL_COLOR_ATTACHMENT10,
+    Color11 = GL_COLOR_ATTACHMENT11,
+    Color12 = GL_COLOR_ATTACHMENT12,
+    Color13 = GL_COLOR_ATTACHMENT13,
+    Color14 = GL_COLOR_ATTACHMENT14,
+    Color15 = GL_COLOR_ATTACHMENT15,
+    Depth = GL_DEPTH_ATTACHMENT,
+    Stencil = GL_STENCIL_ATTACHMENT,
+    DepthStencil = GL_DEPTH_STENCIL_ATTACHMENT
+};
+}
+typedef _FrameBufferAttachment::FrameBufferAttachment FrameBufferAttachment;
+typedef _FrameBufferAttachment::FrameBufferAttachment FBO_Attachment;
 
 // -------======{[ Textures ]}======-------
 
@@ -272,6 +325,7 @@ enum PixelDataInternalFormat {
 };
 }
 typedef _PixelDataInternalFormat::PixelDataInternalFormat PixelDataInternalFormat;
+typedef _PixelDataInternalFormat::PixelDataInternalFormat PxDIntForm;
 
 
 namespace _PixelDataFormat {
@@ -298,6 +352,7 @@ enum PixelDataFormat {
 };
 };
 typedef _PixelDataFormat::PixelDataFormat PixelDataFormat;
+typedef _PixelDataFormat::PixelDataFormat PxDForm;
 
 namespace _PixelDataType {
 enum PixelDataType {
@@ -328,6 +383,7 @@ enum PixelDataType {
 };
 };
 typedef _PixelDataType::PixelDataType PixelDataType;
+typedef _PixelDataType::PixelDataType PxDTtype;
 
 namespace _Wrap {
 enum Wrap {

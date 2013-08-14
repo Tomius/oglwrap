@@ -195,6 +195,11 @@ public:
         glTexBuffer(texture_t, internalFormat, buffer.Expose());
         oglwrap_CheckError();
     }
+
+    /// Returns the C handle for the texture.
+    GLuint Expose() const {
+        return texture;
+    }
 };
 
 } // namespace oglwrap

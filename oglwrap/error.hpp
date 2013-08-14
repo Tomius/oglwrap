@@ -59,7 +59,7 @@ inline void _CheckError(const char *file, const char *func, int line) {
     }
 }
 #else
-#define oglwrap_Print(cond, text)
+#define oglwrap_PrintError(cond, text)
 #define oglwrap_Assert(x)
 #define oglwrap_CheckError()
 #endif
