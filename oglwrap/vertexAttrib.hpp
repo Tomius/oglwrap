@@ -1,3 +1,7 @@
+/** @file vertexAttrib.hpp
+    @brief Implements the VAO and the VertexAttributeArray.
+*/
+
 #ifndef VERTEXATTRIB_HPP
 #define VERTEXATTRIB_HPP
 
@@ -27,32 +31,36 @@ public:
     /// Generates a VAO.
     /// @see glGenVertexArrays
     VertexArray() {
+        oglwrap_PreCheckError();
+
         glGenVertexArrays(1, &vao);
-        oglwrap_CheckError();
     }
 
     /// If only one instance of this object
     /// exists, deletes the VAO it has created.
     /// @see glDeleteVertexArrays
     ~VertexArray() {
+        oglwrap_PreCheckError();
+
         if(!isDeletable())
             return;
         glDeleteVertexArrays(1, &vao);
-        oglwrap_CheckError();
     }
 
     /// Binds the Vertex Array object, so that it will be used for the further draw calls.
     /// @see glBindVertexArray
     void Bind() {
+        oglwrap_PreCheckError();
+
         glBindVertexArray(vao);
-        oglwrap_CheckError();
     }
 
     /// Unbinds the currently active VAO.
     /// @see glBindVertexArray
     static void Unbind() {
+        oglwrap_PreCheckError();
+
         glBindVertexArray(0);
-        oglwrap_CheckError();
     }
 };
 
@@ -72,11 +80,17 @@ public:
     /// @param identifier - Specifies the attribute's name you want to setup.
     /// @see glGetAttribLocation
     VertexAttribArray(Program& program, const std::string& identifier) {
+        oglwrap_PreCheckError();
+
         location = glGetAttribLocation(program.Expose(), identifier.c_str());
         if(location == INVALID_LOCATION) {
             std::cerr << "Unable to get VertexAttribArray location of '" << identifier << "'" << std::endl;
         }
         oglwrap_CheckError();
+        oglwrap_PrintError(
+            GL_INVALID_OPERATION,
+            "VertexAttribArray constructor is called with a program, that isn't linked successfully."
+        );
     }
 
     // Setup functions
@@ -86,6 +100,8 @@ public:
     /// @param values_per_vertex - The dimension of the attribute data divided by the dimension of the template parameter.
     /// @see glVertexAttribPointer, glVertexAttribIPointer, glVertexAttribLPointer
     const VertexAttribArray& Setup(GLuint values_per_vertex = 1) const {
+        oglwrap_PreCheckError();
+
         throw std::invalid_argument("Unrecognized OpenGL type for VertexAttribArray::Setup");
         return *this;
     }
@@ -128,8 +144,19 @@ public:
                                      bool normalized = false,
                                      GLsizei stride = 0,
                                      void *offset_pointer = nullptr) const {
+        oglwrap_PreCheckError();
+
         glVertexAttribPointer(location, values_per_vertex, type, normalized, stride, offset_pointer);
         oglwrap_CheckError();
+        oglwrap_PrintError(
+            GL_INVALID_VALUE,
+            "VertexAttribArray::Pointer is called with size different "
+            "than 1, 2, 3, 4, or stride is negative."
+        );
+        GL_INVALID_OPERATION(
+            GL_INVALID_OPERATION,
+            "VertexAttribArray::Pointer is called, but type and values_per_vertex mismatch."
+        );
         return *this;
     }
 
@@ -143,11 +170,23 @@ public:
                                       WholeDataType type = WholeDataType::Int,
                                       GLsizei stride = 0,
                                       void *offset_pointer = nullptr) const {
+        oglwrap_PreCheckError();
+
         glVertexAttribIPointer(location, values_per_vertex, type, stride, offset_pointer);
         oglwrap_CheckError();
+        oglwrap_PrintError(
+            GL_INVALID_VALUE,
+            "VertexAttribArray::IPointer is called with size different "
+            "than 1, 2, 3, 4, or stride is negative."
+        );
+        GL_INVALID_OPERATION(
+            GL_INVALID_OPERATION,
+            "VertexAttribArray::IPointer is called, but type and values_per_vertex mismatch."
+        );
         return *this;
     }
 
+    #if !OGLWRAP_COREONLY
     /// Sets up an attribute for double type data.
     /// @param values_per_vertex - The dimension of the attribute data. For example is 3 for a vec3. The initial value is 4.
     /// @param stride - Specifies the byte offset between consecutive generic vertex attributes. If stride is 0, the generic vertex attributes are understood to be tightly packed in the array. The initial value is 0.
@@ -156,25 +195,39 @@ public:
     const VertexAttribArray& LPointer(GLuint values_per_vertex = 4,
                                       GLsizei stride = 0,
                                       void *offset_pointer = nullptr) const {
+        oglwrap_PreCheckError();
+
         glVertexAttribLPointer(location, values_per_vertex, DataType::Double, stride, offset_pointer);
         oglwrap_CheckError();
+        oglwrap_PrintError(
+            GL_INVALID_VALUE,
+            "VertexAttribArray::LPointer is called with size different "
+            "than 1, 2, 3, 4, or stride is negative."
+        );
+        GL_INVALID_OPERATION(
+            GL_INVALID_OPERATION,
+            "VertexAttribArray::LPointer is called, but type and values_per_vertex mismatch."
+        );
         return *this;
     }
+    #endif
 
     // Enable & Disable
     /// Enables the attribute array slot
     /// @see glEnableVertexAttribArray
     const VertexAttribArray& Enable() const {
+        oglwrap_PreCheckError();
+
         glEnableVertexAttribArray(location);
-        oglwrap_CheckError();
         return *this;
     }
 
     /// Disables the attribute array slot
     /// @see glDisableVertexAttribArray
     const VertexAttribArray& Disable() const {
+        oglwrap_PreCheckError();
+
         glDisableVertexAttribArray(location);
-        oglwrap_CheckError();
         return *this;
     }
 
@@ -183,8 +236,9 @@ public:
     /// @param divisor - Specify the number of instances that will pass between updates of the attribute.
     /// @see glVertexAttribDivisor
     const VertexAttribArray& Divisor(GLuint divisor) const {
+        oglwrap_PreCheckError();
+
         glVertexAttribDivisor(location, divisor);
-        oglwrap_CheckError();
         return *this;
     }
 };
