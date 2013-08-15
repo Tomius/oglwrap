@@ -19,7 +19,8 @@ Features:
   figures this out for you, so you don't even have to bother with that 'I'.
 * Less macros, nicer looking names.
 * Easy to read, easy to parse. It is fully supported by intellicenses unlike the C OpenGL or oglplus.
-* Built in conditional error checking for every OpenGL call, so you can exactly know when and where did the error happen. The checking only happens if you #define OGLWRAP_DEBUG 1 as it might make you loose up to 5 FPS.
+* Built in conditional error checking for every OpenGL call, so you can exactly know when and where did the error happen. The checking can be turned off with #define OGLWRAP_DEBUG 0. 
+  You also have can check for errors that happened outside an oglwrap function with #define OGLWRAP_DEBUG_FULL 1. Also if you can create a debug context you might want to use DebugOutput::Activate().
 * Documented inside the code, so with intellicense you won't ever have to google OpenGL functions again.
 For example:
 ![screenshot](http://oi42.tinypic.com/hrmv7c.jpg)
