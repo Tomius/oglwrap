@@ -126,8 +126,8 @@ public:
     }
 };
 
+/// @brief A Uniform that sets a sampler.
 typedef Uniform<GLint> UniformSampler;
-/// A Uniform that sets a sampler.
 
 // -------======{[ IndexedUniform ]}======-------
 
@@ -200,8 +200,8 @@ public:
     }
 };
 
+/// @brief An IndexedUniform that sets a value of an element of a sampler array.
 typedef IndexedUniform<GLint> IndexedUniformSampler;
-/// An Indexed uniform that sets a value of an element of a sampler array.
 
 // -------======{[ LazyUniform ]}======-------
 
@@ -287,8 +287,8 @@ public:
     }
 };
 
+/// @brief A LazyUniform that sets a sampler.
 typedef LazyUniform<GLint> LazyUniformSampler;
-/// A LazyUniform that sets a sampler.
 
 
 // -------======{[ UniformObject::Set specializations ]}======-------

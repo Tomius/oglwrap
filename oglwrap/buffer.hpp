@@ -177,28 +177,27 @@ public:
     }
 };
 
-typedef BufferObject<BufferType::Array> ArrayBuffer;
 /// A Buffer that stores vertex attribute data.
 /** The buffer will be used as a source for vertex data,
   * but only when VertexAttribArray::Pointer​ is called. */
 /// @see GL_ARRAY_BUFFER
+typedef BufferObject<BufferType::Array> ArrayBuffer;
 
-typedef BufferObject<BufferType::ElementArray> IndexBuffer;
 /// A buffer that stores the order of the vertices for a draw call.
 /** All rendering functions of the form gl*Draw*Elements*​ will use the pointer field as a byte offset from
   * the beginning of the buffer object bound to this target. The indices used for indexed rendering will be
   * taken from the buffer object. Note that this binding target is part of a Vertex Array Objects state, so a
   * VAO must be bound before binding a buffer here. */
 /// @see GL_ELEMENT_ARRAY_BUFFER
+typedef BufferObject<BufferType::ElementArray> IndexBuffer;
 
-typedef BufferObject<BufferType::Texture> TextureBuffer;
 /// A Buffer that stores texture pixels.
 /** This buffer has no special semantics, it is intended to use as a buffer object for Buffer Textures. */
 /// @see GL_TEXTURE_BUFFER
-
+typedef BufferObject<BufferType::Texture> TextureBuffer;
 
 template<IndexedBufferType buffer_t>
-/// Buffer objects that have an array of binding targets, like UniformBuffers
+/// Buffer objects that have an array of binding targets, like UniformBuffers.
 /** Buffer Objects are OpenGL Objects that store an array
   * of unformatted memory allocated by the OpenGL context (aka: the GPU).
   * IndexBufferObject is a buffer that is bound to an indexed target. */
@@ -252,13 +251,13 @@ public:
     }
 };
 
-typedef IndexedBufferObject<IndexedBufferType::Uniform> UniformBuffer;
-/// An indexed buffer binding for buffers used as storage for uniform blocks.
+/// @brief An indexed buffer binding for buffers used as storage for uniform blocks.
 /// @see GL_UNIFORM_BUFFER
+typedef IndexedBufferObject<IndexedBufferType::Uniform> UniformBuffer;
 
-typedef IndexedBufferObject<IndexedBufferType::TransformFeedback> TransformFeedbackBuffer;
-/// An indexed buffer binding for buffers used in Transform Feedback operations.
+/// @brief An indexed buffer binding for buffers used in Transform Feedback operations.
 /// @see GL_TRANSFORM_FEEDBACK_BUFFER
+typedef IndexedBufferObject<IndexedBufferType::TransformFeedback> TransformFeedbackBuffer;
 
 } // namespace oglwrap
 

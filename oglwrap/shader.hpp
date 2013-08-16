@@ -162,16 +162,15 @@ public:
 
 
 #if !OGLWRAP_COREONLY
-typedef Shader<ShaderType::Compute> ComputeShader;
 /// A Shader that is used for computing arbitrary information.
 /** A Compute Shader is a Shader Stage that is used entirely for computing arbitrary information.
   * While it can do rendering, it is generally used for tasks not directly related to drawing
   * triangles and pixels. */
 /// @version It is core since OpenGL 4.3.
 /// @see GL_COMPUTE_SHADER
+typedef Shader<ShaderType::Compute> ComputeShader;
 #endif
 
-typedef Shader<ShaderType::Vertex> VertexShader;
 /// A Shader that handles the processing of individual vertices.
 /** The Vertex Shader is the programmable Shader stage in the rendering pipeline that handles the
   * processing of individual vertices. Vertex shaders are fed Vertex Attribute data, as specified
@@ -179,16 +178,16 @@ typedef Shader<ShaderType::Vertex> VertexShader;
   * the vertex stream and generates a single vertex to the output vertex stream. */
 /// @version It is core since OpenGL 2.1
 /// @see GL_VERTEX_SHADER
+typedef Shader<ShaderType::Vertex> VertexShader;
 
-typedef Shader<ShaderType::Geometry> GeometryShader;
 /// A Shader that governs the processing of Primitives.
 /** A Geometry Shader is a Shader program written in GLSL that governs the processing of Primitives.
   * Geometry shaders reside between the Vertex Shaders (or the optional Tessellation stage) and the
   * fixed-function Vertex Post-Processing stage. A geometry shader is optional and does not have to be used. */
 /// @version It is core since OpenGL 3.2
 /// @see GL_GEOMETRY_SHADER
+typedef Shader<ShaderType::Geometry> GeometryShader;
 
-typedef Shader<ShaderType::Fragment> FragmentShader;
 /// A Shader that processes a Fragment from the rasterization process into a set of colors and a single depth value.
 /** A Fragment Shader is a user-supplied program that, when executed, will process a Fragment from the
   * rasterization process into a set of colors and a single depth value. The fragment shader is the OpenGL
@@ -200,9 +199,10 @@ typedef Shader<ShaderType::Fragment> FragmentShader;
   * shaders take a single fragment as input and produce a single fragment as output. */
 /// @version It is core since OpenGL 2.1
 /// @see GL_FRAGMENT_SHADER
+typedef Shader<ShaderType::Fragment> FragmentShader;
+
 
 #if !OGLWRAP_COREONLY
-typedef Shader<ShaderType::TessControl> TessControlShader;
 /// A shader that controls how much tessellation a particular patch gets and also defines the size of a patch.
 /** The Tessellation Control Shader (TCS) is a Shader program written in GLSL. It sits between the Vertex
   * Shader and the Tessellation Evaluation Shader. The TCS controls how much tessellation a particular patch
@@ -212,8 +212,8 @@ typedef Shader<ShaderType::TessControl> TessControlShader;
   * Tessellation Evaluation Shader stage. */
 /// @version It is core since OpenGL 4.0.
 /// @see GL_TESS_CONTROL_SHADER
+typedef Shader<ShaderType::TessControl> TessControlShader;
 
-typedef Shader<ShaderType::TessEval> TessEvalShader;
 /// A shader that generates vertices from the patch data.
 /** The Tessellation Evaluation Shader (TES) is a Shader program written in GLSL that takes the results
   * of a Tessellation operation and computes the interpolated positions and other per-vertex data from them.
@@ -223,6 +223,7 @@ typedef Shader<ShaderType::TessEval> TessEvalShader;
   * per-patch data provided by the Tessellation Control Shader. */
 /// @version It is core since OpenGL 4.0.
 /// @see GL_TESS_EVALUATION_SHADER
+typedef Shader<ShaderType::TessEval> TessEvalShader;
 #endif
 
 // -------======{[ Shader Program ]}======-------
