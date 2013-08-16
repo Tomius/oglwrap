@@ -9,6 +9,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <cctype>
 #include <GL/glew.h>
 
 #include "enums.hpp"
@@ -72,9 +73,11 @@ public:
         std::stringstream shaderString;
         shaderString << shaderFile.rdbuf();
 
-        // Remove the EOF from the end of the string
+        // Remove the EOF(s) from the end of the string.
+        // Yeah some stupid files can have more than one EOF at the end.
         std::string fileData = shaderString.str();
-        fileData.pop_back();
+        while(fileData[fileData.length() - 1] == EOF)
+            fileData.pop_back();
 
         // Add the shader source & compile
         const char *strFileData = fileData.c_str();

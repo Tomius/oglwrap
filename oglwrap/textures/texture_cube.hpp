@@ -2,6 +2,7 @@
     @brief Implements two-dimensional cubeMap textures.
 */
 
+#pragma once
 #ifndef TEXUTRE_CUBE_HPP
 #define TEXTURE_CUBE_HPP
 

@@ -10,7 +10,8 @@
 #include "enums.hpp"
 #include "error.hpp"
 #include "general.hpp"
-#include "texture.hpp"
+#include "textures/texture_base.hpp"
+#include "textures/texture_cube.hpp"
 
 namespace oglwrap {
 

@@ -383,7 +383,7 @@ enum PixelDataType {
 };
 };
 typedef _PixelDataType::PixelDataType PixelDataType;
-typedef _PixelDataType::PixelDataType PxDTtype;
+typedef _PixelDataType::PixelDataType PxDType;
 
 namespace _Wrap {
 enum Wrap {
