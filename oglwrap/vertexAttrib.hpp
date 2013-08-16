@@ -20,11 +20,12 @@ namespace oglwrap {
 
 // -------======{[ Vertex Array declaration ]}======-------
 
-/// A Vertex Array Object (VAO) is an object that encapsulates all of the
-/// state needed to specify vertex data. They define the format of the vertex
-/// data as well as the sources for the vertex arrays. Note that VAOs do not
-/// contain the arrays themselves, the arrays are stored in ArrayBuffer Objects.
-/// The VAOs simply reference already existing buffer objects.
+/// VAO is an object that remembers which ArrayBuffers to use for a draw call.
+/** A Vertex Array Object (VAO) is an object that encapsulates all of the
+  * state needed to specify vertex data. They define the format of the vertex
+  * data as well as the sources for the vertex arrays. Note that VAOs do not
+  * contain the arrays themselves, the arrays are stored in ArrayBuffer Objects.
+  * The VAOs simply reference already existing buffer objects. */
 class VertexArray : protected RefCounted {
     GLuint vao; ///< The C handle for the VAO
 public:
@@ -36,8 +37,7 @@ public:
         glGenVertexArrays(1, &vao);
     }
 
-    /// If only one instance of this object
-    /// exists, deletes the VAO it has created.
+    /// If only one instance of this object exists, deletes the VAO it has created.
     /// @see glDeleteVertexArrays
     ~VertexArray() {
         oglwrap_PreCheckError();
@@ -65,8 +65,12 @@ public:
 };
 
 // -------======{[ Vertex Attribute Array ]}======-------
-/// VertexAttribArray is used to setup the way data is uploaded to
-/// the vertex shader attributes (the 'in' variables in the VS).
+
+/// Is used to set up an attribute.
+/** VertexAttribArray is used to setup the way data is uploaded to
+  * the vertex shader attributes (the 'in' variables in the VS).
+  * When the setup is called, the VAO will remember the currently
+  * active ArrayBuffer and will use that for the draw calls */
 class VertexAttribArray {
     GLuint location; /// < The vertexAttribSlot
 public:
@@ -93,10 +97,9 @@ public:
         );
     }
 
-    // Setup functions
     template <class GLtype>
     /// Sets up an attribute. It can be templated with any OpenGL type or glm vector.
-    /// So you can write Setup<ivec3>(); instead of IPointer(3, WholeDataType::Int);
+    /** So you can write Setup<ivec3>(); instead of IPointer(3, WholeDataType::Int); */
     /// @param values_per_vertex - The dimension of the attribute data divided by the dimension of the template parameter.
     /// @see glVertexAttribPointer, glVertexAttribIPointer, glVertexAttribLPointer
     const VertexAttribArray& Setup(GLuint values_per_vertex = 1) const {
@@ -210,7 +213,6 @@ public:
         return *this;
     }
 
-    // Enable & Disable
     /// Enables the attribute array slot
     /// @see glEnableVertexAttribArray
     const VertexAttribArray& Enable() const {
@@ -229,7 +231,6 @@ public:
         return *this;
     }
 
-    // Divisor
     /// Modify the rate at which generic vertex attributes advance during instanced rendering
     /// @param divisor - Specify the number of instances that will pass between updates of the attribute.
     /// @see glVertexAttribDivisor

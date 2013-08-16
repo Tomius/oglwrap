@@ -81,9 +81,10 @@ public:
         glShaderSource(shader, 1, &strFileData, nullptr);
     }
 
-    /// Compiles the shader code. If the compilation fails, it throws a std::runtime_error,
-    /// containing the compilation info as .what(). The compilation happens automatically
-    /// when the shader gets attached a program.
+    /// Compiles the shader code.
+    /** If the compilation fails, it throws a std::runtime_error, containing the
+      * compilation info as .what(). The compilation happens automatically
+      * when the shader gets attached a program. */
     /// @see glCompileShader
     void Compile()  {
         oglwrap_PreCheckError();
@@ -139,8 +140,8 @@ public:
         }
     }
 
-    /// If only one instance of this shader exists, marks the shader for deletion. The shader
-    /// won't be deleted until the shader is attached to at least one program.
+    /// If only one instance of this shader exists, marks the shader for deletion.
+    /** The shader won't be deleted until the shader is attached to at least one program. */
     /// @see glDeleteShader
     ~Shader() {
         oglwrap_PreCheckError();
@@ -162,66 +163,71 @@ public:
 
 #if !OGLWRAP_COREONLY
 typedef Shader<ShaderType::Compute> ComputeShader;
-/// A Compute Shader is a Shader Stage that is used entirely for computing arbitrary information.
-/// While it can do rendering, it is generally used for tasks not directly related to drawing
-/// triangles and pixels.
+/// A Shader that is used for computing arbitrary information.
+/** A Compute Shader is a Shader Stage that is used entirely for computing arbitrary information.
+  * While it can do rendering, it is generally used for tasks not directly related to drawing
+  * triangles and pixels. */
 /// @version It is core since OpenGL 4.3.
 /// @see GL_COMPUTE_SHADER
 #endif
 
 typedef Shader<ShaderType::Vertex> VertexShader;
-/// The Vertex Shader is the programmable Shader stage in the rendering pipeline that handles the
-/// processing of individual vertices. Vertex shaders are fed Vertex Attribute data, as specified
-/// from a vertex array object by a rendering command. A vertex shader receives a single vertex from
-/// the vertex stream and generates a single vertex to the output vertex stream.
+/// A Shader that handles the processing of individual vertices.
+/** The Vertex Shader is the programmable Shader stage in the rendering pipeline that handles the
+  * processing of individual vertices. Vertex shaders are fed Vertex Attribute data, as specified
+  * from a vertex array object by a rendering command. A vertex shader receives a single vertex from
+  * the vertex stream and generates a single vertex to the output vertex stream. */
 /// @version It is core since OpenGL 2.1
 /// @see GL_VERTEX_SHADER
 
 typedef Shader<ShaderType::Geometry> GeometryShader;
-///  A Geometry Shader is a Shader program written in GLSL that governs the processing of Primitives.
-/// Geometry shaders reside between the Vertex Shaders (or the optional Tessellation stage) and the
-/// fixed-function Vertex Post-Processing stage. A geometry shader is optional and does not have to be used.
+/// A Shader that governs the processing of Primitives.
+/** A Geometry Shader is a Shader program written in GLSL that governs the processing of Primitives.
+  * Geometry shaders reside between the Vertex Shaders (or the optional Tessellation stage) and the
+  * fixed-function Vertex Post-Processing stage. A geometry shader is optional and does not have to be used. */
 /// @version It is core since OpenGL 3.2
 /// @see GL_GEOMETRY_SHADER
 
 typedef Shader<ShaderType::Fragment> FragmentShader;
-/// A Fragment Shader is a user-supplied program that, when executed, will process a Fragment from the
-/// rasterization process into a set of colors and a single depth value. The fragment shader is the OpenGL
-/// pipeline stage after a primitive is rasterized. For each sample of the pixels covered by a primitive,
-/// a "fragment" is generated. Each fragment has a Window Space position, a few other values, and it contains
-/// all of the interpolated per-vertex output values from the last Vertex Processing stage. The output of a
-/// fragment shader is a depth value, a possible stencil value (unmodified by the fragment shader), and zero
-/// or more color values to be potentially written to the buffers in the current framebuffers. Fragment
-/// shaders take a single fragment as input and produce a single fragment as output.
+/// A Shader that processes a Fragment from the rasterization process into a set of colors and a single depth value.
+/** A Fragment Shader is a user-supplied program that, when executed, will process a Fragment from the
+  * rasterization process into a set of colors and a single depth value. The fragment shader is the OpenGL
+  * pipeline stage after a primitive is rasterized. For each sample of the pixels covered by a primitive,
+  * a "fragment" is generated. Each fragment has a Window Space position, a few other values, and it contains
+  * all of the interpolated per-vertex output values from the last Vertex Processing stage. The output of a
+  * fragment shader is a depth value, a possible stencil value (unmodified by the fragment shader), and zero
+  * or more color values to be potentially written to the buffers in the current framebuffers. Fragment
+  * shaders take a single fragment as input and produce a single fragment as output. */
 /// @version It is core since OpenGL 2.1
 /// @see GL_FRAGMENT_SHADER
 
 #if !OGLWRAP_COREONLY
 typedef Shader<ShaderType::TessControl> TessControlShader;
-/// The Tessellation Control Shader (TCS) is a Shader program written in GLSL. It sits between the Vertex
-/// Shader and the Tessellation Evaluation Shader. The TCS controls how much tessellation a particular patch
-/// gets; it also defines the size of a patch, thus allowing it to augment data. It can also filter vertex
-/// data taken from the vertex shader. The main purpose of the TCS is to feed the tessellation levels to the
-/// Tessellation primitive generator stage, as well as to feed patch data (as its output values) to the
-/// Tessellation Evaluation Shader stage.
+/// A shader that controls how much tessellation a particular patch gets and also defines the size of a patch.
+/** The Tessellation Control Shader (TCS) is a Shader program written in GLSL. It sits between the Vertex
+  * Shader and the Tessellation Evaluation Shader. The TCS controls how much tessellation a particular patch
+  * gets; it also defines the size of a patch, thus allowing it to augment data. It can also filter vertex
+  * data taken from the vertex shader. The main purpose of the TCS is to feed the tessellation levels to the
+  * Tessellation primitive generator stage, as well as to feed patch data (as its output values) to the
+  * Tessellation Evaluation Shader stage. */
 /// @version It is core since OpenGL 4.0.
 /// @see GL_TESS_CONTROL_SHADER
 
 typedef Shader<ShaderType::TessEval> TessEvalShader;
-/// The Tessellation Evaluation Shader (TES) is a Shader program written in GLSL that takes the results
-/// of a Tessellation operation and computes the interpolated positions and other per-vertex data from them.
-/// These values are passed on to the next stage in the pipeline. The (TES) takes the abstract patch generated
-/// by the tessellation primitive generation stage, as well as the actual vertex data for the entire patch,
-/// and generates a particular vertex from it. Each TES invocation generates a single vertex. It can also take
-/// per-patch data provided by the Tessellation Control Shader.
+/// A shader that generates vertices from the patch data.
+/** The Tessellation Evaluation Shader (TES) is a Shader program written in GLSL that takes the results
+  * of a Tessellation operation and computes the interpolated positions and other per-vertex data from them.
+  * These values are passed on to the next stage in the pipeline. The (TES) takes the abstract patch generated
+  * by the tessellation primitive generation stage, as well as the actual vertex data for the entire patch,
+  * and generates a particular vertex from it. Each TES invocation generates a single vertex. It can also take
+  * per-patch data provided by the Tessellation Control Shader. */
 /// @version It is core since OpenGL 4.0.
 /// @see GL_TESS_EVALUATION_SHADER
 #endif
 
 // -------======{[ Shader Program ]}======-------
 
-/// The program object can combine multiple shader stages
-/// (built from shader objects) into a single, linked whole.
+/// The program object can combine multiple shader stages (built from shader objects) into a single, linked whole.
 class Program : protected RefCounted {
     std::vector<GLuint> shaders; ///< IDs of the shaders attached to the program
     GLuint program; ///< The C OpenGL handle for the program.
@@ -233,8 +239,8 @@ public:
         oglwrap_PreCheckError();
     }
 
-    /// If only one instance of this program exists, detaches all the shader objects
-    /// currently attached to this program, and deletes the program.
+    /// Detaches all the shader objects currently attached to this program, and deletes the program.
+    /** Only if one instance of this program exists */
     /// @see glDetachShader, glDeleteShader
     ~Program() {
         oglwrap_PreCheckError();
@@ -274,8 +280,8 @@ public:
         return *this;
     }
 
-    /// Links the program. If the linking fails, it throws
-    /// a std::runtime_error containing the linking info.
+    /// Links the program.
+    /** If the linking fails, it throws a std::runtime_error containing the linking info. */
     /// @see glLinkProgram
     Program& Link() {
         oglwrap_PreCheckError();
@@ -309,7 +315,7 @@ public:
         return *this;
     }
 
-    /// Installs the program as a part of the current rendering state
+    /// Installs the program as a part of the current rendering state.
     /// @see glUseProgram
     Program& Use() {
         oglwrap_PreCheckError();
@@ -328,7 +334,7 @@ public:
         return *this;
     }
 
-    /// Installs the default OpenGL shading program to the current rendering state
+    /// Installs the default OpenGL shading program to the current rendering state.
     /// @see glUseProgram
     Program& Unuse() {
         oglwrap_PreCheckError();

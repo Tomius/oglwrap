@@ -14,33 +14,38 @@
 namespace oglwrap {
 
 /// A simple reference counter that you should use with inheritance.
-/// If your class inherit from this class (protected inheritance recommended),
-/// at your class' destructor you can call isDeletable(), which returns true
-/// if exactly one instance of that object exists. Note that OpenGL RAII needs
-/// to be reference counted!
+/** If your class inherit from this class (protected inheritance recommended),
+  * at your class' destructor you can call isDeletable(), which returns true
+  * if exactly one instance of that object exists. Note that OpenGL RAII needs
+  * to be reference counted! */
 class RefCounted {
-    int *numInstances;
+    int *numInstances; /// A dynamically allocated int that stores the number of currently active instances.
 protected:
+    /// Returns if only one instance of this object exists.
     bool isDeletable() {
         return *numInstances == 1;
     }
 
+    /// Allocates the counter.
     RefCounted() {
         numInstances = new int;
         *numInstances = 1;
     }
 
+    /// Creates a copy (copy ctor), and increases counter.
     RefCounted(const RefCounted& rhs) {
         numInstances = rhs.numInstances;
         (*numInstances)++;
     }
 
+    /// Creates a copy (assign op), and increases counter.
     RefCounted& operator=(const RefCounted& rhs) {
         numInstances = rhs.numInstances;
         (*numInstances)++;
         return *this;
     }
 
+    /// Decreases counter, or deletes the counter.
     ~RefCounted() {
         if(isDeletable())
             delete numInstances;

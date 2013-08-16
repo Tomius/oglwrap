@@ -84,6 +84,7 @@ private:
 public:
 
     /// Activates the debug output
+    /// @see glEnable, GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB, glDebugMessageCallbackARB
     static void Activate() {
         if(GLEW_ARB_debug_output)
         {
@@ -93,6 +94,7 @@ public:
     }
 
     /// Deactivates the debug output
+    /// @see glDisable, GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB, glDebugMessageCallbackARB
     static void Deactivate() {
         if(GLEW_ARB_debug_output)
         {

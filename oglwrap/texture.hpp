@@ -1,3 +1,7 @@
+/** @file texture.hpp
+    @brief The main header for textures, including the texture related headers of the library.
+*/
+
 #ifndef TEXTURE_HPP
 #define TEXTURE_HPP
 

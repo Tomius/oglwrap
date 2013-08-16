@@ -19,6 +19,7 @@ class RenderBuffer : protected RefCounted {
     GLuint renderbuffer; /// The C handle for the render buffer.
 public:
     /// Generates the renderbuffer
+    /// @see glGenRenderbuffers
     RenderBuffer() {
         oglwrap_PreCheckError();
 
@@ -26,6 +27,7 @@ public:
     }
 
     /// Deletes the renderbuffer, if only one instance of it exists.
+    /// @see glDeleteRenderbuffers
     ~RenderBuffer() {
         oglwrap_PreCheckError();
 
@@ -35,6 +37,7 @@ public:
     }
 
     /// Binds this renderbuffer.
+    /// @see glBindRenderbuffer
     void Bind() {
         oglwrap_PreCheckError();
 
@@ -42,6 +45,7 @@ public:
     }
 
     /// Unbinds this renderbuffer.
+    /// @see glBindRenderbuffer
     void Unbind() {
         oglwrap_PreCheckError();
 
@@ -49,6 +53,7 @@ public:
     }
 
     /// Establish data storage, format and dimensions of a renderbuffer object's image.
+    /// @see glRenderbufferStorage
     void Storage(PixelDataInternalFormat internalFormat, GLsizei width, GLsizei height) {
         oglwrap_PreCheckError();
 
@@ -73,6 +78,7 @@ public:
     }
 
     /// Establish data storage, format, dimensions and sample count of a renderbuffer object's image.
+    /// @see glRenderbufferStorageMultisample
     void StorageMultisample(
         GLsizei samples, PixelDataInternalFormat internalFormat, GLsizei width, GLsizei height
     ) {
@@ -99,6 +105,8 @@ public:
 
     /// Returns the C handle for this object.
     GLuint Expose() const {
+        oglwrap_PreCheckError();
+
         return renderbuffer;
     }
 };
@@ -106,7 +114,7 @@ public:
 /// A buffer that you can draw to.
 class FrameBuffer : protected RefCounted {
     GLuint framebuffer; /// The C handle for the framebuffer
-    GLenum currentTarget;
+    GLenum currentTarget; /// The current target of this Framebuffer
 public:
     /// Generates the framebuffer.
     /// @see glGenFramebuffers

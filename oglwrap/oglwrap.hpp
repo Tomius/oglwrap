@@ -1,3 +1,7 @@
+/** @file oglwrap.hpp
+    @brief The main header, including the core files of the library.
+*/
+
 #ifndef OGLWRAP_HPP
 #define OGLWRAP_HPP
 
