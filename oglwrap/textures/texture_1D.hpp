@@ -15,6 +15,17 @@ namespace oglwrap {
 /// @see GL_TEXTURE_1D
 class Texture1D : public TextureBase<TexType::Tex1D> {
 public:
+
+    /// Generates an empty texture.
+    /// @see glGenTextures
+    Texture1D() {}
+
+    template <TexType texture_t>
+    /// Copies a 1D texture or changes the type of a texture to Texture1D
+    /// @param src - The texture to copy or cast to Texture1D
+    Texture1D(const TextureBase<texture_t>& src)
+        :TextureBase<TexType::Tex1D>(src) {}
+
     /// Uploads the base image.
     /// @param internalFormat - Specifies the number, order, and size of the color components in the texture.
     /// @param width - Specifies the width of the texture image. All implementations support texture images that are at least 1024 texels wide.

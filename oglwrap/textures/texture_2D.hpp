@@ -16,6 +16,17 @@ template<Tex2DType texture_t>
 /** You should rather use the typedefed versions than this template. */
 class Texture2D_Base : public TextureBase<TexType(texture_t)> {
 public:
+
+    /// Generates an empty texture.
+    /// @see glGenTextures
+    Texture2D_Base() {}
+
+    template <TexType another_texture_t>
+    /// Copies a 2D texture or changes the type of a texture to Texture2D
+    /// @param src - The texture to copy or cast to Texture2D
+    Texture2D_Base(const TextureBase<another_texture_t>& src)
+        :TextureBase<texture_t>(src) {}
+
     /// Uploads the base image.
     /// @param internalFormat - Specifies the number, order, and size of the color components in the texture.
     /// @param width - Specifies the width of the texture image. All implementations support texture images that are at least 1024 texels wide.

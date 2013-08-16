@@ -15,6 +15,16 @@ namespace oglwrap {
 /// @see GL_TEXTURE_CUBE_MAP
 class TextureCube : public TextureBase<TexType::TexCubeMap> {
 public:
+    /// Generates an empty texture.
+    /// @see glGenTextures
+    TextureCube() {}
+
+    template <TexType texture_t>
+    /// Copies a 2D texture or changes the type of a texture to Texture2D
+    /// @param src - The texture to copy or cast to Texture2D
+    TextureCube(const TextureBase<texture_t>& src)
+        :TextureBase<TexType::TexCubeMap>(src) {}
+
     /// Uploads one a base image for one side of the cube.
     /// @param target - Specifies which one of the six sides of the cube to use as target.
     /// @param internalFormat - Specifies the number, order, and size of the color components in the texture.

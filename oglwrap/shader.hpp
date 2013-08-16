@@ -201,7 +201,6 @@ typedef Shader<ShaderType::Geometry> GeometryShader;
 /// @see GL_FRAGMENT_SHADER
 typedef Shader<ShaderType::Fragment> FragmentShader;
 
-
 #if !OGLWRAP_COREONLY
 /// A shader that controls how much tessellation a particular patch gets and also defines the size of a patch.
 /** The Tessellation Control Shader (TCS) is a Shader program written in GLSL. It sits between the Vertex

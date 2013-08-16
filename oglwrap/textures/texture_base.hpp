@@ -29,7 +29,7 @@ namespace oglwrap {
 template <TexType texture_t>
 /// @brief This class is implementing the base functions for textures.
 /** You shouldn't use this class directly. **/
-class TextureBase : protected RefCounted {
+class TextureBase : public RefCounted {
 protected:
     GLuint texture; ///< The C handle for the texture.
 public:
@@ -40,11 +40,19 @@ public:
         oglwrap_CheckError();
     }
 
+    template <TexType another_texture_t>
+    /// Creates a copy from an already existing texture. Can also change it's default target.
+    /** You can use it to cast for example Texture2D to TextureRect. */
+    TextureBase(const TextureBase<another_texture_t>& srctexture)
+        : RefCounted(srctexture)
+        , texture(srctexture.Expose()) {}
+
     /// If only one instance of this object exists, deletes the texture.
     /// @see glDeleteTextures
     ~TextureBase() {
-        if(!isDeletable())
+        if(!isDeletable()){
             return;
+        }
         glDeleteTextures(1, &texture);
         oglwrap_CheckError();
     }

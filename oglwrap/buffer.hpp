@@ -20,7 +20,7 @@ template<BufferType buffer_t>
   * of unformatted memory allocated by the OpenGL context (aka: the GPU).
   * These can be used to store vertex data, pixel data retrieved from
   * images or the framebuffer, and a variety of other things. */
-class BufferObject : protected RefCounted {
+class BufferObject : public RefCounted {
 protected:
     GLuint buffer; ///< The C API handle for the buffer.
 public:
@@ -30,6 +30,15 @@ public:
         oglwrap_PreCheckError();
 
         glGenBuffers(1, &buffer);
+    }
+
+    template<BufferType another_buffer_t>
+    /// Creates a copy of the texture, or casts it to another type.
+    BufferObject(const BufferObject<another_buffer_t> src)
+        : RefCounted(src)
+        , buffer(src.Expose()) {
+
+        oglwrap_PreCheckError();
     }
 
     /// @brief Deletes the buffer generated in the constructor.

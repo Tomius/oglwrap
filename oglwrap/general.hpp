@@ -19,7 +19,8 @@ namespace oglwrap {
   * if exactly one instance of that object exists. Note that OpenGL RAII needs
   * to be reference counted! */
 class RefCounted {
-    int *numInstances; /// A dynamically allocated int that stores the number of currently active instances.
+    int *numInstances; ///< A dynamically allocated int that stores the number of currently active instances.
+
 protected:
     /// Returns if only one instance of this object exists.
     bool isDeletable() {
@@ -32,6 +33,7 @@ protected:
         *numInstances = 1;
     }
 
+public:
     /// Creates a copy (copy ctor), and increases counter.
     RefCounted(const RefCounted& rhs) {
         numInstances = rhs.numInstances;
