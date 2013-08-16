@@ -1,25 +1,18 @@
+/** @file texture_cube.hpp
+    @brief Implements two-dimensional cubeMap textures.
+*/
+
 #ifndef TEXUTRE_CUBE_HPP
 #define TEXTURE_CUBE_HPP
 
-#include <string>
-#include <GL/glew.h>
-
-#include "../error.hpp"
-#include "../enums.hpp"
-#include "../general.hpp"
 #include "texture_base.hpp"
-
-#ifndef OGLWRAP_IMAGEMAGICK
-#define OGLWRAP_IMAGEMAGICK 0
-#endif
-#if OGLWRAP_IMAGEMAGICK
-#include <ImageMagick/Magick++.h>
-#endif
 
 namespace oglwrap {
 
 // -------======{[ TextureCube declaration ]}======-------
 
+/// @brief A set of 6 2D textures, that is used to be sampled with 3D direction vectors.
+/// @see GL_TEXTURE_CUBE_MAP
 class TextureCube : public TextureBase<TexType::TexCubeMap> {
 public:
     /// Uploads one a base image for one side of the cube.
@@ -182,6 +175,7 @@ public:
 
     /// Copies pixels from the current GL_READ_BUFFER and updates part of a mipmap of one side.
     /// @param target - Specifies which one of the six sides of the cube to use as target.
+    /// @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
     /// @param xOffset/yOffset - Specifies the texel offset in the x/y direction within the destination texture array.
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width/height - Specifies the width/height of the texture to copy.

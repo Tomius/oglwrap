@@ -1,12 +1,10 @@
+/** @file texture_3D.hpp
+    @brief Implements three-dimensional textures.
+*/
+
 #ifndef TEXUTRE_3D_HPP
 #define TEXTURE_3D_HPP
 
-#include <string>
-#include <GL/glew.h>
-
-#include "../error.hpp"
-#include "../enums.hpp"
-#include "../general.hpp"
 #include "texture_base.hpp"
 
 namespace oglwrap {
@@ -16,7 +14,7 @@ namespace oglwrap {
 template<Tex3DType texture_t>
 /// The base class describing functionality for all 2D textures.
 /** You should rather use the typedefed versions than this template. */
-class _Texture3D : public TextureBase<TexType(texture_t)> {
+class Texture3D_Base : public TextureBase<TexType(texture_t)> {
 public:
     /// Uploads the base image.
     /// @param internalFormat - Specifies the number, order, and size of the color components in the texture.
@@ -137,6 +135,7 @@ public:
     }
 
     /// Copies pixels from the current GL_READ_BUFFER and updates part of a mipmap of this texture.
+    /// @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
     /// @param xOffset/yOffset/zOffset - Specifies the texel offset in the x/y/z direction within the destination texture array.
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width/height - Specifies the width/height of the texture to copy.
@@ -196,8 +195,8 @@ public:
     }
 };
 
-typedef _Texture3D<Tex3DType::Tex3D> Texture3D;
-typedef _Texture3D<Tex3DType::Tex2DArray> Texture2D_Array;
+typedef Texture3D_Base<Tex3DType::Tex3D> Texture3D;
+typedef Texture3D_Base<Tex3DType::Tex2DArray> Texture2D_Array;
 
 } // namespace oglwrap
 

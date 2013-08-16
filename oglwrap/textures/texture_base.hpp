@@ -1,3 +1,7 @@
+/** @file texture_base.hpp
+    @brief Implements the base functionality for textures.
+*/
+
 #ifndef TEXUTRE_BASE_HPP
 #define TEXTURE_BASE_HPP
 
@@ -23,8 +27,8 @@ namespace oglwrap {
 // -------======{[ TextureBase declaration ]}======-------
 
 template <TexType texture_t>
-/// It's a class implementing the base functions for textures.
-/// You shouldn't use this class directly.
+/// @brief This class is implementing the base functions for textures.
+/** You shouldn't use this class directly. **/
 class TextureBase : protected RefCounted {
 protected:
     GLuint texture; ///< The C handle for the texture.

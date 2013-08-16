@@ -1,12 +1,10 @@
+/** @file texture_2D.hpp
+    @brief Implements two-dimensional, non-cubeMap textures.
+*/
+
 #ifndef TEXUTRE_2D_HPP
 #define TEXTURE_2D_HPP
 
-#include <string>
-#include <GL/glew.h>
-
-#include "../error.hpp"
-#include "../enums.hpp"
-#include "../general.hpp"
 #include "texture_base.hpp"
 
 namespace oglwrap {
@@ -16,7 +14,7 @@ namespace oglwrap {
 template<Tex2DType texture_t>
 /// The base class describing functionality for all 2D textures.
 /** You should rather use the typedefed versions than this template. */
-class _Texture2D : public TextureBase<TexType(texture_t)> {
+class Texture2D_Base : public TextureBase<TexType(texture_t)> {
 public:
     /// Uploads the base image.
     /// @param internalFormat - Specifies the number, order, and size of the color components in the texture.
@@ -65,8 +63,8 @@ public:
     }
 
     /// Updates a part of the base image.
-    /// @param xOffset/yOffset - Specifies a texel offset in the x/y direction within the texture array.
-    /// @param width/height - Specifies the width/height of the texture subimage.
+    /// @param xOffset, yOffset - Specifies a texel offset in the x/y direction within the texture array.
+    /// @param width, height - Specifies the width/height of the texture subimage.
     /// @param format - Specifies the format of the pixel data.
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
@@ -88,8 +86,8 @@ public:
 
     /// Updates a part of a mipmap image.
     /// @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
-    /// @param xOffset/yOffset - Specifies a texel offset in the x/y direction within the texture array.
-    /// @param width/height - Specifies the width/height of the texture subimage.
+    /// @param xOffset, yOffset - Specifies a texel offset in the x/y direction within the texture array.
+    /// @param width, height - Specifies the width/height of the texture subimage.
     /// @param format - Specifies the format of the pixel data.
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
@@ -145,7 +143,7 @@ public:
     }
 
     /// Copies pixels from the current GL_READ_BUFFER and updates part of the base mipmap of this texture with them.
-    /// @param xOffset/yOffset - Specifies the texel offset in the x/y direction within the destination texture array.
+    /// @param xOffset, yOffset - Specifies the texel offset in the x/y direction within the destination texture array.
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width/height - Specifies the width/height of the texture to copy.
     /// @see glCopyTexSubImage2D
@@ -162,6 +160,7 @@ public:
     }
 
     /// Copies pixels from the current GL_READ_BUFFER and updates part of a mipmap of this texture.
+    /// @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
     /// @param xOffset/yOffset - Specifies the texel offset in the x/y direction within the destination texture array.
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width/height - Specifies the width/height of the texture to copy.
@@ -234,17 +233,20 @@ public:
 #endif
 };
 
-typedef _Texture2D<Tex2DType::Tex2D> Texture2D;
-/// The most commonly used two-dimensional texture type.
+/// @brief The most commonly used two-dimensional texture type.
+/// @see GL_TEXTURE_2D
+typedef Texture2D_Base<Tex2DType::Tex2D> Texture2D;
 
-typedef _Texture2D<Tex2DType::TexRect> TextureRect;
 /// A rectangle texture is a texture that contains a single 2D image with no mipmaps.
-/// It has no power-of-two restrictions on its size. Texture coordinates for accessing
-/// this texture must be texel values (floating-point), representing texels within the
-/// texture, rather than normalized texture coordinates.
+/** It has no power-of-two restrictions on its size. Texture coordinates for accessing
+  * this texture must be texel values (floating-point), representing texels within the
+  * texture, rather than normalized texture coordinates. */
+/// @see GL_TEXTURE_RECTANGLE
+typedef Texture2D_Base<Tex2DType::TexRect> TextureRect;
 
-typedef _Texture2D<Tex2DType::Tex1DArray> Texture1D_Array;
-/// An array of one-dimensional textures.
+/// @brief An array of one-dimensional textures.
+/// @see GL_TEXTURE_1D_ARRAY
+typedef Texture2D_Base<Tex2DType::Tex1DArray> Texture1D_Array;
 
 } // namespace oglwrap
 

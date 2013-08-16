@@ -16,9 +16,9 @@ namespace oglwrap {
 
 /// A buffer that servers as a storage for a framebuffer.
 class RenderBuffer : protected RefCounted {
-    GLuint renderbuffer; /// The C handle for the render buffer.
+    GLuint renderbuffer; ///< The C handle for the render buffer.
 public:
-    /// Generates the renderbuffer
+    /// @brief Generates the renderbuffer
     /// @see glGenRenderbuffers
     RenderBuffer() {
         oglwrap_PreCheckError();
@@ -26,7 +26,7 @@ public:
         glGenRenderbuffers(1, &renderbuffer);
     }
 
-    /// Deletes the renderbuffer, if only one instance of it exists.
+    /// @brief Deletes the renderbuffer, if only one instance of it exists.
     /// @see glDeleteRenderbuffers
     ~RenderBuffer() {
         oglwrap_PreCheckError();
@@ -36,7 +36,7 @@ public:
         glDeleteRenderbuffers(1, &renderbuffer);
     }
 
-    /// Binds this renderbuffer.
+    /// @brief Binds this renderbuffer.
     /// @see glBindRenderbuffer
     void Bind() {
         oglwrap_PreCheckError();
@@ -44,7 +44,7 @@ public:
         glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
     }
 
-    /// Unbinds this renderbuffer.
+    /// @brief Unbinds this renderbuffer.
     /// @see glBindRenderbuffer
     void Unbind() {
         oglwrap_PreCheckError();
@@ -52,7 +52,7 @@ public:
         glBindRenderbuffer(GL_RENDERBUFFER, 0);
     }
 
-    /// Establish data storage, format and dimensions of a renderbuffer object's image.
+    /// @brief Establish data storage, format and dimensions of a renderbuffer object's image.
     /// @see glRenderbufferStorage
     void Storage(PixelDataInternalFormat internalFormat, GLsizei width, GLsizei height) {
         oglwrap_PreCheckError();
@@ -77,7 +77,7 @@ public:
         );
     }
 
-    /// Establish data storage, format, dimensions and sample count of a renderbuffer object's image.
+    /// @brief Establish data storage, format, dimensions and sample count of a renderbuffer object's image.
     /// @see glRenderbufferStorageMultisample
     void StorageMultisample(
         GLsizei samples, PixelDataInternalFormat internalFormat, GLsizei width, GLsizei height
@@ -113,10 +113,10 @@ public:
 
 /// A buffer that you can draw to.
 class FrameBuffer : protected RefCounted {
-    GLuint framebuffer; /// The C handle for the framebuffer
-    GLenum currentTarget; /// The current target of this Framebuffer
+    GLuint framebuffer; ///< The C handle for the framebuffer
+    GLenum currentTarget; ///< The current target of this Framebuffer
 public:
-    /// Generates the framebuffer.
+    /// @brief Generates the framebuffer.
     /// @see glGenFramebuffers
     FrameBuffer() {
         oglwrap_PreCheckError();
@@ -124,7 +124,7 @@ public:
         glGenFramebuffers(1, &framebuffer);
     }
 
-    /// Deletes the framebuffer, if only one instance of it exists.
+    /// @brief Deletes the framebuffer, if only one instance of it exists.
     /// @see glDeleteFramebuffers
     ~FrameBuffer() {
         oglwrap_PreCheckError();
@@ -134,7 +134,7 @@ public:
         glDeleteFramebuffers(1, &framebuffer);
     }
 
-    /// Binds the framebuffer for reading and/or drawing.
+    /// @brief Binds the framebuffer for reading and/or drawing.
     /// @param target - The target to bind the framebuffer to.
     /// @see glBindFramebuffer
     void Bind(FBO_Target target = FBO_Target::Read_Draw) {
@@ -144,7 +144,7 @@ public:
         currentTarget = target;
     }
 
-    /// Unbinds the buffer from the target it is currently bound to.
+    /// @brief Unbinds the buffer from the target it is currently bound to.
     /// @see glBindFramebuffer
     void Unbind() {
         oglwrap_PreCheckError();
@@ -155,7 +155,7 @@ public:
         }
     }
 
-    /// Returns the status of a bound framebuffer.
+    /// @brief Returns the status of a bound framebuffer.
     /** Throws an exception if the framebuffer isn't bound. */
     /// @see glCheckFramebufferStatus
     FBO_Status Status() {
@@ -169,14 +169,14 @@ public:
         return FBO_Status(glCheckFramebufferStatus(currentTarget));
     }
 
-    /// Returns if the framebuffer is currently bound.
+    /// @brief Returns if the framebuffer is currently bound.
     bool isBound() {
         oglwrap_PreCheckError();
 
         return currentTarget != 0;
     }
 
-    /// Throws an exception if the framebuffer isn't complete.
+    /// @brief Throws an exception if the framebuffer isn't complete.
     /// @see glCheckFramebufferStatus
     void Validate() {
         oglwrap_PreCheckError();
@@ -237,7 +237,7 @@ public:
         throw std::logic_error("Framebuffer error: \n" + errStr);
     }
 
-    /// Attach a renderbuffer as a logical buffer to the currently bound framebuffer object
+    /// @brief Attach a renderbuffer as a logical buffer to the currently bound framebuffer object
     /// @param attachment - Specifies the attachment point to which renderbuffer should be attached.
     /// @param renderBuffer - Specifies the renderbuffer object that is to be attached.
     /// @see glFramebufferRenderbuffer
@@ -258,7 +258,7 @@ public:
     }
 
     template <TexType texture_t>
-    /// Attach a level of a texture object as a logical buffer to the currently bound framebuffer object
+    /// @brief Attach a level of a texture object as a logical buffer to the currently bound framebuffer object
     /// @param attachment - Specifies the attachment point of the framebuffer.
     /// @param texture - Specifies the texture object to attach to the framebuffer attachment point named by \a attachment.
     /// @param level - Specifies the mipmap level of \a texture to attach.
@@ -279,9 +279,9 @@ public:
         );
     }
 
-    /// Attach a level of a cube map as a logical buffer to the currently bound framebuffer object
+    /// @brief Attach a level of a cube map as a logical buffer to the currently bound framebuffer object.
     /// @param attachment - Specifies the attachment point of the framebuffer.
-    /// @param textarget - Specifies which face of the cube map is to be attached.
+    /// @param target - Specifies which face of the cube map is to be attached.
     /// @param texture - Specifies the texture object to attach to the framebuffer attachment point named by \a attachment.
     /// @param level - Specifies the mipmap level of \a texture to attach.
     /// @see glFramebufferTexture2D

@@ -22,9 +22,9 @@ template<BufferType buffer_t>
   * images or the framebuffer, and a variety of other things. */
 class BufferObject : protected RefCounted {
 protected:
-    GLuint buffer; /// The C API handle for the buffer.
+    GLuint buffer; ///< The C API handle for the buffer.
 public:
-    /// Generates a buffer object.
+    /// @brief Generates a buffer object.
     /// @see glGenBuffers
     BufferObject() {
         oglwrap_PreCheckError();
@@ -32,7 +32,7 @@ public:
         glGenBuffers(1, &buffer);
     }
 
-    /// Deletes the buffer generated in the constructor.
+    /// @brief Deletes the buffer generated in the constructor.
     /// @see glDeleteBuffers
     ~BufferObject() {
         oglwrap_PreCheckError();
@@ -42,7 +42,7 @@ public:
         glDeleteBuffers(1, &buffer);
     }
 
-    /// Bind a buffer object to its default target.
+    /// @brief Bind a buffer object to its default target.
     /// @see glBindBuffer
     void Bind() {
         oglwrap_PreCheckError();
@@ -50,7 +50,7 @@ public:
         glBindBuffer(buffer_t, buffer);
     }
 
-    /// Unbind a buffer object from its default target.
+    /// @brief Unbind a buffer object from its default target.
     /// @see glBindBuffer
     static void Unbind() {
         oglwrap_PreCheckError();
@@ -58,7 +58,7 @@ public:
         glBindBuffer(buffer_t, 0);
     }
 
-    /// Creates and initializes a buffer object's data store.
+    /// @brief Creates and initializes a buffer object's data store.
     /// @param size - Specifies the size in bytes of the buffer object's new data store.
     /// @param data - Specifies a pointer to data that will be copied into the data store for initialization, or NULL if no data is to be copied.
     /// @param usage - Specifies the expected usage pattern of the data store.
@@ -85,7 +85,7 @@ public:
         );
     }
 
-    /// Creates and initializes a buffer object's data store.
+    /// @brief Creates and initializes a buffer object's data store.
     /// @param data - Specifies a vector of data to upload.
     /// @param usage - Specifies the expected usage pattern of the data store.
     /// @see glBufferData
@@ -107,7 +107,7 @@ public:
         );
     }
 
-    /// Updates a subset of a buffer object's data store.
+    /// @brief Updates a subset of a buffer object's data store.
     /// @param offset - Specifies the offset into the buffer object's data store where data replacement will begin, measured in bytes.
     /// @param size - Specifies the size in bytes of the data store region being replaced.
     /// @param data - Specifies a pointer to the new data that will be copied into the data store.
@@ -130,7 +130,7 @@ public:
         );
     }
 
-    /// Updates a subset of a buffer object's data store.
+    /// @brief Updates a subset of a buffer object's data store.
     /// @param offset - Specifies the offset into the buffer object's data store where data replacement will begin, measured in bytes.
     /// @param data - Specifies a vector containing the new data that will be copied into the data store.
     /// @see glBufferSubData
@@ -152,7 +152,7 @@ public:
         );
     }
 
-    /// A getter for the buffer's size.
+    /// @brief A getter for the buffer's size.
     /// @return The size of the buffer currently bound to the buffer objects default target in bytes.
     /// @see glGetBufferParameteriv, GL_BUFFER_SIZE
     static size_t Size() {
@@ -203,7 +203,7 @@ template<IndexedBufferType buffer_t>
   * IndexBufferObject is a buffer that is bound to an indexed target. */
 class IndexedBufferObject : public BufferObject<BufferType(buffer_t)> {
 public:
-    /// Bind a buffer object to an index.
+    /// @brief Bind a buffer object to an index.
     /// @param index - Specify the index of the binding point within the array.
     /// @see glBindBufferBase
     void BindBase(GLuint index) {
@@ -221,7 +221,7 @@ public:
         );
     }
 
-    /// Bind a range within a buffer object to an index.
+    /// @brief Bind a range within a buffer object to an index.
     /// @param index - Specify the index of the binding point within the array.
     /// @param offset - The starting offset in basic machine units into the buffer object.
     /// @param size - The amount of data in machine units that can be read from the buffet object while used as an indexed target.
@@ -241,7 +241,7 @@ public:
         );
     }
 
-    /// Unbind a buffer object from an index.
+    /// @brief Unbind a buffer object from an index.
     /// @param index - Specify the index of the binding point within the array.
     /// @see glBindBufferBase
     static void UnbindBase(GLuint index) {

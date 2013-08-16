@@ -144,7 +144,8 @@ public:
     /** It writes to stderr if the query didn't work. Also changes the currently active
       * program to the program given as a parameter. */
     /// @param program - The program to seek the uniform in. Will call program.Use().
-    /// @param identifier - The name of the uniform that is to be set.
+    /// @param _identifier - The name of the uniform that is to be set.
+    /// @param idx - The index of the element in the uniform array.
     /// @see glGetUniformLocation
     IndexedUniform(Program& program, const std::string& _identifier, size_t idx)
     {
