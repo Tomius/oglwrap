@@ -73,10 +73,9 @@ public:
         std::stringstream shaderString;
         shaderString << shaderFile.rdbuf();
 
-        // Remove the EOF(s) from the end of the string.
-        // Yeah some stupid files can have more than one EOF at the end.
+        // Remove the EOF from the end of the string.
         std::string fileData = shaderString.str();
-        while(fileData[fileData.length() - 1] == EOF)
+        if(fileData[fileData.length() - 1] == EOF)
             fileData.pop_back();
 
         // Add the shader source & compile
