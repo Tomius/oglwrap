@@ -184,6 +184,91 @@ public:
 
         return buffer;
     }
+
+    /// Mapping moves the data of the buffer to the client address space.
+    template <class T>
+    class Map {
+        void *data; ///< The pointer to the data fetched from the buffer.
+        size_t size; ///< The size of the data fetched from the buffer.
+    public:
+        /// Maps the whole buffer.
+        /// @param access - Specifies the access policy (R, W, R/W).
+        /// @see glMapBuffer
+        Map(BufferMapAccess access = BufferMapAccess::Read) {
+            oglwrap_PreCheckError();
+
+            data = glMapBuffer(buffer_t, access);
+            size = BufferObject<buffer_t>::Size();
+
+            oglwrap_CheckError();
+            oglwrap_PrintError(
+                GL_OUT_OF_MEMORY,
+                "Buffer::Map() is called, but the GL is unable to map the buffer object's data store."
+            );
+            oglwrap_PrintError(
+                GL_INVALID_OPERATION,
+                "Buffer::Map() is called, and either the default buffer is bound, or the "
+                "bound buffer is already mapped. "
+            );
+        }
+
+        /// Maps a range of the buffer.
+        /// @param length - Specifies a length of the range to be mapped (in bytes).
+        /// @param offset - Specifies a the starting offset within the buffer of the range to be mapped (in bytes).
+        /// @param access - Specifies the access policy (R, W, R/W).
+        /// @see glMapBufferRange
+        Map(GLintptr offset, GLsizeiptr length, BufferMapAccess access = BufferMapAccess::Read) {
+            oglwrap_PreCheckError();
+
+            data = glMapBufferRange(buffer_t, offset, length, access);
+            size = BufferObject<buffer_t>::Size();
+
+            oglwrap_CheckError();
+            oglwrap_PrintError(
+                GL_INVALID_VALUE,
+                "Buffer::Map() is called, but either of offset or length is negative, "
+                "or offset + length is greater than the value of GL_BUFFER_SIZE."
+            );
+            oglwrap_PrintError(
+                GL_OUT_OF_MEMORY,
+                "Buffer::Map() is called, but the GL is unable to map the buffer object's data store."
+            );
+            oglwrap_PrintError(
+                GL_INVALID_OPERATION,
+                "Buffer::Map() is called, and either the default buffer is bound, or the "
+                "bound buffer is already mapped. "
+            );
+        }
+
+        /// Unmaps the buffer.
+        /// @see glUnmapBuffer
+        ~Map() {
+            glUnmapBuffer(buffer_t);
+
+            oglwrap_CheckError();
+            oglwrap_PrintError(
+                GL_INVALID_OPERATION,
+                "Buffer::~Map() is called, and either the default buffer is bound, or the "
+                "bound buffer is not currently mapped. "
+            );
+        }
+
+        /// Returns the size of the mapped buffer in bytes
+        size_t Size() const {
+            return size;
+        }
+
+        /// Returns the size of the mapped buffer in elements
+        size_t Count() const {
+            return size / sizeof(T);
+        }
+
+        /// Returns a pointer to the data
+        T* Data() {
+            return static_cast<T*>(data);
+        }
+
+    }; // class Map
 };
 
 /// A Buffer that stores vertex attribute data.

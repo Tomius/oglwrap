@@ -128,6 +128,15 @@ enum BufferUsage {
 }
 typedef _BufferUsage::BufferUsage BufferUsage;
 
+namespace _BufferMapAccess {
+enum BufferMapAccess {
+    Read = GL_MAP_READ_BIT,
+    Write = GL_MAP_WRITE_BIT,
+    ReadWrite = GL_READ_WRITE
+};
+}
+typedef _BufferMapAccess::BufferMapAccess BufferMapAccess;
+
 // -------======{[ FrameBuffers ]}======-------
 
 namespace _FrameBufferTarget {
