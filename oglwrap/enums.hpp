@@ -449,6 +449,16 @@ enum CompFunc {
 }
 typedef _CompFunc::CompFunc CompFunc;
 
+namespace _TransformFeedbackPrimitiveType {
+enum TransformFeedbackPrimitiveType {
+    Triangles = GL_TRIANGLES,
+    Lines = GL_LINES,
+    Points = GL_POINTS
+};
+}
+
+typedef _TransformFeedbackPrimitiveType::TransformFeedbackPrimitiveType TransformFeedbackPrimitiveType;
+typedef _TransformFeedbackPrimitiveType::TransformFeedbackPrimitiveType TFB_PrimType;
 
 } // Namespace oglwrap
 
