@@ -427,6 +427,29 @@ enum Swizzle {
 }
 typedef _Swizzle::Swizzle Swizzle;
 
+namespace _CompMode {
+enum CompMode {
+    None = GL_NONE,
+    CompareRefToTexture = GL_COMPARE_REF_TO_TEXTURE
+};
+}
+typedef _CompMode::CompMode CompMode;
+
+namespace _CompFunc {
+enum CompFunc {
+    LEqual = GL_LEQUAL,
+    GEqual = GL_GEQUAL,
+    Less = GL_LESS,
+    Greater = GL_GREATER,
+    Equal = GL_EQUAL,
+    NotEqual = GL_NOTEQUAL,
+    Always = GL_ALWAYS,
+    Never = GL_NEVER,
+};
+}
+typedef _CompFunc::CompFunc CompFunc;
+
+
 } // Namespace oglwrap
 
 #endif // OGLWRAP_ENUMS_H

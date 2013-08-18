@@ -63,14 +63,14 @@ public:
 
     /// Binds the texture to this texture class's target.
     /// @see glBindTexture
-    void Bind() {
+    void Bind() const {
         oglwrap_PreCheckError();
 
         glBindTexture(texture_t, texture);
 
         oglwrap_CheckError();
         oglwrap_PrintError(
-            GL_INVALID_OPERATION
+            GL_INVALID_OPERATION,
             "TextureBase::Bind is called, but the texture was previously created "
             "for another target, and can not be bound for this target."
         );
@@ -94,7 +94,7 @@ public:
         oglwrap_CheckError();
         oglwrap_PrintError(
             GL_INVALID_ENUM,
-            "TextureBase::Active is called for a texUnit ID that is either negative or
+            "TextureBase::Active is called for a texUnit ID that is either negative or "
             "greater than GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS - 1"
         );
     }
@@ -254,6 +254,24 @@ public:
         oglwrap_PreCheckError();
 
         return texture;
+    }
+
+    /// Sets the compare mode.
+    /// @param mode - The desired compare mode.
+    /// @see glTexParameteri, GL_TEXTURE_COMPARE_MODE
+    static void CompareMode (CompMode mode) {
+        oglwrap_PreCheckError();
+
+        glTexParameteri(texture_t, GL_TEXTURE_COMPARE_MODE, mode);
+    }
+
+    /// Sets the compare function.
+    /// @param mode - The desired compare function.
+    /// @see glTexParameteri, GL_TEXTURE_COMPARE_FUNC
+    static void CompareFunc (CompFunc func) {
+        oglwrap_PreCheckError();
+
+        glTexParameteri(texture_t, GL_TEXTURE_COMPARE_FUNC, func);
     }
 };
 
