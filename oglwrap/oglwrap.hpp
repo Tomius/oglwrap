@@ -13,7 +13,7 @@
 #include "vertexAttrib.hpp"
 #include "global.hpp"
 #include "framebuffer.hpp"
-#include "debugOutput.hpp"
+#include "transfeedback.hpp"
 
 #endif // header guard
 

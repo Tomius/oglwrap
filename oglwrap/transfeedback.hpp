@@ -17,23 +17,39 @@ namespace oglwrap {
   * resubmit this data multiple times. */
 class TransformFeedback : protected RefCounted {
     GLuint handle; ///< The C handle for the TransformFeedback
+    enum TFBstate{none, working, paused} state;
 public:
     /// Generates a transform feedback.
     /// @see glGenTransformFeedbacks
-    TransformFeedback() {
+    TransformFeedback() : state(none) {
         oglwrap_PreCheckError();
 
         glGenTransformFeedbacks(1, &handle);
     }
 
+    /// Creates a transform feedback and activates it. It will work till the variable's lifetime.
+    /// @param mode - The primitive type the TFB should use.
+    /// @see glGenTransformFeedbacks
+    TransformFeedback(TFB_PrimType mode) : state(working) {
+        oglwrap_PreCheckError();
+
+        glGenTransformFeedbacks(1, &handle);
+        Bind();
+        Begin(mode);
+    }
+
     /// Deletes the transform feedback, if only one instance of it exists.
+    /** Also ends it if it's active. In this case it will change the currently active TFB. */
     /// @see glDeleteTransformFeedbacks
     ~TransformFeedback() {
         oglwrap_PreCheckError();
 
         if(!isDeletable())
             return;
-
+        if(state != none) {
+            Bind();
+            End();
+        }
         glDeleteTransformFeedbacks(1, &handle);
     }
 
@@ -47,19 +63,20 @@ public:
 
     /// Unbinds the currently bound transform feedback.
     /// @see glBindTransformFeedback
-    static void Unbind() const {
+    void Unbind() {
         oglwrap_PreCheckError();
 
         glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
     }
 
     /// Begins the transform feedback mode.
-    /// @param mode - The primitive type the TF should use.
+    /// @param mode - The primitive type the TFB should use.
     /// @see glBeginTransformFeedback
-    static void Begin(TFB_PrimType mode) {
+    void Begin(TFB_PrimType mode) {
         oglwrap_PreCheckError();
 
         glBeginTransformFeedback(mode);
+        state = working;
 
         oglwrap_CheckError();
         oglwrap_PrintError(
@@ -70,10 +87,11 @@ public:
 
     /// Ends the transform feedback mode.
     /// @see glEndTransformFeedback
-    static void End() {
+    void End() {
         oglwrap_PreCheckError();
 
-        glEndTransformFeedback(mode);
+        glEndTransformFeedback();
+        state = none;
 
         oglwrap_CheckError();
         oglwrap_PrintError(
@@ -88,10 +106,11 @@ public:
 
     /// Pauses transform feedback operations on the currently active transform feedback object.
     /// @see glPauseTransformFeedback
-    static void Pause() {
+    void Pause() {
         oglwrap_PreCheckError();
 
-        glPauseTransformFeedback(mode);
+        glPauseTransformFeedback();
+        state = paused;
 
         oglwrap_CheckError();
         oglwrap_PrintError(
@@ -103,10 +122,11 @@ public:
 
     /// Resumes transform feedback operations on the currently active transform feedback object.
     /// @see glResumeTransformFeedback
-    static void Pause() {
+    void Resume() {
         oglwrap_PreCheckError();
 
-        glResumeTransformFeedback(mode);
+        glResumeTransformFeedback();
+        state = working;
 
         oglwrap_CheckError();
         oglwrap_PrintError(
