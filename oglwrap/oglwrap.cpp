@@ -2,6 +2,8 @@
 #include "oglwrap.hpp"
 #include "texture.hpp"
 #include "shapes/cube.hpp"
+#include "shapes/fullScreenPic.hpp"
+#include "shapes/mesh.hpp"
 
 using namespace oglwrap;
 
