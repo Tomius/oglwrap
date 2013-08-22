@@ -4,7 +4,6 @@
 
 #ifndef TEXUTRE_2D_HPP
 #define TEXTURE_2D_HPP
-#pragma once
 
 #include "texture_base.hpp"
 
