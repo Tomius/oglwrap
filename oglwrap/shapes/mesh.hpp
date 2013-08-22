@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include <climits>
 #include <iostream>
 #include <stdexcept>
 #include <GL/glew.h>
@@ -32,7 +33,8 @@ class Mesh {
         VertexArray vao;
         ArrayBuffer verts, normals, texCoords;
         IndexBuffer indices;
-        unsigned materialIndex;
+        unsigned idxCount, materialIndex;
+        DataType idxType;
 
         MeshEntry() : materialIndex(INVALID_MATERIAL) {}
     };
@@ -61,6 +63,32 @@ public:
             throw std::runtime_error("Error parsing " + filename + " : " + importer.GetErrorString());
     }
 
+private:
+    template <class IdxType>
+    /// A template for setting different types (byte/short/int) of indices.
+    /** This expect the correct vao to be already bound!! */
+    /// @param index - The index of the entry
+    void SetIndices(size_t index) {
+        const aiMesh* paiMesh = pScene->mMeshes[index];
+
+        std::vector<IdxType> indicesVector;
+        indicesVector.reserve(paiMesh->mNumFaces * 3);
+
+        for(size_t i = 0; i < paiMesh->mNumFaces; i++) {
+            const aiFace& face = paiMesh->mFaces[i];
+            if(face.mNumIndices == 3) { // The invalid vertices are just ignored.
+                indicesVector.push_back(face.mIndices[0]);
+                indicesVector.push_back(face.mIndices[1]);
+                indicesVector.push_back(face.mIndices[2]);
+            }
+        }
+
+        entries[index].indices.Bind();
+        entries[index].indices.Data(indicesVector);
+        entries[index].idxCount = indicesVector.size();
+    }
+
+public:
     /// Loads in vertex positions and indices, and uploads the former into an attribute array.
     /** Uploads the vertex positions data to an attribute array, and sets it up for use.
       * Calling this function changes the currently active VAO and ArrayBuffer.
@@ -68,29 +96,16 @@ public:
     /// @param attrib - The attribute array to use as destination.
     void Positions(VertexAttribArray attrib) {
         for(size_t i = 0; i < entries.size(); i++) {
-
             const aiMesh* paiMesh = pScene->mMeshes[i];
 
-            std::vector<aiVector3D> vertsVector;
-            std::vector<unsigned> indicesVector;
+            // ~~~~~~<{ Load the vertices }>~~~~~~
 
+            std::vector<aiVector3D> vertsVector;
             size_t vertNum = paiMesh->mNumVertices;
             vertsVector.reserve(vertNum);
-            // The indices vector may actually be smaller if there
-            // are invalid vertices, from non-triangle-faces
-            indicesVector.reserve(paiMesh->mNumFaces * 3);
 
             for(size_t i = 0; i < vertNum; i++) {
                 vertsVector.push_back(paiMesh->mVertices[i]);
-            }
-
-            for(size_t i = 0; i < paiMesh->mNumFaces; i++) {
-                const aiFace& face = paiMesh->mFaces[i];
-                if(face.mNumIndices == 3) {
-                    indicesVector.push_back(face.mIndices[0]);
-                    indicesVector.push_back(face.mIndices[1]);
-                    indicesVector.push_back(face.mIndices[2]);
-                }
             }
 
             entries[i].vao.Bind();
@@ -99,8 +114,18 @@ public:
             entries[i].verts.Data(vertsVector);
             attrib.Setup<float>(3).Enable();
 
-            entries[i].indices.Bind();
-            entries[i].indices.Data(indicesVector);
+            // ~~~~~~<{ Load the indices }>~~~~~~
+
+            if(paiMesh->mNumFaces * 3 < UCHAR_MAX) {
+                entries[i].idxType = DataType::UnsignedByte;
+                SetIndices<unsigned char>(i);
+            } else if(paiMesh->mNumFaces * 3 < USHRT_MAX) {
+                entries[i].idxType = DataType::UnsignedShort;
+                SetIndices<unsigned short>(i);
+            } else {
+                entries[i].idxType = DataType::UnsignedInt;
+                SetIndices<unsigned int>(i);
+            }
         }
 
         VertexArray::Unbind();
@@ -250,8 +275,8 @@ public:
 
             glDrawElements(
                 GL_TRIANGLES,
-                entries[i].indices.Size() / sizeof(unsigned),
-                GL_UNSIGNED_INT,
+                entries[i].idxCount,
+                entries[i].idxType,
                 0
             );
 
