@@ -21,17 +21,19 @@
 #include "../vertexAttrib.hpp"
 #include "../textures/texture_2D.hpp"
 
+
 namespace oglwrap {
 
-class Mesh {
+const unsigned INVALID_MATERIAL = 0xFFFFFFFF;
 
+/// A class that can load in and draw meshes from over 30 file formats using assimp.
+class Mesh {
     struct MeshEntry {
         VertexArray vao;
         ArrayBuffer verts, normals, texCoords;
         IndexBuffer indices;
         unsigned materialIndex;
 
-        #define INVALID_MATERIAL 0xFFFFFFFF
         MeshEntry() : materialIndex(INVALID_MATERIAL) {}
     };
 
@@ -59,6 +61,11 @@ public:
             throw std::runtime_error("Error parsing " + filename + " : " + importer.GetErrorString());
     }
 
+    /// Loads in vertex positions and indices, and uploads the former into an attribute array.
+    /** Uploads the vertex positions data to an attribute array, and sets it up for use.
+      * Calling this function changes the currently active VAO and ArrayBuffer.
+      * The mesh cannot be drawn without calling this function. */
+    /// @param attrib - The attribute array to use as destination.
     void Positions(VertexAttribArray attrib) {
         for(size_t i = 0; i < entries.size(); i++) {
 
@@ -100,6 +107,10 @@ public:
         rdy2draw = true;
     }
 
+    /// Loads in vertex normals, and uploads it to an attribute array.
+    /** Uploads the vertex normals data to an attribute array, and sets it up for use.
+      * Calling this function changes the currently active VAO and ArrayBuffer. */
+    /// @param attrib - The attribute array to use as destination.
     void Normals(VertexAttribArray attrib) {
         for(size_t i = 0; i < entries.size(); i++) {
             const aiMesh* paiMesh = pScene->mMeshes[i];
@@ -123,9 +134,13 @@ public:
         VertexArray::Unbind();
     }
 
-    bool HasTexCoords() {
+    /// Checks if at least one mesh has texcoords
+    /** Returns true if at least one mesh in the scene has texture
+      * coordinates in the specified texture coordinate set. */
+    /// @param texCoordSet - Specifies the index of the texture coordinate set that should be inspected
+    bool HasTexCoords(unsigned char texCoordSet = 0) {
         for(size_t i = 0; i < entries.size(); i++) {
-            if(pScene->mMeshes[i]->HasTextureCoords(0)) {
+            if(pScene->mMeshes[i]->HasTextureCoords(texCoordSet)) {
                 return true;
             }
         }
@@ -133,9 +148,13 @@ public:
         return false;
     }
 
-    bool EveryEntryHasTexCoords() {
+    /// Checks if every mesh has texcoords
+    /** Returns true if all of the meshes in the scene have texture
+      * coordinates in the specified texture coordinate set. */
+    /// @param texCoordSet - Specifies the index of the texture coordinate set that should be inspected
+    bool EveryEntryHasTexCoords(unsigned char texCoordSet = 0) {
         for(size_t i = 0; i < entries.size(); i++) {
-            if(!pScene->mMeshes[i]->HasTextureCoords(0)) {
+            if(!pScene->mMeshes[i]->HasTextureCoords(texCoordSet)) {
                 return false;
             }
         }
@@ -143,7 +162,14 @@ public:
         return true;
     }
 
-    void TexCoords(VertexAttribArray attrib) {
+    /// Loads in vertex texture coordinates (the 0th set), and the materials.
+    /** Uploads the vertex textures coordinates data to an attribute array,
+      * and sets it up for use. Also loads in the materials (textures) for
+      * the mesh. May write to the stderr if a material is missing.
+      * Calling this function changes the currently active VAO and ArrayBuffer. */
+    /// @param attrib - The attribute array to use as destination.
+    /// @param texCoordSet - Specifies the index of the texture coordinate set that should be used
+    void TexCoords(VertexAttribArray attrib, unsigned char texCoordSet = 0) {
 
         // Initialize TexCoords
         for(size_t i = 0; i < entries.size(); i++) {
@@ -153,10 +179,10 @@ public:
             std::vector<aiVector2D> texCoordsVector;
 
             size_t vertNum = paiMesh->mNumVertices;
-            if(paiMesh->HasTextureCoords(0)) {
+            if(paiMesh->HasTextureCoords(texCoordSet)) {
                 texCoordsVector.reserve(vertNum);
                 for(size_t i = 0; i < vertNum; i++) {
-                    const aiVector3D& texC = paiMesh->mTextureCoords[0][i];
+                    const aiVector3D& texC = paiMesh->mTextureCoords[texCoordSet][i];
                     texCoordsVector.push_back(aiVector2D(texC.x, texC.y));
                 }
             } else {
@@ -206,6 +232,7 @@ public:
         }
     }
 
+    /// Renders the mesh.
     void Render() {
         if(!rdy2draw)
             return;
@@ -219,17 +246,24 @@ public:
                 }
             }
 
+            oglwrap_PreCheckError();
+
             glDrawElements(
                 GL_TRIANGLES,
                 entries[i].indices.Size() / sizeof(unsigned),
                 GL_UNSIGNED_INT,
                 0
             );
+
+            oglwrap_CheckError();
         }
 
         VertexArray::Unbind();
     }
 
+    /// Gives information about the mesh's bounding cuboid.
+    /// @param center - The vec3 where bounding cuboid's center is to be returned.
+    /// @param edges - The vec3 where bounding cuboid's edge lengths are to be returned.
     void BoundingCuboid(glm::vec3& center, glm::vec3& edges) {
         // Idea: get the minimums and maximums of the vertex positions
         // in each coordinate. Then the average of the mins and maxes
