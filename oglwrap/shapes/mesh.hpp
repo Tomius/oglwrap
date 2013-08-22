@@ -280,7 +280,7 @@ public:
                 if(paiMesh->mVertices[i].z < mins.z)
                     mins.z = paiMesh->mVertices[i].z;
 
-                if(maxes.x < paiMesh->mVertices[i].x)mins
+                if(maxes.x < paiMesh->mVertices[i].x)
                     maxes.x = paiMesh->mVertices[i].x;
                 if(maxes.y < paiMesh->mVertices[i].y)
                     maxes.y = paiMesh->mVertices[i].y;
