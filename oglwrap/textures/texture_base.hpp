@@ -41,8 +41,7 @@ public:
     /// @brief Creates a copy from an already existing texture. Can also change it's default target.
     /** You can use it to cast for example Texture2D to TextureRect. */
     TextureBase(const TextureBase<another_texture_t>& srctexture)
-        : RefCounted(srctexture)
-        , texture(srctexture.Expose()) {
+        : texture(srctexture.Expose()) {
     }
 
     /// @brief Binds the texture to this texture class's target.
