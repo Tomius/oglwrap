@@ -174,7 +174,7 @@ public:
     void Draw() {
         if(rdy2draw) {
             vao.Bind();
-            glDrawArrays(GL_TRIANGLES, 0, 108 * sizeof(float));
+            gl( DrawArrays(GL_TRIANGLES, 0, 108 * sizeof(float)) );
             vao.Unbind();
         }
     }

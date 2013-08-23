@@ -45,10 +45,9 @@ public:
         PixelDataType type,
         const void *data
     ) {
-        glTexImage3D(
+        gl( TexImage3D(
             texture_t, 0, internalFormat, width, height, depth, 0, format, type, data
-        );
-        oglwrap_CheckError();
+        ));
     }
 
     /// Uploads a mipmap of the image.
@@ -71,10 +70,9 @@ public:
         PixelDataType type,
         const void *data
     ) {
-        glTexImage3D(
+        gl( TexImage3D(
             texture_t, level, internalFormat, width, height, depth, 0, format, type, data
-        );
-        oglwrap_CheckError();
+        ));
     }
 
     /// Updates a part of the base image.
@@ -95,10 +93,9 @@ public:
         PixelDataType type,
         const void *data
     ) {
-        glTexSubImage3D(
+        gl( TexSubImage3D(
             texture_t, 0, xOffset, yOffset, zOffset, width, height, depth, format, type, data
-        );
-        oglwrap_CheckError();
+        ));
     }
 
     /// Updates a part of a mipmap image.
@@ -121,10 +118,9 @@ public:
         PixelDataType type,
         const void *data
     ) {
-        glTexSubImage3D(
+        gl( TexSubImage3D(
             texture_t, level, xOffset, yOffset, zOffset, width, height, depth, format, type, data
-        );
-        oglwrap_CheckError();
+        ));
     }
 
     /// Copies pixels from the current GL_READ_BUFFER and updates part of the base mipmap of this texture with them.
@@ -141,8 +137,7 @@ public:
         GLsizei width,
         GLsizei height
     ) {
-        glCopyTexSubImage3D(texture_t, 0, xOffset, yOffset, zOffset, x, y, width, height);
-        oglwrap_CheckError();
+        gl( CopyTexSubImage3D(texture_t, 0, xOffset, yOffset, zOffset, x, y, width, height) );
     }
 
     /// Copies pixels from the current GL_READ_BUFFER and updates part of a mipmap of this texture.
@@ -161,8 +156,7 @@ public:
         GLsizei width,
         GLsizei height
     ) {
-        glCopyTexSubImage3D(texture_t, level, xOffset, yOffset, zOffset, x, y, width, height);
-        oglwrap_CheckError();
+        gl( CopyTexSubImage3D(texture_t, level, xOffset, yOffset, zOffset, x, y, width, height) );
     }
 
     /// Returns the width of a mipmap of the currently bound texture of this class.
@@ -170,8 +164,7 @@ public:
     /// @see glGetTexLevelParameteriv, GL_TEXTURE_WIDTH
     static GLsizei Width(GLint level = 0) {
         GLsizei data;
-        glGetTexLevelParameteriv(texture_t, level, GL_TEXTURE_WIDTH, &data);
-        oglwrap_CheckError();
+        gl( GetTexLevelParameteriv(texture_t, level, GL_TEXTURE_WIDTH, &data) );
         return data;
     }
 
@@ -180,8 +173,7 @@ public:
     /// @see glGetTexLevelParameteriv, GL_TEXTURE_HEIGHT
     static GLsizei Height(GLint level = 0) {
         GLsizei data;
-        glGetTexLevelParameteriv(texture_t, level, GL_TEXTURE_HEIGHT, &data);
-        oglwrap_CheckError();
+        gl( GetTexLevelParameteriv(texture_t, level, GL_TEXTURE_HEIGHT, &data) );
         return data;
     }
 
@@ -190,8 +182,7 @@ public:
     /// @see glGetTexLevelParameteriv, GL_TEXTURE_DEPTH
     static GLsizei Depth(GLint level = 0) {
         GLsizei data;
-        glGetTexLevelParameteriv(texture_t, level, GL_TEXTURE_DEPTH, &data);
-        oglwrap_CheckError();
+        gl( GetTexLevelParameteriv(texture_t, level, GL_TEXTURE_DEPTH, &data) );
         return data;
     }
 
@@ -201,8 +192,7 @@ public:
     /// @param img - Returns the compressed texture image.
     /// @see glGetCompressedTexImage
     static void GetCompressedImage(GLint level, GLvoid* img) {
-        glGetCompressedTexImage(TexType::Tex3D, level, img);
-        oglwrap_CheckError();
+        gl( GetCompressedTexImage(TexType::Tex3D, level, img) );
     }
 };
 

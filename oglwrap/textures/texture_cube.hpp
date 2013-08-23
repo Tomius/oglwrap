@@ -44,10 +44,9 @@ public:
         PixelDataType type,
         const void *data
     ) {
-        glTexImage2D(
+        gl( TexImage2D(
             target, 0, internalFormat, width, height, 0, format, type, data
-        );
-        oglwrap_CheckError();
+        ));
     }
 
     /// Uploads a mipmap for one side of the cube.
@@ -70,10 +69,9 @@ public:
         PixelDataType type,
         const void *data
     ) {
-        glTexImage2D(
+        gl( TexImage2D(
             target, level, internalFormat, width, height, 0, format, type, data
-        );
-        oglwrap_CheckError();
+        ));
     }
 
 
@@ -95,10 +93,9 @@ public:
         PixelDataType type,
         const void *data
     ) {
-        glTexSubImage2D(
+        gl( TexSubImage2D(
             target, 0, xOffset, yOffset, width, height, format, type, data
-        );
-        oglwrap_CheckError();
+        ));
     }
 
     /// Updates a part of a mipmap image for one side of the cube.
@@ -121,10 +118,9 @@ public:
         PixelDataType type,
         const void *data
     ) {
-        glTexSubImage2D(
+        gl( TexSubImage2D(
             target, level, xOffset, yOffset, width, height, format, type, data
-        );
-        oglwrap_CheckError();
+        ));
     }
 
     /// Copies pixels from the current GL_READ_BUFFER into the base mipmap of one side of the cube.
@@ -141,8 +137,7 @@ public:
         GLsizei width,
         GLsizei height
     ) {
-        glCopyTexImage2D(target, 0, internalFormat, x, y, width, height, 0);
-        oglwrap_CheckError();
+        gl( CopyTexImage2D(target, 0, internalFormat, x, y, width, height, 0) );
     }
 
     /// Copies pixels from the current GL_READ_BUFFER into a mipmap of one side of the cube.
@@ -161,8 +156,7 @@ public:
         GLsizei width,
         GLsizei height
     ) {
-        glCopyTexImage2D(target, level, internalFormat, x, y, width, height, 0);
-        oglwrap_CheckError();
+        gl( CopyTexImage2D(target, level, internalFormat, x, y, width, height, 0) );
     }
 
     /// Copies pixels from the current GL_READ_BUFFER and updates part of the base mipmap of one side with them.
@@ -180,8 +174,7 @@ public:
         GLsizei width,
         GLsizei height
     ) {
-        glCopyTexSubImage2D(target, 0, xOffset, yOffset, x, y, width, height);
-        oglwrap_CheckError();
+        gl( CopyTexSubImage2D(target, 0, xOffset, yOffset, x, y, width, height) );
     }
 
     /// Copies pixels from the current GL_READ_BUFFER and updates part of a mipmap of one side.
@@ -201,8 +194,7 @@ public:
         GLsizei width,
         GLsizei height
     ) {
-        glCopyTexSubImage2D(target, level, xOffset, yOffset, x, y, width, height);
-        oglwrap_CheckError();
+        gl( CopyTexSubImage2D(target, level, xOffset, yOffset, x, y, width, height) );
     }
 
     /// Returns the width of a mipmap of one side.
@@ -211,8 +203,7 @@ public:
     /// @see glGetTexLevelParameteriv, GL_TEXTURE_WIDTH
     static GLsizei Width(CubeTarget target, GLint level = 0) {
         GLsizei data;
-        glGetTexLevelParameteriv(target, level, GL_TEXTURE_WIDTH, &data);
-        oglwrap_CheckError();
+        gl( GetTexLevelParameteriv(target, level, GL_TEXTURE_WIDTH, &data) );
         return data;
     }
 
@@ -222,8 +213,7 @@ public:
     /// @see glGetTexLevelParameteriv, GL_TEXTURE_HEIGHT
     static GLsizei Height(CubeTarget target, GLint level = 0) {
         GLsizei data;
-        glGetTexLevelParameteriv(target, level, GL_TEXTURE_HEIGHT, &data);
-        oglwrap_CheckError();
+        gl( GetTexLevelParameteriv(target, level, GL_TEXTURE_HEIGHT, &data) );
         return data;
     }
 
@@ -254,8 +244,7 @@ public:
     /// @param img - Returns the compressed texture image.
     /// @see glGetCompressedTexImage
     static void GetCompressedImage(CubeTarget target, GLint level, GLvoid* img) {
-        glGetCompressedTexImage(target, level, img);
-        oglwrap_CheckError();
+        gl( GetCompressedTexImage(target, level, img) );
     }
 
 #if OGLWRAP_IMAGEMAGICK

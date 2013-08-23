@@ -52,8 +52,6 @@ protected:
 public:
     /// Returns the C OpenGL handle for the uniform's location.
     GLuint Expose() const {
-        oglwrap_PreCheckError();
-
         return location;
     }
 };
@@ -80,16 +78,13 @@ public:
     :identifier(identifier)
     #endif
     {
-        oglwrap_PreCheckError();
-
         program.Use();
-        UniformObject<GLtype>::location = glGetUniformLocation(program.Expose(), identifier.c_str());
+        UniformObject<GLtype>::location = gl( GetUniformLocation(program.Expose(), identifier.c_str()) );
 
         if(UniformObject<GLtype>::location == INVALID_LOCATION) {
             std::cerr << "Error getting the location of uniform '" << identifier << "'" << std::endl;
         }
 
-        oglwrap_CheckError();
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
             "Tried to get a uniform's location from a"
@@ -102,8 +97,6 @@ public:
     /// @param value - Specifies the new value to be used for the uniform variable.
     /// @see glUniform*
     void Set(const GLtype& value) {
-        oglwrap_PreCheckError();
-
         UniformObject<GLtype>::Set(value);
 
         oglwrap_CheckError();
@@ -149,8 +142,6 @@ public:
     /// @see glGetUniformLocation
     IndexedUniform(Program& program, const std::string& _identifier, size_t idx)
     {
-        oglwrap_PreCheckError();
-
         std::stringstream id;
         id << _identifier << '[' << idx << ']';
         #if OGLWRAP_DEBUG
@@ -158,13 +149,12 @@ public:
         #endif
 
         program.Use();
-        UniformObject<GLtype>::location = glGetUniformLocation(program.Expose(), id.str().c_str());
+        UniformObject<GLtype>::location = gl( GetUniformLocation(program.Expose(), id.str().c_str()) );
 
         if(UniformObject<GLtype>::location == INVALID_LOCATION) {
             std::cerr << "Error getting the location of uniform '" << id.str() << "'" << std::endl;
         }
 
-        oglwrap_CheckError();
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
             "Tried to get a uniform's location from a"
@@ -177,8 +167,6 @@ public:
     /// @param value - Specifies the new value to be used for the uniform variable.
     /// @see glUniform*
     void Set(const GLtype& value) {
-        oglwrap_PreCheckError();
-
         UniformObject<GLtype>::Set(value);
 
         oglwrap_CheckError();
@@ -230,7 +218,6 @@ public:
         , program(program)
         , identifier(identifier)
         , firstCall(true) {
-        oglwrap_PreCheckError();
     }
 
     /// Sets the uniforms value.
@@ -239,13 +226,11 @@ public:
       * to the one specified in the constructor. */
     /// @param value - Specifies the new value to be used for the uniform variable.
     void Set(const GLtype& value) {
-        oglwrap_PreCheckError();
-
         program.Use();
 
         // Get the uniform's location only at the first Set call.
         if(firstCall) {
-            UniformObject<GLtype>::location = glGetUniformLocation(program.Expose(), identifier.c_str());
+            UniformObject<GLtype>::location = gl( GetUniformLocation(program.Expose(), identifier.c_str()) );
 
             // Check if it worked.
             if(UniformObject<GLtype>::location == INVALID_LOCATION) {
@@ -255,7 +240,6 @@ public:
             firstCall = false;
         }
 
-        oglwrap_CheckError();
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
             "Tried to get a uniform's location from a"
@@ -263,6 +247,7 @@ public:
         );
 
         UniformObject<GLtype>::Set(value);
+
         oglwrap_CheckError();
         oglwrap_PrintError(
             GL_INVALID_OPERATION,

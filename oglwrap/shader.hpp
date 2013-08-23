@@ -20,29 +20,78 @@ namespace oglwrap {
 
 // -------======{[ Shader ]}======-------
 
+/// A specialization of the ObjectExt class for Shaders (they aren't created with glGen*)
+template<ShaderType shader_t>
+class ShaderObject : public RefCounted {
+    /// The C handle for the object.
+    GLuint *handle;
+    /// The boolean for the object being initialized.
+    /** It is a pointer because it is shared between the copies. If one inits
+      * the handle, then all instances will have the inited handle */
+    bool *inited;
+public:
+    /// Creates the object, but does not allocate any resource yet.
+    ShaderObject()
+        : handle(new GLuint)
+        , inited(new bool) {
+
+        *inited = false;
+    }
+
+    /// @brief Deletes the object.
+    /** Deletes the resource if only one instance of
+      * this object exists, and it is initialized. */
+    ~ShaderObject() {
+        if(isDeletable()) {
+            if(*inited) {
+                gl( DeleteShader(*handle) )
+            }
+            delete inited;
+            delete handle;
+        }
+    }
+
+    /// Allocates the resource. It only happens upon the first use.
+    void Init() const {
+        *inited = true;
+        *handle = gl( CreateShader(shader_t) );
+    }
+
+    /// Returns if there's allocated memory for this class.
+    bool isInited() const {
+        return *inited;
+    }
+
+    /// Returns a self-pointer, useful for inheritance
+    const ShaderObject& Handle() const {
+        return *this;
+    }
+
+    /// Returns the C handle for the object. Inits it, if this is the first call for it.
+    operator GLuint() const {
+        if(!*inited)
+            Init();
+
+        return *handle;
+    }
+};
+
 template<ShaderType shader_t>
 /// A GLSL shader object used to control the drawing process.
-class Shader : protected RefCounted {
-    GLuint shader; ///< The C API handle for the buffer.
+/// @see glCreateShader, glDeleteShader
+class Shader {
+    ShaderObject<shader_t> shader; ///< The handle for the buffer.
     bool compiled; ///< Stores if the shader is compiled.
     std::string filename;  ///< Stores the source file's name if the shader was initialized from file.
 public:
     /// Creates the an empty shader object.
-    /// @see glCreateShader
-    Shader() : compiled(false) {
-        oglwrap_PreCheckError();
+    Shader() : compiled(false) { }
 
-        shader = glCreateShader(shader_t);
-    }
-
-    /// Creates the a shader and sets the file as the shader source.
+    /// Creates a shader and sets the file as the shader source.
     /// @param file - The file to load and set as shader source.
     /// @see glCreateShader, glShaderSource
     Shader(const std::string& file)
             : compiled(false), filename(file) {
-        oglwrap_PreCheckError();
-
-        shader = glCreateShader(shader_t);
         SourceFile(file);
     }
 
@@ -50,18 +99,14 @@ public:
     /// @param source - string containing the shader code.
     /// @see glShaderSource
     void Source(const std::string& source)  {
-        oglwrap_PreCheckError();
-
         const char *str = source.c_str();
-        glShaderSource(shader, 1, &str, nullptr);
+        gl( ShaderSource(shader, 1, &str, nullptr) );
     }
 
     /// Loads a file and uploads it as shader source
     /// @param file - the shader file's path
     /// @see glShaderSource
     void SourceFile(const std::string& file)  {
-        oglwrap_PreCheckError();
-
         filename = file;
         std::ifstream shaderFile(file.c_str());
         if(!shaderFile.is_open()) {
@@ -80,7 +125,7 @@ public:
 
         // Add the shader source & compile
         const char *strFileData = fileData.c_str();
-        glShaderSource(shader, 1, &strFileData, nullptr);
+        gl( ShaderSource(shader, 1, &strFileData, nullptr) );
     }
 
     /// Compiles the shader code.
@@ -89,23 +134,21 @@ public:
       * when the shader gets attached a program. */
     /// @see glCompileShader
     void Compile()  {
-        oglwrap_PreCheckError();
-
         if(compiled) {
             return;
         }
-        glCompileShader(shader);
+        gl( CompileShader(shader) );
         compiled = true;
 
         // Get compilation status
         GLint status;
-        glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+        gl( GetShaderiv(shader, GL_COMPILE_STATUS, &status) );
         if(status == GL_FALSE) {
             GLint infoLogLength;
-            glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
+            gl( GetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength) );
 
             GLchar *strInfoLog = new GLchar[infoLogLength + 1];
-            glGetShaderInfoLog(shader, infoLogLength, nullptr, strInfoLog);
+            gl( GetShaderInfoLog(shader, infoLogLength, nullptr, strInfoLog) );
 
             const char * strShaderType = nullptr;
             switch(shader_t) {
@@ -142,22 +185,8 @@ public:
         }
     }
 
-    /// If only one instance of this shader exists, marks the shader for deletion.
-    /** The shader won't be deleted until the shader is attached to at least one program. */
-    /// @see glDeleteShader
-    ~Shader() {
-        oglwrap_PreCheckError();
-
-        if(!isDeletable()) {
-            return;
-        }
-        glDeleteShader(shader);
-    }
-
     /// Returns the C OpenGL handle for the shader.
-    GLuint Expose() const  {
-        oglwrap_PreCheckError();
-
+    const ShaderObject<shader_t>& Expose() const  {
         return shader;
     }
 };
@@ -229,31 +258,80 @@ typedef Shader<ShaderType::TessEval> TessEvalShader;
 
 // -------======{[ Shader Program ]}======-------
 
-/// The program object can combine multiple shader stages (built from shader objects) into a single, linked whole.
-class Program : protected RefCounted {
-    std::vector<GLuint> shaders; ///< IDs of the shaders attached to the program
-    GLuint program; ///< The C OpenGL handle for the program.
-    bool linked; ///< Stores if the program is linked.
+/// A specialization of the ObjectExt class for Programs (they aren't created with glGen*)
+class ProgramObject : public RefCounted {
+    /// The C handle for the object.
+    GLuint *handle;
+    /// The boolean for the object being initialized.
+    /** It is a pointer because it is shared between the copies. If one inits
+      * the handle, then all instances will have the inited handle */
+    bool *inited;
 public:
-    /// Generates an empty program object.
-    /// @see glCreateProgram
-    Program() : program(glCreateProgram()), linked(false) {
-        oglwrap_PreCheckError();
+    /// Creates the object, but does not allocate any resource yet.
+    ProgramObject()
+        : handle(new GLuint)
+        , inited(new bool) {
+
+        *inited = false;
     }
 
-    /// Detaches all the shader objects currently attached to this program, and deletes the program.
-    /** Only if one instance of this program exists */
+    /// @brief Deletes the object.
+    /** Deletes the resource if only one instance of
+      * this object exists, and it is initialized. */
+    ~ProgramObject() {
+        if(isDeletable()) {
+            if(*inited) {
+                gl( DeleteProgram(*handle) )
+            }
+            delete inited;
+            delete handle;
+        }
+    }
+
+    /// Allocates the resource. It only happens upon the first use.
+    void Init() const {
+        *inited = true;
+        *handle = gl( CreateProgram() );
+    }
+
+    /// Returns if there's allocated memory for this class.
+    bool isInited() const {
+        return *inited;
+    }
+
+    /// Returns a self-pointer, useful for inheritance
+    const ProgramObject& Handle() const {
+        return *this;
+    }
+
+    /// Returns the C handle for the object. Inits it, if this is the first call for it.
+    operator GLuint() const {
+        if(!*inited)
+            Init();
+
+        return *handle;
+    }
+};
+
+/// @brief The program object can combine multiple shader stages (built from shader objects) into a single, linked whole.
+/// glCreateProgram, glDeleteProgram
+class Program {
+    ProgramObject program; ///< The C OpenGL handle for the program.
+    std::vector<GLuint> shaders; ///< IDs of the shaders attached to the program
+    bool linked; ///< Stores if the program is linked.
+public:
+    /// Creates an empty program object.
+    Program() : linked(false) {
+    }
+
+    /// @brief Detaches all the shader objects currently attached to this program, and deletes the program.
     /// @see glDetachShader, glDeleteShader
     ~Program() {
-        oglwrap_PreCheckError();
-
-        if(!isDeletable()) {
-            return;
+        if(program.isDeletable()) {
+            for(size_t i = 0; i < shaders.size(); i++) {
+                gl( DetachShader(program, shaders[i]) );
+            }
         }
-        for(size_t i = 0; i < shaders.size(); i++) {
-            glDetachShader(program, shaders[i]);
-        }
-        glDeleteProgram(program);
     }
 
     template<ShaderType shader_t>
@@ -261,12 +339,10 @@ public:
     /// @param shader Specifies the shader object that is to be attached.
     /// @see glAttachShader
     void AttachShader(Shader<shader_t>& shader) {
-        oglwrap_PreCheckError();
-
         shader.Compile();
         shaders.push_back(shader.Expose());
-        glAttachShader(program, shader.Expose());
-        oglwrap_CheckError();
+        gl( AttachShader(program, shader.Expose()) );
+
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
             "Program::AttachShader called on the same shader twice."
@@ -286,29 +362,27 @@ public:
     /** If the linking fails, it throws a std::runtime_error containing the linking info. */
     /// @see glLinkProgram
     Program& Link() {
-        oglwrap_PreCheckError();
-
         if(linked) {
             return *this;
         }
-        glLinkProgram(program);
+        gl( LinkProgram(program) );
         linked = true;
 
         GLint status;
-        glGetProgramiv(program, GL_LINK_STATUS, &status);
+        gl( GetProgramiv(program, GL_LINK_STATUS, &status) );
         if(status == GL_FALSE) {
             GLint infoLogLength;
-            glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
+            gl( GetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength) );
 
             GLchar *strInfoLog = new GLchar[infoLogLength + 1];
-            glGetProgramInfoLog(program, infoLogLength, NULL, strInfoLog);
+            gl( GetProgramInfoLog(program, infoLogLength, NULL, strInfoLog) );
             std::stringstream str;
             str << "OpenGL program linker failure: " << strInfoLog << std::endl;
             delete[] strInfoLog;
 
             throw std::runtime_error(str.str());
         }
-        oglwrap_CheckError();
+
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
             "Program::Link is called on the currently active program "
@@ -320,13 +394,10 @@ public:
     /// Installs the program as a part of the current rendering state.
     /// @see glUseProgram
     Program& Use() {
-        oglwrap_PreCheckError();
-
         if(!linked) {
             Link();
         }
-        glUseProgram(program);
-        oglwrap_CheckError();
+        gl( UseProgram(program) );
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
             "Program::Use is called, but the program could not be made "
@@ -339,16 +410,12 @@ public:
     /// Installs the default OpenGL shading program to the current rendering state.
     /// @see glUseProgram
     Program& Unuse() {
-        oglwrap_PreCheckError();
-
-        glUseProgram(0);
+        gl( UseProgram(0) );
         return *this;
     }
 
     /// Returns the C OpenGL handle for the program.
-    GLuint Expose() const {
-        oglwrap_PreCheckError();
-
+    const ProgramObject& Expose() const {
         return program;
     }
 };

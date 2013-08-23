@@ -15,52 +15,30 @@
 
 namespace oglwrap {
 
-/// A buffer that servers as a storage for a framebuffer.
-class RenderBuffer : protected RefCounted {
-    GLuint renderbuffer; ///< The C handle for the render buffer.
+/// @brief A buffer that servers as a storage for a framebuffer.
+/// @see glGenRenderbuffers, glDeleteRenderbuffers
+class RenderBuffer {
+    /// The handle for the render buffer.
+    ObjectExt<glGenRenderbuffers, glDeleteRenderbuffers> renderbuffer;
 public:
-    /// @brief Generates the renderbuffer
-    /// @see glGenRenderbuffers
-    RenderBuffer() {
-        oglwrap_PreCheckError();
-
-        glGenRenderbuffers(1, &renderbuffer);
-    }
-
-    /// @brief Deletes the renderbuffer, if only one instance of it exists.
-    /// @see glDeleteRenderbuffers
-    ~RenderBuffer() {
-        oglwrap_PreCheckError();
-
-        if(!isDeletable())
-            return;
-        glDeleteRenderbuffers(1, &renderbuffer);
-    }
 
     /// @brief Binds this renderbuffer.
     /// @see glBindRenderbuffer
     void Bind() {
-        oglwrap_PreCheckError();
-
-        glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
+        gl( BindRenderbuffer(GL_RENDERBUFFER, renderbuffer) );
     }
 
     /// @brief Unbinds this renderbuffer.
     /// @see glBindRenderbuffer
     void Unbind() {
-        oglwrap_PreCheckError();
-
-        glBindRenderbuffer(GL_RENDERBUFFER, 0);
+        gl( BindRenderbuffer(GL_RENDERBUFFER, 0) );
     }
 
     /// @brief Establish data storage, format and dimensions of a renderbuffer object's image.
     /// @see glRenderbufferStorage
     void Storage(PixelDataInternalFormat internalFormat, GLsizei width, GLsizei height) {
-        oglwrap_PreCheckError();
+        gl( RenderbufferStorage(GL_RENDERBUFFER, internalFormat, width, height) );
 
-        glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, width, height);
-
-        oglwrap_CheckError();
         oglwrap_PrintError(
             GL_INVALID_VALUE,
             "RenderBuffer::Storage is called, but width or height is negative, or greater "
@@ -83,10 +61,8 @@ public:
     void StorageMultisample(
         GLsizei samples, PixelDataInternalFormat internalFormat, GLsizei width, GLsizei height
     ) {
-        oglwrap_PreCheckError();
+        gl( RenderbufferStorageMultisample(GL_RENDERBUFFER, samples, internalFormat, width, height) );
 
-        glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, internalFormat, width, height);
-        oglwrap_CheckError();
         oglwrap_PrintError(
             GL_INVALID_VALUE,
             "RenderBuffer::Storage is called, but width or height is negative, or greater "
@@ -104,54 +80,30 @@ public:
         );
     }
 
-    /// Returns the C handle for this object.
-    GLuint Expose() const {
-        oglwrap_PreCheckError();
-
+    /// Returns the handle for this object.
+    const ObjectExt<glGenRenderbuffers, glDeleteRenderbuffers>& Expose() const {
         return renderbuffer;
     }
 };
 
 /// A buffer that you can draw to.
-class FrameBuffer : protected RefCounted {
-    GLuint framebuffer; ///< The C handle for the framebuffer
+class FrameBuffer {
+    ObjectExt<glGenFramebuffers, glDeleteFramebuffers> framebuffer; ///< The handle for the framebuffer
     GLenum currentTarget; ///< The current target of this Framebuffer
 public:
-    /// @brief Generates the framebuffer.
-    /// @see glGenFramebuffers
-    FrameBuffer() {
-        oglwrap_PreCheckError();
-
-        glGenFramebuffers(1, &framebuffer);
-    }
-
-    /// @brief Deletes the framebuffer, if only one instance of it exists.
-    /// @see glDeleteFramebuffers
-    ~FrameBuffer() {
-        oglwrap_PreCheckError();
-
-        if(!isDeletable())
-            return;
-        glDeleteFramebuffers(1, &framebuffer);
-    }
-
     /// @brief Binds the framebuffer for reading and/or drawing.
     /// @param target - The target to bind the framebuffer to.
     /// @see glBindFramebuffer
     void Bind(FBO_Target target = FBO_Target::Read_Draw) {
-        oglwrap_PreCheckError();
-
-        glBindFramebuffer(target, framebuffer);
+        gl( BindFramebuffer(target, framebuffer) );
         currentTarget = target;
     }
 
     /// @brief Unbinds the buffer from the target it is currently bound to.
     /// @see glBindFramebuffer
     void Unbind() {
-        oglwrap_PreCheckError();
-
         if(currentTarget != 0) {
-            glBindFramebuffer(currentTarget, 0);
+            gl( BindFramebuffer(currentTarget, 0) );
             currentTarget = 0;
         }
     }
@@ -160,8 +112,6 @@ public:
     /** Throws an exception if the framebuffer isn't bound. */
     /// @see glCheckFramebufferStatus
     FBO_Status Status() {
-        oglwrap_PreCheckError();
-
         if(!currentTarget) {
             throw std::logic_error(
                 "FrameBuffer::Status is called, but the framebuffer isn't bound to any target."
@@ -172,16 +122,12 @@ public:
 
     /// @brief Returns if the framebuffer is currently bound.
     bool isBound() {
-        oglwrap_PreCheckError();
-
         return currentTarget != 0;
     }
 
     /// @brief Throws an exception if the framebuffer isn't complete.
     /// @see glCheckFramebufferStatus
     void Validate() {
-        oglwrap_PreCheckError();
-
         std::string errStr;
 
         if(!currentTarget) {
@@ -243,15 +189,14 @@ public:
     /// @param renderBuffer - Specifies the renderbuffer object that is to be attached.
     /// @see glFramebufferRenderbuffer
     void AttachBuffer(FBO_Attachment attachment, RenderBuffer renderBuffer) {
-        oglwrap_PreCheckError();
-
         if(!currentTarget) {
             std::cerr << "FrameBuffer::AttachBuffer is called, but the "
                          "framebuffer isn't bound to any target." << std::endl;
             return;
         }
-        glFramebufferRenderbuffer(currentTarget, attachment, GL_RENDERBUFFER, renderBuffer.Expose());
-        oglwrap_CheckError();
+
+        gl( FramebufferRenderbuffer(currentTarget, attachment, GL_RENDERBUFFER, renderBuffer.Expose()) );
+
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
             "FrameBuffer::AttachBuffer is called, but the default FBO is bound to this target."
@@ -265,15 +210,13 @@ public:
     /// @param level - Specifies the mipmap level of \a texture to attach.
     /// @see glFramebufferTexture
     void AttachTexture(FBO_Attachment attachment, const TextureBase<texture_t>& texture, GLuint level) {
-        oglwrap_PreCheckError();
-
         if(!currentTarget) {
             std::cerr << "FrameBuffer::AttachBuffer is called, but the "
                          "framebuffer isn't bound to any target." << std::endl;
             return;
         }
-        glFramebufferTexture(currentTarget, attachment, texture.Expose(), level);
-        oglwrap_CheckError();
+        gl( FramebufferTexture(currentTarget, attachment, texture.Expose(), level) );
+
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
             "FrameBuffer::AttachBuffer is called, but the default FBO is bound to this target."
@@ -289,19 +232,21 @@ public:
     void AttachTexture(
         FBO_Attachment attachment, CubeTarget target, const TextureCube& texture, GLuint level
     ) {
-        oglwrap_PreCheckError();
-
         if(!currentTarget) {
             std::cerr << "FrameBuffer::AttachBuffer is called, but the "
                          "framebuffer isn't bound to any target." << std::endl;
             return;
         }
-        glFramebufferTexture2D(currentTarget, attachment, target, texture.Expose(), level);
-        oglwrap_CheckError();
+        gl( FramebufferTexture2D(currentTarget, attachment, target, texture.Expose(), level) );
+
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
             "FrameBuffer::AttachBuffer is called, but the default FBO is bound to this target."
         );
+    }
+
+    const ObjectExt<glGenFramebuffers, glDeleteFramebuffers>& Expose() {
+        return framebuffer;
     }
 };
 

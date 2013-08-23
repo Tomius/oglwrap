@@ -15,25 +15,19 @@ namespace oglwrap {
   * processed by a Vertex Shader and optionally a Geometry Shader will be written to buffer
   * objects. This allows one to preserve the post-transform rendering state of an object and
   * resubmit this data multiple times. */
+/// @see glGenTransformFeedbacks, glDeleteTransformFeedbacks
 class TransformFeedback : protected RefCounted {
-    GLuint handle; ///< The C handle for the TransformFeedback
+    /// The handle for the TransformFeedback
+    ObjectExt<glGenTransformFeedbacks, glDeleteTransformFeedbacks> handle;
     enum TFBstate{none, working, paused} state;
 public:
     /// Generates a transform feedback.
-    /// @see glGenTransformFeedbacks
-    TransformFeedback() : state(none) {
-        oglwrap_PreCheckError();
-
-        glGenTransformFeedbacks(1, &handle);
-    }
+    TransformFeedback() : state(none) {}
 
     /// Creates a transform feedback and activates it. It will work till the variable's lifetime.
     /// @param mode - The primitive type the TFB should use.
     /// @see glGenTransformFeedbacks
     TransformFeedback(TFB_PrimType mode) : state(working) {
-        oglwrap_PreCheckError();
-
-        glGenTransformFeedbacks(1, &handle);
         Bind();
         Begin(mode);
     }
@@ -42,43 +36,33 @@ public:
     /** Also ends it if it's active. In this case it will change the currently active TFB. */
     /// @see glDeleteTransformFeedbacks
     ~TransformFeedback() {
-        oglwrap_PreCheckError();
-
-        if(!isDeletable())
+        if(!handle.isDeletable())
             return;
         if(state != none) {
             Bind();
             End();
         }
-        glDeleteTransformFeedbacks(1, &handle);
     }
 
     /// Binds the transform feedback.
     /// @see glBindTransformFeedback
     void Bind() const {
-        oglwrap_PreCheckError();
-
-        glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, handle);
+        gl( BindTransformFeedback(GL_TRANSFORM_FEEDBACK, handle) );
     }
 
     /// Unbinds the currently bound transform feedback.
     /// @see glBindTransformFeedback
     void Unbind() {
-        oglwrap_PreCheckError();
-
-        glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
+        gl( BindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0) );
     }
 
     /// Begins the transform feedback mode.
     /// @param mode - The primitive type the TFB should use.
     /// @see glBeginTransformFeedback
     void Begin(TFB_PrimType mode) {
-        oglwrap_PreCheckError();
-
-        glBeginTransformFeedback(mode);
         state = working;
+        gl( BeginTransformFeedback(mode) );
 
-        oglwrap_CheckError();
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
             "TransformFeedback::Begin is called while transform feedback is active."
@@ -88,12 +72,9 @@ public:
     /// Ends the transform feedback mode.
     /// @see glEndTransformFeedback
     void End() {
-        oglwrap_PreCheckError();
-
-        glEndTransformFeedback();
         state = none;
+        gl( EndTransformFeedback() );
 
-        oglwrap_CheckError();
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
             "TransformFeedback::End is called but either of the following apply: \n"
@@ -107,12 +88,9 @@ public:
     /// Pauses transform feedback operations on the currently active transform feedback object.
     /// @see glPauseTransformFeedback
     void Pause() {
-        oglwrap_PreCheckError();
-
-        glPauseTransformFeedback();
         state = paused;
+        gl( PauseTransformFeedback() );
 
-        oglwrap_CheckError();
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
             "TransformFeedback::Pause is called but the currently bound "
@@ -123,12 +101,9 @@ public:
     /// Resumes transform feedback operations on the currently active transform feedback object.
     /// @see glResumeTransformFeedback
     void Resume() {
-        oglwrap_PreCheckError();
-
-        glResumeTransformFeedback();
         state = working;
+        gl( ResumeTransformFeedback() );
 
-        oglwrap_CheckError();
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
             "TransformFeedback::Pause is called but the currently bound "

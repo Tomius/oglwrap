@@ -26,41 +26,25 @@ namespace oglwrap {
   * data as well as the sources for the vertex arrays. Note that VAOs do not
   * contain the arrays themselves, the arrays are stored in ArrayBuffer Objects.
   * The VAOs simply reference already existing buffer objects. */
-class VertexArray : protected RefCounted {
-    GLuint vao; ///< The C handle for the VAO
+/// @see glGenVertexArrays, glDeleteVertexArrays
+class VertexArray {
+    ObjectExt<glGenVertexArrays, glDeleteVertexArrays> vao; ///< The handle for the VAO
 public:
-    /// Generates a VAO.
-    /// @see glGenVertexArrays
-    VertexArray() {
-        oglwrap_PreCheckError();
-
-        glGenVertexArrays(1, &vao);
-    }
-
-    /// If only one instance of this object exists, deletes the VAO it has created.
-    /// @see glDeleteVertexArrays
-    ~VertexArray() {
-        oglwrap_PreCheckError();
-
-        if(!isDeletable())
-            return;
-        glDeleteVertexArrays(1, &vao);
-    }
-
     /// Binds the Vertex Array object, so that it will be used for the further draw calls.
     /// @see glBindVertexArray
     void Bind() {
-        oglwrap_PreCheckError();
-
-        glBindVertexArray(vao);
+        gl( BindVertexArray(vao) );
     }
 
     /// Unbinds the currently active VAO.
     /// @see glBindVertexArray
     static void Unbind() {
-        oglwrap_PreCheckError();
+        gl( BindVertexArray(0) );
+    }
 
-        glBindVertexArray(0);
+    /// Returns the handle for the VertexArray.
+    const ObjectExt<glGenVertexArrays, glDeleteVertexArrays>& Expose() const {
+        return vao;
     }
 };
 
@@ -84,13 +68,11 @@ public:
     /// @param identifier - Specifies the attribute's name you want to setup.
     /// @see glGetAttribLocation
     VertexAttribArray(Program& program, const std::string& identifier) {
-        oglwrap_PreCheckError();
-
-        location = glGetAttribLocation(program.Expose(), identifier.c_str());
+        location = gl( GetAttribLocation(program.Expose(), identifier.c_str()) );
         if(location == INVALID_LOCATION) {
             std::cerr << "Unable to get VertexAttribArray location of '" << identifier << "'" << std::endl;
         }
-        oglwrap_CheckError();
+
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
             "VertexAttribArray constructor is called with a program, that isn't linked successfully."
@@ -103,8 +85,6 @@ public:
     /// @param values_per_vertex - The dimension of the attribute data divided by the dimension of the template parameter.
     /// @see glVertexAttribPointer, glVertexAttribIPointer, glVertexAttribLPointer
     const VertexAttribArray& Setup(GLuint values_per_vertex = 1) const {
-        oglwrap_PreCheckError();
-
         throw std::invalid_argument("Unrecognized OpenGL type for VertexAttribArray::Setup");
         return *this;
     }
@@ -147,10 +127,8 @@ public:
                                      bool normalized = false,
                                      GLsizei stride = 0,
                                      void *offset_pointer = nullptr) const {
-        oglwrap_PreCheckError();
+        gl( VertexAttribPointer(location, values_per_vertex, type, normalized, stride, offset_pointer) );
 
-        glVertexAttribPointer(location, values_per_vertex, type, normalized, stride, offset_pointer);
-        oglwrap_CheckError();
         oglwrap_PrintError(
             GL_INVALID_VALUE,
             "VertexAttribArray::Pointer is called with size different "
@@ -173,10 +151,8 @@ public:
                                       WholeDataType type = WholeDataType::Int,
                                       GLsizei stride = 0,
                                       void *offset_pointer = nullptr) const {
-        oglwrap_PreCheckError();
+        gl( VertexAttribIPointer(location, values_per_vertex, type, stride, offset_pointer) );
 
-        glVertexAttribIPointer(location, values_per_vertex, type, stride, offset_pointer);
-        oglwrap_CheckError();
         oglwrap_PrintError(
             GL_INVALID_VALUE,
             "VertexAttribArray::IPointer is called with size different "
@@ -197,10 +173,8 @@ public:
     const VertexAttribArray& LPointer(GLuint values_per_vertex = 4,
                                       GLsizei stride = 0,
                                       void *offset_pointer = nullptr) const {
-        oglwrap_PreCheckError();
+        gl( VertexAttribLPointer(location, values_per_vertex, DataType::Double, stride, offset_pointer) );
 
-        glVertexAttribLPointer(location, values_per_vertex, DataType::Double, stride, offset_pointer);
-        oglwrap_CheckError();
         oglwrap_PrintError(
             GL_INVALID_VALUE,
             "VertexAttribArray::LPointer is called with size different "
@@ -216,18 +190,14 @@ public:
     /// Enables the attribute array slot
     /// @see glEnableVertexAttribArray
     const VertexAttribArray& Enable() const {
-        oglwrap_PreCheckError();
-
-        glEnableVertexAttribArray(location);
+        gl( EnableVertexAttribArray(location) );
         return *this;
     }
 
     /// Disables the attribute array slot
     /// @see glDisableVertexAttribArray
     const VertexAttribArray& Disable() const {
-        oglwrap_PreCheckError();
-
-        glDisableVertexAttribArray(location);
+        gl( DisableVertexAttribArray(location) );
         return *this;
     }
 
@@ -235,9 +205,7 @@ public:
     /// @param divisor - Specify the number of instances that will pass between updates of the attribute.
     /// @see glVertexAttribDivisor
     const VertexAttribArray& Divisor(GLuint divisor) const {
-        oglwrap_PreCheckError();
-
-        glVertexAttribDivisor(location, divisor);
+        gl( VertexAttribDivisor(location, divisor) );
         return *this;
     }
 };

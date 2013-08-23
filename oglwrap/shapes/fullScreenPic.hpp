@@ -69,7 +69,7 @@ public:
     void Draw() {
         if(rdy2draw) {
             vao.Bind();
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+            gl( DrawArrays(GL_TRIANGLE_STRIP, 0, 4) );
             vao.Unbind();
         }
     }

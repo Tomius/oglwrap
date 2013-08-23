@@ -10,6 +10,14 @@
 #include <stdexcept>
 #include "config.hpp"
 
+#define oglfunc(func) \
+    func;\
+    oglwrap_CheckError();
+
+#define gl(func) \
+    gl##func;\
+    oglwrap_CheckError();
+
 #if OGLWRAP_DEBUG
 static GLenum lastError;
 /// Prints additional info in case of a specific OpenGL error.

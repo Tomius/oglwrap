@@ -271,16 +271,12 @@ public:
                 }
             }
 
-            oglwrap_PreCheckError();
-
-            glDrawElements(
+            gl( DrawElements(
                 GL_TRIANGLES,
                 entries[i].idxCount,
                 entries[i].idxType,
                 0
-            );
-
-            oglwrap_CheckError();
+            ));
         }
 
         VertexArray::Unbind();
