@@ -5,8 +5,6 @@
 #ifndef GENERAL_HPP
 #define GENERAL_HPP
 
-#include <functional>
-
 /// Macro to convert an angle value from degrees to radians
 #define ToRadian(x) ((x) * M_PI / 180.0f)
 
@@ -64,15 +62,12 @@ typedef void (*glGenFunc) (GLsizei, GLuint*);
 /// The signature of glDelete* functions
 typedef void (*glDeleteFunc) (GLsizei, const GLuint*);
 
-// Note: This class wouldn't work if the template parameters were
-// normal function pointers rather than function pointer constant
-// references. The reason behind it is that, for example glew's glGenBuffers,
-// (__glewGenBuffers) is a local function pointer to an external function,
-// so ObjectExt<glGenBuffers, glDeleteBuffers> tries to create the template
-// with a function pointer not the function itself. But function pointers
-// can not be used as template arguments, because they are mutable. Though
-// a pointer (or a const&) to a function pointer is totally valid, and it
-// does what we want.
+// Note the '&' after the function pointer. The template parameters for
+// objects defined in an extension are function pointer that point out
+// to an external library, therefore the function pointer itself has
+// undefined value compile time, it will get a value after linking,
+// but template deductions happen compile time. But the address of
+// the function pointer works fine as a template argument.
 template <const glGenFunc& constructor, const glDeleteFunc& destructor>
 /// A class for managing OpenGL resources that are defined in an extension.
 /** This class is pretty simple, but really important. What it does,
@@ -137,7 +132,12 @@ public:
     }
 };
 
-template <glGenFunc constructor, glDeleteFunc destructor>
+// Functions that existed in legacy OpenGL like glGenTextures, are explicitly defined
+// compile time. These work fine without the '&'. But they won't work with the ObjectExt
+// class, as they are functions not function pointers, so writing their name already
+// causes an indirection, their name evaluates as a hexa value not a variable, therefore
+// we can't get the address of it, nor can reference it.
+template <const glGenFunc constructor, const glDeleteFunc destructor>
 /// A class for managing OpenGL resources for object that existed in legacy OpenGL.
 /** The class is pretty simple, but really important. What it does,
     is that it moves object creation (server side memory allocation)
