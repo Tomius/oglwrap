@@ -13,7 +13,9 @@ Features:
   you can upload vec2 to buffers, setup attribute arrays with Setup< vec2 >() instead of Pointer(2, GLfloat, ...) etc..
 * Portable, and easy to use, as it is header only.
 * A lot of default parameters, often used function take about half as much parameter than with C OpenGL
-* RAII resource handling. You won't have to generate or delete the resources yourself, it happens in the constructor & destructor.
+* RAII resource handling. You won't have to generate or delete the resources yourself, the memory will be allocated when you first use the object,
+  (It happens there, rather than in the constructor, because this way, you can declare global or static objects, whose ctor run before the creatin 
+  of the GL context. Also if you never you a resource, then no memory will be allocated for it :)
 * Typesafety, functions do not take GLenum or GLuint, but for ex. VertexAttribArray::Pointer takes a FloatDataType enum value, so
   you can't call Pointer for Ints, you only can IPointer with int parameter. But VertexAttribArray also has a setup template which 
   figures this out for you, so you don't even have to bother with that 'I'.
