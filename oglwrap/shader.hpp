@@ -113,7 +113,7 @@ public:
             shaderFile.open("shaders/" + file);
         }
         if(!shaderFile.is_open()) {
-            throw std::runtime_error("File: " + file + " not found.");
+            throw std::runtime_error("Shader file '" + file + "' not found.");
         }
         std::stringstream shaderString;
         shaderString << shaderFile.rdbuf();

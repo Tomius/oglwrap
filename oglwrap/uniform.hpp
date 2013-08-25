@@ -64,7 +64,7 @@ template<typename GLtype>
   * stderr, if getting the location of the variable, or setting it didn't work. */
 class Uniform : public UniformObject<GLtype> {
     #if OGLWRAP_DEBUG
-    const std::string& identifier;
+    const std::string identifier;
     #endif
 public:
     /// Queries a variable named 'identifier' in the 'program', and stores it's location.
@@ -130,7 +130,7 @@ template<typename GLtype>
     stderr, if getting the location of the variable, or setting it didn't work. */
 class IndexedUniform : public UniformObject<GLtype> {
     #if OGLWRAP_DEBUG
-    std::string& identifier;
+    std::string identifier;
     #endif
 public:
     /// Queries a variable named 'identifier' in the 'program', and stores it's location.
