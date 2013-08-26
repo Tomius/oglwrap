@@ -38,21 +38,20 @@ protected:
         MeshEntry() : materialIndex(0xFFFFFFFF) {} // Invalid material
     };
 
-    // The scene will actually belong to the importer. It is dynamically allocated,
-    // as we don't want its copy constructor to run, when we create a copy of a Mesh.
-    Assimp::Importer *importer;
+    Assimp::Importer importer;
     const aiScene* scene;
 
     std::string filename;
     bool rdy2draw, useMaterials;
-    // Coping these will only copy the handles, the actual OpenGL object won't be duplicated.
     std::vector<MeshEntry> entries;
     std::vector<Texture2D> textures;
 
+    // It shouldn't be copyable
+    Mesh(const Mesh& src);
+    void operator=(const Mesh& rhs);
 public:
     Mesh(const std::string& filename, unsigned int flags)
-        : importer(new Assimp::Importer)
-        , scene(importer->ReadFile(
+        : scene(importer.ReadFile(
               filename.c_str(),
               flags | aiProcess_Triangulate
           ))
@@ -62,13 +61,8 @@ public:
         , entries(scene->mNumMeshes) {
 
         if(!scene) {
-            throw std::runtime_error("Error parsing " + filename + " : " + importer->GetErrorString());
+            throw std::runtime_error("Error parsing " + filename + " : " + importer.GetErrorString());
         }
-    }
-
-    ~Mesh() {
-        if(isDeletable())
-            delete importer;
     }
 
 private:
@@ -376,7 +370,7 @@ public:
         return max;
     }
 
-    unsigned char NumBoneAttribs() const {
+    unsigned char RecommendedNumBoneAttribs() const {
         const unsigned char mbpv = MaxBonesPerVertex();
         return (mbpv%4 == 0) ? (mbpv/4) : (mbpv/4 + 1);
     }
@@ -456,37 +450,66 @@ class AnimatedMesh : public Mesh {
 
     size_t numBones;
     glm::mat4 globalInverseTransform;
+
+    std::map<std::string, size_t> animNames;
+    // vector::push_back(Assimp::Importer()) wouldn't work, because it has
+    // a weird copy constructor, that doesn't actually copy. It must be dynamic.
+    std::vector<Assimp::Importer*> animationImporters;
+    std::vector<const aiScene*> animations;
+    const aiScene* currentAnim;
+
+    // It shouldn't be copyable
+    AnimatedMesh(const AnimatedMesh& src);
+    void operator=(const AnimatedMesh& rhs);
 public:
     AnimatedMesh(const std::string& filename, unsigned int flags)
         : Mesh(filename, flags)
         , boneBuffers(scene->mNumMeshes)
-        , numBones(0) {
+        , numBones(0)
+        , currentAnim(scene) {
 
         glm::mat4 matrix = convertMatrix(scene->mRootNode->mTransformation);
         globalInverseTransform = glm::inverse(matrix);
 
-        if(MaxBonesPerVertex() > 4 * numBoneAttribs)
-            std::cerr << "Error in AnimatedMesh: " << filename << "\n" <<
-            "Some vertices depend on " << MaxBonesPerVertex() << " bones, " <<
-            "but you only specified " << 4 * numBoneAttribs << " bone slots per vertex.\n" <<
-            "For these vertices some of the lowest influence bones will be ignored. \n"
-            "You would probably want to increase the numBoneAttribs template argument" << std::endl;
+        if(numBoneAttribs != RecommendedNumBoneAttribs())
+            std::cerr << "Error in AnimatedMesh '" << filename << "'\n" <<
+            "The class was created with " << (int)numBoneAttribs << " bone "
+            "attribute(s), but the mesh needs " << (int)RecommendedNumBoneAttribs() <<
+            " bone attribute(s) to do its best." << std::endl;
+
     }
 
-    AnimatedMesh(const Mesh& src)
-        : Mesh(src) // Copy ctor doesn't duplicate the actual data.
-        , boneBuffers(scene->mNumMeshes)
-        , numBones(0) {
+    ~AnimatedMesh() {
+        for(auto i = animationImporters.begin(); i != animationImporters.end(); i++)
+            delete *i;
+    }
 
-        glm::mat4 matrix = convertMatrix(scene->mRootNode->mTransformation);
-        globalInverseTransform = glm::inverse(matrix);
+    unsigned char NumBoneAttribs() {
+        return numBoneAttribs;
+    }
 
-        if(MaxBonesPerVertex() > 4 * numBoneAttribs)
-            std::cerr << "Error in AnimatedMesh: " << filename << "\n" <<
-            "Some vertices depend on " << MaxBonesPerVertex() << " bones, " <<
-            "but you only specified " << 4 * numBoneAttribs << " bone slots per vertex.\n" <<
-            "For these vertices some of the lowest influence bones will be ignored. \n"
-            "You would probably want to increase the numBoneAttribs template argument" << std::endl;
+    void AddAnimation(const std::string& filename, const std::string& animName) {
+        if(animNames.find(animName) != animNames.end()){
+            std::string err = "Animation name '" + animName + "' isn't unique for '" + filename + "'";
+            throw std::runtime_error(err);
+        }
+        size_t idx = animations.size();
+        animNames[animName] = idx;
+        animationImporters.push_back(new Assimp::Importer());
+        animations.push_back(animationImporters[idx]->ReadFile(filename, 0));
+
+        if(!animations[idx]) {
+            throw std::runtime_error("Error parsing " + filename
+                + " : " + animationImporters[idx]->GetErrorString());
+        }
+    }
+
+    void SetCurrentAnimation(const std::string& animName) {
+        currentAnim = animations[animNames[animName]];
+    }
+
+    void SetCurrentAnimation(size_t animIndex) {
+        currentAnim = animations[animIndex];
     }
 
 /*         //=====:==-==-==:=====\\                                 //=====:==-==-==:=====\\
@@ -537,7 +560,10 @@ private:
             }
 
             // -------======{[ Upload the bone data ]}======-------
-            for(int boneAttribSet = 0; boneAttribSet < numBoneAttribs; boneAttribSet++) {
+            for(int boneAttribSet = 0;
+                boneAttribSet < std::min(RecommendedNumBoneAttribs(), numBoneAttribs);
+                boneAttribSet++
+            ) {
                 entries[entry].vao.Bind();
                 boneBuffers[entry].Bind();
                 boneBuffers[entry].Data(bones[entry]);
@@ -687,8 +713,9 @@ private:
     void ReadNodeHeirarchy(float animationTime, const aiNode* pNode, const glm::mat4& parentTransform) {
         std::string nodeName(pNode->mName.data);
 
-        // FIXME
-        const aiAnimation* pAnimation = scene->mAnimations[0];
+        // You probably want to be able to select different than animations than the 0th.
+        // But with Maya's DAE_FBX exporter, it is not possible.
+        const aiAnimation* pAnimation = currentAnim->mAnimations[0];
         const aiNodeAnim* pNodeAnim = FindNodeAnim(pAnimation, nodeName);
 
         glm::mat4 nodeTransform = convertMatrix(pNode->mTransformation);
@@ -728,12 +755,12 @@ private:
 public:
 
     void UpdateBoneInfo(float timeInSeconds) {
-        float ticksPerSecond = scene->mAnimations[0]->mTicksPerSecond > 1e-10 ? // != 0
-                               scene->mAnimations[0]->mTicksPerSecond : 24.0f;
+        float ticksPerSecond = currentAnim->mAnimations[0]->mTicksPerSecond > 1e-10 ? // != 0
+                               currentAnim->mAnimations[0]->mTicksPerSecond : 24.0f;
         float timeInTicks = timeInSeconds * ticksPerSecond;
-        float animationTime = fmod(timeInTicks, (float)scene->mAnimations[0]->mDuration);
+        float animationTime = fmod(timeInTicks, (float)currentAnim->mAnimations[0]->mDuration);
 
-        ReadNodeHeirarchy(animationTime, scene->mRootNode, glm::mat4());
+        ReadNodeHeirarchy(animationTime, currentAnim->mRootNode, glm::mat4());
     }
 
     void BoneTransform(float timeInSeconds,
