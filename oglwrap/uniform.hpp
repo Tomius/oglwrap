@@ -5,17 +5,6 @@
 #ifndef UNIFORM_HPP
 #define UNIFORM_HPP
 
-#include <string>
-#include <GL/glew.h>
-
-#include "error.hpp"
-#include "enums.hpp"
-#include "shader.hpp"
-
-#include "glm/glm/glm.hpp"
-#include "glm/glm/gtc/type_ptr.hpp"
-#include "glm/glm/gtc/matrix_transform.hpp"
-
 namespace oglwrap {
 
 // -------======{[ UniformObject ]}======-------

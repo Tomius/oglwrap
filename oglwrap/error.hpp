@@ -5,11 +5,6 @@
 #ifndef ERROR_HPP
 #define ERROR_HPP
 
-#include <GL/glew.h>
-#include <iostream>
-#include <stdexcept>
-#include "config.hpp"
-
 #define oglfunc(func) \
     func;\
     oglwrap_CheckError();

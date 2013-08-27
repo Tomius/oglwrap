@@ -5,9 +5,6 @@
 #ifndef OGLWRAP_ENUMS_H
 #define OGLWRAP_ENUMS_H
 
-#include <GL/glew.h>
-#include "config.hpp"
-
 namespace oglwrap {
 
 // -------======{[ Shaders ]}======-------

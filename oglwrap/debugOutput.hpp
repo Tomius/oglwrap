@@ -5,10 +5,6 @@
 #ifndef DEBUGOUTPUT_HPP
 #define DEBUGOUTPUT_HPP
 
-#include <string>
-#include <iostream>
-#include <GL/glew.h>
-
 namespace oglwrap {
 
 /// A server side debug utility that helps letting you know what went wrong.

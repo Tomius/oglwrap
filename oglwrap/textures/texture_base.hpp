@@ -2,25 +2,9 @@
     @brief Implements the base functionality for textures.
 */
 
+#pragma once
 #ifndef TEXUTRE_BASE_HPP
 #define TEXTURE_BASE_HPP
-
-#pragma once
-
-#include <string>
-#include <GL/glew.h>
-
-#include "../error.hpp"
-#include "../enums.hpp"
-#include "../general.hpp"
-
-#ifndef OGLWRAP_IMAGEMAGICK
-#define OGLWRAP_IMAGEMAGICK 0
-#endif
-
-#if OGLWRAP_IMAGEMAGICK
-#include <ImageMagick/Magick++.h>
-#endif
 
 namespace oglwrap {
 
@@ -209,3 +193,4 @@ public:
 } // namespace oglwrap
 
 #endif // TEXUTRE_BASE
+

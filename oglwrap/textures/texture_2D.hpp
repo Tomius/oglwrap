@@ -2,11 +2,9 @@
     @brief Implements two-dimensional, non-cubeMap textures.
 */
 
+#pragma once
 #ifndef TEXUTRE_2D_HPP
 #define TEXTURE_2D_HPP
-#pragma once
-
-#include "texture_base.hpp"
 
 namespace oglwrap {
 

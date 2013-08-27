@@ -5,6 +5,10 @@
 #ifndef TEXTURE_HPP
 #define TEXTURE_HPP
 
+#if OGLWRAP_IMAGEMAGICK
+#include <ImageMagick/Magick++.h>
+#endif
+
 #include "textures/texture_base.hpp"
 #include "textures/texture_1D.hpp"
 #include "textures/texture_2D.hpp"

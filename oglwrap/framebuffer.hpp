@@ -5,11 +5,6 @@
 #ifndef FRAMEBUFFER_HPP
 #define FRAMEBUFFER_HPP
 
-#include "GL/glew.h"
-
-#include "enums.hpp"
-#include "error.hpp"
-#include "general.hpp"
 #include "textures/texture_base.hpp"
 #include "textures/texture_cube.hpp"
 

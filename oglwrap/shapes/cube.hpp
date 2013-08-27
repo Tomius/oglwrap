@@ -5,10 +5,6 @@
 #ifndef CUBE_HPP
 #define CUBE_HPP
 
-#include <GL/glew.h>
-#include "../vertexAttrib.hpp"
-#include "../buffer.hpp"
-
 namespace oglwrap {
 
 /// Class providing vertex attributes and instructions for rendering of a cube.

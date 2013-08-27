@@ -1,5 +1,5 @@
 /** @file general.hpp
-    @brief Contains codes that aren't related to OpenGL
+    @brief Contains codes that are (mostly) not related to OpenGL
 */
 
 #ifndef GENERAL_HPP
@@ -57,10 +57,10 @@ public:
 };
 
 /// The signature of glGen* functions
-typedef void (*glGenFunc) (GLsizei, GLuint*);
+typedef void (GLAPIENTRY *glGenFunc) (GLsizei, GLuint*);
 
 /// The signature of glDelete* functions
-typedef void (*glDeleteFunc) (GLsizei, const GLuint*);
+typedef void (GLAPIENTRY *glDeleteFunc) (GLsizei, const GLuint*);
 
 // Note the '&' after the function pointer. The template parameters for
 // objects defined in an extension are function pointer that point out

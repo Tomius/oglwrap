@@ -5,17 +5,6 @@
 #ifndef SHADER_HPP
 #define SHADER_HPP
 
-#include <vector>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <cctype>
-#include <GL/glew.h>
-
-#include "enums.hpp"
-#include "error.hpp"
-#include "general.hpp"
-
 namespace oglwrap {
 
 // -------======{[ Shader ]}======-------

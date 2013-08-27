@@ -5,22 +5,11 @@
 #ifndef SHAPES_MESH_HPP
 #define SHAPES_MESH_HPP
 
-#include <string>
-#include <vector>
 #include <climits>
-#include <iostream>
-#include <stdexcept>
-#include <GL/glew.h>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-
-#include "../error.hpp"
-#include "../enums.hpp"
-#include "../buffer.hpp"
-#include "../vertexAttrib.hpp"
-#include "../textures/texture_2D.hpp"
 
 namespace oglwrap {
 
@@ -395,6 +384,14 @@ static inline aiMatrix4x4 convertMatrix(const glm::mat4& m) {
 }
 
 template <unsigned char numBoneAttribs = 1>
+/// A class for loading and displaying nearly any kind of animated mesh.
+/** Usage: specify the numBoneAttribs to be the maximum of bone influences per
+  * vertex divided by four, counted up. You should specify the skinned mesh's
+  * filename in the constructor, and add it's animations manually, with the
+  * AddAnimation function. It is recommended to only export the animated bones
+  * to these files. Currently it does not support multiple animation per file,
+  * as I'm unable to export that way from either Blender or Maya or 3Ds max,
+  * but if you can do it, please send me mail, and I'll implement it. */
 class AnimatedMesh : public Mesh {
     template<class Index_t>
     struct VertexBoneData_PerAttribute {
@@ -584,6 +581,13 @@ private:
 
 public:
 
+    /// Loads in bone weight and id information to the given array of attribute arrays.
+    /** Uploads the bone weight and id to an array of attribute arrays, and sets it up for use.
+      * For example if you specified "in vec4 boneIds[3]" you have to give "prog | boneIds"
+      * Calling this function changes the currently active VAO and ArrayBuffer.
+      * The mesh cannot be drawn without calling this function. */
+    /// @param boneIDs - The array of attributes array to use as destination for bone IDs.
+    /// @param boneWeights - The array of attributes array to use as destination for bone weights.
     void Bones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights) {
         MapBones();
 

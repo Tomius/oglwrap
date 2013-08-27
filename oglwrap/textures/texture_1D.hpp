@@ -2,10 +2,9 @@
     @brief Implements one-dimensional textures.
 */
 
+#pragma once
 #ifndef TEXUTRE_1D_HPP
 #define TEXTURE_1D_HPP
-
-#include "texture_base.hpp"
 
 namespace oglwrap {
 

@@ -2,10 +2,9 @@
     @brief Implements three-dimensional textures.
 */
 
+#pragma once
 #ifndef TEXUTRE_3D_HPP
 #define TEXTURE_3D_HPP
-
-#include "texture_base.hpp"
 
 namespace oglwrap {
 

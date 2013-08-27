@@ -5,9 +5,6 @@
 #ifndef TRANSFORMFEEDBACK_HPP
 #define TRANSFORMFEEDBACK_HPP
 
-#include <GL/glew.h>
-#include "error.hpp"
-
 namespace oglwrap {
 
 /// A wrapper class for transform feedback.

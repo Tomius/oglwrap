@@ -4,14 +4,6 @@
 #ifndef BUFFER_HPP
 #define BUFFER_HPP
 
-#include <vector>
-#include <string>
-#include <GL/glew.h>
-
-#include "error.hpp"
-#include "enums.hpp"
-#include "general.hpp"
-
 namespace oglwrap {
 
 template<BufferType buffer_t>
