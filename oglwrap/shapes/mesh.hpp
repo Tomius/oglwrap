@@ -316,7 +316,7 @@ public:
     glm::vec4 BoundingSphere() {
         glm::vec3 center, edges;
         BoundingCuboid(center, edges);
-        return glm::vec4(center, std::max(edges.x, std::max(edges.y, edges.z)));
+        return glm::vec4(center, std::max(edges.x, std::max(edges.y, edges.z)) / 2);
     }
 
     /// Returns the center of the bounding sphere.
@@ -330,7 +330,7 @@ public:
     float BoundingSphere_Radius() {
         glm::vec3 center, edges;
         BoundingCuboid(center, edges);
-        return std::max(edges.x, std::max(edges.y, edges.z));
+        return std::max(edges.x, std::max(edges.y, edges.z)) / 2;
     }
 
     /// @brief This is for animated meshes, to figure out the template argument for the skinned mesh class.
@@ -453,7 +453,8 @@ class AnimatedMesh : public Mesh {
     // a weird copy constructor, that doesn't actually copy. It must be dynamic.
     std::vector<Assimp::Importer*> animationImporters;
     std::vector<const aiScene*> animations;
-    const aiScene* currentAnim;
+    const aiScene *lastAnim, *currentAnim;
+    float endOfLastAnim, transitionTime, lastPeriodTime;
 
     // It shouldn't be copyable
     AnimatedMesh(const AnimatedMesh& src);
@@ -463,7 +464,11 @@ public:
         : Mesh(filename, flags)
         , boneBuffers(scene->mNumMeshes)
         , numBones(0)
-        , currentAnim(scene) {
+        , lastAnim(scene)
+        , currentAnim(scene)
+        , endOfLastAnim(0)
+        , transitionTime(0)
+        , lastPeriodTime(0) {
 
         glm::mat4 matrix = convertMatrix(scene->mRootNode->mTransformation);
         globalInverseTransform = glm::inverse(matrix);
@@ -501,12 +506,26 @@ public:
         }
     }
 
-    void SetCurrentAnimation(const std::string& animName) {
-        currentAnim = animations[animNames[animName]];
+    void SetCurrentAnimation(const std::string& animName, float currentTime, float transitionTime = 0.0f) {
+        auto nextanim = animations[animNames[animName]];
+        if(currentAnim == nextanim || (endOfLastAnim + this->transitionTime) > currentTime)
+            return;
+        lastAnim = currentAnim;
+        currentAnim = nextanim;
+        this->transitionTime = transitionTime;
+        lastPeriodTime = currentTime - endOfLastAnim;
+        endOfLastAnim = currentTime;
     }
 
-    void SetCurrentAnimation(size_t animIndex) {
-        currentAnim = animations[animIndex];
+    void SetCurrentAnimation(size_t animIndex, float currentTime, float transitionTime = 0.0f) {
+        auto nextanim = animations[animIndex];
+        if(currentAnim == nextanim || endOfLastAnim + this->transitionTime > currentTime)
+            return;
+        lastAnim = currentAnim;
+        currentAnim = nextanim;
+        this->transitionTime = transitionTime;
+        lastPeriodTime = currentTime - endOfLastAnim;
+        endOfLastAnim = currentTime;
     }
 
 /*         //=====:==-==-==:=====\\                                 //=====:==-==-==:=====\\
@@ -634,6 +653,11 @@ private:
         throw std::runtime_error("Animation Error - Scaling keyframe not found");
     }
 
+    template<class T>
+    T Interpolate(const T& a, const T& b, float alpha) {
+        return a + alpha * (b - a);
+    }
+
     void CalcInterpolatedPosition(aiVector3D& out, float animTime, const aiNodeAnim* pNodeAnim) {
         const auto& keys = pNodeAnim->mPositionKeys;
         const auto& numKeys = pNodeAnim->mNumPositionKeys;
@@ -653,7 +677,7 @@ private:
 
         const aiVector3D& start = keys[i].mValue;
         const aiVector3D& end   = keys[i + 1].mValue;
-        out = start + factor * (end - start);
+        out = Interpolate(start, end, factor);
     }
 
     void CalcInterpolatedRotation(aiQuaternion& out, float animTime, const aiNodeAnim* pNodeAnim) {
@@ -675,7 +699,7 @@ private:
 
         const aiQuaternion& start = keys[i].mValue;
         const aiQuaternion& end   = keys[i + 1].mValue;
-        aiQuaternion::Interpolate(out, start, end, factor);
+        aiQuaternion::Interpolate(out, start, end, factor); // spherical interpolation
         out = out.Normalize();
     }
 
@@ -698,7 +722,7 @@ private:
 
         const aiVector3D& start = keys[i].mValue;
         const aiVector3D& end   = keys[i + 1].mValue;
-        out = start + factor * (end - start);
+        out = Interpolate(start, end, factor);
     }
 
     const aiNodeAnim* FindNodeAnim(const aiAnimation* pAnimation, const std::string nodeName) {
@@ -756,15 +780,91 @@ private:
         }
     }
 
+    // ReadNodeHierarchy for transitions between animations.
+    void TransitionReadNodeHeirarchy(float prevAnimationTime,
+                                     float nextAnimationTime,
+                                     const aiNode* pNode,
+                                     const glm::mat4& parentTransform) {
+        std::string nodeName(pNode->mName.data);
+
+        // You probably want to be able to select different than animations than the 0th.
+        // But with Maya's DAE_FBX exporter, it is not possible.
+        const aiAnimation* prevAnimation = lastAnim->mAnimations[0];
+        const aiAnimation* nextAnimation = currentAnim->mAnimations[0];
+        const aiNodeAnim* prevNodeAnim = FindNodeAnim(prevAnimation, nodeName);
+        const aiNodeAnim* nextNodeAnim = FindNodeAnim(nextAnimation, nodeName);
+
+        glm::mat4 nodeTransform = convertMatrix(pNode->mTransformation);
+
+        if(prevNodeAnim && nextAnimation) {
+            float factor = transitionTime > 1e-10 ? (nextAnimationTime / transitionTime) : 0.0f;
+
+            // Interpolate the transformations and get the matrices
+            aiVector3D prevScaling, nextScaling;
+            CalcInterpolatedScaling(prevScaling, prevAnimationTime, prevNodeAnim);
+            CalcInterpolatedScaling(nextScaling, nextAnimationTime, nextNodeAnim);
+            aiVector3D scaling = Interpolate(prevScaling, nextScaling, factor);
+            glm::mat4 scalingM = glm::scale(glm::mat4(), glm::vec3(scaling.x, scaling.y, scaling.z));
+
+            aiQuaternion prevRotation, nextRotation, rotation;
+            CalcInterpolatedRotation(prevRotation, prevAnimationTime, prevNodeAnim);
+            CalcInterpolatedRotation(nextRotation, nextAnimationTime, nextNodeAnim);
+            // spherical interpolation, and it always chooses the shorter path (exactly what we want).
+            aiQuaternion::Interpolate(rotation, prevRotation, nextRotation, factor);
+            glm::mat4 rotationM = convertMatrix(rotation.GetMatrix());
+
+            aiVector3D prevTranslation, nextTranslation;
+            CalcInterpolatedPosition(prevTranslation, prevAnimationTime, prevNodeAnim);
+            CalcInterpolatedPosition(nextTranslation, nextAnimationTime, nextNodeAnim);
+            aiVector3D translation = Interpolate(prevTranslation, nextTranslation, factor);
+            glm::mat4 translationM =
+                glm::translate(glm::mat4(), glm::vec3(translation.x, translation.y, translation.z));
+
+            // Combine the transformations
+            nodeTransform = translationM * rotationM * scalingM;
+        }
+
+        glm::mat4 globalTransformation = parentTransform * nodeTransform;
+
+        if(boneMapping.find(nodeName) != boneMapping.end()) {
+            unsigned boneIndex = boneMapping[nodeName];
+            boneInfo[boneIndex].finalTransformation =
+                globalInverseTransform * globalTransformation * boneInfo[boneIndex].boneOffset;
+        }
+
+        for(unsigned i = 0; i < pNode->mNumChildren; i++) {
+            TransitionReadNodeHeirarchy(
+                prevAnimationTime, nextAnimationTime, pNode->mChildren[i], globalTransformation
+            );
+        }
+    }
+
 public:
 
     void UpdateBoneInfo(float timeInSeconds) {
-        float ticksPerSecond = currentAnim->mAnimations[0]->mTicksPerSecond > 1e-10 ? // != 0
-                               currentAnim->mAnimations[0]->mTicksPerSecond : 24.0f;
-        float timeInTicks = timeInSeconds * ticksPerSecond;
-        float animationTime = fmod(timeInTicks, (float)currentAnim->mAnimations[0]->mDuration);
+        if(currentAnim->mAnimations == 0 || lastAnim->mAnimations == 0){
+            throw std::logic_error("Tried to run an animation, that doesn't have an animation channel.");
+        }
 
-        ReadNodeHeirarchy(animationTime, currentAnim->mRootNode, glm::mat4());
+        float prevTicksPerSecond = lastAnim->mAnimations[0]->mTicksPerSecond > 1e-10 ? // != 0
+                                   lastAnim->mAnimations[0]->mTicksPerSecond : 24.0f;
+        float nextTicksPerSecond = currentAnim->mAnimations[0]->mTicksPerSecond > 1e-10 ? // != 0
+                                   currentAnim->mAnimations[0]->mTicksPerSecond : 24.0f;
+
+        float prevTimeInTicks = lastPeriodTime * prevTicksPerSecond;
+        float currentTimeInTicks = (timeInSeconds - endOfLastAnim) * nextTicksPerSecond;
+        float prevAnimationTime = fabs(fmod(prevTimeInTicks, (float)lastAnim->mAnimations[0]->mDuration));
+        float currentAnimationTime = fabs(fmod(currentTimeInTicks, (float)currentAnim->mAnimations[0]->mDuration));
+
+        if(endOfLastAnim + transitionTime < timeInSeconds) {
+            // Normal animation
+            ReadNodeHeirarchy(currentAnimationTime, scene->mRootNode, glm::mat4());
+        } else {
+            // Transition between two animations.
+            TransitionReadNodeHeirarchy(
+                prevAnimationTime, currentAnimationTime, scene->mRootNode, glm::mat4()
+            );
+        }
     }
 
     void BoneTransform(float timeInSeconds,
