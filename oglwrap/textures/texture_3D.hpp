@@ -35,7 +35,7 @@ public:
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
     /// @see glTexImage3D
-    static void Upload(
+    static void upload(
         PixelDataInternalFormat internalFormat,
         GLsizei width,
         GLsizei height,
@@ -59,7 +59,7 @@ public:
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
     /// @see glTexImage3D
-    static void Upload_Mipmap(
+    static void upload_Mipmap(
         GLint level,
         PixelDataInternalFormat internalFormat,
         GLsizei width,
@@ -81,7 +81,7 @@ public:
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
     /// @see glTexSubImage3D
-    static void SubUpload(
+    static void subUpload(
         GLint xOffset,
         GLint yOffset,
         GLint zOffset,
@@ -105,7 +105,7 @@ public:
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
     /// @see glTexSubImage3D
-    static void SubUpload_Mipmap(
+    static void subUpload_Mipmap(
         GLint level,
         GLint xOffset,
         GLint yOffset,
@@ -127,7 +127,7 @@ public:
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width/height - Specifies the width/height of the texture to copy.
     /// @see glCopyTexSubImage3D
-    static void CopySub(
+    static void copySub(
         GLint xOffset,
         GLint yOffset,
         GLint zOffset,
@@ -145,7 +145,7 @@ public:
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width/height - Specifies the width/height of the texture to copy.
     /// @see glCopyTexSubImage3D
-    static void CopySub_Mipmap(
+    static void copySub_Mipmap(
         GLint level,
         GLint xOffset,
         GLint yOffset,
@@ -161,7 +161,7 @@ public:
     /// Returns the width of a mipmap of the currently bound texture of this class.
     /// @param level - Specifies the mipmap whose size should be queried.
     /// @see glGetTexLevelParameteriv, GL_TEXTURE_WIDTH
-    static GLsizei Width(GLint level = 0) {
+    static GLsizei width(GLint level = 0) {
         GLsizei data;
         gl( GetTexLevelParameteriv(texture_t, level, GL_TEXTURE_WIDTH, &data) );
         return data;
@@ -170,7 +170,7 @@ public:
     /// Returns the height of a mipmap of the currently bound texture of this class.
     /// @param level - Specifies the mipmap whose size should be queried.
     /// @see glGetTexLevelParameteriv, GL_TEXTURE_HEIGHT
-    static GLsizei Height(GLint level = 0) {
+    static GLsizei height(GLint level = 0) {
         GLsizei data;
         gl( GetTexLevelParameteriv(texture_t, level, GL_TEXTURE_HEIGHT, &data) );
         return data;
@@ -179,7 +179,7 @@ public:
     /// Returns the depth of a mipmap of the currently bound texture of this class.
     /// @param level - Specifies the mipmap whose size should be queried.
     /// @see glGetTexLevelParameteriv, GL_TEXTURE_DEPTH
-    static GLsizei Depth(GLint level = 0) {
+    static GLsizei depth(GLint level = 0) {
         GLsizei data;
         gl( GetTexLevelParameteriv(texture_t, level, GL_TEXTURE_DEPTH, &data) );
         return data;
@@ -190,7 +190,7 @@ public:
     /// @param level - Specifies the level-of-detail number of the desired image. Level 0 is the base image level. Level n is the nth mipmap reduction image.
     /// @param img - Returns the compressed texture image.
     /// @see glGetCompressedTexImage
-    static void GetCompressedImage(GLint level, GLvoid* img) {
+    static void getCompressedImage(GLint level, GLvoid* img) {
         gl( GetCompressedTexImage(TexType::Tex3D, level, img) );
     }
 };

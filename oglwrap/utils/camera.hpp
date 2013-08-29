@@ -14,16 +14,37 @@ namespace oglwrap {
 class Camera {
 public:
     /// Returns the camera matrix.
-    virtual glm::mat4 CameraMatrix() const = 0;
+    virtual glm::mat4 cameraMatrix() const = 0;
 
-    /// Returns the target's model matrix.
-    virtual glm::mat4 ModelMatrix() const = 0;
+    /// Returns the camera's position.
+    virtual glm::vec3 getPos() const = 0;
 
     /// Returns the camera's target.
     virtual glm::vec3 getTarget() const = 0;
 
-    /// Returns the camera's position.
-    virtual glm::vec3 getPos() const = 0;
+    /// Returns the looking direction of the camera
+    virtual glm::vec3 getForward() const {
+        return glm::normalize(getTarget() - getPos());
+    }
+
+    /// Returns the camera's CCW rotation angle around the X Euler axe.
+    /** Assuming that (0,1,0) is up, angle 0 is neg Z (forwards), Pi/2 is pos Y (up) */
+    virtual float getRotx() const {
+        return asin(getForward().y);
+    }
+
+    /// Returns the camera's CCW rotation angle around the Y Euler axe.
+    /** Assuming that (0,1,0) is up, angle 0 is pos X (right), Pi/2 is pos Z (backwards) */
+    virtual float getRoty() const {
+        glm::vec3 fwd = getForward();
+        return atan2(fwd.z, fwd.x);
+    }
+
+    /// Returns the camera's CCW rotation angle around the Z Euler axe.
+    /** Assuming that (0,1,0) is up, angle 0 is neg Z (forwards), Pi/2 is pos Y (up) */
+    virtual float getRotz() const {
+        return 0;
+    }
 };
 
 /// A simple free-fly camera class using SFML. It's rather for testing than serious use.
@@ -32,7 +53,7 @@ class FreeFlyCamera : public Camera {
     /// The camera's position and the normalized forward vector
     glm::vec3 pos, fwd;
 
-    /// Rotation angles(in radians) relative to the pos Z axis in the XZ and YZ planes.
+    /// Rotation angles(in radians) around the x and y Euler axes.
     float rotx, roty;
 
     /// Private constant numbers
@@ -48,19 +69,19 @@ public:
                   float mouseSensitivity = 1.0f)
         : pos(pos)
         , fwd(glm::normalize(target - pos))
-        , rotx(atan2(fwd.z, fwd.x))
-        , roty(asin(fwd.y))
+        , rotx(asin(fwd.y))
+        , roty(atan2(fwd.z, fwd.x))
         , speedPerSec(speedPerSec)
         , maxPitchAngle(85./90. * M_PI_2)
         , mouseSensitivity(mouseSensitivity) {
 
-        assert(fabs(roty) < maxPitchAngle);
+        assert(fabs(rotx) < maxPitchAngle);
     }
 
     /// Updates the camera's position and rotation.
     /// @param window - The currently active SFML window.
     /// @param fixMouse - Specifies if the mouse should be locked into the middle of the screen.
-    void Update(const sf::Window& window, bool fixMouse = false) {
+    void update(const sf::Window& window, bool fixMouse = false) {
         using namespace glm;
         static sf::Clock clock;
         static float prevTime;
@@ -89,19 +110,19 @@ public:
 
         // Mouse movement - update the coordinate system
         if(diff.x || diff.y) {
-            rotx += diff.x * mouseSensitivity * 0.0035f;
-            roty += -diff.y * mouseSensitivity * 0.0035f;
+            roty += diff.x * mouseSensitivity * 0.0035f;
+            rotx += -diff.y * mouseSensitivity * 0.0035f;
 
-            if(fabs(roty) > maxPitchAngle)
-                roty = roty/fabs(roty) * maxPitchAngle;
+            if(fabs(rotx) > maxPitchAngle)
+                rotx = rotx/fabs(rotx) * maxPitchAngle;
         }
 
         // WASD movement
         float ds = dt * speedPerSec;
         fwd = vec3(
-                  cos(roty) * cos(rotx),
-                  sin(roty),
-                  cos(roty) * sin(rotx)
+                  cos(rotx) * cos(roty),
+                  sin(rotx),
+                  cos(rotx) * sin(roty)
               );
         vec3 right = normalize(cross(fwd, vec3(0.0f, 1.0f, 0.0f)));
 
@@ -116,13 +137,8 @@ public:
     }
 
     /// Returns the camera matrix.
-    glm::mat4 CameraMatrix() const {
+    glm::mat4 cameraMatrix() const {
         return glm::lookAt(pos, pos + fwd, glm::vec3(0.0f, 1.0f, 0.0f));
-    }
-
-    /// Returns the target's model matrix.
-    glm::mat4 ModelMatrix() const {
-        return glm::translate(glm::mat4(), pos + fwd);
     }
 
     /// Returns the camera's target.
@@ -134,6 +150,16 @@ public:
     glm::vec3 getPos() const {
         return pos;
     }
+
+    /// Returns the camera's CCW rotation angle around the X Euler axe.
+    float getRotx() const {
+        return rotx;
+    }
+
+    /// Returns the camera's CCW rotation angle around the Y Euler axe.
+    float getRoty() const {
+        return roty;
+    }
 }; // FreeFlyCamera
 
 
@@ -144,10 +170,14 @@ class ThirdPersonalCamera : public Camera {
     glm::vec3 target, fwd;
 
     /// Rotation angles(in radians) relative to the pos Z axis in the XZ and YZ planes.
-    float rotx, roty, distance;
+    float rotx, roty;
+
+    /// Initial distance  between the camera and target, and the current and destination distance modifier.
+    /** It's nearly a must to interpolate this, it looks very ugly without it */
+    float currDistMod, destDistMod;
 
     /// a private constant number
-    const float maxPitchAngle, mouseSensitivity;
+    const float initialDistance, maxPitchAngle, mouseSensitivity, mouseScrollSensitivity;
 public:
     /// @brief Creates the third-personal camera.
     /// @param pos - The position of the camera.
@@ -155,23 +185,31 @@ public:
     /// @param speedPerSec - Move speed in OpenGL units per second
     ThirdPersonalCamera(const glm::vec3& pos,
                         const glm::vec3& target = glm::vec3(),
-                        float mouseSensitivity = 1.0f)
+                        float mouseSensitivity = 1.0f,
+                        float mouseScrollSensitivity = 1.0f)
         : target(pos)
-        , fwd(target - pos)
-        , rotx(atan2(fwd.z, fwd.x))
-        , roty(asin(fwd.y))
-        , distance(glm::length(fwd))
-        , maxPitchAngle(75./90. * M_PI_2)
-        , mouseSensitivity(mouseSensitivity) {
+        , fwd(glm::normalize(target - pos))
+        , rotx(asin(fwd.y))
+        , roty(atan2(fwd.z, fwd.x))
+        , currDistMod(1.0)
+        , destDistMod(1.0)
+        , initialDistance(glm::length(target - pos))
+        , maxPitchAngle(60./90. * M_PI_2)
+        , mouseSensitivity(mouseSensitivity)
+        , mouseScrollSensitivity(mouseScrollSensitivity) {
 
-        assert(fabs(roty) < maxPitchAngle);
+        assert(fabs(rotx) < maxPitchAngle);
     }
 
     /// Updates the camera's position and rotation.
     /// @param window - The currently active SFML window.
     /// @param fixMouse - Specifies if the mouse should be locked into the middle of the screen.
-    void Update(const glm::vec3& _target, const sf::Window& window, bool fixMouse = false) {
+    void updateRotation(float time, const sf::Window& window, bool fixMouse = false) {
         using namespace glm;
+
+        static float lastTime = 0;
+        float dt = time - lastTime;
+        lastTime = time;
 
         sf::Vector2i loc = sf::Mouse::getPosition(window);
         sf::Vector2i diff;
@@ -185,40 +223,55 @@ public:
             prevLoc = loc;
         }
 
+        // We get invalid diff values at the startup or if fixMouse has just changed
         static bool firstExec = true, lastFixMouse = fixMouse;
         if(firstExec || lastFixMouse != fixMouse) {
             firstExec = false;
             lastFixMouse = fixMouse;
-            return;
+            diff = sf::Vector2i(0, 0);
         }
 
         // Mouse movement - update the coordinate system
         if(diff.x || diff.y) {
-            rotx += diff.x * mouseSensitivity * 0.0035f;
-            roty += -diff.y * mouseSensitivity * 0.0035f;
+            roty += diff.x * mouseSensitivity * 0.0035f;
+            rotx += -diff.y * mouseSensitivity * 0.0035f;
 
-            if(fabs(roty) > maxPitchAngle)
-                roty = roty/fabs(roty) * maxPitchAngle;
+            if(fabs(rotx) > maxPitchAngle)
+                rotx = rotx/fabs(rotx) * maxPitchAngle;
         }
 
-        // FIXME: sf::Event::MouseWheelEvent::delta
-        fwd = distance * vec3(
-            cos(roty) * cos(rotx),
-            sin(roty),
-            cos(roty) * sin(rotx)
-        );
+        float distDiffMod = destDistMod - currDistMod;
+        if(fabs(distDiffMod) > 1e-2) {
+            int sign = distDiffMod / fabs(distDiffMod);
+            currDistMod += sign * dt;
+        }
 
-        target = _target;
+        fwd = (initialDistance * currDistMod) * vec3(
+            cos(rotx) * cos(roty),
+            sin(rotx),
+            cos(rotx) * sin(roty)
+        );
+    }
+
+    /// Changes the distance in which the camera should follow the target.
+    /// @param mouseWheelTicks - The number of ticks, the mouse wheel was scrolled. Expect positive on up scroll.
+    void scrolling(int mouseWheelTicks) {
+        destDistMod -= mouseWheelTicks / (10.0f * mouseScrollSensitivity);
+        if(destDistMod < 0.5f)
+            destDistMod = 0.5f;
+        else if(destDistMod > 2.0f)
+            destDistMod = 2.0f;
+    }
+
+    /// Updates the target of the camera
+    /// @param target - the position of the object the camera should follow.
+    void updateTarget(const glm::vec3& target) {
+        this->target = target;
     }
 
     /// Returns the camera matrix.
-    glm::mat4 CameraMatrix() const {
+    glm::mat4 cameraMatrix() const {
         return glm::lookAt(target - fwd, target, glm::vec3(0.0f, 1.0f, 0.0f));
-    }
-
-    /// Returns the target's model matrix.
-    glm::mat4 ModelMatrix() const {
-        return glm::translate(glm::mat4(), target);
     }
 
     /// Returns the camera's target.
@@ -229,6 +282,16 @@ public:
     /// Returns the camera's position.
     glm::vec3 getPos() const {
         return target - fwd;
+    }
+
+    /// Returns the camera's CCW rotation angle around the X Euler axe.
+    float getRotx() const {
+        return rotx;
+    }
+
+    /// Returns the camera's CCW rotation angle around the Y Euler axe.
+    float getRoty() const {
+        return roty;
     }
 }; // ThirdPersonalCamera
 

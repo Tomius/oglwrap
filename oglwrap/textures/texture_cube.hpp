@@ -33,7 +33,7 @@ public:
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
     /// @see glTexImage2D
-    static void Upload(
+    static void upload(
         CubeTarget target,
         PixelDataInternalFormat internalFormat,
         GLsizei width,
@@ -57,7 +57,7 @@ public:
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
     /// @see glTexImage2D
-    static void Upload_Mipmap(
+    static void upload_Mipmap(
         CubeTarget target,
         GLint level,
         PixelDataInternalFormat internalFormat,
@@ -81,7 +81,7 @@ public:
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
     /// @see glTexSubImage2D
-    static void SubUpload(
+    static void subUpload(
         CubeTarget target,
         GLint xOffset,
         GLint yOffset,
@@ -105,7 +105,7 @@ public:
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
     /// @see glTexSubImage2D
-    static void SubUpload_Mipmap(
+    static void subUpload_Mipmap(
         CubeTarget target,
         GLint level,
         GLint xOffset,
@@ -127,7 +127,7 @@ public:
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width/height - Specifies the width/height of the texture to copy.
     /// @see glCopyTexImage2D
-    static void Copy(
+    static void copy(
         CubeTarget target,
         PixelDataInternalFormat internalFormat,
         GLint x,
@@ -145,7 +145,7 @@ public:
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width/height - Specifies the width/height of the texture to copy.
     /// @see glCopyTexImage2D
-    static void Copy_Mipmap(
+    static void copy_Mipmap(
         CubeTarget target,
         GLint level,
         PixelDataInternalFormat internalFormat,
@@ -163,7 +163,7 @@ public:
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width/height - Specifies the width/height of the texture to copy.
     /// @see glCopyTexSubImage2D
-    static void CopySub(
+    static void copySub(
         CubeTarget target,
         GLint xOffset,
         GLint yOffset,
@@ -182,7 +182,7 @@ public:
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width/height - Specifies the width/height of the texture to copy.
     /// @see glCopyTexSubImage2D
-    static void CopySub_Mipmap(
+    static void copySub_Mipmap(
         CubeTarget target,
         GLint level,
         GLint xOffset,
@@ -199,7 +199,7 @@ public:
     /// @param target - Specifies which one of the six sides of the cube to use as target.
     /// @param level - Specifies the mipmap whose size should be queried.
     /// @see glGetTexLevelParameteriv, GL_TEXTURE_WIDTH
-    static GLsizei Width(CubeTarget target, GLint level = 0) {
+    static GLsizei width(CubeTarget target, GLint level = 0) {
         GLsizei data;
         gl( GetTexLevelParameteriv(target, level, GL_TEXTURE_WIDTH, &data) );
         return data;
@@ -209,7 +209,7 @@ public:
     /// @param target - Specifies which one of the six sides of the cube to use as target.
     /// @param level - Specifies the mipmap whose size should be queried.
     /// @see glGetTexLevelParameteriv, GL_TEXTURE_HEIGHT
-    static GLsizei Height(CubeTarget target, GLint level = 0) {
+    static GLsizei height(CubeTarget target, GLint level = 0) {
         GLsizei data;
         gl( GetTexLevelParameteriv(target, level, GL_TEXTURE_HEIGHT, &data) );
         return data;
@@ -217,7 +217,7 @@ public:
 
     /// Returns the i-th element of the cube sides in alphabetic order.
     /// @param i - The index of the CubeTarget to return
-    static CubeTarget CubeFace(int i) {
+    static CubeTarget cubeFace(int i) {
         switch(i) {
             case 0:
                 return CubeTarget::PosX;
@@ -241,7 +241,7 @@ public:
     /// @param level - Specifies the level-of-detail number of the desired image. Level 0 is the base image level. Level n is the nth mipmap reduction image.
     /// @param img - Returns the compressed texture image.
     /// @see glGetCompressedTexImage
-    static void GetCompressedImage(CubeTarget target, GLint level, GLvoid* img) {
+    static void getCompressedImage(CubeTarget target, GLint level, GLvoid* img) {
         gl( GetCompressedTexImage(target, level, img) );
     }
 
@@ -251,7 +251,7 @@ public:
     /// @param file - Path to the image file.
     /// @param formatString - Specifies the number and order of components to be read.
     /// @see glTexImage2D
-    static void LoadTexture(CubeTarget target,
+    static void loadTexture(CubeTarget target,
                             const std::string& file,
                             const std::string& formatString = "RGBA") {
         try {
@@ -259,7 +259,7 @@ public:
             Magick::Blob blob;
             image.write(&blob, formatString);
 
-            Upload(
+            upload(
                 target,
                 PixelDataInternalFormat::SRGBA8,
                 image.columns(),
@@ -278,7 +278,7 @@ public:
     /// @param file - Path to the image file.
     /// @param formatString - Specifies the number and order of components to be read.
     /// @see glTexImage2D
-    static void LoadTexture(GLuint faceID,
+    static void loadTexture(GLuint faceID,
                             const std::string& file,
                             const std::string& formatString = "RGBA") {
         try {
@@ -286,8 +286,8 @@ public:
             Magick::Blob blob;
             image.write(&blob, formatString);
 
-            Upload(
-                CubeFace(faceID),
+            upload(
+                cubeFace(faceID),
                 PixelDataInternalFormat::SRGBA8,
                 image.columns(),
                 image.rows(),

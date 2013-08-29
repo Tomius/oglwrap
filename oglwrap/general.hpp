@@ -5,11 +5,17 @@
 #ifndef GENERAL_HPP
 #define GENERAL_HPP
 
-/// Macro to convert an angle value from degrees to radians
-#define ToRadian(x) ((x) * M_PI / 180.0f)
+/// A template to convert an angle value from degrees to radians
+template<class T>
+T ToRadian(const T& x) {
+    return fmod(x * M_PI / 180.0f, 2 * M_PI);
+}
 
-/// Macro to convert an angle value from radians to degrees
-#define ToDegree(x) ((x) * 180.0f / M_PI)
+/// A template to convert an angle value from radians to degrees
+template<class T>
+T ToDegree(const T& x) {
+    return fmod(x * 180.0f / M_PI, 360.0f);
+}
 
 namespace oglwrap {
 
@@ -108,7 +114,7 @@ public:
     }
 
     /// Allocates the resource. It only happens upon the first use.
-    void Init() const {
+    void init() const {
         *inited = true;
         oglfunc(constructor(1, handle));
     }
@@ -119,14 +125,14 @@ public:
     }
 
     /// Returns a self-pointer, useful for inheritance
-    const ObjectExt& Handle() const {
+    const ObjectExt& getHandle() const {
         return *this;
     }
 
     /// Returns the C handle for the object. Inits it, if this is the first call for it.
     operator GLuint() const {
         if(!*inited)
-            Init();
+            init();
 
         return *handle;
     }

@@ -29,13 +29,13 @@ public:
 
     /// @brief Bind a buffer object to its default target.
     /// @see glBindBuffer
-    void Bind() const {
+    void bind() const {
         gl( BindBuffer(buffer_t, buffer) );
     }
 
     /// @brief Unbind a buffer object from its default target.
     /// @see glBindBuffer
-    static void Unbind() {
+    static void unbind() {
         gl( BindBuffer(buffer_t, 0) );
     }
 
@@ -45,7 +45,7 @@ public:
     /// @param data - Specifies a pointer to data that will be copied into the data store for initialization, or NULL if no data is to be copied.
     /// @param usage - Specifies the expected usage pattern of the data store.
     /// @see glBufferData
-    static void Data(GLsizei size, const GLtype* data,
+    static void data(GLsizei size, const GLtype* data,
                      BufferUsage usage = BufferUsage::StaticDraw) {
         gl( BufferData(buffer_t, size, data, usage) );
 
@@ -68,7 +68,7 @@ public:
     /// @param data - Specifies a vector of data to upload.
     /// @param usage - Specifies the expected usage pattern of the data store.
     /// @see glBufferData
-    static void Data(const std::vector<GLtype>& data,
+    static void data(const std::vector<GLtype>& data,
                      BufferUsage usage = BufferUsage::StaticDraw) {
         gl( BufferData(buffer_t, data.size() * sizeof(GLtype), data.data(), usage) );
 
@@ -88,7 +88,7 @@ public:
     /// @param size - Specifies the size in bytes of the data store region being replaced.
     /// @param data - Specifies a pointer to the new data that will be copied into the data store.
     /// @see glBufferSubData
-    static void SubData(GLintptr offset, GLsizei size, const GLtype* data) {
+    static void subData(GLintptr offset, GLsizei size, const GLtype* data) {
         gl( BufferSubData(buffer_t, offset, size, data) );
 
         oglwrap_PrintError(
@@ -107,7 +107,7 @@ public:
     /// @param offset - Specifies the offset into the buffer object's data store where data replacement will begin, measured in bytes.
     /// @param data - Specifies a vector containing the new data that will be copied into the data store.
     /// @see glBufferSubData
-    static void SubData(GLintptr offset, const std::vector<GLtype>& data) {
+    static void subData(GLintptr offset, const std::vector<GLtype>& data) {
         gl( BufferSubData(buffer_t, offset, data.size() * sizeof(GLtype), data.data()) );
 
         oglwrap_PrintError(
@@ -124,7 +124,7 @@ public:
     /// @brief A getter for the buffer's size.
     /// @return The size of the buffer currently bound to the buffer objects default target in bytes.
     /// @see glGetBufferParameteriv, GL_BUFFER_SIZE
-    static size_t Size() {
+    static size_t size() {
         GLint data;
         gl( GetBufferParameteriv(buffer_t, GL_BUFFER_SIZE, &data) );
 
@@ -202,17 +202,17 @@ public:
         }
 
         /// Returns the size of the mapped buffer in bytes
-        size_t Size() const {
+        size_t getSize() const {
             return size;
         }
 
         /// Returns the size of the mapped buffer in elements
-        size_t Count() const {
+        size_t getCount() const {
             return size / sizeof(T);
         }
 
         /// Returns a pointer to the data
-        T* Data() const {
+        T* getData() const {
             return static_cast<T*>(data);
         }
 
@@ -248,7 +248,7 @@ public:
     /// @brief Bind a buffer object to an index.
     /// @param index - Specify the index of the binding point within the array.
     /// @see glBindBufferBase
-    void BindBase(GLuint index) const {
+    void bindBase(GLuint index) const {
         gl( BindBufferBase(buffer_t, index, BufferObject<buffer_t>::buffer) );
 
         oglwrap_PrintError(
@@ -265,7 +265,7 @@ public:
     /// @param offset - The starting offset in basic machine units into the buffer object.
     /// @param size - The amount of data in machine units that can be read from the buffet object while used as an indexed target.
     /// @see glBindBufferRange
-    void BindRange(GLuint index, GLintptr offset, GLsizeiptr size) const {
+    void bindRange(GLuint index, GLintptr offset, GLsizeiptr size) const {
         gl( BindBufferRange(buffer_t, index, offset, size, BufferObject<buffer_t>::buffer) );
 
         oglwrap_PrintError(
@@ -280,7 +280,7 @@ public:
     /// @brief Unbind a buffer object from an index.
     /// @param index - Specify the index of the binding point within the array.
     /// @see glBindBufferBase
-    static void UnbindBase(GLuint index) {
+    static void unbindBase(GLuint index) {
         gl( BindBufferBase(buffer_t, index, 0) );
     }
 };

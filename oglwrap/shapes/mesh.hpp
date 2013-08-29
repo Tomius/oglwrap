@@ -59,7 +59,7 @@ private:
     /// A template for setting different types (byte/short/int) of indices.
     /** This expect the correct vao to be already bound!! */
     /// @param index - The index of the entry
-    void SetIndices(size_t index) {
+    void setIndices(size_t index) {
         const aiMesh* paiMesh = scene->mMeshes[index];
 
         std::vector<IdxType> indicesVector;
@@ -74,8 +74,8 @@ private:
             }
         }
 
-        entries[index].indices.Bind();
-        entries[index].indices.Data(indicesVector);
+        entries[index].indices.bind();
+        entries[index].indices.data(indicesVector);
         entries[index].idxCount = indicesVector.size();
     }
 
@@ -85,7 +85,7 @@ public:
       * Calling this function changes the currently active VAO and ArrayBuffer.
       * The mesh cannot be drawn without calling this function. */
     /// @param attrib - The attribute array to use as destination.
-    void Positions(VertexAttribArray attrib) {
+    void positions(VertexAttribArray attrib) {
         for(size_t i = 0; i < entries.size(); i++) {
             const aiMesh* paiMesh = scene->mMeshes[i];
 
@@ -99,27 +99,27 @@ public:
                 vertsVector.push_back(paiMesh->mVertices[i]);
             }
 
-            entries[i].vao.Bind();
+            entries[i].vao.bind();
 
-            entries[i].verts.Bind();
-            entries[i].verts.Data(vertsVector);
-            attrib.Setup<float>(3).Enable();
+            entries[i].verts.bind();
+            entries[i].verts.data(vertsVector);
+            attrib.setup<float>(3).enable();
 
             // ~~~~~~<{ Load the indices }>~~~~~~
 
             if(paiMesh->mNumFaces * 3 < UCHAR_MAX) {
                 entries[i].idxType = DataType::UnsignedByte;
-                SetIndices<unsigned char>(i);
+                setIndices<unsigned char>(i);
             } else if(paiMesh->mNumFaces * 3 < USHRT_MAX) {
                 entries[i].idxType = DataType::UnsignedShort;
-                SetIndices<unsigned short>(i);
+                setIndices<unsigned short>(i);
             } else {
                 entries[i].idxType = DataType::UnsignedInt;
-                SetIndices<unsigned int>(i);
+                setIndices<unsigned int>(i);
             }
         }
 
-        VertexArray::Unbind();
+        VertexArray::unbind();
         rdy2draw = true;
     }
 
@@ -127,7 +127,7 @@ public:
     /** Uploads the vertex normals data to an attribute array, and sets it up for use.
       * Calling this function changes the currently active VAO and ArrayBuffer. */
     /// @param attrib - The attribute array to use as destination.
-    void Normals(VertexAttribArray attrib) {
+    void normals(VertexAttribArray attrib) {
         for(size_t i = 0; i < entries.size(); i++) {
             const aiMesh* paiMesh = scene->mMeshes[i];
 
@@ -140,35 +140,21 @@ public:
                 normalsVector.push_back(paiMesh->mNormals[i]);
             }
 
-            entries[i].vao.Bind();
+            entries[i].vao.bind();
 
-            entries[i].normals.Bind();
-            entries[i].normals.Data(normalsVector);
-            attrib.Setup<float>(3).Enable();
+            entries[i].normals.bind();
+            entries[i].normals.data(normalsVector);
+            attrib.setup<float>(3).enable();
         }
 
-        VertexArray::Unbind();
+        VertexArray::unbind();
     }
 
-    /// Checks if at least one mesh has texcoords
-    /** Returns true if at least one mesh in the scene has texture
-      * coordinates in the specified texture coordinate set. */
-    /// @param texCoordSet - Specifies the index of the texture coordinate set that should be inspected
-    bool HasTexCoords(unsigned char texCoordSet = 0) {
-        for(size_t i = 0; i < entries.size(); i++) {
-            if(scene->mMeshes[i]->HasTextureCoords(texCoordSet)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /// Checks if every mesh has texcoords
+    /// Checks if every mesh in the scene has texcoords
     /** Returns true if all of the meshes in the scene have texture
       * coordinates in the specified texture coordinate set. */
     /// @param texCoordSet - Specifies the index of the texture coordinate set that should be inspected
-    bool EveryEntryHasTexCoords(unsigned char texCoordSet = 0) {
+    bool hasTexCoords(unsigned char texCoordSet = 0) {
         for(size_t i = 0; i < entries.size(); i++) {
             if(!scene->mMeshes[i]->HasTextureCoords(texCoordSet)) {
                 return false;
@@ -185,7 +171,7 @@ public:
       * Calling this function changes the currently active VAO and ArrayBuffer. */
     /// @param attrib - The attribute array to use as destination.
     /// @param texCoordSet - Specifies the index of the texture coordinate set that should be used
-    void TexCoords(VertexAttribArray attrib, unsigned char texCoordSet = 0) {
+    void texCoords(VertexAttribArray attrib, unsigned char texCoordSet = 0) {
 
         // Initialize TexCoords
         for(size_t i = 0; i < entries.size(); i++) {
@@ -205,14 +191,14 @@ public:
                 texCoordsVector.resize(vertNum);
             }
 
-            entries[i].vao.Bind();
+            entries[i].vao.bind();
 
-            entries[i].texCoords.Bind();
-            entries[i].texCoords.Data(texCoordsVector);
-            attrib.Setup<float>(2).Enable();
+            entries[i].texCoords.bind();
+            entries[i].texCoords.data(texCoordsVector);
+            attrib.setup<float>(2).enable();
         }
 
-        VertexArray::Unbind();
+        VertexArray::unbind();
 
         // Then initialize the materials (they can't be used without texture coordinates).
         textures.resize(scene->mNumMaterials);
@@ -239,27 +225,27 @@ public:
                 if(pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0 &&
                         pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &filepath,
                                               NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-                    textures[i].Bind();
-                    textures[i].LoadTexture(dir + filepath.data);
-                    textures[i].MinFilter(MinF::Linear);
-                    textures[i].MagFilter(MagF::Linear);
+                    textures[i].bind();
+                    textures[i].loadTexture(dir + filepath.data);
+                    textures[i].minFilter(MinF::Linear);
+                    textures[i].magFilter(MagF::Linear);
                 }
             }
         }
     }
 
     /// Renders the mesh.
-    void Render() {
+    void render() {
         if(!rdy2draw) {
             return;
         }
         for(unsigned int i = 0 ; i < entries.size(); i++) {
-            entries[i].vao.Bind();
+            entries[i].vao.bind();
 
             if(useMaterials) {
                 const unsigned int materialIndex = entries[i].materialIndex;
                 if(materialIndex < textures.size()) {
-                    textures[materialIndex].Bind();
+                    textures[materialIndex].bind();
                 }
             }
 
@@ -271,13 +257,13 @@ public:
                ));
         }
 
-        VertexArray::Unbind();
+        VertexArray::unbind();
     }
 
     /// Gives information about the mesh's bounding cuboid.
     /// @param center - The vec3 where bounding cuboid's center is to be returned.
     /// @param edges - The vec3 where bounding cuboid's edge lengths are to be returned.
-    void BoundingCuboid(glm::vec3& center, glm::vec3& edges) {
+    void boundingCuboid(glm::vec3& center, glm::vec3& edges) {
         // Idea: get the minimums and maximums of the vertex positions
         // in each coordinate. Then the average of the mins and maxes
         // will be the center of the cuboid
@@ -313,29 +299,29 @@ public:
     }
 
     /// Returns the center (as xyz) and radius (as w) of the bounding sphere.
-    glm::vec4 BoundingSphere() {
+    glm::vec4 boundingSphere() {
         glm::vec3 center, edges;
-        BoundingCuboid(center, edges);
+        boundingCuboid(center, edges);
         return glm::vec4(center, std::max(edges.x, std::max(edges.y, edges.z)) / 2);
     }
 
     /// Returns the center of the bounding sphere.
-    glm::vec3 BoundingSphere_Center() {
+    glm::vec3 boundingSphere_Center() {
         glm::vec3 center, edges;
-        BoundingCuboid(center, edges);
+        boundingCuboid(center, edges);
         return center;
     }
 
     /// Returns the radius of the bounding sphere.
-    float BoundingSphere_Radius() {
+    float boundingSphere_Radius() {
         glm::vec3 center, edges;
-        BoundingCuboid(center, edges);
+        boundingCuboid(center, edges);
         return std::max(edges.x, std::max(edges.y, edges.z)) / 2;
     }
 
     /// @brief This is for animated meshes, to figure out the template argument for the skinned mesh class.
     /** Without this, you would have to create a AnimatedMesh in order to know how to create the AnimatedMesh*/
-    unsigned char MaxBonesPerVertex() const {
+    unsigned char maxBonesPerVertex() const {
         std::vector<unsigned char> bonesPerVertex[scene->mNumMeshes];
         for(size_t entry = 0; entry < entries.size(); entry++) {
             const aiMesh* pMesh = scene->mMeshes[entry];
@@ -359,8 +345,8 @@ public:
         return max;
     }
 
-    unsigned char RecommendedNumBoneAttribs() const {
-        const unsigned char mbpv = MaxBonesPerVertex();
+    unsigned char getRecommendedNumBoneAttribs() const {
+        const unsigned char mbpv = maxBonesPerVertex();
         return (mbpv%4 == 0) ? (mbpv/4) : (mbpv/4 + 1);
     }
 };
@@ -473,10 +459,10 @@ public:
         glm::mat4 matrix = convertMatrix(scene->mRootNode->mTransformation);
         globalInverseTransform = glm::inverse(matrix);
 
-        if(numBoneAttribs != RecommendedNumBoneAttribs())
+        if(numBoneAttribs != getRecommendedNumBoneAttribs())
             std::cerr << "Error in AnimatedMesh '" << filename << "'\n" <<
             "The class was created with " << (int)numBoneAttribs << " bone "
-            "attribute(s), but the mesh needs " << (int)RecommendedNumBoneAttribs() <<
+            "attribute(s), but the mesh needs " << (int)getRecommendedNumBoneAttribs() <<
             " bone attribute(s) to do its best." << std::endl;
 
     }
@@ -486,11 +472,11 @@ public:
             delete *i;
     }
 
-    unsigned char NumBoneAttribs() {
+    unsigned char getNumBoneAttribs() {
         return numBoneAttribs;
     }
 
-    void AddAnimation(const std::string& filename, const std::string& animName) {
+    void addAnimation(const std::string& filename, const std::string& animName) {
         if(animNames.find(animName) != animNames.end()){
             std::string err = "Animation name '" + animName + "' isn't unique for '" + filename + "'";
             throw std::runtime_error(err);
@@ -506,7 +492,7 @@ public:
         }
     }
 
-    void SetCurrentAnimation(const std::string& animName, float currentTime, float transitionTime = 0.0f) {
+    void setCurrentAnimation(const std::string& animName, float currentTime, float transitionTime = 0.0f) {
         auto nextanim = animations[animNames[animName]];
         if(currentAnim == nextanim || (endOfLastAnim + this->transitionTime) > currentTime)
             return;
@@ -517,7 +503,7 @@ public:
         endOfLastAnim = currentTime;
     }
 
-    void SetCurrentAnimation(size_t animIndex, float currentTime, float transitionTime = 0.0f) {
+    void setCurrentAnimation(size_t animIndex, float currentTime, float transitionTime = 0.0f) {
         auto nextanim = animations[animIndex];
         if(currentAnim == nextanim || endOfLastAnim + this->transitionTime > currentTime)
             return;
@@ -533,7 +519,7 @@ public:
            \\=====:==-==-==:=====//                                 \\=====:==-==-==:=====//          */
 
 private:
-    void MapBones() {
+    void mapBones() {
         for(size_t entry = 0; entry < entries.size(); entry++) {
             const aiMesh* pMesh = scene->mMeshes[entry];
 
@@ -554,7 +540,7 @@ private:
     }
 
     template <class Index_t>
-    void LoadBones(DataType idx_t,
+    void loadBones(DataType idx_t,
                    LazyVertexAttribArray boneIDs,
                    LazyVertexAttribArray boneWeights) {
         std::vector<std::vector<VertexBoneData<Index_t>>> bones(entries.size());
@@ -577,23 +563,23 @@ private:
 
             // -------======{[ Upload the bone data ]}======-------
             for(int boneAttribSet = 0;
-                boneAttribSet < std::min(RecommendedNumBoneAttribs(), numBoneAttribs);
+                boneAttribSet < std::min(getRecommendedNumBoneAttribs(), numBoneAttribs);
                 boneAttribSet++
             ) {
-                entries[entry].vao.Bind();
-                boneBuffers[entry].Bind();
-                boneBuffers[entry].Data(bones[entry]);
+                entries[entry].vao.bind();
+                boneBuffers[entry].bind();
+                boneBuffers[entry].data(bones[entry]);
 
                 const size_t stride = sizeof(VertexBoneData<Index_t>);
                 intptr_t baseOffset =
                     boneAttribSet * sizeof(VertexBoneData_PerAttribute<Index_t>);
                 intptr_t weightOffset = baseOffset + 4 * sizeof(Index_t);
 
-                boneIDs[boneAttribSet].Setup(4, idx_t, stride, (const void*)baseOffset).Enable();
-                boneWeights[boneAttribSet].Setup(4, DataType::Float, stride, (const void*)weightOffset).Enable();
+                boneIDs[boneAttribSet].setup(4, idx_t, stride, (const void*)baseOffset).enable();
+                boneWeights[boneAttribSet].setup(4, DataType::Float, stride, (const void*)weightOffset).enable();
             }
 
-            VertexArray::Unbind();
+            VertexArray::unbind();
         }
 
     }
@@ -607,15 +593,15 @@ public:
       * The mesh cannot be drawn without calling this function. */
     /// @param boneIDs - The array of attributes array to use as destination for bone IDs.
     /// @param boneWeights - The array of attributes array to use as destination for bone weights.
-    void Bones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights) {
-        MapBones();
+    void bones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights) {
+        mapBones();
 
         if(numBones < UCHAR_MAX)
-            LoadBones<unsigned char>(DataType::UnsignedByte, boneIDs, boneWeights);
+            loadBones<unsigned char>(DataType::UnsignedByte, boneIDs, boneWeights);
         else if(numBones < USHRT_MAX)
-            LoadBones<unsigned short>(DataType::UnsignedShort, boneIDs, boneWeights);
+            loadBones<unsigned short>(DataType::UnsignedShort, boneIDs, boneWeights);
         else // more than 65535 bones? WTF???
-            LoadBones<unsigned int>(DataType::UnsignedInt, boneIDs, boneWeights);
+            loadBones<unsigned int>(DataType::UnsignedInt, boneIDs, boneWeights);
     }
 
 /*         //=====:==-==-==:=====\\                           //=====:==-==-==:=====\\
@@ -624,7 +610,7 @@ public:
 
 private:
 
-    unsigned FindPosition(float animationTime, const aiNodeAnim* pNodeAnim) {
+    unsigned findPosition(float animationTime, const aiNodeAnim* pNodeAnim) {
         // Find the first one that is bigger
         for(unsigned i = 0; i < pNodeAnim->mNumPositionKeys - 1; i++) {
             if(animationTime < (float)pNodeAnim->mPositionKeys[i + 1].mTime) {
@@ -635,7 +621,7 @@ private:
         throw std::runtime_error("Animation Error - Position keyframe not found");
     }
 
-    unsigned FindRotation(float animationTime, const aiNodeAnim* pNodeAnim) {
+    unsigned findRotation(float animationTime, const aiNodeAnim* pNodeAnim) {
         for(unsigned i = 0; i < pNodeAnim->mNumRotationKeys - 1; i++) {
             if(animationTime < (float)pNodeAnim->mRotationKeys[i + 1].mTime) {
                 return i;
@@ -644,7 +630,7 @@ private:
         throw std::runtime_error("Animation Error - Rotation keyframe not found");
     }
 
-    unsigned FindScaling(float animationTime, const aiNodeAnim* pNodeAnim) {
+    unsigned findScaling(float animationTime, const aiNodeAnim* pNodeAnim) {
         for(unsigned i = 0; i < pNodeAnim->mNumScalingKeys - 1; i++) {
             if(animationTime < (float)pNodeAnim->mScalingKeys[i + 1].mTime) {
                 return i;
@@ -654,11 +640,11 @@ private:
     }
 
     template<class T>
-    T Interpolate(const T& a, const T& b, float alpha) {
+    T interpolate(const T& a, const T& b, float alpha) {
         return a + alpha * (b - a);
     }
 
-    void CalcInterpolatedPosition(aiVector3D& out, float animTime, const aiNodeAnim* pNodeAnim) {
+    void calcInterpolatedPosition(aiVector3D& out, float animTime, const aiNodeAnim* pNodeAnim) {
         const auto& keys = pNodeAnim->mPositionKeys;
         const auto& numKeys = pNodeAnim->mNumPositionKeys;
 
@@ -667,7 +653,7 @@ private:
             return;
         }
 
-        size_t i = FindPosition(animTime, pNodeAnim);
+        size_t i = findPosition(animTime, pNodeAnim);
         float deltaTime = keys[i + 1].mTime - keys[i].mTime;
         float factor = (animTime - (float)keys[i].mTime) / deltaTime;
         if(factor < 0.0f)
@@ -677,10 +663,10 @@ private:
 
         const aiVector3D& start = keys[i].mValue;
         const aiVector3D& end   = keys[i + 1].mValue;
-        out = Interpolate(start, end, factor);
+        out = interpolate(start, end, factor);
     }
 
-    void CalcInterpolatedRotation(aiQuaternion& out, float animTime, const aiNodeAnim* pNodeAnim) {
+    void calcInterpolatedRotation(aiQuaternion& out, float animTime, const aiNodeAnim* pNodeAnim) {
         const auto& keys = pNodeAnim->mRotationKeys;
         const auto& numKeys = pNodeAnim->mNumRotationKeys;
 
@@ -689,7 +675,7 @@ private:
             return;
         }
 
-        size_t i = FindRotation(animTime, pNodeAnim);
+        size_t i = findRotation(animTime, pNodeAnim);
         float deltaTime = keys[i + 1].mTime - keys[i].mTime;
         float factor = (animTime - (float)keys[i].mTime) / deltaTime;
         if(factor < 0.0f)
@@ -703,7 +689,7 @@ private:
         out = out.Normalize();
     }
 
-    void CalcInterpolatedScaling(aiVector3D& out, float animTime, const aiNodeAnim* pNodeAnim) {
+    void calcInterpolatedScaling(aiVector3D& out, float animTime, const aiNodeAnim* pNodeAnim) {
         const auto& keys = pNodeAnim->mScalingKeys;
         const auto& numKeys = pNodeAnim->mNumScalingKeys;
 
@@ -712,7 +698,7 @@ private:
             return;
         }
 
-        size_t i = FindRotation(animTime, pNodeAnim);
+        size_t i = findRotation(animTime, pNodeAnim);
         float deltaTime = keys[i + 1].mTime - keys[i].mTime;
         float factor = (animTime - (float)keys[i].mTime) / deltaTime;
         if(factor < 0.0f)
@@ -722,10 +708,10 @@ private:
 
         const aiVector3D& start = keys[i].mValue;
         const aiVector3D& end   = keys[i + 1].mValue;
-        out = Interpolate(start, end, factor);
+        out = interpolate(start, end, factor);
     }
 
-    const aiNodeAnim* FindNodeAnim(const aiAnimation* pAnimation, const std::string nodeName) {
+    const aiNodeAnim* findNodeAnim(const aiAnimation* pAnimation, const std::string nodeName) {
         for(unsigned i = 0; i < pAnimation->mNumChannels; i++) {
             const aiNodeAnim* pNodeAnim = pAnimation->mChannels[i];
 
@@ -738,28 +724,28 @@ private:
     }
 
     // Recursive function that travels through the entire node hierarchy
-    void ReadNodeHeirarchy(float animationTime, const aiNode* pNode, const glm::mat4& parentTransform) {
+    void readNodeHeirarchy(float animationTime, const aiNode* pNode, const glm::mat4& parentTransform) {
         std::string nodeName(pNode->mName.data);
 
         // You probably want to be able to select different than animations than the 0th.
         // But with Maya's DAE_FBX exporter, it is not possible.
         const aiAnimation* pAnimation = currentAnim->mAnimations[0];
-        const aiNodeAnim* pNodeAnim = FindNodeAnim(pAnimation, nodeName);
+        const aiNodeAnim* pNodeAnim = findNodeAnim(pAnimation, nodeName);
 
         glm::mat4 nodeTransform = convertMatrix(pNode->mTransformation);
 
         if(pNodeAnim) {
             // Interpolate the transformations and get the matrices
             aiVector3D scaling;
-            CalcInterpolatedScaling(scaling, animationTime, pNodeAnim);
+            calcInterpolatedScaling(scaling, animationTime, pNodeAnim);
             glm::mat4 scalingM = glm::scale(glm::mat4(), glm::vec3(scaling.x, scaling.y, scaling.z));
 
             aiQuaternion rotation;
-            CalcInterpolatedRotation(rotation, animationTime, pNodeAnim);
+            calcInterpolatedRotation(rotation, animationTime, pNodeAnim);
             glm::mat4 rotationM = convertMatrix(rotation.GetMatrix());
 
             aiVector3D translation;
-            CalcInterpolatedPosition(translation, animationTime, pNodeAnim);
+            calcInterpolatedPosition(translation, animationTime, pNodeAnim);
             glm::mat4 translationM =
                 glm::translate(glm::mat4(), glm::vec3(translation.x, translation.y, translation.z));
 
@@ -776,12 +762,12 @@ private:
         }
 
         for(unsigned i = 0; i < pNode->mNumChildren; i++) {
-            ReadNodeHeirarchy(animationTime, pNode->mChildren[i], globalTransformation);
+            readNodeHeirarchy(animationTime, pNode->mChildren[i], globalTransformation);
         }
     }
 
     // ReadNodeHierarchy for transitions between animations.
-    void TransitionReadNodeHeirarchy(float prevAnimationTime,
+    void transitionReadNodeHeirarchy(float prevAnimationTime,
                                      float nextAnimationTime,
                                      const aiNode* pNode,
                                      const glm::mat4& parentTransform) {
@@ -791,8 +777,8 @@ private:
         // But with Maya's DAE_FBX exporter, it is not possible.
         const aiAnimation* prevAnimation = lastAnim->mAnimations[0];
         const aiAnimation* nextAnimation = currentAnim->mAnimations[0];
-        const aiNodeAnim* prevNodeAnim = FindNodeAnim(prevAnimation, nodeName);
-        const aiNodeAnim* nextNodeAnim = FindNodeAnim(nextAnimation, nodeName);
+        const aiNodeAnim* prevNodeAnim = findNodeAnim(prevAnimation, nodeName);
+        const aiNodeAnim* nextNodeAnim = findNodeAnim(nextAnimation, nodeName);
 
         glm::mat4 nodeTransform = convertMatrix(pNode->mTransformation);
 
@@ -801,22 +787,22 @@ private:
 
             // Interpolate the transformations and get the matrices
             aiVector3D prevScaling, nextScaling;
-            CalcInterpolatedScaling(prevScaling, prevAnimationTime, prevNodeAnim);
-            CalcInterpolatedScaling(nextScaling, nextAnimationTime, nextNodeAnim);
-            aiVector3D scaling = Interpolate(prevScaling, nextScaling, factor);
+            calcInterpolatedScaling(prevScaling, prevAnimationTime, prevNodeAnim);
+            calcInterpolatedScaling(nextScaling, nextAnimationTime, nextNodeAnim);
+            aiVector3D scaling = interpolate(prevScaling, nextScaling, factor);
             glm::mat4 scalingM = glm::scale(glm::mat4(), glm::vec3(scaling.x, scaling.y, scaling.z));
 
             aiQuaternion prevRotation, nextRotation, rotation;
-            CalcInterpolatedRotation(prevRotation, prevAnimationTime, prevNodeAnim);
-            CalcInterpolatedRotation(nextRotation, nextAnimationTime, nextNodeAnim);
+            calcInterpolatedRotation(prevRotation, prevAnimationTime, prevNodeAnim);
+            calcInterpolatedRotation(nextRotation, nextAnimationTime, nextNodeAnim);
             // spherical interpolation, and it always chooses the shorter path (exactly what we want).
             aiQuaternion::Interpolate(rotation, prevRotation, nextRotation, factor);
             glm::mat4 rotationM = convertMatrix(rotation.GetMatrix());
 
             aiVector3D prevTranslation, nextTranslation;
-            CalcInterpolatedPosition(prevTranslation, prevAnimationTime, prevNodeAnim);
-            CalcInterpolatedPosition(nextTranslation, nextAnimationTime, nextNodeAnim);
-            aiVector3D translation = Interpolate(prevTranslation, nextTranslation, factor);
+            calcInterpolatedPosition(prevTranslation, prevAnimationTime, prevNodeAnim);
+            calcInterpolatedPosition(nextTranslation, nextAnimationTime, nextNodeAnim);
+            aiVector3D translation = interpolate(prevTranslation, nextTranslation, factor);
             glm::mat4 translationM =
                 glm::translate(glm::mat4(), glm::vec3(translation.x, translation.y, translation.z));
 
@@ -833,7 +819,7 @@ private:
         }
 
         for(unsigned i = 0; i < pNode->mNumChildren; i++) {
-            TransitionReadNodeHeirarchy(
+            transitionReadNodeHeirarchy(
                 prevAnimationTime, nextAnimationTime, pNode->mChildren[i], globalTransformation
             );
         }
@@ -841,7 +827,7 @@ private:
 
 public:
 
-    void UpdateBoneInfo(float timeInSeconds) {
+    void updateBoneInfo(float timeInSeconds) {
         if(currentAnim->mAnimations == 0 || lastAnim->mAnimations == 0){
             throw std::logic_error("Tried to run an animation, that doesn't have an animation channel.");
         }
@@ -858,18 +844,18 @@ public:
 
         if(endOfLastAnim + transitionTime < timeInSeconds) {
             // Normal animation
-            ReadNodeHeirarchy(currentAnimationTime, scene->mRootNode, glm::mat4());
+            readNodeHeirarchy(currentAnimationTime, scene->mRootNode, glm::mat4());
         } else {
             // Transition between two animations.
-            TransitionReadNodeHeirarchy(
+            transitionReadNodeHeirarchy(
                 prevAnimationTime, currentAnimationTime, scene->mRootNode, glm::mat4()
             );
         }
     }
 
-    void BoneTransform(float timeInSeconds,
+    void boneTransform(float timeInSeconds,
                        LazyUniform<glm::mat4>& bones) {
-        UpdateBoneInfo(timeInSeconds);
+        updateBoneInfo(timeInSeconds);
 
         for(unsigned i = 0; i < numBones; i++) {
             bones[i] = boneInfo[i].finalTransformation;

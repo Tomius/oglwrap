@@ -41,7 +41,7 @@ public:
     }
 
     /// Allocates the resource. It only happens upon the first use.
-    void Init() const {
+    void init() const {
         *inited = true;
         *handle = gl( CreateShader(shader_t) );
     }
@@ -52,14 +52,14 @@ public:
     }
 
     /// Returns a self-pointer, useful for inheritance
-    const ShaderObject& Handle() const {
+    const ShaderObject& getHandle() const {
         return *this;
     }
 
     /// Returns the C handle for the object. Inits it, if this is the first call for it.
     operator GLuint() const {
         if(!*inited)
-            Init();
+            init();
 
         return *handle;
     }
@@ -81,13 +81,13 @@ public:
     /// @see glCreateShader, glShaderSource
     Shader(const std::string& file)
             : compiled(false), filename(file) {
-        SourceFile(file);
+        sourceFile(file);
     }
 
     /// Uploads a string as the shader's source.
     /// @param source - string containing the shader code.
     /// @see glShaderSource
-    void Source(const std::string& source)  {
+    void source(const std::string& source)  {
         const char *str = source.c_str();
         gl( ShaderSource(shader, 1, &str, nullptr) );
     }
@@ -95,7 +95,7 @@ public:
     /// Loads a file and uploads it as shader source
     /// @param file - the shader file's path
     /// @see glShaderSource
-    void SourceFile(const std::string& file)  {
+    void sourceFile(const std::string& file)  {
         filename = file;
         std::ifstream shaderFile(file.c_str());
         if(!shaderFile.is_open()) {
@@ -122,7 +122,7 @@ public:
       * compilation info as .what(). The compilation happens automatically
       * when the shader gets attached a program. */
     /// @see glCompileShader
-    void Compile()  {
+    void compile()  {
         if(compiled) {
             return;
         }
@@ -175,7 +175,7 @@ public:
     }
 
     /// Returns the C OpenGL handle for the shader.
-    const ShaderObject<shader_t>& Expose() const  {
+    const ShaderObject<shader_t>& expose() const  {
         return shader;
     }
 };
@@ -278,7 +278,7 @@ public:
     }
 
     /// Allocates the resource. It only happens upon the first use.
-    void Init() const {
+    void init() const {
         *inited = true;
         *handle = gl( CreateProgram() );
     }
@@ -289,14 +289,14 @@ public:
     }
 
     /// Returns a self-pointer, useful for inheritance
-    const ProgramObject& Handle() const {
+    const ProgramObject& getHandle() const {
         return *this;
     }
 
     /// Returns the C handle for the object. Inits it, if this is the first call for it.
     operator GLuint() const {
         if(!*inited)
-            Init();
+            init();
 
         return *handle;
     }
@@ -327,10 +327,10 @@ public:
     /// Attaches a shader to this program object.
     /// @param shader Specifies the shader object that is to be attached.
     /// @see glAttachShader
-    void AttachShader(Shader<shader_t>& shader) {
-        shader.Compile();
-        shaders.push_back(shader.Expose());
-        gl( AttachShader(program, shader.Expose()) );
+    void attachShader(Shader<shader_t>& shader) {
+        shader.compile();
+        shaders.push_back(shader.expose());
+        gl( AttachShader(program, shader.expose()) );
 
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
@@ -343,14 +343,14 @@ public:
     /// @param shader Specifies the shader object that is to be attached.
     /// @see glAttachShader
     Program& operator<<(Shader<shader_t>& shader) {
-        AttachShader(shader);
+        attachShader(shader);
         return *this;
     }
 
     /// Links the program.
     /** If the linking fails, it throws a std::runtime_error containing the linking info. */
     /// @see glLinkProgram
-    Program& Link() {
+    Program& link() {
         if(linked) {
             return *this;
         }
@@ -382,9 +382,9 @@ public:
 
     /// Installs the program as a part of the current rendering state.
     /// @see glUseProgram
-    Program& Use() {
+    Program& use() {
         if(!linked) {
-            Link();
+            link();
         }
         gl( UseProgram(program) );
         oglwrap_PrintError(
@@ -398,13 +398,13 @@ public:
 
     /// Installs the default OpenGL shading program to the current rendering state.
     /// @see glUseProgram
-    Program& Unuse() {
+    Program& unuse() {
         gl( UseProgram(0) );
         return *this;
     }
 
     /// Returns the C OpenGL handle for the program.
-    const ProgramObject& Expose() const {
+    const ProgramObject& expose() const {
         return program;
     }
 };

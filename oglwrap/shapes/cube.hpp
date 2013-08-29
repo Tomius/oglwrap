@@ -2,8 +2,8 @@
     @brief Implements a cube shape wrapper.
 */
 
-#ifndef CUBE_HPP
-#define CUBE_HPP
+#ifndef OGLWRAP_CUBE_HPP
+#define OGLWRAP_CUBE_HPP
 
 namespace oglwrap {
 
@@ -23,16 +23,23 @@ public:
         : w(w), h(h), d(d), rdy2draw(false)
     {}
 
+private:
+    /// Helper class for setupPositions
+    struct Vector3{
+        float x, y, z;
+    };
+
+public:
     /// Creates vertex positions, and uploads it to an attribute array.
     /** Uploads the vertex positions data to an attribute array, and sets it up for use.
       * Calling this function changes the currently active VAO and ArrayBuffer. */
     /// @param attrib - The attribute array to use as destination.
-    void Positions(VertexAttribArray attrib) {
+    void setupPositions(VertexAttribArray attrib) {
 
-        /*       (F)-----(B)
+        /*       (E)-----(A)
                  /|      /|
                 / |     / |
-              (E)-----(A) |
+              (F)-----(B) |
                | (H)---|-(D)
                | /     | /
                |/      |/
@@ -44,29 +51,30 @@ public:
         const float half_h = h/2;
         const float half_d = d/2;
 
-        #define A +half_w, +half_h, +half_d
-        #define B +half_w, +half_h, -half_d
-        #define C +half_w, -half_h, +half_d
-        #define D +half_w, -half_h, -half_d
-        #define E -half_w, +half_h, +half_d
-        #define F -half_w, +half_h, -half_d
-        #define G -half_w, -half_h, +half_d
-        #define H -half_w, -half_h, -half_d
 
-        const float pos[108] = {
-            A, B, D,    C, A, D,
-            A, F, B,    E, F, A,
-            A, C, E,    G, E, C,
-            E, G, F,    H, F, G,
+        Vector3 A = {+half_w, +half_h, -half_d};
+        Vector3 B = {+half_w, +half_h, +half_d};
+        Vector3 C = {+half_w, -half_h, +half_d};
+        Vector3 D = {+half_w, -half_h, -half_d};
+        Vector3 E = {-half_w, +half_h, -half_d};
+        Vector3 F = {-half_w, +half_h, +half_d};
+        Vector3 G = {-half_w, -half_h, +half_d};
+        Vector3 H = {-half_w, -half_h, -half_d};
+
+        const Vector3 pos[] = {
+            A, D, B,    C, B, D,
+            A, B, E,    F, E, B,
+            B, C, F,    G, F, C,
+            F, G, E,    H, E, G,
             H, G, D,    C, D, G,
-            F, H, B,    D, B, H
+            E, H, A,    D, A, H
         };
 
-        vao.Bind();
-        positions.Bind();
-        positions.Data(sizeof(pos), pos);
-        attrib.Setup<glm::vec3>().Enable();
-        vao.Unbind();
+        vao.bind();
+        positions.bind();
+        positions.data(sizeof(pos), pos);
+        attrib.setup<glm::vec3>().enable();
+        vao.unbind();
 
         rdy2draw = true;
     }
@@ -75,7 +83,7 @@ public:
     /** Uploads the vertex normals data to an attribute array, and sets it up for use.
       * Calling this function changes the currently active VAO and ArrayBuffer. */
     /// @param attrib - The attribute array to use as destination.
-    void Normals(VertexAttribArray attrib) {
+    void setupNormals(VertexAttribArray attrib) {
         const float n[6][3] = {
             {+1,  0,  0},
             { 0, +1,  0},
@@ -95,18 +103,18 @@ public:
             }
         }
 
-        vao.Bind();
-        normals.Bind();
-        normals.Data(dest);
-        attrib.Setup<glm::vec3>().Enable();
-        vao.Unbind();
+        vao.bind();
+        normals.bind();
+        normals.data(dest);
+        attrib.setup<glm::vec3>().enable();
+        vao.unbind();
     };
 
     /// Creates vertex texture coordinates, and uploads it to an attribute array.
     /** Uploads the vertex normals data to an attribute array, and sets it up for use.
       * Calling this function changes the currently active VAO and ArrayBuffer. */
     /// @param attrib - The attribute array to use as destination.
-    void TexCoords(VertexAttribArray attrib) {
+    void setupTexCoords(VertexAttribArray attrib) {
         const float n[6][2] = {
             {+1, +1},
             {+1,  0},
@@ -127,18 +135,18 @@ public:
             }
         }
 
-        vao.Bind();
-        texcoords.Bind();
-        texcoords.Data(dest);
-        attrib.Setup<glm::vec2>().Enable();
-        vao.Unbind();
+        vao.bind();
+        texcoords.bind();
+        texcoords.data(dest);
+        attrib.setup<glm::vec3>().enable();
+        vao.unbind();
     }
 
     /// Creates vertex tangents, and uploads it to an attribute array.
     /** Uploads the tangents normals data to an attribute array, and sets it up for use.
       * Calling this function changes the currently active VAO and ArrayBuffer.
       * @param attrib - The attribute array to use as destination. */
-    void Tangents(VertexAttribArray attrib) {
+    void setupTangents(VertexAttribArray attrib) {
         const float n[6][3] = {
             { 0,  0, -1},
             {+1,  0,  0},
@@ -158,35 +166,35 @@ public:
             }
         }
 
-        vao.Bind();
-        tangents.Bind();
-        tangents.Data(dest);
-        attrib.Setup<glm::vec3>().Enable();
-        vao.Unbind();
+        vao.bind();
+        tangents.bind();
+        tangents.data(dest);
+        attrib.setup<glm::vec3>().enable();
+        vao.unbind();
     }
 
     /// Draws the cube.
     /** This call changes the currently active VAO. */
-    void Draw() {
+    void draw() {
         if(rdy2draw) {
-            vao.Bind();
+            vao.bind();
             gl( DrawArrays(GL_TRIANGLES, 0, 108 * sizeof(float)) );
-            vao.Unbind();
+            vao.unbind();
         }
     }
 
     /// Returns the face winding of the cube created by this class.
-    GLenum FaceWinding() const {
+    GLenum faceWinding() const {
         return GL_CW;
     }
 
     /// Returns the center of the cube's bounding sphere
-    glm::vec3 BondingSphere_Center() const {
+    glm::vec3 bondingSphere_Center() const {
         return glm::vec3(0.0f);
     }
 
     /// Returns the radius of the cube's bounding sphere
-    float BondingSphere_Radius() const {
+    float bondingSphere_Radius() const {
         return sqrt(w*w + h*h + d*d);
     }
 };

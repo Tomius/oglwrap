@@ -25,8 +25,8 @@ public:
     /// @param mode - The primitive type the TFB should use.
     /// @see glGenTransformFeedbacks
     TransformFeedback(TFB_PrimType mode) : state(working) {
-        Bind();
-        Begin(mode);
+        bind();
+        begin(mode);
     }
 
     /// Deletes the transform feedback, if only one instance of it exists.
@@ -36,27 +36,27 @@ public:
         if(!handle.isDeletable())
             return;
         if(state != none) {
-            Bind();
-            End();
+            bind();
+            end();
         }
     }
 
     /// Binds the transform feedback.
     /// @see glBindTransformFeedback
-    void Bind() const {
+    void bind() const {
         gl( BindTransformFeedback(GL_TRANSFORM_FEEDBACK, handle) );
     }
 
     /// Unbinds the currently bound transform feedback.
     /// @see glBindTransformFeedback
-    void Unbind() {
+    void unbind() const {
         gl( BindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0) );
     }
 
     /// Begins the transform feedback mode.
     /// @param mode - The primitive type the TFB should use.
     /// @see glBeginTransformFeedback
-    void Begin(TFB_PrimType mode) {
+    void begin(TFB_PrimType mode) {
         state = working;
         gl( BeginTransformFeedback(mode) );
 
@@ -68,7 +68,7 @@ public:
 
     /// Ends the transform feedback mode.
     /// @see glEndTransformFeedback
-    void End() {
+    void end() {
         state = none;
         gl( EndTransformFeedback() );
 
@@ -84,7 +84,7 @@ public:
 
     /// Pauses transform feedback operations on the currently active transform feedback object.
     /// @see glPauseTransformFeedback
-    void Pause() {
+    void pause() {
         state = paused;
         gl( PauseTransformFeedback() );
 
@@ -97,7 +97,7 @@ public:
 
     /// Resumes transform feedback operations on the currently active transform feedback object.
     /// @see glResumeTransformFeedback
-    void Resume() {
+    void resume() {
         state = working;
         gl( ResumeTransformFeedback() );
 

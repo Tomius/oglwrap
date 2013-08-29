@@ -19,19 +19,19 @@ public:
 
     /// @brief Binds this renderbuffer.
     /// @see glBindRenderbuffer
-    void Bind() {
+    void bind() {
         gl( BindRenderbuffer(GL_RENDERBUFFER, renderbuffer) );
     }
 
     /// @brief Unbinds this renderbuffer.
     /// @see glBindRenderbuffer
-    void Unbind() {
+    void unbind() {
         gl( BindRenderbuffer(GL_RENDERBUFFER, 0) );
     }
 
     /// @brief Establish data storage, format and dimensions of a renderbuffer object's image.
     /// @see glRenderbufferStorage
-    void Storage(PixelDataInternalFormat internalFormat, GLsizei width, GLsizei height) {
+    void storage(PixelDataInternalFormat internalFormat, GLsizei width, GLsizei height) {
         gl( RenderbufferStorage(GL_RENDERBUFFER, internalFormat, width, height) );
 
         oglwrap_PrintError(
@@ -53,7 +53,7 @@ public:
 
     /// @brief Establish data storage, format, dimensions and sample count of a renderbuffer object's image.
     /// @see glRenderbufferStorageMultisample
-    void StorageMultisample(
+    void storageMultisample(
         GLsizei samples, PixelDataInternalFormat internalFormat, GLsizei width, GLsizei height
     ) {
         gl( RenderbufferStorageMultisample(GL_RENDERBUFFER, samples, internalFormat, width, height) );
@@ -76,7 +76,7 @@ public:
     }
 
     /// Returns the handle for this object.
-    const ObjectExt<glGenRenderbuffers, glDeleteRenderbuffers>& Expose() const {
+    const ObjectExt<glGenRenderbuffers, glDeleteRenderbuffers>& expose() const {
         return renderbuffer;
     }
 };
@@ -89,14 +89,14 @@ public:
     /// @brief Binds the framebuffer for reading and/or drawing.
     /// @param target - The target to bind the framebuffer to.
     /// @see glBindFramebuffer
-    void Bind(FBO_Target target = FBO_Target::Read_Draw) {
+    void bind(FBO_Target target = FBO_Target::Read_Draw) {
         gl( BindFramebuffer(target, framebuffer) );
         currentTarget = target;
     }
 
     /// @brief Unbinds the buffer from the target it is currently bound to.
     /// @see glBindFramebuffer
-    void Unbind() {
+    void unbind() {
         if(currentTarget != 0) {
             gl( BindFramebuffer(currentTarget, 0) );
             currentTarget = 0;
@@ -106,7 +106,7 @@ public:
     /// @brief Returns the status of a bound framebuffer.
     /** Throws an exception if the framebuffer isn't bound. */
     /// @see glCheckFramebufferStatus
-    FBO_Status Status() {
+    FBO_Status status() {
         if(!currentTarget) {
             throw std::logic_error(
                 "FrameBuffer::Status is called, but the framebuffer isn't bound to any target."
@@ -122,7 +122,7 @@ public:
 
     /// @brief Throws an exception if the framebuffer isn't complete.
     /// @see glCheckFramebufferStatus
-    void Validate() {
+    void validate() {
         std::string errStr;
 
         if(!currentTarget) {
@@ -183,14 +183,14 @@ public:
     /// @param attachment - Specifies the attachment point to which renderbuffer should be attached.
     /// @param renderBuffer - Specifies the renderbuffer object that is to be attached.
     /// @see glFramebufferRenderbuffer
-    void AttachBuffer(FBO_Attachment attachment, RenderBuffer renderBuffer) {
+    void attachBuffer(FBO_Attachment attachment, RenderBuffer renderBuffer) {
         if(!currentTarget) {
             std::cerr << "FrameBuffer::AttachBuffer is called, but the "
                          "framebuffer isn't bound to any target." << std::endl;
             return;
         }
 
-        gl( FramebufferRenderbuffer(currentTarget, attachment, GL_RENDERBUFFER, renderBuffer.Expose()) );
+        gl( FramebufferRenderbuffer(currentTarget, attachment, GL_RENDERBUFFER, renderBuffer.expose()) );
 
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
@@ -204,7 +204,7 @@ public:
     /// @param texture - Specifies the texture object to attach to the framebuffer attachment point named by \a attachment.
     /// @param level - Specifies the mipmap level of \a texture to attach.
     /// @see glFramebufferTexture
-    void AttachTexture(FBO_Attachment attachment, const TextureBase<texture_t>& texture, GLuint level) {
+    void attachTexture(FBO_Attachment attachment, const TextureBase<texture_t>& texture, GLuint level) {
         if(!currentTarget) {
             std::cerr << "FrameBuffer::AttachBuffer is called, but the "
                          "framebuffer isn't bound to any target." << std::endl;
@@ -224,7 +224,7 @@ public:
     /// @param texture - Specifies the texture object to attach to the framebuffer attachment point named by \a attachment.
     /// @param level - Specifies the mipmap level of \a texture to attach.
     /// @see glFramebufferTexture2D
-    void AttachTexture(
+    void attachTexture(
         FBO_Attachment attachment, CubeTarget target, const TextureCube& texture, GLuint level
     ) {
         if(!currentTarget) {
@@ -232,7 +232,7 @@ public:
                          "framebuffer isn't bound to any target." << std::endl;
             return;
         }
-        gl( FramebufferTexture2D(currentTarget, attachment, target, texture.Expose(), level) );
+        gl( FramebufferTexture2D(currentTarget, attachment, target, texture.expose(), level) );
 
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
@@ -240,7 +240,7 @@ public:
         );
     }
 
-    const ObjectExt<glGenFramebuffers, glDeleteFramebuffers>& Expose() {
+    const ObjectExt<glGenFramebuffers, glDeleteFramebuffers>& expose() {
         return framebuffer;
     }
 };
