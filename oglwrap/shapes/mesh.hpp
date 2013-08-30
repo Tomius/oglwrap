@@ -85,7 +85,7 @@ public:
       * Calling this function changes the currently active VAO and ArrayBuffer.
       * The mesh cannot be drawn without calling this function. */
     /// @param attrib - The attribute array to use as destination.
-    void positions(VertexAttribArray attrib) {
+    void setup_positions(VertexAttribArray attrib) {
         for(size_t i = 0; i < entries.size(); i++) {
             const aiMesh* paiMesh = scene->mMeshes[i];
 
@@ -127,7 +127,7 @@ public:
     /** Uploads the vertex normals data to an attribute array, and sets it up for use.
       * Calling this function changes the currently active VAO and ArrayBuffer. */
     /// @param attrib - The attribute array to use as destination.
-    void normals(VertexAttribArray attrib) {
+    void setup_normals(VertexAttribArray attrib) {
         for(size_t i = 0; i < entries.size(); i++) {
             const aiMesh* paiMesh = scene->mMeshes[i];
 
@@ -171,7 +171,7 @@ public:
       * Calling this function changes the currently active VAO and ArrayBuffer. */
     /// @param attrib - The attribute array to use as destination.
     /// @param texCoordSet - Specifies the index of the texture coordinate set that should be used
-    void texCoords(VertexAttribArray attrib, unsigned char texCoordSet = 0) {
+    void setup_texCoords(VertexAttribArray attrib, unsigned char texCoordSet = 0) {
 
         // Initialize TexCoords
         for(size_t i = 0; i < entries.size(); i++) {
@@ -593,7 +593,7 @@ public:
       * The mesh cannot be drawn without calling this function. */
     /// @param boneIDs - The array of attributes array to use as destination for bone IDs.
     /// @param boneWeights - The array of attributes array to use as destination for bone weights.
-    void bones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights) {
+    void setup_bones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights) {
         mapBones();
 
         if(numBones < UCHAR_MAX)

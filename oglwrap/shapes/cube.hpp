@@ -34,7 +34,7 @@ public:
     /** Uploads the vertex positions data to an attribute array, and sets it up for use.
       * Calling this function changes the currently active VAO and ArrayBuffer. */
     /// @param attrib - The attribute array to use as destination.
-    void setupPositions(VertexAttribArray attrib) {
+    void setup_positions(VertexAttribArray attrib) {
 
         /*       (E)-----(A)
                  /|      /|
@@ -83,7 +83,7 @@ public:
     /** Uploads the vertex normals data to an attribute array, and sets it up for use.
       * Calling this function changes the currently active VAO and ArrayBuffer. */
     /// @param attrib - The attribute array to use as destination.
-    void setupNormals(VertexAttribArray attrib) {
+    void setup_normals(VertexAttribArray attrib) {
         const float n[6][3] = {
             {+1,  0,  0},
             { 0, +1,  0},
@@ -114,7 +114,7 @@ public:
     /** Uploads the vertex normals data to an attribute array, and sets it up for use.
       * Calling this function changes the currently active VAO and ArrayBuffer. */
     /// @param attrib - The attribute array to use as destination.
-    void setupTexCoords(VertexAttribArray attrib) {
+    void setup_texCoords(VertexAttribArray attrib) {
         const float n[6][2] = {
             {+1, +1},
             {+1,  0},
@@ -146,7 +146,7 @@ public:
     /** Uploads the tangents normals data to an attribute array, and sets it up for use.
       * Calling this function changes the currently active VAO and ArrayBuffer.
       * @param attrib - The attribute array to use as destination. */
-    void setupTangents(VertexAttribArray attrib) {
+    void setup_tangents(VertexAttribArray attrib) {
         const float n[6][3] = {
             { 0,  0, -1},
             {+1,  0,  0},

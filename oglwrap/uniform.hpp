@@ -73,12 +73,6 @@ public:
         if(UniformObject<GLtype>::location == INVALID_LOCATION) {
             std::cerr << "Error getting the location of uniform '" << identifier << "'" << std::endl;
         }
-
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "Tried to get a uniform's location from a"
-            "program that hasn't been linked successfully."
-        );
     }
 
     /// Sets the uniform to value if it is an OpenGL type or a glm vector or matrix.
@@ -86,16 +80,16 @@ public:
     /// @param value - Specifies the new value to be used for the uniform variable.
     /// @see glUniform*
     void set(const GLtype& value) {
-        UniformObject<GLtype>::set(value);
+        glfunc( UniformObject<GLtype>::set(value) );
 
-        oglwrap_CheckError();
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
             std::string("Uniform::set is called ") +
             #if OGLWRAP_DEBUG
             "for uniform '" + identifier + "'" +
             #endif
-            " but the uniform template parameter and the actual uniform type mismatches."
+            " but the uniform template parameter and the actual uniform type mismatches, "
+            "or there is no current program object."
         )
     }
 
@@ -143,12 +137,6 @@ public:
         if(UniformObject<GLtype>::location == INVALID_LOCATION) {
             std::cerr << "Error getting the location of uniform '" << id.str() << "'" << std::endl;
         }
-
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "Tried to get a uniform's location from a"
-            "program that hasn't been linked successfully."
-        );
     }
 
     /// Sets the uniform to value if it is an OpenGL type or a glm vector or matrix.
@@ -156,16 +144,16 @@ public:
     /// @param value - Specifies the new value to be used for the uniform variable.
     /// @see glUniform*
     void set(const GLtype& value) {
-        UniformObject<GLtype>::set(value);
+        glfunc( UniformObject<GLtype>::set(value) );
 
-        oglwrap_CheckError();
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
             std::string("Uniform::set is called ") +
             #if OGLWRAP_DEBUG
             "for uniform '" + identifier + "'" +
             #endif
-            " but the uniform template parameter and the actual uniform type mismatches."
+            " but the uniform template parameter and the actual uniform type mismatches, "
+            "or there is no current program object."
         )
     }
 
@@ -229,19 +217,13 @@ public:
             firstCall = false;
         }
 
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "Tried to get a uniform's location from a"
-            "program that hasn't been linked successfully."
-        );
+        glfunc( UniformObject<GLtype>::set(value) );
 
-        UniformObject<GLtype>::set(value);
-
-        oglwrap_CheckError();
         oglwrap_PrintError(
             GL_INVALID_OPERATION,
             "Uniform::set is called for uniform '" + identifier + "' but the "
-            "uniform template parameter and the actual uniform type mismatches."
+            "uniform template parameter and the actual uniform type mismatches, "
+            "or there is no current program object."
         )
     }
 

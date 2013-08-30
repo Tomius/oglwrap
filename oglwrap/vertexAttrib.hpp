@@ -221,11 +221,6 @@ public:
         if(location == INVALID_LOCATION) {
             std::cerr << "Unable to get location of attribute '" << identifier << "'" << std::endl;
         }
-
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "VertexAttribArray constructor is called with a program, that isn't linked successfully."
-        );
     }
 };
 
@@ -240,11 +235,6 @@ class LazyVertexAttribArray : public VertexAttribArrayObject {
             std::cerr << "Unable to get location of attribute '" << identifier << "'" << std::endl;
         }
 
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "LazyVertexAttribArray isn't able to query the attribute location, "
-            "because the program it is called with isn't linked successfully."
-        );
         inited = true;
     }
 public:

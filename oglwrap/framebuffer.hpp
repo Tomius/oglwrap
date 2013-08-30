@@ -112,7 +112,9 @@ public:
                 "FrameBuffer::Status is called, but the framebuffer isn't bound to any target."
             );
         }
-        return FBO_Status(glCheckFramebufferStatus(currentTarget));
+
+        GLenum status = gl( CheckFramebufferStatus(currentTarget) );
+        return FBO_Status(status);
     }
 
     /// @brief Returns if the framebuffer is currently bound.
@@ -128,8 +130,8 @@ public:
         if(!currentTarget) {
             errStr = "The framebuffer isn't bound to any target.";
         } else {
-            FBO_Status status = FBO_Status(glCheckFramebufferStatus(currentTarget));
-            switch (status) {
+            GLenum status = gl( CheckFramebufferStatus(currentTarget) );
+            switch (FBO_Status(status)) {
                 case FBO_Status::Complete:
                     return;
                 case FBO_Status::Incomplete_Attachment:
@@ -172,7 +174,7 @@ public:
                              "of the same target.";
                     break;
                 default:
-                    errStr = "I have no damn idea about what the hell did you do.";
+                    errStr = "Unknown error.";
             }
         }
 

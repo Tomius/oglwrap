@@ -7,6 +7,7 @@
 
 namespace oglwrap {
 
+#ifdef OGLWRAP_USE_OWN_DEBUG_OUTPUT
 /// A server side debug utility that helps letting you know what went wrong.
 /** It requires a debug context, which for example SFML can't create. But
     if your window loader supports it, you should definitely use this
@@ -15,7 +16,7 @@ class DebugOutput {
 private:
     /// The debug callback function
     static void DebugFunc(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
-                            const GLchar* message, GLvoid* userParam) {
+                          const GLchar* message, GLvoid* userParam) {
         std::string srcName;
         switch(source) {
             case GL_DEBUG_SOURCE_API_ARB:
@@ -74,7 +75,7 @@ private:
         }
 
         std::cerr << errorType << " from " << srcName <<
-            ",\t" << typeSeverity << " priority" << std::endl;
+                  ",\t" << typeSeverity << " priority" << std::endl;
         std::cerr << "Message: " << message << std::endl;
     }
 public:
@@ -82,8 +83,7 @@ public:
     /// Activates the debug output
     /// @see glEnable, GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB, glDebugMessageCallbackARB
     static void Activate() {
-        if(GLEW_ARB_debug_output)
-        {
+        if(GLEW_ARB_debug_output) {
             glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
             glDebugMessageCallbackARB(DebugFunc, nullptr);
         }
@@ -92,13 +92,71 @@ public:
     /// Deactivates the debug output
     /// @see glDisable, GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB, glDebugMessageCallbackARB
     static void Deactivate() {
-        if(GLEW_ARB_debug_output)
-        {
+        if(GLEW_ARB_debug_output) {
             glDisable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
             glDebugMessageCallbackARB(nullptr, nullptr);
         }
     }
 };
+#else
+
+class DebugOutput {
+    enum glError_t { INVALID_ENUM, INVALID_VALUE, INVALID_OPERATION, STACK_OVERFLOW
+                     ,STACK_UNDERFLOW, OUT_OF_MEMORY, INVALID_FRAMEBUFFER_OPERATION, NUM_ERRORS
+                   };
+
+    const char* glErrorNames[NUM_ERRORS] = {
+        "GL_INVALID_ENUM",
+        "GL_INVALID_VALUE",
+        "GL_INVALID_OPERATION",
+        "GL_STACK_OVERFLOW",
+        "GL_STACK_UNDERFLOW",
+        "GL_OUT_OF_MEMORY",
+        "GL_INVALID_FRAMEBUFFER_OPERATION"
+    };
+
+    struct ErrorInfo {
+        std::string funcSignature;
+        std::string errors[7];
+    };
+
+    std::map<std::string, ErrorInfo> errorMap;
+public:
+    DebugOutput() {
+        using namespace std;
+
+        ifstream is("GLerrors.txt");
+        string func, funcSignature, errors[7];
+        string buffer, buffer2;
+        while(is.good()) {
+            getline(is, func);
+
+            // Get lines until we find we ending with );
+            while(getline(is, buffer))
+                while(isspace(buffer[buffer.size() - 1])) {
+                    buffer.pop_back();
+                }
+            funcSignature += buffer;
+            if(buffer[buffer.size() - 1] != ';' || buffer[buffer.size() - 2] != ')') {
+                break;
+            }
+        }
+
+        while(getline(is, buffer) && !buffer.empty()) {
+
+            stringstream strstream(buffer);
+            strstream >> buffer2;
+            for(int i = 0; i < 7; i++) {
+                if(buffer2 == glErrorNames[i]) {
+                    errors[i];
+                }
+            }
+        }
+
+    }
+};
+
+#endif
 
 
 } // namespace oglwrap

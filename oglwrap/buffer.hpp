@@ -151,7 +151,7 @@ public:
         /// @see glMapBuffer
         Map(BufferMapAccess access = BufferMapAccess::Read) {
             data = gl( MapBuffer(buffer_t, access) );
-            size = BufferObject<buffer_t>::Size();
+            size = BufferObject<buffer_t>::size();
 
             oglwrap_PrintError(
                 GL_OUT_OF_MEMORY,
@@ -171,7 +171,7 @@ public:
         /// @see glMapBufferRange
         Map(GLintptr offset, GLsizeiptr length, BufferMapAccess access = BufferMapAccess::Read) {
             data = gl( MapBufferRange(buffer_t, offset, length, access) );
-            size = BufferObject<buffer_t>::Size();
+            size = BufferObject<buffer_t>::size();
 
             oglwrap_PrintError(
                 GL_INVALID_VALUE,

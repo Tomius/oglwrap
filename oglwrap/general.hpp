@@ -106,7 +106,7 @@ public:
     ~ObjectExt() {
         if(isDeletable()) {
             if(*inited) {
-                oglfunc(destructor(1, handle));
+                glfunc(destructor(1, handle));
             }
             delete inited;
             delete handle;
@@ -116,7 +116,7 @@ public:
     /// Allocates the resource. It only happens upon the first use.
     void init() const {
         *inited = true;
-        oglfunc(constructor(1, handle));
+        glfunc(constructor(1, handle));
     }
 
     /// Returns if there's allocated memory for this class.
@@ -175,7 +175,7 @@ public:
     ~Object() {
         if(isDeletable()) {
             if(*inited) {
-                oglfunc(destructor(1, handle));
+                glfunc(destructor(1, handle));
             }
             delete inited;
             delete handle;
@@ -185,7 +185,7 @@ public:
     /// Allocates the resource. It only happens upon the first use.
     void Init() const {
         *inited = true;
-        oglfunc(constructor(1, handle));
+        glfunc(constructor(1, handle));
     }
 
     /// Returns if there's allocated memory for this class.
