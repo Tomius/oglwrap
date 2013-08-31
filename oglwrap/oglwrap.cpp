@@ -1,4 +1,5 @@
 #include <SFML/Window.hpp>
+#include <GL/glew.h>
 #include "oglwrap.hpp"
 #include "texture.hpp"
 #include "shapes/cube.hpp"
@@ -16,11 +17,7 @@ int main() {
     );
     assert(glewInit() == GLEW_OK);
 
-    buf.Bind();
-
-    Texture2D tex;
-
-    Texture1D tex1d(tex);
+    buf.bind();
 
     return 0;
 }

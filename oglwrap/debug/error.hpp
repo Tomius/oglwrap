@@ -5,27 +5,27 @@
 #ifndef ERROR_HPP
 #define ERROR_HPP
 
-#define glfunc(func) \
-    func;\
-    oglwrap_CheckErrorNamed(#func);
-
-#define gl(func) glfunc(gl##func)
+#include "debugOutput.hpp"
 
 namespace oglwrap {
 
 #if OGLWRAP_DEBUG
 
-/// A global variable storing the last OpenGL error.
-/** An instance of this is defined per file. */
-static GLenum lastError;
+#if OGLWRAP_USE_ARB_DEBUG_OUTPUT
+    #define glfunc(func) func;
+#else
+    static DebugOutput dbgout;
+
+    #define glfunc(func) \
+        func;\
+        oglwrap_CheckErrorNamed(#func); \
+        dbgout.PrintError(#func);
+#endif // OGLWRAP_USE_ARB_DEBUG_OUTPUT
 
 /// Prints additional info in case of a specific OpenGL error.
 /** Conditionally prints more information about an error if the
   * condition equals with the last error catched by oglwrap_CheckError() */
-#define oglwrap_PrintError(cond, text) if(lastError == cond) {std::cout << text << std::endl;}
-
-/// A conditional assert that only does anything if OGLWRAP_DEBUG is defined.
-#define oglwrap_Assert(x) assert(x)
+#define oglwrap_PrintError(cond, text) if(OGLWRAP_LAST_ERROR == cond) {std::cout << text << std::endl;}
 
 /// A wrapper around glGetError, that prints file, function, line, and the error in human-readable format.
 /** An error checking macro used for debugging purposes. If OGLWRAP_DEBUG
@@ -42,12 +42,12 @@ static GLenum lastError;
 /// Use this via the oglwrap_CheckError or oglwrap_CheckErrorNamed macros.
 /// @see glGetError
 inline void __CheckError(const char *file, const char *func, int line, const char* glfunc = nullptr) {
-    lastError = glGetError();
-    if (lastError != GL_NO_ERROR) {
+    OGLWRAP_LAST_ERROR = glGetError();
+    if (OGLWRAP_LAST_ERROR != GL_NO_ERROR) {
 
-        std::cerr << std::endl << " -------======{[ ";
+        std::cerr << std::endl << "---------========={[ ";
 
-        switch (lastError)
+        switch (OGLWRAP_LAST_ERROR)
         {
             case GL_INVALID_ENUM:
                 std::cerr << "GL_INVALID_ENUM";
@@ -72,21 +72,22 @@ inline void __CheckError(const char *file, const char *func, int line, const cha
                 break;
         };
 
-        std::cerr << " ]}======------- " << std::endl << std::endl;
+        std::cerr << " ]}=========---------" << std::endl << std::endl;
 
         if(glfunc)
             std::cerr << "Caused by " << glfunc << std::endl;
         std::cerr << "In function: " << func << std::endl;
-        std::cerr << "In file: '" << file << "'" << std::endl;
-        std::cerr << "In line: " << line << std::endl;
+        std::cerr << "In '" << file << "' at line " << line << std::endl << std::endl;
     }
 }
 #else
 #define oglwrap_PrintError(cond, text)
-#define oglwrap_Assert(x)
 #define oglwrap_CheckError()
 #define oglwrap_CheckErrorNamed(glfunc)
+#define glfunc(func) func;
 #endif
+
+#define gl(func) glfunc(gl##func)
 
 } // namespace oglwrap
 

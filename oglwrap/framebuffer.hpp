@@ -33,22 +33,6 @@ public:
     /// @see glRenderbufferStorage
     void storage(PixelDataInternalFormat internalFormat, GLsizei width, GLsizei height) {
         gl( RenderbufferStorage(GL_RENDERBUFFER, internalFormat, width, height) );
-
-        oglwrap_PrintError(
-            GL_INVALID_VALUE,
-            "RenderBuffer::Storage is called, but width or height is negative, or greater "
-            "than the value of GL_MAX_RENDERBUFFER_SIZE."
-        );
-        oglwrap_PrintError(
-            GL_INVALID_ENUM,
-            "RenderBuffer::Storage is called, but internalFormat is not a color-renderable, "
-            "depth-renderable, or stencil-renderable format."
-        );
-        oglwrap_PrintError(
-            GL_OUT_OF_MEMORY,
-            "RenderBuffer::Storage is called, but GL is unable to create a data store of "
-            "the requested size."
-        );
     }
 
     /// @brief Establish data storage, format, dimensions and sample count of a renderbuffer object's image.
@@ -57,22 +41,6 @@ public:
         GLsizei samples, PixelDataInternalFormat internalFormat, GLsizei width, GLsizei height
     ) {
         gl( RenderbufferStorageMultisample(GL_RENDERBUFFER, samples, internalFormat, width, height) );
-
-        oglwrap_PrintError(
-            GL_INVALID_VALUE,
-            "RenderBuffer::Storage is called, but width or height is negative, or greater "
-            "than the value of GL_MAX_RENDERBUFFER_SIZE or samples is greater than GL_MAX_SAMPLES."
-        );
-        oglwrap_PrintError(
-            GL_INVALID_ENUM,
-            "RenderBuffer::Storage is called, but internalFormat is not a color-renderable, "
-            "depth-renderable, or stencil-renderable format."
-        );
-        oglwrap_PrintError(
-            GL_OUT_OF_MEMORY,
-            "RenderBuffer::Storage is called, but GL is unable to create a data store of "
-            "the requested size."
-        );
     }
 
     /// Returns the handle for this object.
@@ -193,11 +161,6 @@ public:
         }
 
         gl( FramebufferRenderbuffer(currentTarget, attachment, GL_RENDERBUFFER, renderBuffer.expose()) );
-
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "FrameBuffer::AttachBuffer is called, but the default FBO is bound to this target."
-        );
     }
 
     template <TexType texture_t>
@@ -212,12 +175,8 @@ public:
                          "framebuffer isn't bound to any target." << std::endl;
             return;
         }
-        gl( FramebufferTexture(currentTarget, attachment, texture.Expose(), level) );
 
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "FrameBuffer::AttachBuffer is called, but the default FBO is bound to this target."
-        );
+        gl( FramebufferTexture(currentTarget, attachment, texture.Expose(), level) );
     }
 
     /// @brief Attach a level of a cube map as a logical buffer to the currently bound framebuffer object.
@@ -234,12 +193,8 @@ public:
                          "framebuffer isn't bound to any target." << std::endl;
             return;
         }
-        gl( FramebufferTexture2D(currentTarget, attachment, target, texture.expose(), level) );
 
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "FrameBuffer::AttachBuffer is called, but the default FBO is bound to this target."
-        );
+        gl( FramebufferTexture2D(currentTarget, attachment, target, texture.expose(), level) );
     }
 
     const ObjectExt<glGenFramebuffers, glDeleteFramebuffers>& expose() {

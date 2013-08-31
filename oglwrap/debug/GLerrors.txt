@@ -1,0 +1,666 @@
+glBindBuffer
+void glBindBuffer(GLenum target,
+                  GLuint buffer);
+GL_INVALID_ENUM is generated if target is not one of the allowable values.
+GL_INVALID_VALUE is generated if buffer is not a name previously returned from a call to glGenBuffers.
+
+glBufferData
+void glBufferData(GLenum        target,
+                  GLsizeiptr    size,
+                  const GLvoid* data,
+                  GLenum        usage);
+GL_INVALID_ENUM is generated if target is not one of the accepted buffer targets.
+GL_INVALID_ENUM is generated if usage is not GL_STREAM_DRAW, GL_STREAM_READ, GL_STREAM_COPY, GL_STATIC_DRAW, GL_STATIC_READ, GL_STATIC_COPY, GL_DYNAMIC_DRAW, GL_DYNAMIC_READ, or GL_DYNAMIC_COPY.
+GL_INVALID_VALUE is generated if size is negative.
+GL_INVALID_OPERATION is generated if the reserved buffer object name 0 is bound to target.
+GL_OUT_OF_MEMORY is generated if the GL is unable to create a data store with the specified size.
+
+glBufferSubData
+void glBufferSubData(GLenum        target,
+                     GLintptr      offset,
+                     GLsizeiptr    size,
+                     const GLvoid* data);
+GL_INVALID_ENUM is generated if target is not one of the accepted buffer targets.
+GL_INVALID_VALUE is generated if offset or size is negative, or if together they define a region of memory that extends beyond the buffer object's allocated data store.
+GL_INVALID_OPERATION is generated if the reserved buffer object name 0 is bound to target.
+GL_INVALID_OPERATION is generated if the buffer object being updated is mapped.
+
+glGetBufferParameteriv
+void glGetBufferParameteriv(GLenum target,
+                            GLenum value,
+                            GLint* data);
+GL_INVALID_ENUM is generated if target or value is not an accepted value.
+GL_INVALID_OPERATION is generated if the reserved buffer object name 0 is bound to target.
+
+glMapBuffer
+void * glMapBuffer(GLenum target,
+                   GLenum access);
+GL_INVALID_ENUM is generated if target is not one of the accepted targets.
+GL_INVALID_ENUM is generated if access is not GL_READ_ONLY, GL_WRITE_ONLY, or GL_READ_WRITE.
+GL_OUT_OF_MEMORY is generated when glMapBuffer is executed if the GL is unable to map the buffer object's data store. This may occur for a variety of system-specific reasons, such as the absence of sufficient remaining virtual memory.
+GL_INVALID_OPERATION is generated if the reserved buffer object name 0 is bound to target.
+GL_INVALID_OPERATION is generated if glMapBuffer is executed for a buffer object whose data store is already mapped.
+GL_INVALID_OPERATION is generated if glUnmapBuffer is executed for a buffer object whose data store is not currently mapped.
+
+glMapBufferRange
+void *glMapBufferRange(GLenum     target,
+                       GLintptr   offset,
+                       GLsizeiptr length,
+                       GLbitfield access);
+GL_INVALID_VALUE is generated if either of offset or length is negative, or if offset + length is greater than the value of GL_BUFFER_SIZE.
+GL_INVALID_VALUE is generated if access has any bits set other than those defined above.
+GL_INVALID_OPERATION is generated if the buffer is already in a mapped state.
+GL_INVALID_OPERATION is generated if neither GL_MAP_READ_BIT or GL_MAP_WRITE_BIT is set.
+GL_INVALID_OPERATION is generated if GL_MAP_READ_BIT is set and any of GL_MAP_INVALIDATE_RANGE_BIT, GL_MAP_INVALIDATE_BUFFER_BIT, or GL_MAP_UNSYNCHRONIZED_BIT is set.
+GL_INVALID_OPERATION is generated if GL_MAP_FLUSH_EXPLICIT_BIT is set and GL_MAP_WRITE_BIT is not set.
+GL_INVALID_OPERATION is generated if any of GL_MAP_READ_BIT, GL_MAP_WRITE_BIT, GL_MAP_PERSISTENT_BIT, or GL_MAP_COHERENT_BIT are included in access, but the same bit is not included in the buffer's storage flags.
+GL_OUT_OF_MEMORY is generated if glMapBufferRange fails because memory for the mapping could not be obtained.
+
+glMapBuffer
+void * glMapBuffer(GLenum target,
+                   GLenum access);
+GL_INVALID_ENUM is generated if target is not one of the accepted targets.
+GL_INVALID_ENUM is generated if access is not GL_READ_ONLY, GL_WRITE_ONLY, or GL_READ_WRITE.
+GL_OUT_OF_MEMORY is generated when glMapBuffer is executed if the GL is unable to map the buffer object's data store. This may occur for a variety of system-specific reasons, such as the absence of sufficient remaining virtual memory.
+GL_INVALID_OPERATION is generated if the reserved buffer object name 0 is bound to target.
+GL_INVALID_OPERATION is generated if glMapBuffer is executed for a buffer object whose data store is already mapped.
+GL_INVALID_OPERATION is generated if glUnmapBuffer is executed for a buffer object whose data store is not currently mapped.
+
+glBindBufferBase
+void glBindBufferBase(GLenum target,
+                      GLuint index,
+                      GLuint buffer);
+GL_INVALID_ENUM is generated if target is not GL_ATOMIC_COUNTER_BUFFER, GL_TRANSFORM_FEEDBACK_BUFFER, GL_UNIFORM_BUFFER or GL_SHADER_STORAGE_BUFFER.
+GL_INVALID_VALUE is generated if index is greater than or equal to the number of target-specific indexed binding points.
+GL_INVALID_VALUE is generated if buffer does not have an associated data store, or if the size of that store is zero.
+
+glBindBufferRange
+void glBindBufferRange(GLenum     target,
+                       GLuint     index,
+                       GLuint     buffer,
+                       GLintptr   offset,
+                       GLsizeiptr size);
+GL_INVALID_ENUM is generated if target is not one of GL_ATOMIC_COUNTER_BUFFER, GL_TRANSFORM_FEEDBACK_BUFFER, GL_UNIFORM_BUFFER or GL_SHADER_STORAGE_BUFFER.
+GL_INVALID_VALUE is generated if index is greater than or equal to the number of target-specific indexed binding points.
+GL_INVALID_VALUE is generated if size is less than or equal to zero, or if offset + size is greater than the value of GL_BUFFER_SIZE.
+
+glBindRenderbuffer
+void glBindRenderbuffer(GLenum target,
+                        GLuint renderbuffer);
+GL_INVALID_ENUM is generated if target is not GL_RENDERBUFFER.
+GL_INVALID_OPERATION is generated if renderbuffer is not zero or the name of a renderbuffer previously returned from a call to glGenRenderbuffers.
+
+glRenderbufferStorage
+void glRenderbufferStorage(GLenum  target,
+                           GLenum  internalformat,
+                           GLsizei width,
+                           GLsizei height);
+GL_INVALID_ENUM is generated if target is not GL_RENDERBUFFER.
+GL_INVALID_VALUE is generated if either of width or height is negative, or greater than the value of GL_MAX_RENDERBUFFER_SIZE.
+GL_INVALID_ENUM is generated if internalformat is not a color-renderable, depth-renderable, or stencil-renderable format.
+GL_OUT_OF_MEMORY is generated if the GL is unable to create a data store of the requested size.
+
+glRenderbufferStorageMultisample
+void glRenderbufferStorageMultisample(GLenum  target,
+                                      GLsizei samples,
+                                      GLenum  internalformat,
+                                      GLsizei width,
+                                      GLsizei height);
+GL_INVALID_ENUM is generated if target is not GL_RENDERBUFFER.
+GL_INVALID_VALUE is generated if samples is greater than GL_MAX_SAMPLES.
+GL_INVALID_ENUM is generated if internalformat is not a color-renderable, depth-renderable, or stencil-renderable format.
+GL_INVALID_OPERATION is generated if internalformat is a signed or unsigned integer format and samples is greater than the value of GL_MAX_INTEGER_SAMPLES
+GL_INVALID_VALUE is generated if either of width or height is negative, or greater than the value of GL_MAX_RENDERBUFFER_SIZE.
+GL_OUT_OF_MEMORY is generated if the GL is unable to create a data store of the requested size.
+
+glBindFramebuffer
+void glBindFramebuffer(GLenum target,
+                       GLuint framebuffer);
+GL_INVALID_ENUM is generated if target is not GL_DRAW_FRAMEBUFFER, GL_READ_FRAMEBUFFER or GL_FRAMEBUFFER.
+GL_INVALID_OPERATION is generated if framebuffer is not zero or the name of a framebuffer previously returned from a call to glGenFramebuffers.
+
+glCheckFramebufferStatus
+GLenum glCheckFramebufferStatus(GLenum target);
+GL_INVALID_ENUM is generated if target is not GL_DRAW_FRAMEBUFFER, GL_READ_FRAMEBUFFER or GL_FRAMEBUFFER.
+
+glFramebufferRenderbuffer
+void glFramebufferRenderbuffer(GLenum target,
+                               GLenum attachment,
+                               GLenum renderbuffertarget,
+                               GLuint renderbuffer);
+GL_INVALID_ENUM is generated if target is not one of the accepted tokens.
+GL_INVALID_ENUM is generated if renderbuffertarget is not GL_RENDERBUFFER.
+GL_INVALID_OPERATION is generated if zero is bound to target.
+
+glFramebufferTexture
+void glFramebufferTexture(GLenum target,
+                          GLenum attachment,
+                          GLuint texture,
+                          GLint  level);
+GL_INVALID_ENUM is generated if target is not one of the accepted tokens.
+GL_INVALID_ENUM is generated if renderbuffertarget is not GL_RENDERBUFFER.
+GL_INVALID_OPERATION is generated if zero is bound to target.
+
+glFramebufferTexture2D
+void glFramebufferTexture2D(GLenum target,
+                            GLenum attachment,
+                            GLenum textarget,
+                            GLuint texture,
+                            GLint  level);
+GL_INVALID_ENUM is generated if target is not one of the accepted tokens.
+GL_INVALID_ENUM is generated if renderbuffertarget is not GL_RENDERBUFFER.
+GL_INVALID_OPERATION is generated if zero is bound to target.
+GL_INVALID_OPERATION is generated if textarget and texture are not compatible.
+
+glDeleteShader
+void glDeleteShader(GLuint shader);
+GL_INVALID_VALUE is generated if shader is not a value generated by OpenGL.
+
+glCreateShader
+GLuint glCreateShader(GLenum shaderType);
+GL_INVALID_ENUM is generated if shaderType is not an accepted value.
+
+glShaderSource
+void glShaderSource(GLuint  shader,
+                    GLsizei count,
+                    const GLchar** string,
+                    const GLint*   length);
+GL_INVALID_VALUE is generated if shader is not a value generated by OpenGL.
+GL_INVALID_OPERATION is generated if shader is not a shader object.
+GL_INVALID_VALUE is generated if count is less than 0.
+
+glCompileShader
+void glCompileShader(GLuint shader);
+GL_INVALID_VALUE is generated if shader is not a value generated by OpenGL.
+GL_INVALID_OPERATION is generated if shader is not a shader object.
+
+glGetShaderiv
+void glGetShaderiv(GLuint shader,
+                   GLenum pname,
+                   GLint *params);
+GL_INVALID_VALUE is generated if shader is not a value generated by OpenGL.
+GL_INVALID_OPERATION is generated if shader does not refer to a shader object.
+GL_INVALID_ENUM is generated if pname is not an accepted value.
+
+glGetShaderInfoLog
+void glGetShaderInfoLog(GLuint   shader,
+                        GLsizei  maxLength,
+                        GLsizei* length,
+                        GLchar*  infoLog);
+GL_INVALID_VALUE is generated if shader is not a value generated by OpenGL.
+GL_INVALID_OPERATION is generated if shader is not a shader object.
+GL_INVALID_VALUE is generated if maxLength is less than 0.
+
+glDeleteProgram
+void glDeleteProgram(GLuint program);
+GL_INVALID_VALUE is generated if program is not a value generated by OpenGL.
+
+glDetachShader
+void glDetachShader(GLuint program,
+                    GLuint shader);
+GL_INVALID_VALUE is generated if either program or shader is a value that was not generated by OpenGL.
+GL_INVALID_OPERATION is generated if program is not a program object.
+GL_INVALID_OPERATION is generated if shader is not a shader object.
+GL_INVALID_OPERATION is generated if shader is not attached to program.
+
+glAttachShader
+void glAttachShader(GLuint program,
+                    GLuint shader);
+GL_INVALID_VALUE is generated if either program or shader is not a value generated by OpenGL.
+GL_INVALID_OPERATION is generated if program is not a program object.
+GL_INVALID_OPERATION is generated if shader is not a shader object.
+GL_INVALID_OPERATION is generated if shader is already attached to program.
+
+glGetProgramiv
+void glGetProgramiv(GLuint program,
+                    GLenum pname,
+                    GLint* params);
+GL_INVALID_VALUE is generated if program is not a value generated by OpenGL.
+GL_INVALID_OPERATION is generated if program does not refer to a program object.
+GL_INVALID_OPERATION is generated if pname is GL_GEOMETRY_VERTICES_OUT, GL_GEOMETRY_INPUT_TYPE, or GL_GEOMETRY_OUTPUT_TYPE, and program does not contain a geometry shader.
+GL_INVALID_ENUM is generated if pname is not an accepted value.
+
+glGetProgramInfoLog
+void glGetProgramInfoLog(GLuint   program,
+                         GLsizei  maxLength,
+                         GLsizei* length,
+                         GLchar*  infoLog);
+GL_INVALID_VALUE is generated if program is not a value generated by OpenGL.
+GL_INVALID_OPERATION is generated if program is not a program object.
+GL_INVALID_VALUE is generated if maxLength is less than 0.
+
+glUseProgram
+void glUseProgram(GLuint program);
+GL_INVALID_VALUE is generated if program is neither 0 nor a value generated by OpenGL.
+GL_INVALID_OPERATION is generated if program is not a program object.
+GL_INVALID_OPERATION is generated if program could not be made part of current state.
+GL_INVALID_OPERATION is generated if transform feedback mode is active.
+
+glBindTransformFeedback
+void glBindTransformFeedback(GLenum target,
+                             GLuint id);
+GL_INVALID_ENUM is generated if target is not GL_TRANSFORM_FEEDBACK.
+GL_INVALID_OPERATION is generated if the transform feedback operation is active on the currently bound transform feedback object, and that operation is not paused.
+GL_INVALID_OPERATION is generated if id is not zero or the name of a transform feedback object returned from a previous call to glGenTransformFeedbacks, or if such a name has been deleted by glDeleteTransformFeedbacks.
+
+glBeginTransformFeedback
+void glBeginTransformFeedback(GLenum primitiveMode);
+GL_INVALID_OPERATION is generated if glBeginTransformFeedback is executed while transform feedback is active.
+
+glEndTransformFeedback
+void glEndTransformFeedback(void);
+GL_INVALID_OPERATION is generated if glEndTransformFeedback is executed while transform feedback is not active.
+GL_INVALID_OPERATION is generated by glEndTransformFeedback if any binding point used in transform feedback mode does not have a buffer object bound.
+GL_INVALID_OPERATION is generated by glEndTransformFeedback if no binding points would be used, either because no program object is active of because the active program object has specified no varying variables to record.
+
+glPauseTransformFeedback
+void glPauseTransformFeedback(void);
+GL_INVALID_OPERATION is generated if the currently bound transform feedback object is not active or is paused.
+
+glResumeTransformFeedback
+void glResumeTransformFeedback(void);
+GL_INVALID_OPERATION is generated if the currently bound transform feedback object is not active or is not paused.
+
+glGetUniformLocation
+GLint glGetUniformLocation(GLuint        program,
+                           const GLchar* name);
+GL_INVALID_VALUE is generated if program is not a value generated by OpenGL.
+GL_INVALID_OPERATION is generated if program is not a program object.
+GL_INVALID_OPERATION is generated if program has not been successfully linked.
+
+glBindVertexArray
+void glBindVertexArray(GLuint array);
+GL_INVALID_OPERATION is generated if array is not zero or the name of a vertex array object previously returned from a call to glGenVertexArrays.
+
+glVertexAttribPointer
+void glVertexAttribPointer(GLuint        index,
+                           GLint         size,
+                           GLenum        type,
+                           GLboolean     normalized,
+                           GLsizei       stride,
+                           const GLvoid* pointer);
+GL_INVALID_VALUE is generated if index is greater than or equal to GL_MAX_VERTEX_ATTRIBS.
+GL_INVALID_VALUE is generated if size is not 1, 2, 3, 4 or (for glVertexAttribPointer), GL_BGRA.
+GL_INVALID_ENUM is generated if type is not an accepted value.
+GL_INVALID_VALUE is generated if stride is negative.
+GL_INVALID_OPERATION is generated if size is GL_BGRA and type is not GL_UNSIGNED_BYTE, GL_INT_2_10_10_10_REV or GL_UNSIGNED_INT_2_10_10_10_REV.
+GL_INVALID_OPERATION is generated if type is GL_INT_2_10_10_10_REV or GL_UNSIGNED_INT_2_10_10_10_REV and size is not 4 or GL_BGRA.
+GL_INVALID_OPERATION is generated if type is GL_UNSIGNED_INT_10F_11F_11F_REV and size is not 3.
+GL_INVALID_OPERATION is generated by glVertexAttribPointer if size is GL_BGRA and noramlized is GL_FALSE.
+GL_INVALID_OPERATION is generated if zero is bound to the GL_ARRAY_BUFFER buffer object binding point and the pointer argument is not NULL.
+
+glVertexAttribIPointer
+void glVertexAttribIPointer(GLuint        index,
+                            GLint         size,
+                            GLenum        type,
+                            GLsizei       stride,
+                            const GLvoid* pointer);
+GL_INVALID_VALUE is generated if index is greater than or equal to GL_MAX_VERTEX_ATTRIBS.
+GL_INVALID_VALUE is generated if size is not 1, 2, 3, 4 or (for glVertexAttribPointer), GL_BGRA.
+GL_INVALID_ENUM is generated if type is not an accepted value.
+GL_INVALID_VALUE is generated if stride is negative.
+GL_INVALID_OPERATION is generated if size is GL_BGRA and type is not GL_UNSIGNED_BYTE, GL_INT_2_10_10_10_REV or GL_UNSIGNED_INT_2_10_10_10_REV.
+GL_INVALID_OPERATION is generated if type is GL_INT_2_10_10_10_REV or GL_UNSIGNED_INT_2_10_10_10_REV and size is not 4 or GL_BGRA.
+GL_INVALID_OPERATION is generated if type is GL_UNSIGNED_INT_10F_11F_11F_REV and size is not 3.
+GL_INVALID_OPERATION is generated by glVertexAttribPointer if size is GL_BGRA and noramlized is GL_FALSE.
+GL_INVALID_OPERATION is generated if zero is bound to the GL_ARRAY_BUFFER buffer object binding point and the pointer argument is not NULL.
+
+glVertexAttribLPointer
+void glVertexAttribLPointer(GLuint        index,
+                            GLint         size,
+                            GLenum        type,
+                            GLsizei       stride,
+                            const GLvoid* pointer);
+GL_INVALID_VALUE is generated if index is greater than or equal to GL_MAX_VERTEX_ATTRIBS.
+GL_INVALID_VALUE is generated if size is not 1, 2, 3, 4 or (for glVertexAttribPointer), GL_BGRA.
+GL_INVALID_ENUM is generated if type is not an accepted value.
+GL_INVALID_VALUE is generated if stride is negative.
+GL_INVALID_OPERATION is generated if size is GL_BGRA and type is not GL_UNSIGNED_BYTE, GL_INT_2_10_10_10_REV or GL_UNSIGNED_INT_2_10_10_10_REV.
+GL_INVALID_OPERATION is generated if type is GL_INT_2_10_10_10_REV or GL_UNSIGNED_INT_2_10_10_10_REV and size is not 4 or GL_BGRA.
+GL_INVALID_OPERATION is generated if type is GL_UNSIGNED_INT_10F_11F_11F_REV and size is not 3.
+GL_INVALID_OPERATION is generated by glVertexAttribPointer if size is GL_BGRA and noramlized is GL_FALSE.
+GL_INVALID_OPERATION is generated if zero is bound to the GL_ARRAY_BUFFER buffer object binding point and the pointer argument is not NULL.
+
+glEnableVertexAttribArray
+void glEnableVertexAttribArray(GLuint index);
+GL_INVALID_VALUE is generated if index is greater than or equal to GL_MAX_VERTEX_ATTRIBS.
+
+glDisableVertexAttribArray
+void glDisableVertexAttribArray(GLuint index);
+GL_INVALID_VALUE is generated if index is greater than or equal to GL_MAX_VERTEX_ATTRIBS.
+
+glVertexAttribDivisor
+void glVertexAttribDivisor(GLuint index,
+                           GLuint divisor);
+GL_INVALID_VALUE is generated if index is greater than or equal to the value of GL_MAX_VERTEX_ATTRIBS.
+
+glGetAttribLocation
+GLint glGetAttribLocation(GLuint        program,
+                          const GLchar* name);
+GL_INVALID_OPERATION is generated if program is not a value generated by OpenGL.
+GL_INVALID_OPERATION is generated if program is not a program object.
+GL_INVALID_OPERATION is generated if program has not been successfully linked.
+
+glBindTexture
+void glBindTexture(GLenum target,
+                   GLuint texture);
+GL_INVALID_ENUM is generated if target is not one of the allowable values.
+GL_INVALID_VALUE is generated if target is not a name returned from a previous call to glGenTextures.
+GL_INVALID_OPERATION is generated if texture was previously created with a target that doesn't match that of target.
+
+glActiveTexture
+void glActiveTexture(GLenum texture);
+GL_INVALID_ENUM is generated if texture is not one of GL_TEXTUREi, where i ranges from 0 to (GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS - 1).
+
+glGenerateMipmap
+void glGenerateMipmap(GLenum target);
+GL_INVALID_ENUM is generated if target is not one of the accepted texture targets.
+GL_INVALID_OPERATION is generated if target is GL_TEXTURE_CUBE_MAP and the texture bound to the GL_TEXTURE_CUBE_MAP target of the active texture unit is not cube complete.
+
+glTexParameterf
+void glTexParameterf(GLenum  target,
+                     GLenum  pname,
+                     GLfloat param);
+GL_INVALID_ENUM is generated if target or pname is not one of the accepted defined values.
+GL_INVALID_ENUM is generated if params should have a defined constant value (based on the value of pname) and does not.
+
+glTexParameteri
+void glTexParameteri(GLenum target,
+                     GLenum pname,
+                     GLint  param);
+GL_INVALID_ENUM is generated if target or pname is not one of the accepted defined values.
+GL_INVALID_ENUM is generated if params should have a defined constant value (based on the value of pname) and does not.
+
+glTexParameterfv
+void glTexParameterfv(GLenum         target,
+                      GLenum         pname,
+                      const GLfloat* params);
+GL_INVALID_ENUM is generated if target or pname is not one of the accepted defined values.
+GL_INVALID_ENUM is generated if params should have a defined constant value (based on the value of pname) and does not.
+
+glTexParameteriv
+void glTexParameteriv(GLenum       target,
+                      GLenum       pname,
+                      const GLint* params);
+GL_INVALID_ENUM is generated if target or pname is not one of the accepted defined values.
+GL_INVALID_ENUM is generated if params should have a defined constant value (based on the value of pname) and does not.
+
+glGetFloatv
+void glGetFloatv(GLenum   pname,
+                 GLfloat* params);
+GL_INVALID_ENUM is generated if pname is not an accepted value.
+
+glTexBuffer
+void glTexBuffer(GLenum target,
+                 GLenum internalFormat,
+                 GLuint buffer);
+GL_INVALID_ENUM is generated if target is not GL_TEXTURE_BUFFER.
+GL_INVALID_ENUM is generated if internalFormat is not one of the accepted tokens.
+GL_INVALID_OPERATION is generated if buffer is not zero or the name of an existing buffer object.
+
+glTexImage1D
+void glTexImage1D(GLenum        target,
+                  GLint         level,
+                  GLint         internalFormat,
+                  GLsizei       width,
+                  GLint         border,
+                  GLenum        format,
+                  GLenum        type,
+                  const GLvoid* data);
+GL_INVALID_ENUM is generated if target is not GL_TEXTURE_1D or GL_PROXY_TEXTURE_1D.
+GL_INVALID_ENUM is generated if format is not an accepted format constant. Format constants other than GL_STENCIL_INDEX are accepted.
+GL_INVALID_ENUM is generated if type is not a type constant.
+GL_INVALID_VALUE is generated if level is less than 0.
+GL_INVALID_VALUE may be generated if level is greater than log 2 ⁡ max , where max is the returned value of GL_MAX_TEXTURE_SIZE.
+GL_INVALID_VALUE is generated if internalFormat is not one of the accepted resolution and format symbolic constants.
+GL_INVALID_VALUE is generated if width is less than 0 or greater than GL_MAX_TEXTURE_SIZE.
+GL_INVALID_VALUE is generated if border is not 0.
+GL_INVALID_OPERATION is generated if type is one of GL_UNSIGNED_BYTE_3_3_2, GL_UNSIGNED_BYTE_2_3_3_REV, GL_UNSIGNED_SHORT_5_6_5, or GL_UNSIGNED_SHORT_5_6_5_REV and format is not GL_RGB.
+GL_INVALID_OPERATION is generated if type is one of GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_4_4_4_4_REV, GL_UNSIGNED_SHORT_5_5_5_1, GL_UNSIGNED_SHORT_1_5_5_5_REV, GL_UNSIGNED_INT_8_8_8_8, GL_UNSIGNED_INT_8_8_8_8_REV, GL_UNSIGNED_INT_10_10_10_2, or GL_UNSIGNED_INT_2_10_10_10_REV and format is neither GL_RGBA nor GL_BGRA.
+GL_INVALID_OPERATION is generated if format is GL_DEPTH_COMPONENT and internalFormat is not GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT24, or GL_DEPTH_COMPONENT32.
+GL_INVALID_OPERATION is generated if internalFormat is GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT24, or GL_DEPTH_COMPONENT32, and format is not GL_DEPTH_COMPONENT.
+GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to the GL_PIXEL_UNPACK_BUFFER target and the buffer object's data store is currently mapped.
+GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to the GL_PIXEL_UNPACK_BUFFER target and the data would be unpacked from the buffer object such that the memory reads required would exceed the data store size.
+GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to the GL_PIXEL_UNPACK_BUFFER target and data is not evenly divisible into the number of bytes needed to store in memory a datum indicated by type.
+
+glTexSubImage1D
+void glTexSubImage1D(GLenum        target,
+                     GLint         level,
+                     GLint         xoffset,
+                     GLsizei       width,
+                     GLenum        format,
+                     GLenum        type,
+                     const GLvoid* data);
+GL_INVALID_ENUM is generated if target is not one of the allowable values.
+GL_INVALID_ENUM is generated if format is not an accepted format constant.
+GL_INVALID_ENUM is generated if type is not a type constant.
+GL_INVALID_VALUE is generated if level is less than 0.
+GL_INVALID_VALUE may be generated if level is greater than log 2 max, where max is the returned value of GL_MAX_TEXTURE_SIZE.
+GL_INVALID_VALUE is generated if xoffset < - b , or if xoffset + width > w - b , where w is the GL_TEXTURE_WIDTH, and b is the width of the GL_TEXTURE_BORDER of the texture image being modified. Note that w includes twice the border width.
+GL_INVALID_VALUE is generated if width is less than 0.
+GL_INVALID_OPERATION is generated if the texture array has not been defined by a previous glTexImage1D operation.
+GL_INVALID_OPERATION is generated if type is one of GL_UNSIGNED_BYTE_3_3_2, GL_UNSIGNED_BYTE_2_3_3_REV, GL_UNSIGNED_SHORT_5_6_5, or GL_UNSIGNED_SHORT_5_6_5_REV and format is not GL_RGB.
+GL_INVALID_OPERATION is generated if type is one of GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_4_4_4_4_REV, GL_UNSIGNED_SHORT_5_5_5_1, GL_UNSIGNED_SHORT_1_5_5_5_REV, GL_UNSIGNED_INT_8_8_8_8, GL_UNSIGNED_INT_8_8_8_8_REV, GL_UNSIGNED_INT_10_10_10_2, or GL_UNSIGNED_INT_2_10_10_10_REV and format is neither GL_RGBA nor GL_BGRA.
+GL_INVALID_OPERATION is generated if format is GL_STENCIL_INDEX and the base internal format is not GL_STENCIL_INDEX.
+GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to the GL_PIXEL_UNPACK_BUFFER target and the buffer object's data store is currently mapped.
+GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to the GL_PIXEL_UNPACK_BUFFER target and the data would be unpacked from the buffer object such that the memory reads required would exceed the data store size.
+GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to the GL_PIXEL_UNPACK_BUFFER target and data is not evenly divisible into the number of bytes needed to store in memory a datum indicated by type.
+
+glCopyTexImage
+void glCopyTexImage1D(GLenum  target,
+                      GLint   level,
+                      GLenum  internalformat,
+                      GLint   x,
+                      GLint   y,
+                      GLsizei width,
+                      GLint   border);
+GL_INVALID_ENUM is generated if target is not one of the allowable values.
+GL_INVALID_VALUE is generated if level is less than 0.
+GL_INVALID_VALUE may be generated if level is greater than log 2 ⁢ max , where max is the returned value of GL_MAX_TEXTURE_SIZE.
+GL_INVALID_VALUE is generated if internalformat is not an allowable value.
+GL_INVALID_VALUE is generated if width is less than 0 or greater than GL_MAX_TEXTURE_SIZE.
+GL_INVALID_VALUE is generated if border is not 0.
+GL_INVALID_OPERATION is generated if internalformat is GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT24, or GL_DEPTH_COMPONENT32 and there is no depth buffer.
+
+glCopyTexSubImage1D
+void glCopyTexSubImage1D(GLenum  target,
+                         GLint   level,
+                         GLint   xoffset,
+                         GLint   x,
+                         GLint   y,
+                         GLsizei width);
+GL_INVALID_ENUM is generated if /target is not GL_TEXTURE_1D.
+GL_INVALID_OPERATION is generated if the texture array has not been defined by a previous glTexImage1D or glCopyTexImage1D operation.
+GL_INVALID_VALUE is generated if level is less than 0.
+GL_INVALID_VALUE may be generated if level > log 2 ⁡ max , where max is the returned value of GL_MAX_TEXTURE_SIZE.
+GL_INVALID_VALUE is generated if xoffset < 0 , or xoffset + width > w , where w is the GL_TEXTURE_WIDTH of the texture image being modified.
+
+
+glGetTexLevelParameterfv
+void glGetTexLevelParameterfv(GLenum   target,
+                              GLint    level,
+                              GLenum   pname,
+                              GLfloat* params);
+GL_INVALID_ENUM is generated if target or pname is not an accepted value.
+GL_INVALID_VALUE is generated if level is less than 0.
+GL_INVALID_VALUE may be generated if level is greater than log 2 max, where max is the returned value of GL_MAX_TEXTURE_SIZE.
+GL_INVALID_VALUE is generated if target is GL_TEXTURE_BUFFER and level is not zero.
+GL_INVALID_OPERATION is generated if GL_TEXTURE_COMPRESSED_IMAGE_SIZE is queried on texture images with an uncompressed internal format or on proxy targets.
+
+glGetTexLevelParameteriv
+void glGetTexLevelParameteriv(GLenum target,
+                              GLint level,
+                              GLenum pname,
+                              GLint* params);
+GL_INVALID_ENUM is generated if target or pname is not an accepted value.
+GL_INVALID_VALUE is generated if level is less than 0.
+GL_INVALID_VALUE may be generated if level is greater than log 2 max, where max is the returned value of GL_MAX_TEXTURE_SIZE.
+GL_INVALID_VALUE is generated if target is GL_TEXTURE_BUFFER and level is not zero.
+GL_INVALID_OPERATION is generated if GL_TEXTURE_COMPRESSED_IMAGE_SIZE is queried on texture images with an uncompressed internal format or on proxy targets.
+
+
+glGetCompressedTexImage
+void glGetCompressedTexImage(GLenum  target,
+                             GLint   lod,
+                             GLvoid* img);
+GL_INVALID_VALUE is generated if lod is less than zero or greater than the maximum number of LODs permitted by the implementation.
+GL_INVALID_OPERATION is generated if glGetCompressedTexImage is used to retrieve a texture that is in an uncompressed internal format.
+GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to the GL_PIXEL_PACK_BUFFER target and the buffer object's data store is currently mapped.
+GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to the GL_PIXEL_PACK_BUFFER target and the data would be packed to the buffer object such that the memory writes required would exceed the data store size.
+
+glTexImage2D
+void glTexImage2D(GLenum        target,
+                  GLint         level,
+                  GLint         internalFormat,
+                  GLsizei       width,
+                  GLsizei       height,
+                  GLint         border,
+                  GLenum        format,
+                  GLenum        type,
+                  const GLvoid* data);
+GL_INVALID_ENUM is generated if target is not GL_TEXTURE_2D, GL_TEXTURE_1D_ARRAY, GL_TEXTURE_RECTANGLE, GL_PROXY_TEXTURE_2D, GL_PROXY_TEXTURE_1D_ARRAY, GL_PROXY_TEXTURE_RECTANGLE, GL_PROXY_TEXTURE_CUBE_MAP, GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, GL_TEXTURE_CUBE_MAP_POSITIVE_Y, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, GL_TEXTURE_CUBE_MAP_POSITIVE_Z, or GL_TEXTURE_CUBE_MAP_NEGATIVE_Z.
+GL_INVALID_ENUM is generated if target is one of the six cube map 2D image targets and the width and height parameters are not equal.
+GL_INVALID_ENUM is generated if type is not a type constant.
+GL_INVALID_VALUE is generated if width is less than 0 or greater than GL_MAX_TEXTURE_SIZE.
+GL_INVALID_VALUE is generated if target is not GL_TEXTURE_1D_ARRAY or GL_PROXY_TEXTURE_1D_ARRAY and height is less than 0 or greater than GL_MAX_TEXTURE_SIZE.
+GL_INVALID_VALUE is generated if target is GL_TEXTURE_1D_ARRAY or GL_PROXY_TEXTURE_1D_ARRAY and height is less than 0 or greater than GL_MAX_ARRAY_TEXTURE_LAYERS.
+GL_INVALID_VALUE is generated if level is less than 0.
+GL_INVALID_VALUE may be generated if level is greater than log 2 ⁡ max , where max is the returned value of GL_MAX_TEXTURE_SIZE.
+GL_INVALID_VALUE is generated if internalFormat is not one of the accepted resolution and format symbolic constants.
+GL_INVALID_VALUE is generated if width or height is less than 0 or greater than GL_MAX_TEXTURE_SIZE.
+GL_INVALID_VALUE is generated if border is not 0.
+GL_INVALID_OPERATION is generated if type is one of GL_UNSIGNED_BYTE_3_3_2, GL_UNSIGNED_BYTE_2_3_3_REV, GL_UNSIGNED_SHORT_5_6_5, GL_UNSIGNED_SHORT_5_6_5_REV, or GL_UNSIGNED_INT_10F_11F_11F_REV, and format is not GL_RGB.
+GL_INVALID_OPERATION is generated if type is one of GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_4_4_4_4_REV, GL_UNSIGNED_SHORT_5_5_5_1, GL_UNSIGNED_SHORT_1_5_5_5_REV, GL_UNSIGNED_INT_8_8_8_8, GL_UNSIGNED_INT_8_8_8_8_REV, GL_UNSIGNED_INT_10_10_10_2, GL_UNSIGNED_INT_2_10_10_10_REV, or GL_UNSIGNED_INT_5_9_9_9_REV, and format is neither GL_RGBA nor GL_BGRA.
+GL_INVALID_OPERATION is generated if target is not GL_TEXTURE_2D, GL_PROXY_TEXTURE_2D, GL_TEXTURE_RECTANGLE, or GL_PROXY_TEXTURE_RECTANGLE, and internalFormat is GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT24, or GL_DEPTH_COMPONENT32F.
+GL_INVALID_OPERATION is generated if format is GL_DEPTH_COMPONENT and internalFormat is not GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT24, or GL_DEPTH_COMPONENT32F.
+GL_INVALID_OPERATION is generated if internalFormat is GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT24, or GL_DEPTH_COMPONENT32F, and format is not GL_DEPTH_COMPONENT.
+GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to the GL_PIXEL_UNPACK_BUFFER target and the buffer object's data store is currently mapped.
+GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to the GL_PIXEL_UNPACK_BUFFER target and the data would be unpacked from the buffer object such that the memory reads required would exceed the data store size.
+GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to the GL_PIXEL_UNPACK_BUFFER target and data is not evenly divisible into the number of bytes needed to store in memory a datum indicated by type.
+GL_INVALID_VALUE is generated if target is GL_TEXTURE_RECTANGLE or GL_PROXY_TEXTURE_RECTANGLE and level is not 0.
+
+glTexSubImage2D
+void glTexSubImage2D(GLenum        target,
+                     GLint         level,
+                     GLint         xoffset,
+                     GLint         yoffset,
+                     GLsizei       width,
+                     GLsizei       height,
+                     GLenum        format,
+                     GLenum        type,
+                     const GLvoid* data);
+GL_INVALID_ENUM is generated if target is not GL_TEXTURE_2D, GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, GL_TEXTURE_CUBE_MAP_POSITIVE_Y, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, GL_TEXTURE_CUBE_MAP_POSITIVE_Z, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, or GL_TEXTURE_1D_ARRAY.
+GL_INVALID_ENUM is generated if format is not an accepted format constant.
+GL_INVALID_ENUM is generated if type is not a type constant.
+GL_INVALID_VALUE is generated if level is less than 0.
+GL_INVALID_VALUE may be generated if level is greater than log 2 max, where max is the returned value of GL_MAX_TEXTURE_SIZE.
+GL_INVALID_VALUE is generated if xoffset < - b , xoffset + width > w - b , yoffset < - b , or yoffset + height > h - b , where w is the GL_TEXTURE_WIDTH, h is the GL_TEXTURE_HEIGHT, and b is the border width of the texture image being modified. Note that w and h include twice the border width.
+GL_INVALID_VALUE is generated if width or height is less than 0.
+GL_INVALID_OPERATION is generated if the texture array has not been defined by a previous glTexImage2D operation.
+GL_INVALID_OPERATION is generated if type is one of GL_UNSIGNED_BYTE_3_3_2, GL_UNSIGNED_BYTE_2_3_3_REV, GL_UNSIGNED_SHORT_5_6_5, or GL_UNSIGNED_SHORT_5_6_5_REV and format is not GL_RGB.
+GL_INVALID_OPERATION is generated if type is one of GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_4_4_4_4_REV, GL_UNSIGNED_SHORT_5_5_5_1, GL_UNSIGNED_SHORT_1_5_5_5_REV, GL_UNSIGNED_INT_8_8_8_8, GL_UNSIGNED_INT_8_8_8_8_REV, GL_UNSIGNED_INT_10_10_10_2, or GL_UNSIGNED_INT_2_10_10_10_REV and format is neither GL_RGBA nor GL_BGRA.
+GL_INVALID_OPERATION is generated if format is GL_STENCIL_INDEX and the base internal format is not GL_STENCIL_INDEX.
+GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to the GL_PIXEL_UNPACK_BUFFER target and the buffer object's data store is currently mapped.
+GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to the GL_PIXEL_UNPACK_BUFFER target and the data would be unpacked from the buffer object such that the memory reads required would exceed the data store size.
+GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to the GL_PIXEL_UNPACK_BUFFER target and data is not evenly divisible into the number of bytes needed to store in memory a datum indicated by type.
+
+glCopyTexImage2D
+void glCopyTexImage2D(GLenum  target,
+                      GLint   level,
+                      GLenum  internalformat,
+                      GLint   x,
+                      GLint   y,
+                      GLsizei width,
+                      GLsizei height,
+                      GLint   border);
+GL_INVALID_ENUM is generated if target is not GL_TEXTURE_2D, GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, GL_TEXTURE_CUBE_MAP_POSITIVE_Y, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, GL_TEXTURE_CUBE_MAP_POSITIVE_Z, or GL_TEXTURE_CUBE_MAP_NEGATIVE_Z.
+GL_INVALID_VALUE is generated if level is less than 0.
+GL_INVALID_VALUE may be generated if level is greater than log2 ⁢max, where max is the returned value of GL_MAX_TEXTURE_SIZE.
+GL_INVALID_VALUE is generated if width is less than 0 or greater than GL_MAX_TEXTURE_SIZE.
+GL_INVALID_VALUE is generated if border is not 0.
+GL_INVALID_VALUE is generated if internalformat is not an accepted format.
+GL_INVALID_OPERATION is generated if internalformat is GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT24, or GL_DEPTH_COMPONENT32 and there is no depth buffer.
+
+glCopyTexSubImage2D
+void glCopyTexSubImage2D(GLenum  target,
+                         GLint   level,
+                         GLint   xoffset,
+                         GLint   yoffset,
+                         GLint   x,
+                         GLint   y,
+                         GLsizei width,
+                         GLsizei height);
+GL_INVALID_ENUM is generated if target is not GL_TEXTURE_2D, GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, GL_TEXTURE_CUBE_MAP_POSITIVE_Y, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, GL_TEXTURE_CUBE_MAP_POSITIVE_Z, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, or GL_TEXTURE_1D_ARRAY.
+GL_INVALID_OPERATION is generated if the texture array has not been defined by a previous glTexImage2D or glCopyTexImage2D operation.
+GL_INVALID_VALUE is generated if level is less than 0.
+GL_INVALID_VALUE may be generated if level > log2 max, where max is the returned value of GL_MAX_TEXTURE_SIZE.
+GL_INVALID_VALUE is generated if xoffset < 0 , xoffset + width > w , yoffset < 0 , or yoffset + height > 0 , where w is the GL_TEXTURE_WIDTH, h is the GL_TEXTURE_HEIGHT and of the texture image being modified.
+
+glTexImage3D
+void glTexImage3D(GLenum        target,
+                  GLint         level,
+                  GLint         internalFormat,
+                  GLsizei       width,
+                  GLsizei       height,
+                  GLsizei       depth,
+                  GLint         border,
+                  GLenum        format,
+                  GLenum        type,
+                  const GLvoid* data);
+GL_INVALID_ENUM is generated if target is not GL_TEXTURE_3D or GL_PROXY_TEXTURE_3D.
+GL_INVALID_ENUM is generated if format is not an accepted format constant. Format constants other than GL_STENCIL_INDEX and GL_DEPTH_COMPONENT are accepted.
+GL_INVALID_ENUM is generated if type is not a type constant.
+GL_INVALID_VALUE is generated if level is less than 0.
+GL_INVALID_VALUE may be generated if level is greater than log 2 ⁡ max , where max is the returned value of GL_MAX_TEXTURE_SIZE.
+GL_INVALID_VALUE is generated if internalFormat is not one of the accepted resolution and format symbolic constants.
+GL_INVALID_VALUE is generated if width, height, or depth is less than 0 or greater than GL_MAX_TEXTURE_SIZE.
+GL_INVALID_VALUE is generated if border is not 0.
+GL_INVALID_OPERATION is generated if type is one of GL_UNSIGNED_BYTE_3_3_2, GL_UNSIGNED_BYTE_2_3_3_REV, GL_UNSIGNED_SHORT_5_6_5, or GL_UNSIGNED_SHORT_5_6_5_REV and format is not GL_RGB.
+GL_INVALID_OPERATION is generated if type is one of GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_4_4_4_4_REV, GL_UNSIGNED_SHORT_5_5_5_1, GL_UNSIGNED_SHORT_1_5_5_5_REV, GL_UNSIGNED_INT_8_8_8_8, GL_UNSIGNED_INT_8_8_8_8_REV, GL_UNSIGNED_INT_10_10_10_2, or GL_UNSIGNED_INT_2_10_10_10_REV and format is neither GL_RGBA nor GL_BGRA.
+GL_INVALID_OPERATION is generated if format or internalFormat is GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT24, or GL_DEPTH_COMPONENT32.
+GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to the GL_PIXEL_UNPACK_BUFFER target and the buffer object's data store is currently mapped.
+GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to the GL_PIXEL_UNPACK_BUFFER target and the data would be unpacked from the buffer object such that the memory reads required would exceed the data store size.
+GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to the GL_PIXEL_UNPACK_BUFFER target and data is not evenly divisible into the number of bytes needed to store in memory a datum indicated by type.
+
+glTexSubImage3D
+void glTexSubImage3D(GLenum        target,
+                     GLint         level,
+                     GLint         xoffset,
+                     GLint         yoffset,
+                     GLint         zoffset,
+                     GLsizei       width,
+                     GLsizei       height,
+                     GLsizei       depth,
+                     GLenum        format,
+                     GLenum        type,
+                     const GLvoid* data);
+GL_INVALID_ENUM is generated if target is not GL_TEXTURE_3D or GL_TEXTURE_2D_ARRAY.
+GL_INVALID_ENUM is generated if format is not an accepted format constant.
+GL_INVALID_ENUM is generated if type is not a type constant.
+GL_INVALID_VALUE is generated if level is less than 0.
+GL_INVALID_VALUE may be generated if level is greater than log 2 max, where max is the returned value of GL_MAX_TEXTURE_SIZE.
+GL_INVALID_VALUE is generated if xoffset < - b , xoffset + width > w - b , yoffset < - b , or yoffset + height > h - b , or zoffset < - b , or zoffset + depth > d - b , where w is the GL_TEXTURE_WIDTH, h is the GL_TEXTURE_HEIGHT, d is the GL_TEXTURE_DEPTH and b is the border width of the texture image being modified. Note that w, h, and d include twice the border width.
+GL_INVALID_VALUE is generated if width, height, or depth is less than 0.
+GL_INVALID_OPERATION is generated if the texture array has not been defined by a previous glTexImage3D or glTexStorage3D operation.
+GL_INVALID_OPERATION is generated if type is one of GL_UNSIGNED_BYTE_3_3_2, GL_UNSIGNED_BYTE_2_3_3_REV, GL_UNSIGNED_SHORT_5_6_5, or GL_UNSIGNED_SHORT_5_6_5_REV and format is not GL_RGB.
+GL_INVALID_OPERATION is generated if type is one of GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_4_4_4_4_REV, GL_UNSIGNED_SHORT_5_5_5_1, GL_UNSIGNED_SHORT_1_5_5_5_REV, GL_UNSIGNED_INT_8_8_8_8, GL_UNSIGNED_INT_8_8_8_8_REV, GL_UNSIGNED_INT_10_10_10_2, or GL_UNSIGNED_INT_2_10_10_10_REV and format is neither GL_RGBA nor GL_BGRA.
+GL_INVALID_OPERATION is generated if format is GL_STENCIL_INDEX and the base internal format is not GL_STENCIL_INDEX.
+GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to the GL_PIXEL_UNPACK_BUFFER target and the buffer object's data store is currently mapped.
+GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to the GL_PIXEL_UNPACK_BUFFER target and the data would be unpacked from the buffer object such that the memory reads required would exceed the data store size.
+GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to the GL_PIXEL_UNPACK_BUFFER target and data is not evenly divisible into the number of bytes needed to store in memory a datum indicated by type.
+
+glCopyTexSubImage3D
+void glCopyTexSubImage3D(GLenum  target,
+                         GLint   level,
+                         GLint   xoffset,
+                         GLint   yoffset,
+                         GLint   zoffset,
+                         GLint   x,
+                         GLint   y,
+                         GLsizei width,
+                         GLsizei height);
+GL_INVALID_ENUM is generated if target is not GL_TEXTURE_3D.
+GL_INVALID_OPERATION is generated if the texture array has not been defined by a previous glTexImage3D operation.
+GL_INVALID_VALUE is generated if level is less than 0.
+GL_INVALID_VALUE may be generated if level > log 2 ⁡ max , where max is the returned value of GL_MAX_3D_TEXTURE_SIZE if target is GL_TEXTURE_3D or the returned value of GL_MAX_ARRAY_TEXTURE_LAYERS if target is GL_TEXTURE_2D_ARRAY.
+GL_INVALID_VALUE is generated if xoffset < 0 , xoffset + width > w , yoffset < 0 , yoffset + height > h , zoffset < 0 , or zoffset + 1 > d , where w is the GL_TEXTURE_WIDTH, h is the GL_TEXTURE_HEIGHT, d is the GL_TEXTURE_DEPTH and of the texture image being modified. Note that w, h, and d include twice the border width.

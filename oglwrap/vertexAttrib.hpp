@@ -110,16 +110,6 @@ public:
             Init();
 
         gl( VertexAttribPointer(location, values_per_vertex, type, normalized, stride, offset_pointer) );
-
-        oglwrap_PrintError(
-            GL_INVALID_VALUE,
-            "VertexAttribArrayObject::Pointer is called with an attribute index greater than "
-            "or equal to GL_MAX_VERTEX_ATTRIBS, or size is different than 1, 2, 3, 4, or stride is negative."
-        );
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "VertexAttribArrayObject::Pointer is called, but type and values_per_vertex mismatch."
-        );
         return *this;
     }
 
@@ -137,16 +127,6 @@ public:
             Init();
 
         gl( VertexAttribIPointer(location, values_per_vertex, type, stride, offset_pointer) );
-
-        oglwrap_PrintError(
-            GL_INVALID_VALUE,
-            "VertexAttribArrayObject::IPointer is called with an attribute index greater than "
-            "or equal to GL_MAX_VERTEX_ATTRIBS, or size is different than 1, 2, 3, 4, or stride is negative."
-        );
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "VertexAttribArrayObject::IPointer is called, but type and values_per_vertex mismatch."
-        );
         return *this;
     }
 
@@ -162,16 +142,6 @@ public:
             Init();
 
         gl( VertexAttribLPointer(location, values_per_vertex, DataType::Double, stride, offset_pointer) );
-
-        oglwrap_PrintError(
-            GL_INVALID_VALUE,
-            "VertexAttribArrayObject::LPointer is called with an attribute index greater than "
-            "or equal to GL_MAX_VERTEX_ATTRIBS, or size is different than 1, 2, 3, 4, or stride is negative."
-        );
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "VertexAttribArrayObject::LPointer is called, but type and values_per_vertex mismatch."
-        );
         return *this;
     }
 

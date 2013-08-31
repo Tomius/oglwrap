@@ -59,11 +59,6 @@ public:
     void begin(TFB_PrimType mode) {
         state = working;
         gl( BeginTransformFeedback(mode) );
-
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "TransformFeedback::Begin is called while transform feedback is active."
-        );
     }
 
     /// Ends the transform feedback mode.
@@ -71,15 +66,6 @@ public:
     void end() {
         state = none;
         gl( EndTransformFeedback() );
-
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "TransformFeedback::End is called but either of the following apply: \n"
-            " - The transform feedback is not active. \n"
-            " - Any binding point used in transform feedback mode does not have a buffer object bound. \n "
-            " - No binding points would be used, either because no program object is active or because the "
-            "active program object has specified no varying variables to record."
-        );
     }
 
     /// Pauses transform feedback operations on the currently active transform feedback object.
@@ -87,12 +73,6 @@ public:
     void pause() {
         state = paused;
         gl( PauseTransformFeedback() );
-
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "TransformFeedback::Pause is called but the currently bound "
-            "transform feedback object is not active or is paused."
-        );
     }
 
     /// Resumes transform feedback operations on the currently active transform feedback object.
@@ -100,12 +80,6 @@ public:
     void resume() {
         state = working;
         gl( ResumeTransformFeedback() );
-
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "TransformFeedback::Pause is called but the currently bound "
-            "transform feedback object is not active or is not paused."
-        );
     }
 };
 

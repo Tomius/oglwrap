@@ -32,12 +32,6 @@ public:
     /// @see glBindTexture
     void bind() const {
         gl( BindTexture(texture_t, texture) );
-
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "TextureBase::Bind is called, but the texture was previously created "
-            "for another target, and can not be bound for this target."
-        );
     }
 
     /// @brief Unbinds the texture from this texture class's target.
@@ -51,23 +45,12 @@ public:
     /// @see glActiveTexture
     static void active(GLuint texUnit) {
         gl( ActiveTexture(GL_TEXTURE0 + texUnit) );
-
-        oglwrap_PrintError(
-            GL_INVALID_ENUM,
-            "TextureBase::Active is called for a texUnit ID that is either negative or "
-            "greater than GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS - 1"
-        );
     }
 
     /// @brief Generates mipmaps for the currently uploaded image to this texture class.
     /// @see glGenerateMipmap
     static void generateMipmap() {
         gl( GenerateMipmap(texture_t) );
-
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "TextureCube::GenerateMipmap is called but the bound cube map is not complete."
-        );
     }
 
     /// @brief Sets the border color for this texture class.

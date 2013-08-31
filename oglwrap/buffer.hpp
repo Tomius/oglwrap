@@ -48,19 +48,6 @@ public:
     static void data(GLsizei size, const GLtype* data,
                      BufferUsage usage = BufferUsage::StaticDraw) {
         gl( BufferData(buffer_t, size, data, usage) );
-
-        oglwrap_PrintError(
-            GL_INVALID_VALUE,
-            "BufferObject::Data was called with a negative size parameter."
-        );
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "BufferObject::Data was called without a bound buffer for this target."
-        );
-        oglwrap_PrintError(
-            GL_OUT_OF_MEMORY,
-            "BufferObject::Data - GL was unable to create a data store with the specified size."
-        );
     }
 
     template<typename GLtype>
@@ -71,15 +58,6 @@ public:
     static void data(const std::vector<GLtype>& data,
                      BufferUsage usage = BufferUsage::StaticDraw) {
         gl( BufferData(buffer_t, data.size() * sizeof(GLtype), data.data(), usage) );
-
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "BufferObject::Data was called without a bound buffer for this target."
-        );
-        oglwrap_PrintError(
-            GL_OUT_OF_MEMORY,
-            "BufferObject::Data - GL was unable to create a data store with the specified size."
-        );
     }
 
     template<typename GLtype>
@@ -90,16 +68,6 @@ public:
     /// @see glBufferSubData
     static void subData(GLintptr offset, GLsizei size, const GLtype* data) {
         gl( BufferSubData(buffer_t, offset, size, data) );
-
-        oglwrap_PrintError(
-            GL_INVALID_VALUE,
-            "BufferObject::Data was called with negative size or offset parameter."
-        );
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "BufferObject::Data was either called without a bound buffer "
-            "for this target, or the bound target was mapped."
-        );
     }
 
     template<typename GLtype>
@@ -109,16 +77,6 @@ public:
     /// @see glBufferSubData
     static void subData(GLintptr offset, const std::vector<GLtype>& data) {
         gl( BufferSubData(buffer_t, offset, data.size() * sizeof(GLtype), data.data()) );
-
-        oglwrap_PrintError(
-            GL_INVALID_VALUE,
-            "BufferObject::Data was called with offset parameter."
-        );
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "BufferObject::Data was either called without a bound buffer "
-            "for this target, or the bound target was mapped."
-        );
     }
 
     /// @brief A getter for the buffer's size.
@@ -127,11 +85,6 @@ public:
     static size_t size() {
         GLint data;
         gl( GetBufferParameteriv(buffer_t, GL_BUFFER_SIZE, &data) );
-
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "BufferObject::Size was called without a bound buffer."
-        );
         return data;
     }
 
@@ -152,16 +105,6 @@ public:
         Map(BufferMapAccess access = BufferMapAccess::Read) {
             data = gl( MapBuffer(buffer_t, access) );
             size = BufferObject<buffer_t>::size();
-
-            oglwrap_PrintError(
-                GL_OUT_OF_MEMORY,
-                "Buffer::Map() is called, but the GL is unable to map the buffer object's data store."
-            );
-            oglwrap_PrintError(
-                GL_INVALID_OPERATION,
-                "Buffer::Map() is called, and either the default buffer is bound, or the "
-                "bound buffer is already mapped. "
-            );
         }
 
         /// Maps a range of the buffer.
@@ -172,33 +115,12 @@ public:
         Map(GLintptr offset, GLsizeiptr length, BufferMapAccess access = BufferMapAccess::Read) {
             data = gl( MapBufferRange(buffer_t, offset, length, access) );
             size = BufferObject<buffer_t>::size();
-
-            oglwrap_PrintError(
-                GL_INVALID_VALUE,
-                "Buffer::Map() is called, but either of offset or length is negative, "
-                "or offset + length is greater than the value of GL_BUFFER_SIZE."
-            );
-            oglwrap_PrintError(
-                GL_OUT_OF_MEMORY,
-                "Buffer::Map() is called, but the GL is unable to map the buffer object's data store."
-            );
-            oglwrap_PrintError(
-                GL_INVALID_OPERATION,
-                "Buffer::Map() is called, and either the default buffer is bound, or the "
-                "bound buffer is already mapped. "
-            );
         }
 
         /// Unmaps the buffer.
         /// @see glUnmapBuffer
         ~Map() {
             gl( UnmapBuffer(buffer_t) );
-
-            oglwrap_PrintError(
-                GL_INVALID_OPERATION,
-                "Buffer::~Map() is called, and either the default buffer is bound, or the "
-                "bound buffer is not currently mapped. "
-            );
         }
 
         /// Returns the size of the mapped buffer in bytes
@@ -250,14 +172,6 @@ public:
     /// @see glBindBufferBase
     void bindBase(GLuint index) const {
         gl( BindBufferBase(buffer_t, index, BufferObject<buffer_t>::buffer) );
-
-        oglwrap_PrintError(
-            GL_INVALID_VALUE,
-            "IndexedBufferObject::BindBase was called either with an index greater "
-            "than the number of target-specific indexed binding points, or the "
-            "buffer does not have an associated data store, or the size of that "
-            "store is zero"
-        );
     }
 
     /// @brief Bind a range within a buffer object to an index.
@@ -267,14 +181,6 @@ public:
     /// @see glBindBufferRange
     void bindRange(GLuint index, GLintptr offset, GLsizeiptr size) const {
         gl( BindBufferRange(buffer_t, index, offset, size, BufferObject<buffer_t>::buffer) );
-
-        oglwrap_PrintError(
-            GL_INVALID_VALUE,
-            "IndexedBufferObject::glBindBufferRange was called either with an index greater "
-            "than the number of target-specific indexed binding points, or the "
-            "buffer does not have an associated data store, or the size of that "
-            "store is zero"
-        );
     }
 
     /// @brief Unbind a buffer object from an index.

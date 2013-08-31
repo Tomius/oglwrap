@@ -331,11 +331,6 @@ public:
         shader.compile();
         shaders.push_back(shader.expose());
         gl( AttachShader(program, shader.expose()) );
-
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "Program::AttachShader called on the same shader twice."
-        );
     }
 
     template<ShaderType shader_t>
@@ -372,11 +367,6 @@ public:
             throw std::runtime_error(str.str());
         }
 
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "Program::Link is called on the currently active program "
-            "object, and transform feedback mode is active."
-        );
         return *this;
     }
 
@@ -387,12 +377,6 @@ public:
             link();
         }
         gl( UseProgram(program) );
-        oglwrap_PrintError(
-            GL_INVALID_OPERATION,
-            "Program::Use is called, but the program could not be made "
-            "part of current state. (Is transform feedback mode active?) "
-        );
-
         return *this;
     }
 

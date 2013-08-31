@@ -7,17 +7,19 @@
 #define OGLWRAP_HPP
 
 // standard headers
+#include <map>
 #include <vector>
 #include <string>
+#include <cctype>
+#include <cassert>
 #include <fstream>
 #include <sstream>
-#include <cctype>
 #include <iostream>
 #include <stdexcept>
 
 // basic headers, required by all others below
 #include "config.hpp"
-#include "error.hpp"
+#include "debug/error.hpp"
 #include "enums.hpp"
 #include "general.hpp"
 
