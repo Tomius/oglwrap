@@ -10,7 +10,7 @@ Features:
 -------------
 * It has full glm support, glm classes are treated like they were GL types. You can use Uniform< vec2 > to upload with glUniform2fv, 
   you can upload vec2 to buffers, setup attribute arrays with Setup< vec2 >() instead of Pointer(2, GLfloat, ...) etc..
-* Portable, and easy to use, as it is header only.
+* Portable, and easy to use, as it is platform-indipendent, header only, and doesn't even have to be configured (apart from the extra features, that can be turned on with defining macros before the inclusion of oglwrap, or in the config.hpp.
 * A lot of default parameters, often used function take about half as much parameter than with C OpenGL
 * RAII resource handling. You won't have to generate or delete the resources yourself, the memory will be allocated when you first use the object,
   ( It happens there, rather than in the constructor, because this way, you can declare global or static objects, whose ctor run before the creatin of the GL context. )
