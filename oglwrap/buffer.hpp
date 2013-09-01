@@ -27,17 +27,21 @@ public:
         : buffer(src.Expose())
     { }
 
+    #ifdef glBindBuffer
     /// @brief Bind a buffer object to its default target.
     /// @see glBindBuffer
     void bind() const {
         gl( BindBuffer(buffer_t, buffer) );
     }
+    #endif
 
+    #ifdef glBindBuffer
     /// @brief Unbind a buffer object from its default target.
     /// @see glBindBuffer
     static void unbind() {
         gl( BindBuffer(buffer_t, 0) );
     }
+    #endif
 
     template<typename GLtype>
     /// @brief Creates and initializes a buffer object's data store.

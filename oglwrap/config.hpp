@@ -4,11 +4,6 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 
-/// Loads core profile only
-#ifndef OGLWRAP_COREONLY
-#define OGLWRAP_COREONLY 1
-#endif
-
 /// Enables error checking, and DebugOutputs.
 #ifndef OGLWRAP_DEBUG
 #define OGLWRAP_DEBUG 1
@@ -24,6 +19,5 @@
 #ifndef OGLWRAP_IMAGEMAGICK
 #define OGLWRAP_IMAGEMAGICK 1
 #endif
-
 
 #endif // CONFIG_HPP

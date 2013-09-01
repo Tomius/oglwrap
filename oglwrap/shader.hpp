@@ -141,24 +141,32 @@ public:
 
             const char * strShaderType = nullptr;
             switch(shader_t) {
-                #if !OGLWRAP_COREONLY
+                #ifdef GL_COMPUTE_SHADER
                 case ShaderType::Compute:
                     strShaderType = "compute";
                     break;
                 #endif
+                #ifdef GL_VERTEX_SHADER
                 case ShaderType::Vertex:
                     strShaderType = "vertex";
                     break;
+                #endif
+                #ifdef GL_GEOMETRY_SHADER
                 case ShaderType::Geometry:
                     strShaderType = "geometry";
                     break;
+                #endif
+                #ifdef GL_FRAGMENT_SHADER
                 case ShaderType::Fragment:
                     strShaderType = "fragment";
                     break;
-                #if !OGLWRAP_COREONLY
+                #endif
+                #ifdef GL_TESS_CONTROL_SHADER
                 case ShaderType::TessControl:
                     strShaderType = "tessellation control";
                     break;
+                #endif
+                #ifdef GL_TESS_EVALUATION_SHADER
                 case ShaderType::TessEval:
                     strShaderType = "tessellation evaluation";
                     break;
@@ -181,7 +189,7 @@ public:
 };
 
 
-#if !OGLWRAP_COREONLY
+#ifdef GL_COMPUTE_SHADER
 /// A Shader that is used for computing arbitrary information.
 /** A Compute Shader is a Shader Stage that is used entirely for computing arbitrary information.
   * While it can do rendering, it is generally used for tasks not directly related to drawing
@@ -191,6 +199,7 @@ public:
 typedef Shader<ShaderType::Compute> ComputeShader;
 #endif
 
+#ifdef GL_VERTEX_SHADER
 /// A Shader that handles the processing of individual vertices.
 /** The Vertex Shader is the programmable Shader stage in the rendering pipeline that handles the
   * processing of individual vertices. Vertex shaders are fed Vertex Attribute data, as specified
@@ -199,7 +208,9 @@ typedef Shader<ShaderType::Compute> ComputeShader;
 /// @version It is core since OpenGL 2.1
 /// @see GL_VERTEX_SHADER
 typedef Shader<ShaderType::Vertex> VertexShader;
+#endif
 
+#ifdef GL_GEOMETRY_SHADER
 /// A Shader that governs the processing of Primitives.
 /** A Geometry Shader is a Shader program written in GLSL that governs the processing of Primitives.
   * Geometry shaders reside between the Vertex Shaders (or the optional Tessellation stage) and the
@@ -207,7 +218,9 @@ typedef Shader<ShaderType::Vertex> VertexShader;
 /// @version It is core since OpenGL 3.2
 /// @see GL_GEOMETRY_SHADER
 typedef Shader<ShaderType::Geometry> GeometryShader;
+#endif
 
+#ifdef GL_FRAGMENT_SHADER
 /// A Shader that processes a Fragment from the rasterization process into a set of colors and a single depth value.
 /** A Fragment Shader is a user-supplied program that, when executed, will process a Fragment from the
   * rasterization process into a set of colors and a single depth value. The fragment shader is the OpenGL
@@ -220,8 +233,9 @@ typedef Shader<ShaderType::Geometry> GeometryShader;
 /// @version It is core since OpenGL 2.1
 /// @see GL_FRAGMENT_SHADER
 typedef Shader<ShaderType::Fragment> FragmentShader;
+#endif
 
-#if !OGLWRAP_COREONLY
+#ifdef GL_TESS_CONTROL_SHADER
 /// A shader that controls how much tessellation a particular patch gets and also defines the size of a patch.
 /** The Tessellation Control Shader (TCS) is a Shader program written in GLSL. It sits between the Vertex
   * Shader and the Tessellation Evaluation Shader. The TCS controls how much tessellation a particular patch
@@ -232,7 +246,9 @@ typedef Shader<ShaderType::Fragment> FragmentShader;
 /// @version It is core since OpenGL 4.0.
 /// @see GL_TESS_CONTROL_SHADER
 typedef Shader<ShaderType::TessControl> TessControlShader;
+#endif
 
+#ifdef GL_TESS_EVALUATION_SHADER
 /// A shader that generates vertices from the patch data.
 /** The Tessellation Evaluation Shader (TES) is a Shader program written in GLSL that takes the results
   * of a Tessellation operation and computes the interpolated positions and other per-vertex data from them.
