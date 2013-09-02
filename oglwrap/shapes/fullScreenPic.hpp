@@ -2,8 +2,7 @@
     @brief Implements a rectangle that covers the entire screen.
 */
 
-#ifndef FULLSCREENPIC_HPP
-#define FULLSCREENPIC_HPP
+#pragma once
 
 namespace oglwrap {
 
@@ -77,5 +76,3 @@ public:
 };
 
 } // Namespace oglwrap
-
-#endif // FULLSCREENPIC_HPP

@@ -2,8 +2,7 @@
     @brief Contains error handling macros
 */
 
-#ifndef ERROR_HPP
-#define ERROR_HPP
+#pragma once
 
 #include "debugOutput.hpp"
 
@@ -90,5 +89,3 @@ inline void __CheckError(const char *file, const char *func, int line, const cha
 #define gl(func) glfunc(gl##func)
 
 } // namespace oglwrap
-
-#endif // ERROR_HPP

@@ -2,8 +2,7 @@
     @brief A Mesh loader using assimp
 */
 
-#ifndef SHAPES_MESH_HPP
-#define SHAPES_MESH_HPP
+#pragma once
 
 #include <climits>
 
@@ -864,5 +863,3 @@ public:
 }; // AnimatedMesh
 
 } // namespace oglwrap
-
-#endif // include guard
