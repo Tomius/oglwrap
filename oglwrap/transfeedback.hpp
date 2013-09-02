@@ -2,11 +2,12 @@
     @brief Implements transform feedback functionality.
 */
 
-#ifndef TRANSFORMFEEDBACK_HPP
-#define TRANSFORMFEEDBACK_HPP
+#pragma once
 
 namespace oglwrap {
 
+#ifdef glGenTransformFeedbacks
+#ifdef glDeleteTransformFeedbacks
 /// A wrapper class for transform feedback.
 /** Transform Feedback is the process of altering the rendering pipeline so that primitives
   * processed by a Vertex Shader and optionally a Geometry Shader will be written to buffer
@@ -23,7 +24,6 @@ public:
 
     /// Creates a transform feedback and activates it. It will work till the variable's lifetime.
     /// @param mode - The primitive type the TFB should use.
-    /// @see glGenTransformFeedbacks
     TransformFeedback(TFB_PrimType mode) : state(working) {
         bind();
         begin(mode);
@@ -41,18 +41,23 @@ public:
         }
     }
 
+    #ifdef glBindTransformFeedback
     /// Binds the transform feedback.
     /// @see glBindTransformFeedback
     void bind() const {
         gl( BindTransformFeedback(GL_TRANSFORM_FEEDBACK, handle) );
     }
+    #endif // glBindTransformFeedback
 
+    #ifdef glBindTransformFeedback
     /// Unbinds the currently bound transform feedback.
     /// @see glBindTransformFeedback
     void unbind() const {
         gl( BindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0) );
     }
+    #endif // glBindTransformFeedback
 
+    #ifdef glBeginTransformFeedback
     /// Begins the transform feedback mode.
     /// @param mode - The primitive type the TFB should use.
     /// @see glBeginTransformFeedback
@@ -60,29 +65,36 @@ public:
         state = working;
         gl( BeginTransformFeedback(mode) );
     }
+    #endif // glBeginTransformFeedback
 
+    #ifdef glEndTransformFeedback
     /// Ends the transform feedback mode.
     /// @see glEndTransformFeedback
     void end() {
         state = none;
         gl( EndTransformFeedback() );
     }
+    #endif // glEndTransformFeedback
 
+    #ifdef glPauseTransformFeedback
     /// Pauses transform feedback operations on the currently active transform feedback object.
     /// @see glPauseTransformFeedback
     void pause() {
         state = paused;
         gl( PauseTransformFeedback() );
     }
+    #endif // glPauseTransformFeedback
 
+    #ifdef glResumeTransformFeedback
     /// Resumes transform feedback operations on the currently active transform feedback object.
     /// @see glResumeTransformFeedback
     void resume() {
         state = working;
         gl( ResumeTransformFeedback() );
     }
+    #endif // glResumeTransformFeedback
 };
+#endif // glDeleteTransformFeedbacks
+#endif // glGenTransformFeedbacks
 
 };
-
-#endif

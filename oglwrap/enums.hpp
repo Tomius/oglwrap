@@ -2,8 +2,7 @@
     @brief Contains enumeration wrappers for GLenums.
 */
 
-#ifndef OGLWRAP_ENUMS_H
-#define OGLWRAP_ENUMS_H
+#pragma once
 
 namespace oglwrap {
 
@@ -230,10 +229,10 @@ enum BufferMapAccess {
 }
 typedef _BufferMapAccess::BufferMapAccess BufferMapAccess;
 
-// -------======{[ FrameBuffers ]}======-------
+// -------======{[ Framebuffers ]}======-------
 
-namespace _FrameBufferTarget {
-enum FrameBufferTarget {
+namespace _FramebufferTarget {
+enum FramebufferTarget {
 #ifdef GL_READ_FRAMEBUFFER
     Read = GL_READ_FRAMEBUFFER,
 #endif
@@ -245,11 +244,11 @@ enum FrameBufferTarget {
 #endif
 };
 }
-typedef _FrameBufferTarget::FrameBufferTarget FrameBufferTarget;
-typedef _FrameBufferTarget::FrameBufferTarget FBO_Target;
+typedef _FramebufferTarget::FramebufferTarget FramebufferTarget;
+typedef _FramebufferTarget::FramebufferTarget FBO_Target;
 
-namespace _FrameBufferStatus {
-enum FrameBufferStatus {
+namespace _FramebufferStatus {
+enum FramebufferStatus {
 #ifdef GL_FRAMEBUFFER_COMPLETE
     Complete = GL_FRAMEBUFFER_COMPLETE,
 #endif
@@ -279,11 +278,11 @@ enum FrameBufferStatus {
 #endif
 };
 }
-typedef _FrameBufferStatus::FrameBufferStatus FrameBufferStatus;
-typedef _FrameBufferStatus::FrameBufferStatus FBO_Status;
+typedef _FramebufferStatus::FramebufferStatus FramebufferStatus;
+typedef _FramebufferStatus::FramebufferStatus FBO_Status;
 
-namespace _FrameBufferAttachment {
-enum FrameBufferAttachment {
+namespace _FramebufferAttachment {
+enum FramebufferAttachment {
 #ifdef GL_COLOR_ATTACHMENT0
     Color = GL_COLOR_ATTACHMENT0,
 #endif
@@ -343,8 +342,8 @@ enum FrameBufferAttachment {
 #endif
 };
 }
-typedef _FrameBufferAttachment::FrameBufferAttachment FrameBufferAttachment;
-typedef _FrameBufferAttachment::FrameBufferAttachment FBO_Attachment;
+typedef _FramebufferAttachment::FramebufferAttachment FramebufferAttachment;
+typedef _FramebufferAttachment::FramebufferAttachment FBO_Attachment;
 
 // -------======{[ Textures ]}======-------
 
@@ -973,6 +972,3 @@ typedef _TransformFeedbackPrimitiveType::TransformFeedbackPrimitiveType Transfor
 typedef _TransformFeedbackPrimitiveType::TransformFeedbackPrimitiveType TFB_PrimType;
 
 } // Namespace oglwrap
-
-#endif // OGLWRAP_ENUMS_H
-

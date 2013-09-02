@@ -2,13 +2,13 @@
     @brief Implements GLSL shaders related classes.
 */
 
-#ifndef SHADER_HPP
-#define SHADER_HPP
+#pragma once
 
 namespace oglwrap {
 
 // -------======{[ Shader ]}======-------
-
+#ifdef glCreateShader
+#ifdef glDeleteShader
 /// A specialization of the ObjectExt class for Shaders (they aren't created with glGen*)
 template<ShaderType shader_t>
 class ShaderObject : public RefCounted {
@@ -76,14 +76,17 @@ public:
     /// Creates the an empty shader object.
     Shader() : compiled(false) { }
 
+    #ifdef glShaderSource
     /// Creates a shader and sets the file as the shader source.
     /// @param file - The file to load and set as shader source.
-    /// @see glCreateShader, glShaderSource
+    /// @see glShaderSource
     Shader(const std::string& file)
             : compiled(false), filename(file) {
         sourceFile(file);
     }
+    #endif // glShaderSource
 
+    #ifdef glShaderSource
     /// Uploads a string as the shader's source.
     /// @param source - string containing the shader code.
     /// @see glShaderSource
@@ -91,7 +94,9 @@ public:
         const char *str = source.c_str();
         gl( ShaderSource(shader, 1, &str, nullptr) );
     }
+    #endif // glShaderSource
 
+    #ifdef glShaderSource
     /// Loads a file and uploads it as shader source
     /// @param file - the shader file's path
     /// @see glShaderSource
@@ -116,12 +121,16 @@ public:
         const char *strFileData = fileData.c_str();
         gl( ShaderSource(shader, 1, &strFileData, nullptr) );
     }
+    #endif // glShaderSource
 
+    #ifdef glCompileShader
+    #ifdef glGetShaderiv
+    #ifdef glGetShaderInfoLog
     /// Compiles the shader code.
     /** If the compilation fails, it throws a std::runtime_error, containing the
       * compilation info as .what(). The compilation happens automatically
       * when the shader gets attached a program. */
-    /// @see glCompileShader
+    /// @see glCompileShader, glGetShaderiv, glGetShaderInfoLog
     void compile()  {
         if(compiled) {
             return;
@@ -181,6 +190,9 @@ public:
             throw std::runtime_error(str.str());
         }
     }
+    #endif // glGetShaderInfoLog
+    #endif // glGetShaderiv
+    #endif // glCompileShader
 
     /// Returns the C OpenGL handle for the shader.
     const ShaderObject<shader_t>& expose() const  {
@@ -197,7 +209,7 @@ public:
 /// @version It is core since OpenGL 4.3.
 /// @see GL_COMPUTE_SHADER
 typedef Shader<ShaderType::Compute> ComputeShader;
-#endif
+#endif // GL_COMPUTE_SHADER
 
 #ifdef GL_VERTEX_SHADER
 /// A Shader that handles the processing of individual vertices.
@@ -208,7 +220,7 @@ typedef Shader<ShaderType::Compute> ComputeShader;
 /// @version It is core since OpenGL 2.1
 /// @see GL_VERTEX_SHADER
 typedef Shader<ShaderType::Vertex> VertexShader;
-#endif
+#endif // GL_VERTEX_SHADER
 
 #ifdef GL_GEOMETRY_SHADER
 /// A Shader that governs the processing of Primitives.
@@ -218,7 +230,7 @@ typedef Shader<ShaderType::Vertex> VertexShader;
 /// @version It is core since OpenGL 3.2
 /// @see GL_GEOMETRY_SHADER
 typedef Shader<ShaderType::Geometry> GeometryShader;
-#endif
+#endif // GL_GEOMETRY_SHADER
 
 #ifdef GL_FRAGMENT_SHADER
 /// A Shader that processes a Fragment from the rasterization process into a set of colors and a single depth value.
@@ -233,7 +245,7 @@ typedef Shader<ShaderType::Geometry> GeometryShader;
 /// @version It is core since OpenGL 2.1
 /// @see GL_FRAGMENT_SHADER
 typedef Shader<ShaderType::Fragment> FragmentShader;
-#endif
+#endif // GL_FRAGMENT_SHADER
 
 #ifdef GL_TESS_CONTROL_SHADER
 /// A shader that controls how much tessellation a particular patch gets and also defines the size of a patch.
@@ -246,7 +258,7 @@ typedef Shader<ShaderType::Fragment> FragmentShader;
 /// @version It is core since OpenGL 4.0.
 /// @see GL_TESS_CONTROL_SHADER
 typedef Shader<ShaderType::TessControl> TessControlShader;
-#endif
+#endif // GL_TESS_CONTROL_SHADER
 
 #ifdef GL_TESS_EVALUATION_SHADER
 /// A shader that generates vertices from the patch data.
@@ -259,10 +271,15 @@ typedef Shader<ShaderType::TessControl> TessControlShader;
 /// @version It is core since OpenGL 4.0.
 /// @see GL_TESS_EVALUATION_SHADER
 typedef Shader<ShaderType::TessEval> TessEvalShader;
-#endif
+#endif // GL_TESS_EVALUATION_SHADER
+
+#endif // glDeleteShader
+#endif // glCreateShader
 
 // -------======{[ Shader Program ]}======-------
 
+#ifdef glCreateProgram
+#ifdef glDeleteProgram
 /// A specialization of the ObjectExt class for Programs (they aren't created with glGen*)
 class ProgramObject : public RefCounted {
     /// The C handle for the object.
@@ -318,6 +335,7 @@ public:
     }
 };
 
+#ifdef glDetachShader
 /// @brief The program object can combine multiple shader stages (built from shader objects) into a single, linked whole.
 /// glCreateProgram, glDeleteProgram
 class Program {
@@ -339,6 +357,7 @@ public:
         }
     }
 
+    #ifdef glAttachShader
     template<ShaderType shader_t>
     /// Attaches a shader to this program object.
     /// @param shader Specifies the shader object that is to be attached.
@@ -348,7 +367,9 @@ public:
         shaders.push_back(shader.expose());
         gl( AttachShader(program, shader.expose()) );
     }
+    #endif // glAttachShader
 
+    #ifdef glAttachShader
     template<ShaderType shader_t>
     /// Attaches a shader object to the program.
     /// @param shader Specifies the shader object that is to be attached.
@@ -357,10 +378,14 @@ public:
         attachShader(shader);
         return *this;
     }
+    #endif // glAttachShader
 
+    #ifdef glLinkProgram
+    #ifdef glGetProgramiv
+    #ifdef glGetProgramInfoLog
     /// Links the program.
     /** If the linking fails, it throws a std::runtime_error containing the linking info. */
-    /// @see glLinkProgram
+    /// @see glLinkProgram, glGetProgramiv, glGetProgramInfoLog
     Program& link() {
         if(linked) {
             return *this;
@@ -385,7 +410,11 @@ public:
 
         return *this;
     }
+    #endif // glGetProgramInfoLog
+    #endif // glGetProgramiv
+    #endif // glLinkProgram
 
+    #ifdef glUseProgram
     /// Installs the program as a part of the current rendering state.
     /// @see glUseProgram
     Program& use() {
@@ -395,20 +424,24 @@ public:
         gl( UseProgram(program) );
         return *this;
     }
+    #endif
 
+    #ifdef glUseProgram
     /// Installs the default OpenGL shading program to the current rendering state.
     /// @see glUseProgram
     Program& unuse() {
         gl( UseProgram(0) );
         return *this;
     }
+    #endif
 
     /// Returns the C OpenGL handle for the program.
     const ProgramObject& expose() const {
         return program;
     }
 };
+#endif // glDetachShader
+#endif // glDeleteProgram
+#endif // glCreateProgram
 
 } // namespace oglwrap
-
-#endif // SHADER_HPP

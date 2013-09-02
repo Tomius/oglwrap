@@ -3,8 +3,6 @@
 */
 
 #pragma once
-#ifndef TEXUTRE_BASE_HPP
-#define TEXTURE_BASE_HPP
 
 namespace oglwrap {
 
@@ -130,13 +128,16 @@ public:
         gl( TexParameteri(texture_t, GL_TEXTURE_SWIZZLE_RGBA, swizzlemode) );
     }
 
+    #ifdef GL_TEXTURE_MAX_ANISOTROPY_EXT
     /// @brief Sets the anisotropy extension to a desired value.
     /// @param value - The desired anisotropy value.
     /// @see glTexParameterf, GL_TEXTURE_MAX_ANISOTROPY_EXT
     static void anisotropy(float value) {
         gl( TexParameterf(texture_t, GL_TEXTURE_MAX_ANISOTROPY_EXT, value) );
     }
+    #endif
 
+    #ifdef GL_TEXTURE_MAX_ANISOTROPY_EXT
     /// @brief Sets the anisotropy extension to the maximum value possible on this hardware.
     /// @see glGetFloatv, glTexParameterf, GL_TEXTURE_MAX_ANISOTROPY_EXT
     static void maxAnisotropy() {
@@ -144,6 +145,7 @@ public:
         gl( GetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAniso) );
         gl( TexParameterf(texture_t, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAniso) );
     }
+    #endif // GL_TEXTURE_MAX_ANISOTROPY_EXT
 
     /// @brief Assigns a buffer storing the texel data to the texture.
     /// @param internalFormat - Specifies the internal format of the data in the store belonging to buffer. It must be a sized, uncompressed internal format.
@@ -174,6 +176,4 @@ public:
 };
 
 } // namespace oglwrap
-
-#endif // TEXUTRE_BASE
 

@@ -3,8 +3,6 @@
 */
 
 #pragma once
-#ifndef TEXUTRE_2D_HPP
-#define TEXTURE_2D_HPP
 
 namespace oglwrap {
 
@@ -198,6 +196,7 @@ public:
         return data;
     }
 
+    #ifdef glGetCompressedTexImage
     /// Return a compressed texture image
     /// @param level - Specifies the level-of-detail number of the desired image. Level 0 is the base image level. Level n is the nth mipmap reduction image.
     /// @param img - Returns the compressed texture image.
@@ -205,6 +204,7 @@ public:
     static void getCompressedImage(GLint level, GLvoid* img) {
         gl( GetCompressedTexImage(TexType::Tex2D, level, img) );
     }
+    #endif // glGetCompressedTexImage
 
 #if OGLWRAP_IMAGEMAGICK
     /// Loads in, and uploads an image from a file using Magick++.
@@ -236,17 +236,19 @@ public:
 /// @see GL_TEXTURE_2D
 typedef Texture2D_Base<Tex2DType::Tex2D> Texture2D;
 
+#ifdef GL_TEXTURE_RECTANGLE
 /// A rectangle texture is a texture that contains a single 2D image with no mipmaps.
 /** It has no power-of-two restrictions on its size. Texture coordinates for accessing
   * this texture must be texel values (floating-point), representing texels within the
   * texture, rather than normalized texture coordinates. */
 /// @see GL_TEXTURE_RECTANGLE
 typedef Texture2D_Base<Tex2DType::TexRect> TextureRect;
+#endif // GL_TEXTURE_RECTANGLE
 
+#ifdef GL_TEXTURE_1D_ARRAY
 /// @brief An array of one-dimensional textures.
 /// @see GL_TEXTURE_1D_ARRAY
 typedef Texture2D_Base<Tex2DType::Tex1DArray> Texture1D_Array;
+#endif // GL_TEXTURE_1D_ARRAY
 
 } // namespace oglwrap
-
-#endif // TEXTURE_2D

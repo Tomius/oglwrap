@@ -2,14 +2,15 @@
     @brief Implements a wrapper for Framebuffer objects
 */
 
-#ifndef FRAMEBUFFER_HPP
-#define FRAMEBUFFER_HPP
+#pragma once
 
 #include "textures/texture_base.hpp"
 #include "textures/texture_cube.hpp"
 
 namespace oglwrap {
 
+#ifdef glGenRenderbuffers
+#ifdef glDeleteRenderbuffers
 /// @brief A buffer that servers as a storage for a framebuffer.
 /// @see glGenRenderbuffers, glDeleteRenderbuffers
 class RenderBuffer {
@@ -17,24 +18,31 @@ class RenderBuffer {
     ObjectExt<glGenRenderbuffers, glDeleteRenderbuffers> renderbuffer;
 public:
 
+    #ifdef glBindRenderbuffer
     /// @brief Binds this renderbuffer.
     /// @see glBindRenderbuffer
     void bind() {
         gl( BindRenderbuffer(GL_RENDERBUFFER, renderbuffer) );
     }
+    #endif // glBindRenderbuffer
 
+    #ifdef glBindRenderbuffer
     /// @brief Unbinds this renderbuffer.
     /// @see glBindRenderbuffer
     void unbind() {
         gl( BindRenderbuffer(GL_RENDERBUFFER, 0) );
     }
+    #endif // glBindRenderbuffer
 
+    #ifdef glRenderbufferStorage
     /// @brief Establish data storage, format and dimensions of a renderbuffer object's image.
     /// @see glRenderbufferStorage
     void storage(PixelDataInternalFormat internalFormat, GLsizei width, GLsizei height) {
         gl( RenderbufferStorage(GL_RENDERBUFFER, internalFormat, width, height) );
     }
+    #endif // glRenderbufferStorage
 
+    #ifdef glRenderbufferStorageMultisample
     /// @brief Establish data storage, format, dimensions and sample count of a renderbuffer object's image.
     /// @see glRenderbufferStorageMultisample
     void storageMultisample(
@@ -42,18 +50,24 @@ public:
     ) {
         gl( RenderbufferStorageMultisample(GL_RENDERBUFFER, samples, internalFormat, width, height) );
     }
+    #endif // glRenderbufferStorageMultisample
 
     /// Returns the handle for this object.
     const ObjectExt<glGenRenderbuffers, glDeleteRenderbuffers>& expose() const {
         return renderbuffer;
     }
 };
+#endif // glDeleteRenderbuffers
+#endif // glGenRenderbuffers
 
+#ifdef glGenFramebuffers
+#ifdef glDeleteFramebuffers
 /// A buffer that you can draw to.
-class FrameBuffer {
+class Framebuffer {
     ObjectExt<glGenFramebuffers, glDeleteFramebuffers> framebuffer; ///< The handle for the framebuffer
     GLenum currentTarget; ///< The current target of this Framebuffer
 public:
+    #ifdef glBindFramebuffer
     /// @brief Binds the framebuffer for reading and/or drawing.
     /// @param target - The target to bind the framebuffer to.
     /// @see glBindFramebuffer
@@ -61,7 +75,9 @@ public:
         gl( BindFramebuffer(target, framebuffer) );
         currentTarget = target;
     }
+    #endif // glBindFramebuffer
 
+    #ifdef glBindFramebuffer
     /// @brief Unbinds the buffer from the target it is currently bound to.
     /// @see glBindFramebuffer
     void unbind() {
@@ -70,26 +86,30 @@ public:
             currentTarget = 0;
         }
     }
+    #endif // glBindFramebuffer
 
+    #ifdef glCheckFramebufferStatus
     /// @brief Returns the status of a bound framebuffer.
     /** Throws an exception if the framebuffer isn't bound. */
     /// @see glCheckFramebufferStatus
     FBO_Status status() {
         if(!currentTarget) {
             throw std::logic_error(
-                "FrameBuffer::Status is called, but the framebuffer isn't bound to any target."
+                "Framebuffer::Status is called, but the framebuffer isn't bound to any target."
             );
         }
 
         GLenum status = gl( CheckFramebufferStatus(currentTarget) );
         return FBO_Status(status);
     }
+    #endif // glCheckFramebufferStatus
 
     /// @brief Returns if the framebuffer is currently bound.
     bool isBound() {
         return currentTarget != 0;
     }
 
+    #ifdef glCheckFramebufferStatus
     /// @brief Throws an exception if the framebuffer isn't complete.
     /// @see glCheckFramebufferStatus
     void validate() {
@@ -148,21 +168,25 @@ public:
 
         throw std::logic_error("Framebuffer error: \n" + errStr);
     }
+    #endif // glCheckFramebufferStatus
 
+    #ifdef glFramebufferRenderbuffer
     /// @brief Attach a renderbuffer as a logical buffer to the currently bound framebuffer object
     /// @param attachment - Specifies the attachment point to which renderbuffer should be attached.
     /// @param renderBuffer - Specifies the renderbuffer object that is to be attached.
     /// @see glFramebufferRenderbuffer
     void attachBuffer(FBO_Attachment attachment, RenderBuffer renderBuffer) {
         if(!currentTarget) {
-            std::cerr << "FrameBuffer::AttachBuffer is called, but the "
+            std::cerr << "Framebuffer::AttachBuffer is called, but the "
                          "framebuffer isn't bound to any target." << std::endl;
             return;
         }
 
         gl( FramebufferRenderbuffer(currentTarget, attachment, GL_RENDERBUFFER, renderBuffer.expose()) );
     }
+    #endif // glFramebufferRenderbuffer
 
+    #ifdef glFramebufferTexture
     template <TexType texture_t>
     /// @brief Attach a level of a texture object as a logical buffer to the currently bound framebuffer object
     /// @param attachment - Specifies the attachment point of the framebuffer.
@@ -171,14 +195,16 @@ public:
     /// @see glFramebufferTexture
     void attachTexture(FBO_Attachment attachment, const TextureBase<texture_t>& texture, GLuint level) {
         if(!currentTarget) {
-            std::cerr << "FrameBuffer::AttachBuffer is called, but the "
+            std::cerr << "Framebuffer::AttachBuffer is called, but the "
                          "framebuffer isn't bound to any target." << std::endl;
             return;
         }
 
         gl( FramebufferTexture(currentTarget, attachment, texture.Expose(), level) );
     }
+    #endif // glFramebufferTexture
 
+    #ifdef glFramebufferTexture2D
     /// @brief Attach a level of a cube map as a logical buffer to the currently bound framebuffer object.
     /// @param attachment - Specifies the attachment point of the framebuffer.
     /// @param target - Specifies which face of the cube map is to be attached.
@@ -189,19 +215,21 @@ public:
         FBO_Attachment attachment, CubeTarget target, const TextureCube& texture, GLuint level
     ) {
         if(!currentTarget) {
-            std::cerr << "FrameBuffer::AttachBuffer is called, but the "
+            std::cerr << "Framebuffer::AttachBuffer is called, but the "
                          "framebuffer isn't bound to any target." << std::endl;
             return;
         }
 
         gl( FramebufferTexture2D(currentTarget, attachment, target, texture.expose(), level) );
     }
+    #endif // glFramebufferTexture2D
 
     const ObjectExt<glGenFramebuffers, glDeleteFramebuffers>& expose() {
         return framebuffer;
     }
-};
+}; // class Framebuffer
+
+#endif // glDeleteFramebuffers
+#endif // glGenFramebuffers
 
 } // namespace oglwrap
-
-#endif

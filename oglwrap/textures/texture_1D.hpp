@@ -3,8 +3,6 @@
 */
 
 #pragma once
-#ifndef TEXUTRE_1D_HPP
-#define TEXTURE_1D_HPP
 
 namespace oglwrap {
 
@@ -182,6 +180,7 @@ public:
         return w;
     }
 
+    #ifdef glGetCompressedTexImage
     /// Return a compressed texture image
     /// @param level - Specifies the level-of-detail number of the desired image. Level 0 is the base image level. Level n is the nth mipmap reduction image.
     /// @param img - Returns the compressed texture image.
@@ -189,8 +188,7 @@ public:
     static void getCompressedImage(GLint level, GLvoid* img) {
         gl( GetCompressedTexImage(TexType::Tex1D, level, img) );
     }
+    #endif // glGetCompressedTexImage
 };
 
 } // namespace oglwrap
-
-#endif // TEXTURE_1D

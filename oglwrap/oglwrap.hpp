@@ -3,8 +3,7 @@
     It doesn't include everything, just the main features.
 */
 
-#ifndef OGLWRAP_HPP
-#define OGLWRAP_HPP
+#pragma once
 
 // standard headers
 #include <map>
@@ -37,6 +36,4 @@
 #include "texture.hpp"
 #include "framebuffer.hpp"
 #include "transfeedback.hpp"
-
-#endif // header guard
 

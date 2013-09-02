@@ -2,8 +2,7 @@
     @brief Contains codes that are (mostly) not related to OpenGL
 */
 
-#ifndef GENERAL_HPP
-#define GENERAL_HPP
+#pragma once
 
 /// A template to convert an angle value from degrees to radians
 template<class T>
@@ -61,6 +60,14 @@ public:
             (*numInstances)--;
     }
 };
+
+#ifndef APIENTRY
+#define APIENTRY
+#endif
+
+#ifndef GLAPIENTRY
+#define GLAPIENTRY APIENTRY
+#endif
 
 /// The signature of glGen* functions
 typedef void (GLAPIENTRY *glGenFunc) (GLsizei, GLuint*);
@@ -208,5 +215,3 @@ public:
 };
 
 } // namespace oglwrap
-
-#endif // GENERAL_HPP

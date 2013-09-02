@@ -3,13 +3,12 @@
 */
 
 #pragma once
-#ifndef TEXUTRE_CUBE_HPP
-#define TEXTURE_CUBE_HPP
 
 namespace oglwrap {
 
 // -------======{[ TextureCube declaration ]}======-------
 
+#ifdef GL_TEXTURE_CUBE_MAP
 /// @brief A set of 6 2D textures, that is used to be sampled with 3D direction vectors.
 /// @see GL_TEXTURE_CUBE_MAP
 class TextureCube : public TextureBase<TexType::TexCubeMap> {
@@ -236,6 +235,7 @@ public:
         }
     }
 
+    #ifdef glGetCompressedTexImage
     /// Return the compressed texture image of one side
     /// @param target - Specifies which one of the six sides of the cube to use as target.
     /// @param level - Specifies the level-of-detail number of the desired image. Level 0 is the base image level. Level n is the nth mipmap reduction image.
@@ -244,6 +244,7 @@ public:
     static void getCompressedImage(CubeTarget target, GLint level, GLvoid* img) {
         gl( GetCompressedTexImage(target, level, img) );
     }
+    #endif
 
 #if OGLWRAP_IMAGEMAGICK
     /// Loads in, and uploads an image for one side of the cube from a file using Magick++.
@@ -302,7 +303,7 @@ public:
 #endif
 }; // End of TextureCube definition
 
-} // namespace oglwrap
+#endif // GL_TEXTURE_CUBE_MAP
 
-#endif // TEXTURE_CUBE
+} // namespace oglwrap
 
