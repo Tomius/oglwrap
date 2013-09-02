@@ -1,7 +1,7 @@
-oglwrap
-=======
+![logo](logo.png) *OpenGL C++ wrapper*
+===
 
-Oglwrap is a lightweight header-only C++ wrapper for the core OpenGL 3.3. 
+Oglwrap is a lightweight header-only C++ wrapper for OpenGL. 
 
 It is highly inspired by [oglplus](https://github.com/matus-chochlik/oglplus), there are a lot of similarites in the interfaces of the two library, however in some aspects, like binding targets, the two library work enitrely diffrent.
 However there aren't much similarity in the aspect of implementation. Oglwrap is meant to be an easy to read, easy to parse library, but this isn't true for oglplus, because it offers a lot better portability and is safer work with, at the cost of beeing a more roboust library. But there are also a lot of major differences in the two library apart from simplicity. For example in oglwarp resource allocation happens at the first use of an object, in oglplus, it happens when the constructor runs. So with oglwrap you can declare global/static objects, whose constructor run without an avaliable context, and they will work fine, but with oglplus object you can't do this. The two debugging systems are definitely not even alike, oglwrap doesn't have a fancy expection system, but it usually provides more information about what has happened (but running oglwrap in debug mode is more costy in terms of performance), and it rather just prints the error to stderr, if it's not fatal, and program could keep on working, instead of throwing an exception and probably terminating the program.    
