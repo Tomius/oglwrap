@@ -3,8 +3,6 @@
 */
 
 #pragma once
-#ifndef TEXUTRE_3D_HPP
-#define TEXTURE_3D_HPP
 
 namespace oglwrap {
 
