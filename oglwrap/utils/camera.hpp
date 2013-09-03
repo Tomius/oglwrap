@@ -243,7 +243,7 @@ public:
         float distDiffMod = destDistMod - currDistMod;
         if(fabs(distDiffMod) > 1e-2) {
             int sign = distDiffMod / fabs(distDiffMod);
-            currDistMod += sign * dt;
+            currDistMod += sign * dt * mouseScrollSensitivity;
         }
 
         fwd = (initialDistance * currDistMod) * vec3(
@@ -256,7 +256,7 @@ public:
     /// Changes the distance in which the camera should follow the target.
     /// @param mouseWheelTicks - The number of ticks, the mouse wheel was scrolled. Expect positive on up scroll.
     void scrolling(int mouseWheelTicks) {
-        destDistMod -= mouseWheelTicks / (10.0f * mouseScrollSensitivity);
+        destDistMod -= mouseWheelTicks / 10.0f * mouseScrollSensitivity;
         if(destDistMod < 0.5f)
             destDistMod = 0.5f;
         else if(destDistMod > 2.0f)
