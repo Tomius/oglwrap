@@ -63,7 +63,7 @@ public:
         GLint currentlyBoundTFB;
         gl( GetIntegerv(GL_TRANSFORM_FEEDBACK, &currentlyBoundTFB) );
         OGLWRAP_LAST_BIND_TARGET = "GL_TRANSFORM_FEEDBACK";
-        return buffer == GLuint(currentlyBoundTFB);
+        return handle == GLuint(currentlyBoundTFB);
     }
 
     #ifdef glBeginTransformFeedback

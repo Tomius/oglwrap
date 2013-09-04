@@ -48,6 +48,10 @@ static std::string OGLWRAP_LAST_BIND_TARGET;
     /** Only if OGLWRAP_BINDCHECK is defined true */
     #define CHECK_BINDING()
 
+    /// @brief Calls the isBoundFunc function, and prints an error and calls bindFunc if it returns false.
+    /** Only if OGLWRAP_BINDCHECK is defined true */
+    #define CHECK_BINDING_EXPLICIT(isBoundFunc, bindFunc)
+
     /// Checks if the object name '0' is bound to the given target, and prints error if it is.
     /** Only if OGLWRAP_BINDCHECK is defined true */
     /// @param bindTarget - The target to check. Expected to be a value returned by getBindingTarget();
