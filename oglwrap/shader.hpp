@@ -341,10 +341,11 @@ public:
 class Program {
     ProgramObject program; ///< The C OpenGL handle for the program.
     std::vector<GLuint> shaders; ///< IDs of the shaders attached to the program
-    bool linked; ///< Stores if the program is linked.
+    bool *linked; ///< Stores if the program is linked. Its a pointer, so .use() can be const.
 public:
-    /// Creates an empty program object.
-    Program() : linked(false) {
+    /// @brief Creates an empty program object.
+    Program() : linked(new bool) {
+        *linked = false;
     }
 
     /// @brief Detaches all the shader objects currently attached to this program, and deletes the program.
@@ -354,12 +355,13 @@ public:
             for(size_t i = 0; i < shaders.size(); i++) {
                 gl( DetachShader(program, shaders[i]) );
             }
+            delete linked;
         }
     }
 
     #ifdef glAttachShader
     template<ShaderType shader_t>
-    /// Attaches a shader to this program object.
+    /// @brief Attaches a shader to this program object.
     /// @param shader Specifies the shader object that is to be attached.
     /// @see glAttachShader
     void attachShader(Shader<shader_t>& shader) {
@@ -371,7 +373,7 @@ public:
 
     #ifdef glAttachShader
     template<ShaderType shader_t>
-    /// Attaches a shader object to the program.
+    /// @brief Attaches a shader object to the program.
     /// @param shader Specifies the shader object that is to be attached.
     /// @see glAttachShader
     Program& operator<<(Shader<shader_t>& shader) {
@@ -383,15 +385,15 @@ public:
     #ifdef glLinkProgram
     #ifdef glGetProgramiv
     #ifdef glGetProgramInfoLog
-    /// Links the program.
+    /// @brief Links the program.
     /** If the linking fails, it throws a std::runtime_error containing the linking info. */
     /// @see glLinkProgram, glGetProgramiv, glGetProgramInfoLog
-    Program& link() {
-        if(linked) {
+    const Program& link() const {
+        if(*linked) {
             return *this;
         }
         gl( LinkProgram(program) );
-        linked = true;
+        *linked = true;
 
         GLint status;
         gl( GetProgramiv(program, GL_LINK_STATUS, &status) );
@@ -415,10 +417,10 @@ public:
     #endif // glLinkProgram
 
     #ifdef glUseProgram
-    /// Installs the program as a part of the current rendering state.
+    /// @brief Installs the program as a part of the current rendering state.
     /// @see glUseProgram
-    Program& use() {
-        if(!linked) {
+    const Program& use() const {
+        if(!*linked) {
             link();
         }
         gl( UseProgram(program) );
@@ -427,13 +429,20 @@ public:
     #endif
 
     #ifdef glUseProgram
-    /// Installs the default OpenGL shading program to the current rendering state.
+    /// @brief Installs the default OpenGL shading program to the current rendering state.
     /// @see glUseProgram
-    Program& unuse() {
+    static void unuse() {
         gl( UseProgram(0) );
-        return *this;
     }
     #endif
+
+    /// @brief Returns if this program is the currently active one.
+    /// @see glGetIntegerv
+    bool isActive() const {
+        GLint currentProgram;
+        gl( GetIntegerv(GL_CURRENT_PROGRAM, &currentProgram) );
+        return program == GLuint(currentProgram);
+    }
 
     /// Returns the C OpenGL handle for the program.
     const ProgramObject& expose() const {

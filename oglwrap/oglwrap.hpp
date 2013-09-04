@@ -6,9 +6,8 @@
 #pragma once
 
 /* TODO:
-    - shapes + multiply programs
+    - shapes -> block multiply setup calls
     - document shapes
-    - binding check
 */
 
 // standard headers

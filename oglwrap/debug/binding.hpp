@@ -43,12 +43,58 @@ static std::string OGLWRAP_LAST_BIND_TARGET;
         glGetIntegerv(bindTarget, &__currently_bound_target); \
         if(__currently_bound_target == 0) \
             __print_default_object_is_bound_error(__FILE__, __PRETTY_FUNCTION__, __LINE__);
+
+    /// A function used by CHECK_FOR_DEFAULT_BINDING() macro
+    inline void __print_another_object_is_bound_error(const char *file, const char *func, int line) {
+        std::cerr << "\n---------========={[ BIND CHECK FAILURE ]}=========---------\n" << std::endl;
+        std::cerr << "In function: " << cut_end_of_pretty_func(func) << std::endl;
+        std::cerr << "In '" << file << "' at line " << line << "\n\n";
+        std::cerr << "The function is called through an object that is different ";
+        std::cerr << "than the one, currently bound to " << OGLWRAP_LAST_BIND_TARGET << ".\n";
+        std::cerr << "Did you forget to call .bind() on the object? \n\n";
+        for(size_t i = 0; i < strlen("---------========={[ BIND CHECK FAILURE ]}=========---------"); i++)
+            std::cerr << '-';
+        std::cerr << std::endl;
+    }
+
+    /// A function used by CHECK_FOR_DEFAULT_BINDING_EXPLICIT() macro
+    inline void __print_default_object_is_bound_error(const char *file, const char *func, int line) {
+        std::cerr << "\n---------========={[ BIND CHECK FAILURE ]}=========---------\n" << std::endl;
+        std::cerr << "In function: " << cut_end_of_pretty_func(func) << std::endl;
+        std::cerr << "In '" << file << "' at line " << line << "\n\n";
+        std::cerr << "The function requires an object to be bound to " << OGLWRAP_LAST_BIND_TARGET;
+        std::cerr << " but only the default object '0' is bound to that target.\n\n";
+        for(size_t i = 0; i < strlen("---------========={[ BIND CHECK FAILURE ]}=========---------"); i++)
+            std::cerr << '-';
+        std::cerr << std::endl;
+    }
+
+    /// Checks if the program is the currently active one, and if not, it returns prints out an error, and calls use on that program.
+    /// @param program - The shader program to check if is active.
+    #define CHECK_ACTIVE_PROGRAM(program) \
+        if(!program.isActive()) { \
+            __print_another_program_is_active_error(__FILE__, __PRETTY_FUNCTION__, __LINE__); \
+            program.use(); \
+        }
+
+    /// A function used by the CHECK_ACTIVE_PROGRAM() macro
+    inline void __print_another_program_is_active_error(const char *file, const char *func, int line) {
+        std::cerr << "\n---------========={[ ACTIVE PROGRAM CHECK FAILURE ]}=========---------\n" << std::endl;
+        std::cerr << "In function: " << cut_end_of_pretty_func(func) << std::endl;
+        std::cerr << "In '" << file << "' at line " << line << "\n\n";
+        std::cerr << "The currently active program is different than "
+                  << "the one, this function is supposed to operate on.\n";
+        std::cerr << "Did you forget to call .use() on the program? \n\n";
+        for(size_t i = 0; i < strlen("---------========={[ ACTIVE PROGRAM CHECK FAILURE ]}=========---------"); i++)
+            std::cerr << '-';
+        std::cerr << std::endl;
+    }
 #else
-    /// @brief Calls the isBound() member function, and prints error if it returns false.
+    /// @brief Calls the isBound() member function, and prints an error, and binds it, if it returns false.
     /** Only if OGLWRAP_BINDCHECK is defined true */
     #define CHECK_BINDING()
 
-    /// @brief Calls the isBoundFunc function, and prints an error and calls bindFunc if it returns false.
+    /// @brief Calls the isBoundFunc function, and prints an error, and calls bindFunc, if it returns false.
     /** Only if OGLWRAP_BINDCHECK is defined true */
     #define CHECK_BINDING_EXPLICIT(isBoundFunc, bindFunc)
 
@@ -61,32 +107,12 @@ static std::string OGLWRAP_LAST_BIND_TARGET;
     /** Only if OGLWRAP_BINDCHECK is defined true */
     /// @param bindTarget - The target to check. Expected to be an explicit OpenGL macro name.
     #define CHECK_FOR_DEFAULT_BINDING_EXPLICIT(bindTarget)
+
+    /// @brief Checks if the program is the currently active one, and if not, it prints out an error, and calls use() on that program.
+    /** Only if OGLWRAP_BINDCHECK is defined true */
+    /// @param program - The shader program to check if is active.
+    #define CHECK_ACTIVE_PROGRAM(program)
 #endif
-
-/// A function used by CHECK_FOR_DEFAULT_BINDING() macro
-inline void __print_another_object_is_bound_error(const char *file, const char *func, int line) {
-    std::cerr << "\n---------========={[ BIND CHECK FAILURE ]}=========---------\n" << std::endl;
-    std::cerr << "In function: " << cut_end_of_pretty_func(func) << std::endl;
-    std::cerr << "In '" << file << "' at line " << line << "\n\n";
-    std::cerr << "The function is called through an object that is different ";
-    std::cerr << "than the one, currently bound to " << OGLWRAP_LAST_BIND_TARGET << ".\n";
-    std::cerr << "Did you forget to call .bind()? \n\n";
-    for(size_t i = 0; i < strlen("---------========={[ BIND CHECK FAILURE ]}=========---------"); i++)
-        std::cerr << '-';
-    std::cerr << std::endl;
-}
-
-/// A function used by CHECK_FOR_DEFAULT_BINDING_EXPLICIT() macro
-inline void __print_default_object_is_bound_error(const char *file, const char *func, int line) {
-    std::cerr << "\n---------========={[ BIND CHECK FAILURE ]}=========---------\n" << std::endl;
-    std::cerr << "In function: " << cut_end_of_pretty_func(func) << std::endl;
-    std::cerr << "In '" << file << "' at line " << line << "\n\n";
-    std::cerr << "The function requires an object to be bound to " << OGLWRAP_LAST_BIND_TARGET;
-    std::cerr << " but only the default object '0' is bound to that target.\n\n";
-    for(size_t i = 0; i < strlen("---------========={[ BIND CHECK FAILURE ]}=========---------"); i++)
-        std::cerr << '-';
-    std::cerr << std::endl;
-}
 
 /// Returns the buffer binding point's GLenum for the given buffer target.
 /// @param buffer_t - The buffer target.

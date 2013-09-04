@@ -19,7 +19,7 @@ int main() {
 
     buf.bind();
 
-    Texture tex;
+    Texture2D tex;
     tex.bind();
     tex.generateMipmap();
 

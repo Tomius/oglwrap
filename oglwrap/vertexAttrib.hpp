@@ -230,6 +230,8 @@ class LazyVertexAttribArray : public VertexAttribArrayObject {
     /// @brief Queries the location of the attribute using the attribute's name
     /// @see glGetAttribLocation
     void Init() {
+        CHECK_ACTIVE_PROGRAM(program);
+
         location = gl( GetAttribLocation(program.expose(), identifier.c_str()) );
         if(location == INVALID_LOCATION) {
             std::cerr << "Unable to get location of attribute '" << identifier << "'" << std::endl;

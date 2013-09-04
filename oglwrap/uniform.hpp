@@ -56,8 +56,7 @@ class Uniform : public UniformObject<GLtype> {
     #endif
 public:
     /// Queries a variable named 'identifier' in the 'program', and stores it's location.
-    /** It writes to stderr if the query didn't work. Also changes the currently active
-      * program to the program given as a parameter. */
+    /** It writes to stderr if the query didn't work. */
     /// @param program - The program to seek the uniform in. Will call program.use().
     /// @param identifier - The name of the uniform that is to be set.
     /// @see glGetUniformLocation
@@ -66,7 +65,8 @@ public:
     :identifier(identifier)
     #endif
     {
-        program.use();
+        CHECK_ACTIVE_PROGRAM(program);
+
         UniformObject<GLtype>::location = gl( GetUniformLocation(program.expose(), identifier.c_str()) );
 
         if(UniformObject<GLtype>::location == INVALID_LOCATION) {
@@ -116,8 +116,7 @@ class IndexedUniform : public UniformObject<GLtype> {
     #endif
 public:
     /// Queries a variable named 'identifier' in the 'program', and stores it's location.
-    /** It writes to stderr if the query didn't work. Also changes the currently active
-      * program to the program given as a parameter. */
+    /** It writes to stderr if the query didn't work. */
     /// @param program - The program to seek the uniform in. Will call program.use().
     /// @param _identifier - The name of the uniform that is to be set.
     /// @param idx - The index of the element in the uniform array.
@@ -130,7 +129,8 @@ public:
             identifier = id.str();
         #endif
 
-        program.use();
+        CHECK_ACTIVE_PROGRAM(program);
+
         UniformObject<GLtype>::location = gl( GetUniformLocation(program.expose(), id.str().c_str()) );
 
         if(UniformObject<GLtype>::location == INVALID_LOCATION) {
@@ -198,11 +198,10 @@ public:
 
     /// Sets the uniforms value.
     /** At the first call, queries the uniform's location. It writes to stderr if it was unable to get it.
-      * At every call it sets the uniform to the specified value. It also changes the active program
-      * to the one specified in the constructor. */
+      * At every call it sets the uniform to the specified value. */
     /// @param value - Specifies the new value to be used for the uniform variable.
     void set(const GLtype& value) {
-        program.use();
+        CHECK_ACTIVE_PROGRAM(program);
 
         // Get the uniform's location only at the first set call.
         if(firstCall) {
