@@ -19,6 +19,10 @@ int main() {
 
     buf.bind();
 
+    Texture tex;
+    tex.bind();
+    tex.generateMipmap();
+
     return 0;
 }
 

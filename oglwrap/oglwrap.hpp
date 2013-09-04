@@ -5,11 +5,18 @@
 
 #pragma once
 
+/* TODO:
+    - shapes + multiply programs
+    - document shapes
+    - binding check
+*/
+
 // standard headers
 #include <map>
 #include <vector>
 #include <string>
 #include <cctype>
+#include <cstring>
 #include <cassert>
 #include <fstream>
 #include <sstream>
@@ -20,6 +27,7 @@
 #include "config.hpp"
 #include "debug/error.hpp"
 #include "enums.hpp"
+#include "debug/binding.hpp"
 #include "general.hpp"
 
 // GLM

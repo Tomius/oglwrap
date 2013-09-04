@@ -57,11 +57,21 @@ public:
     }
     #endif // glBindTransformFeedback
 
+    /// @brief Returns if this is the currently bound transform feedback.
+    /// @see glGetIntegerv
+    bool isBound() const {
+        GLint currentlyBoundTFB;
+        gl( GetIntegerv(GL_TRANSFORM_FEEDBACK, &currentlyBoundTFB) );
+        OGLWRAP_LAST_BIND_TARGET = "GL_TRANSFORM_FEEDBACK";
+        return buffer == GLuint(currentlyBoundTFB);
+    }
+
     #ifdef glBeginTransformFeedback
     /// Begins the transform feedback mode.
     /// @param mode - The primitive type the TFB should use.
     /// @see glBeginTransformFeedback
     void begin(TFB_PrimType mode) {
+        CHECK_BINDING();
         state = working;
         gl( BeginTransformFeedback(mode) );
     }
@@ -71,6 +81,7 @@ public:
     /// Ends the transform feedback mode.
     /// @see glEndTransformFeedback
     void end() {
+        CHECK_BINDING();
         state = none;
         gl( EndTransformFeedback() );
     }
@@ -80,6 +91,7 @@ public:
     /// Pauses transform feedback operations on the currently active transform feedback object.
     /// @see glPauseTransformFeedback
     void pause() {
+        CHECK_BINDING();
         state = paused;
         gl( PauseTransformFeedback() );
     }
@@ -89,6 +101,7 @@ public:
     /// Resumes transform feedback operations on the currently active transform feedback object.
     /// @see glResumeTransformFeedback
     void resume() {
+        CHECK_BINDING();
         state = working;
         gl( ResumeTransformFeedback() );
     }

@@ -664,3 +664,8 @@ GL_INVALID_OPERATION is generated if the texture array has not been defined by a
 GL_INVALID_VALUE is generated if level is less than 0.
 GL_INVALID_VALUE may be generated if level > log 2 ⁡ max , where max is the returned value of GL_MAX_3D_TEXTURE_SIZE if target is GL_TEXTURE_3D or the returned value of GL_MAX_ARRAY_TEXTURE_LAYERS if target is GL_TEXTURE_2D_ARRAY.
 GL_INVALID_VALUE is generated if xoffset < 0 , xoffset + width > w , yoffset < 0 , yoffset + height > h , zoffset < 0 , or zoffset + 1 > d , where w is the GL_TEXTURE_WIDTH, h is the GL_TEXTURE_HEIGHT, d is the GL_TEXTURE_DEPTH and of the texture image being modified. Note that w, h, and d include twice the border width.
+
+glGetIntegerv
+void glGetIntegerv(GLenum pname,
+                   GLint* params);
+GL_INVALID_ENUM is generated if pname is not an accepted value.

@@ -4,6 +4,9 @@
 
 #pragma once
 
+#define CHECK_BINDING_TEXTURE2D() \
+    CHECK_BINDING_EXPLICIT(Texture2D_Base<texture_t>::isBound, Texture2D_Base<texture_t>::bind);
+
 namespace oglwrap {
 
 // -------======{[ 2D Textures' declaration ]}======-------
@@ -32,7 +35,7 @@ public:
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
     /// @see glTexImage2D
-    static void upload(
+    void upload(
         PixelDataInternalFormat internalFormat,
         GLsizei width,
         GLsizei height,
@@ -40,6 +43,8 @@ public:
         PixelDataType type,
         const void *data
     ) {
+        CHECK_BINDING_TEXTURE2D();
+
         gl( TexImage2D(
             texture_t, 0, internalFormat, width, height, 0, format, type, data
         ));
@@ -54,7 +59,7 @@ public:
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
     /// @see glTexImage2D
-    static void upload_Mipmap(
+    void upload_Mipmap(
         GLint level,
         PixelDataInternalFormat internalFormat,
         GLsizei width,
@@ -63,6 +68,8 @@ public:
         PixelDataType type,
         const void *data
     ) {
+        CHECK_BINDING_TEXTURE2D();
+
         gl( TexImage2D(
             texture_t, level, internalFormat, width, height, 0, format, type, data
         ));
@@ -75,7 +82,7 @@ public:
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
     /// @see glTexSubImage2D
-    static void subUpload(
+    void subUpload(
         GLint xOffset,
         GLint yOffset,
         GLsizei width,
@@ -84,6 +91,8 @@ public:
         PixelDataType type,
         const void *data
     ) {
+        CHECK_BINDING_TEXTURE2D();
+
         gl( TexSubImage2D(
             texture_t, 0, xOffset, yOffset, width, height, format, type, data
         ));
@@ -97,7 +106,7 @@ public:
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
     /// @see glTexSubImage2D
-    static void subUpload_Mipmap(
+    void subUpload_Mipmap(
         GLint level,
         GLint xOffset,
         GLint yOffset,
@@ -107,6 +116,8 @@ public:
         PixelDataType type,
         const void *data
     ) {
+        CHECK_BINDING_TEXTURE2D();
+
         gl( TexSubImage2D(
             texture_t, level, xOffset, yOffset, width, height, format, type, data
         ));
@@ -117,13 +128,15 @@ public:
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width/height - Specifies the width/height of the texture to copy.
     /// @see glCopyTexImage2D
-    static void copy(
+    void copy(
         PixelDataInternalFormat internalFormat,
         GLint x,
         GLint y,
         GLsizei width,
         GLsizei height
     ) {
+        CHECK_BINDING_TEXTURE2D();
+
         gl( CopyTexImage2D(texture_t, 0, internalFormat, x, y, width, height, 0) );
     }
 
@@ -133,7 +146,7 @@ public:
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width/height - Specifies the width/height of the texture to copy.
     /// @see glCopyTexImage2D
-    static void copy_Mipmap(
+    void copy_Mipmap(
         GLint level,
         PixelDataInternalFormat internalFormat,
         GLint x,
@@ -141,6 +154,8 @@ public:
         GLsizei width,
         GLsizei height
     ) {
+        CHECK_BINDING_TEXTURE2D();
+
         gl( CopyTexImage2D(texture_t, level, internalFormat, x, y, width, height, 0) );
     }
 
@@ -149,7 +164,7 @@ public:
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width/height - Specifies the width/height of the texture to copy.
     /// @see glCopyTexSubImage2D
-    static void copySub(
+    void copySub(
         GLint xOffset,
         GLint yOffset,
         GLint x,
@@ -157,6 +172,8 @@ public:
         GLsizei width,
         GLsizei height
     ) {
+        CHECK_BINDING_TEXTURE2D();
+
         gl( CopyTexSubImage2D(texture_t, 0, xOffset, yOffset, x, y, width, height) );
     }
 
@@ -166,7 +183,7 @@ public:
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width/height - Specifies the width/height of the texture to copy.
     /// @see glCopyTexSubImage2D
-    static void copySub_Mipmap(
+    void copySub_Mipmap(
         GLint level,
         GLint xOffset,
         GLint yOffset,
@@ -175,13 +192,17 @@ public:
         GLsizei width,
         GLsizei height
     ) {
+        CHECK_BINDING_TEXTURE2D();
+
         gl( CopyTexSubImage2D(texture_t, level, xOffset, yOffset, x, y, width, height) );
     }
 
     /// Returns the width of a mipmap of the currently bound texture of this class.
     /// @param level - Specifies the mipmap whose size should be queried.
     /// @see glGetTexLevelParameteriv, GL_TEXTURE_WIDTH
-    static GLsizei width(GLint level = 0) {
+    GLsizei width(GLint level = 0) {
+        CHECK_BINDING_TEXTURE2D();
+
         GLsizei data;
         gl( GetTexLevelParameteriv(texture_t, level, GL_TEXTURE_WIDTH, &data) );
         return data;
@@ -190,7 +211,9 @@ public:
     /// Returns the height of a mipmap of the currently bound texture of this class.
     /// @param level - Specifies the mipmap whose size should be queried.
     /// @see glGetTexLevelParameteriv, GL_TEXTURE_HEIGHT
-    static GLsizei height(GLint level = 0) {
+    GLsizei height(GLint level = 0) {
+        CHECK_BINDING_TEXTURE2D();
+
         GLsizei data;
         gl( GetTexLevelParameteriv(texture_t, level, GL_TEXTURE_HEIGHT, &data) );
         return data;
@@ -201,7 +224,8 @@ public:
     /// @param level - Specifies the level-of-detail number of the desired image. Level 0 is the base image level. Level n is the nth mipmap reduction image.
     /// @param img - Returns the compressed texture image.
     /// @see glGetCompressedTexImage
-    static void getCompressedImage(GLint level, GLvoid* img) {
+    void getCompressedImage(GLint level, GLvoid* img) {
+        CHECK_BINDING_TEXTURE2D();
         gl( GetCompressedTexImage(TexType::Tex2D, level, img) );
     }
     #endif // glGetCompressedTexImage
@@ -211,7 +235,7 @@ public:
     /// @param file - Path to the image file.
     /// @param formatString - Specifies the number and order of components to be read.
     /// @see glTexImage2D
-    static void loadTexture(const std::string& file, const std::string& formatString = "RGBA") {
+    void loadTexture(const std::string& file, const std::string& formatString = "RGBA") {
         try {
             Magick::Image image = Magick::Image(file);
             Magick::Blob blob;

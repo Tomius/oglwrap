@@ -17,7 +17,6 @@ class RenderBuffer {
     /// The handle for the render buffer.
     ObjectExt<glGenRenderbuffers, glDeleteRenderbuffers> renderbuffer;
 public:
-
     #ifdef glBindRenderbuffer
     /// @brief Binds this renderbuffer.
     /// @see glBindRenderbuffer
@@ -34,10 +33,20 @@ public:
     }
     #endif // glBindRenderbuffer
 
+    /// @brief Returns if this is the currently bound RenderBuffer.
+    /// @see glGetIntegerv
+    bool isBound() const {
+        GLint currentlyBoundBuffer;
+        gl( GetIntegerv(GL_RENDERBUFFER_BINDING, &currentlyBoundBuffer) );
+        OGLWRAP_LAST_BIND_TARGET = "GL_RENDERBUFFER_BINDING";
+        return renderbuffer == GLuint(currentlyBoundBuffer);
+    }
+
     #ifdef glRenderbufferStorage
     /// @brief Establish data storage, format and dimensions of a renderbuffer object's image.
     /// @see glRenderbufferStorage
     void storage(PixelDataInternalFormat internalFormat, GLsizei width, GLsizei height) {
+        CHECK_BINDING();
         gl( RenderbufferStorage(GL_RENDERBUFFER, internalFormat, width, height) );
     }
     #endif // glRenderbufferStorage
@@ -48,6 +57,7 @@ public:
     void storageMultisample(
         GLsizei samples, PixelDataInternalFormat internalFormat, GLsizei width, GLsizei height
     ) {
+        CHECK_BINDING();
         gl( RenderbufferStorageMultisample(GL_RENDERBUFFER, samples, internalFormat, width, height) );
     }
     #endif // glRenderbufferStorageMultisample
@@ -63,17 +73,24 @@ public:
 #ifdef glGenFramebuffers
 #ifdef glDeleteFramebuffers
 /// A buffer that you can draw to.
-class Framebuffer {
+template<FramebufferType fbo_t>
+class FramebufferObject {
     ObjectExt<glGenFramebuffers, glDeleteFramebuffers> framebuffer; ///< The handle for the framebuffer
-    GLenum currentTarget; ///< The current target of this Framebuffer
 public:
+    template<FramebufferType another_fbo_t>
+    /// Creates a copy of the framebuffer, or casts it to another type.
+    /** Important: if you use this to change the type of the active framebuffer,
+      * don't forget to unbind the old one, and bind the new one */
+    FramebufferObject(const BufferObject<another_fbo_t> src)
+        : framebuffer(src.Expose())
+    { }
+
     #ifdef glBindFramebuffer
     /// @brief Binds the framebuffer for reading and/or drawing.
     /// @param target - The target to bind the framebuffer to.
     /// @see glBindFramebuffer
-    void bind(FBO_Target target = FBO_Target::Read_Draw) {
-        gl( BindFramebuffer(target, framebuffer) );
-        currentTarget = target;
+    void bind() {
+        gl( BindFramebuffer(fbo_t, framebuffer) );
     }
     #endif // glBindFramebuffer
 
@@ -81,10 +98,7 @@ public:
     /// @brief Unbinds the buffer from the target it is currently bound to.
     /// @see glBindFramebuffer
     void unbind() {
-        if(currentTarget != 0) {
-            gl( BindFramebuffer(currentTarget, 0) );
-            currentTarget = 0;
-        }
+        gl( BindFramebuffer(fbo_t, 0) );
     }
     #endif // glBindFramebuffer
 
@@ -92,78 +106,72 @@ public:
     /// @brief Returns the status of a bound framebuffer.
     /** Throws an exception if the framebuffer isn't bound. */
     /// @see glCheckFramebufferStatus
-    FBO_Status status() {
-        if(!currentTarget) {
-            throw std::logic_error(
-                "Framebuffer::Status is called, but the framebuffer isn't bound to any target."
-            );
-        }
-
-        GLenum status = gl( CheckFramebufferStatus(currentTarget) );
-        return FBO_Status(status);
+    FramebufferStatus status() {
+        GLenum status = gl( CheckFramebufferStatus(fbo_t) );
+        return status;
     }
     #endif // glCheckFramebufferStatus
 
-    /// @brief Returns if the framebuffer is currently bound.
-    bool isBound() {
-        return currentTarget != 0;
+    /// @brief Returns if this is the currently bound framebuffer for its target.
+    /// @see glGetIntegerv
+    bool isBound() const {
+        GLint currentlyBoundBuffer;
+        gl( GetIntegerv(getBindingTarget(fbo_t), &currentlyBoundBuffer) );
+        return framebuffer == GLuint(currentlyBoundBuffer);
     }
 
     #ifdef glCheckFramebufferStatus
-    /// @brief Throws an exception if the framebuffer isn't complete.
+    /// @brief Throws a logic error exception if the framebuffer isn't complete.
     /// @see glCheckFramebufferStatus
     void validate() {
-        std::string errStr;
+        CHECK_BINDING();
 
-        if(!currentTarget) {
-            errStr = "The framebuffer isn't bound to any target.";
-        } else {
-            GLenum status = gl( CheckFramebufferStatus(currentTarget) );
-            switch (FBO_Status(status)) {
-                case FBO_Status::Complete:
-                    return;
-                case FBO_Status::Incomplete_Attachment:
-                    errStr = "One or more framebuffer attachment points are incomplete.";
-                    break;
-                case FBO_Status::Incomplete_MissingAttachment:
-                    errStr = "The framebuffer does not have at least one image attached to it.";
-                    break;
-                case FBO_Status::Incomplete_DrawBuffer:
-                    errStr = "The value of GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE is GL_NONE for "
-                             "any color attachment point(s) named by GL_DRAW_BUFFERi.";
-                    break;
-                case FBO_Status::Incomplete_ReadBuffer:
-                    errStr = "The GL_READ_BUFFER is not GL_NONE and the value of GL_FRAMEBUFFER_"
-                             "ATTACHMENT_OBJECT_TYPE is GL_NONE for the color attachment point "
-                             "named by GL_READ_BUFFER.";
-                    break;
-                case FBO_Status::Unsupported:
-                    errStr = "The combination of internal formats of the attached images violates an "
-                             "implementation-dependent set of restrictions.";
-                    break;
-                case FBO_Status::Undefined:
-                    errStr = "The currently bound framebuffer does not exist.";
-                    break;
-                case FBO_Status::Incomplete_Multisample:
-                    errStr = "One of the followings happened: \n"
-                             "-  The value of GL_RENDERBUFFER_SAMPLES is not the same for all attached "
-                             "renderbuffers; if the value of GL_TEXTURE_SAMPLES is the not same for all "
-                             "attached textures; or, if the attached images are a mix of renderbuffers "
-                             "and textures, the value of GL_RENDERBUFFER_SAMPLES does not match the value "
-                             "of GL_TEXTURE_SAMPLES. \n"
-                             "-  The value of GL_TEXTURE_FIXED_SAMPLE_LOCATIONS is not the same for all "
-                             "attached textures; or, if the attached images are a mix of renderbuffers "
-                             "and textures, the value of GL_TEXTURE_FIXED_SAMPLE_LOCATIONS is not GL_TRUE "
-                             "for all attached textures.";
-                    break;
-                case FBO_Status::Incomplete_LayerTargets:
-                    errStr = "One or more framebuffer attachment is layered, and any populated attachment "
-                             "is not layered, or if all populated color attachments are not from textures "
-                             "of the same target.";
-                    break;
-                default:
-                    errStr = "Unknown error.";
-            }
+        std::string errStr;
+        GLenum status = gl( CheckFramebufferStatus(fbo_t) );
+        switch (FramebufferStatus(status)) {
+            case FramebufferStatus::Complete:
+                return;
+            case FramebufferStatus::Incomplete_Attachment:
+                errStr = "One or more framebuffer attachment points are incomplete.";
+                break;
+            case FramebufferStatus::Incomplete_MissingAttachment:
+                errStr = "The framebuffer does not have at least one image attached to it.";
+                break;
+            case FramebufferStatus::Incomplete_DrawBuffer:
+                errStr = "The value of GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE is GL_NONE for "
+                         "any color attachment point(s) named by GL_DRAW_BUFFERi.";
+                break;
+            case FramebufferStatus::Incomplete_ReadBuffer:
+                errStr = "The GL_READ_BUFFER is not GL_NONE and the value of GL_FRAMEBUFFER_"
+                         "ATTACHMENT_OBJECT_TYPE is GL_NONE for the color attachment point "
+                         "named by GL_READ_BUFFER.";
+                break;
+            case FramebufferStatus::Unsupported:
+                errStr = "The combination of internal formats of the attached images violates an "
+                         "implementation-dependent set of restrictions.";
+                break;
+            case FramebufferStatus::Undefined:
+                errStr = "The currently bound framebuffer does not exist.";
+                break;
+            case FramebufferStatus::Incomplete_Multisample:
+                errStr = "One of the followings happened: \n"
+                         "-  The value of GL_RENDERBUFFER_SAMPLES is not the same for all attached "
+                         "renderbuffers; if the value of GL_TEXTURE_SAMPLES is the not same for all "
+                         "attached textures; or, if the attached images are a mix of renderbuffers "
+                         "and textures, the value of GL_RENDERBUFFER_SAMPLES does not match the value "
+                         "of GL_TEXTURE_SAMPLES. \n"
+                         "-  The value of GL_TEXTURE_FIXED_SAMPLE_LOCATIONS is not the same for all "
+                         "attached textures; or, if the attached images are a mix of renderbuffers "
+                         "and textures, the value of GL_TEXTURE_FIXED_SAMPLE_LOCATIONS is not GL_TRUE "
+                         "for all attached textures.";
+                break;
+            case FramebufferStatus::Incomplete_LayerTargets:
+                errStr = "One or more framebuffer attachment is layered, and any populated attachment "
+                         "is not layered, or if all populated color attachments are not from textures "
+                         "of the same target.";
+                break;
+            default:
+                errStr = "Unknown error.";
         }
 
         throw std::logic_error("Framebuffer error: \n" + errStr);
@@ -175,14 +183,10 @@ public:
     /// @param attachment - Specifies the attachment point to which renderbuffer should be attached.
     /// @param renderBuffer - Specifies the renderbuffer object that is to be attached.
     /// @see glFramebufferRenderbuffer
-    void attachBuffer(FBO_Attachment attachment, RenderBuffer renderBuffer) {
-        if(!currentTarget) {
-            std::cerr << "Framebuffer::AttachBuffer is called, but the "
-                         "framebuffer isn't bound to any target." << std::endl;
-            return;
-        }
+    void attachBuffer(FramebufferAttachment attachment, RenderBuffer renderBuffer) {
+        CHECK_BINDING();
 
-        gl( FramebufferRenderbuffer(currentTarget, attachment, GL_RENDERBUFFER, renderBuffer.expose()) );
+        gl( FramebufferRenderbuffer(fbo_t, attachment, GL_RENDERBUFFER, renderBuffer.expose()) );
     }
     #endif // glFramebufferRenderbuffer
 
@@ -193,14 +197,10 @@ public:
     /// @param texture - Specifies the texture object to attach to the framebuffer attachment point named by \a attachment.
     /// @param level - Specifies the mipmap level of \a texture to attach.
     /// @see glFramebufferTexture
-    void attachTexture(FBO_Attachment attachment, const TextureBase<texture_t>& texture, GLuint level) {
-        if(!currentTarget) {
-            std::cerr << "Framebuffer::AttachBuffer is called, but the "
-                         "framebuffer isn't bound to any target." << std::endl;
-            return;
-        }
+    void attachTexture(FramebufferAttachment attachment, const TextureBase<texture_t>& texture, GLuint level) {
+        CHECK_BINDING();
 
-        gl( FramebufferTexture(currentTarget, attachment, texture.Expose(), level) );
+        gl( FramebufferTexture(fbo_t, attachment, texture.Expose(), level) );
     }
     #endif // glFramebufferTexture
 
@@ -212,15 +212,11 @@ public:
     /// @param level - Specifies the mipmap level of \a texture to attach.
     /// @see glFramebufferTexture2D
     void attachTexture(
-        FBO_Attachment attachment, CubeTarget target, const TextureCube& texture, GLuint level
+        FramebufferAttachment attachment, CubeTarget target, const TextureCube& texture, GLuint level
     ) {
-        if(!currentTarget) {
-            std::cerr << "Framebuffer::AttachBuffer is called, but the "
-                         "framebuffer isn't bound to any target." << std::endl;
-            return;
-        }
+        CHECK_BINDING();
 
-        gl( FramebufferTexture2D(currentTarget, attachment, target, texture.expose(), level) );
+        gl( FramebufferTexture2D(fbo_t, attachment, target, texture.expose(), level) );
     }
     #endif // glFramebufferTexture2D
 
@@ -228,6 +224,10 @@ public:
         return framebuffer;
     }
 }; // class Framebuffer
+
+typedef FramebufferObject<FramebufferType::Read_Draw> Framebuffer;
+typedef FramebufferObject<FramebufferType::Read> Read_Framebuffer;
+typedef FramebufferObject<FramebufferType::Draw> Draw_Framebuffer;
 
 #endif // glDeleteFramebuffers
 #endif // glGenFramebuffers

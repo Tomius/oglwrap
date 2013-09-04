@@ -9,6 +9,13 @@
     #define OGLWRAP_DEBUG 1
 #endif
 
+#if OGLWRAP_DEBUG
+    /// If true, warns you if call a function that requires binding through an object that isn't the currently bound one.
+    #ifndef OGLWRAP_BINDCHECK
+        #define OGLWRAP_BINDCHECK 1
+    #endif
+#endif // OGLWRAP_DEBUG
+
 /// If true, uses the ARB_DebugOutput. If it's false, it will use the own debug output instead.
 /** DebugOutputs only work if OGLWRAP_DEBUG is true */
 #ifndef GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB

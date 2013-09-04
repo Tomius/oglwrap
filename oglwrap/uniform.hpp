@@ -81,7 +81,7 @@ public:
     void set(const GLtype& value) {
         glfunc( UniformObject<GLtype>::set(value) );
 
-        oglwrap_PrintError(
+        OGLWRAP_PRINT_ERROR(
             GL_INVALID_OPERATION,
             std::string("Uniform::set is called ") +
             #if OGLWRAP_DEBUG
@@ -145,7 +145,7 @@ public:
     void set(const GLtype& value) {
         glfunc( UniformObject<GLtype>::set(value) );
 
-        oglwrap_PrintError(
+        OGLWRAP_PRINT_ERROR(
             GL_INVALID_OPERATION,
             std::string("Uniform::set is called ") +
             #if OGLWRAP_DEBUG
@@ -218,7 +218,7 @@ public:
 
         glfunc( UniformObject<GLtype>::set(value) );
 
-        oglwrap_PrintError(
+        OGLWRAP_PRINT_ERROR(
             GL_INVALID_OPERATION,
             "Uniform::set is called for uniform '" + identifier + "' but the "
             "uniform template parameter and the actual uniform type mismatches, "

@@ -180,6 +180,53 @@ enum IndexedBufferType {
 }
 typedef _IndexedBufferType::IndexedBufferType IndexedBufferType;
 
+namespace _BufferBinding {
+enum BufferBinding {
+#ifdef GL_ARRAY_BUFFER_BINDING
+    Array = GL_ARRAY_BUFFER_BINDING,
+#endif
+#ifdef GL_ATOMIC_COUNTER_BUFFER_BINDING
+    AtomicCounter = GL_ATOMIC_COUNTER_BUFFER_BINDING,
+#endif
+// Note: these two do not end with _BINDING
+#ifdef GL_COPY_READ_BUFFER
+    CopyRead = GL_COPY_READ_BUFFER,
+#endif
+#ifdef GL_COPY_WRITE_BUFFER
+    CopyWrite = GL_COPY_WRITE_BUFFER,
+#endif
+#ifdef GL_DISPATCH_INDIRECT_BUFFER_BINDING
+    DispatchIndirect = GL_DISPATCH_INDIRECT_BUFFER_BINDING,
+#endif
+#ifdef GL_DRAW_INDIRECT_BUFFER_BINDING
+    DrawIndirect = GL_DRAW_INDIRECT_BUFFER_BINDING,
+#endif
+#ifdef GL_ELEMENT_ARRAY_BUFFER_BINDING
+    ElementArray = GL_ELEMENT_ARRAY_BUFFER_BINDING,
+#endif
+#ifdef GL_PIXEL_PACK_BUFFER_BINDING
+    PixelPack = GL_PIXEL_PACK_BUFFER_BINDING,
+#endif
+#ifdef GL_PIXEL_UNPACK_BUFFER_BINDING
+    PixelUnpack = GL_PIXEL_UNPACK_BUFFER_BINDING,
+#endif
+#ifdef GL_SHADER_STORAGE_BUFFER_BINDING
+    ShaderStorage = GL_SHADER_STORAGE_BUFFER_BINDING,
+#endif
+// Note: It's not BUFFER_BINDING but BINDING_BUFFER.
+#ifdef GL_TEXTURE_BINDING_BUFFER
+    Texture = GL_TEXTURE_BINDING_BUFFER,
+#endif
+#ifdef GL_TRANSFORM_FEEDBACK_BUFFER_BINDING
+    TransformFeedback = GL_TRANSFORM_FEEDBACK_BUFFER_BINDING,
+#endif
+#ifdef GL_UNIFORM_BUFFER_BINDING
+    Uniform = GL_UNIFORM_BUFFER_BINDING,
+#endif
+};
+}
+typedef _BufferBinding::BufferBinding BufferBinding;
+
 
 namespace _BufferUsage {
 enum BufferUsage {
@@ -231,8 +278,8 @@ typedef _BufferMapAccess::BufferMapAccess BufferMapAccess;
 
 // -------======{[ Framebuffers ]}======-------
 
-namespace _FramebufferTarget {
-enum FramebufferTarget {
+namespace _FramebufferType {
+enum FramebufferType {
 #ifdef GL_READ_FRAMEBUFFER
     Read = GL_READ_FRAMEBUFFER,
 #endif
@@ -244,8 +291,24 @@ enum FramebufferTarget {
 #endif
 };
 }
-typedef _FramebufferTarget::FramebufferTarget FramebufferTarget;
-typedef _FramebufferTarget::FramebufferTarget FBO_Target;
+typedef _FramebufferType::FramebufferType FramebufferType;
+typedef _FramebufferType::FramebufferType FboType;
+
+namespace _FramebufferBinding {
+enum FramebufferBinding {
+#ifdef GL_READ_FRAMEBUFFER_BINDING
+    Read = GL_READ_FRAMEBUFFER_BINDING,
+#endif
+#ifdef GL_DRAW_FRAMEBUFFER_BINDING
+    Draw = GL_DRAW_FRAMEBUFFER_BINDING,
+#endif
+#ifdef GL_FRAMEBUFFER_BINDING
+    Read_Draw = GL_FRAMEBUFFER_BINDING,
+#endif
+};
+}
+typedef _FramebufferBinding::FramebufferBinding FramebufferBinding;
+typedef _FramebufferBinding::FramebufferBinding FboBinding;
 
 namespace _FramebufferStatus {
 enum FramebufferStatus {
@@ -279,7 +342,7 @@ enum FramebufferStatus {
 };
 }
 typedef _FramebufferStatus::FramebufferStatus FramebufferStatus;
-typedef _FramebufferStatus::FramebufferStatus FBO_Status;
+typedef _FramebufferStatus::FramebufferStatus FboStatus;
 
 namespace _FramebufferAttachment {
 enum FramebufferAttachment {
@@ -343,7 +406,7 @@ enum FramebufferAttachment {
 };
 }
 typedef _FramebufferAttachment::FramebufferAttachment FramebufferAttachment;
-typedef _FramebufferAttachment::FramebufferAttachment FBO_Attachment;
+typedef _FramebufferAttachment::FramebufferAttachment FboAttachment;
 
 // -------======{[ Textures ]}======-------
 
@@ -373,6 +436,33 @@ enum TexType {
 };
 }
 typedef _TexType::TexType TexType;
+
+namespace _TexBinding {
+enum TexBinding {
+#ifdef GL_TEXTURE_BINDING_1D
+    Tex1D = GL_TEXTURE_BINDING_1D,
+#endif
+#ifdef GL_TEXTURE_BINDING_2D
+    Tex2D = GL_TEXTURE_BINDING_2D,
+#endif
+#ifdef GL_TEXTURE_BINDING_3D
+    Tex3D = GL_TEXTURE_BINDING_3D,
+#endif
+#ifdef GL_TEXTURE_BINDING_RECTANGLE
+    TexRect = GL_TEXTURE_BINDING_RECTANGLE,
+#endif
+#ifdef GL_TEXTURE_BINDING_1D_ARRAY
+    Tex1DArray = GL_TEXTURE_BINDING_1D_ARRAY,
+#endif
+#ifdef GL_TEXTURE_BINDING_2D_ARRAY
+    Tex2DArray = GL_TEXTURE_BINDING_2D_ARRAY,
+#endif
+#ifdef GL_TEXTURE_BINDING_CUBE_MAP
+    TexCubeMap = GL_TEXTURE_BINDING_CUBE_MAP,
+#endif
+};
+}
+typedef _TexBinding::TexBinding TexBinding;
 
 namespace _Tex2DType {
 enum Tex2DType {

@@ -24,7 +24,9 @@ public:
     BufferObject() {}
 
     template<BufferType another_buffer_t>
-    /// Creates a copy of the texture, or casts it to another type.
+    /// Creates a copy of the buffer, or casts it to another type.
+    /** Important: if you use this to change the type of the active buffer,
+      * don't forget to unbind the old one, and bind the new one */
     BufferObject(const BufferObject<another_buffer_t> src)
         : buffer(src.Expose())
     { }
@@ -45,6 +47,14 @@ public:
     }
     #endif // glBindBuffer
 
+    /// @brief Returns if this is the currently bound buffer for its target.
+    /// @see glGetIntegerv
+    bool isBound() const {
+        GLint currentlyBoundBuffer;
+        gl( GetIntegerv(getBindingTarget(buffer_t), &currentlyBoundBuffer) );
+        return buffer == GLuint(currentlyBoundBuffer);
+    }
+
     #ifdef glBufferData
     template<typename GLtype>
     /// @brief Creates and initializes a buffer object's data store.
@@ -52,8 +62,12 @@ public:
     /// @param data - Specifies a pointer to data that will be copied into the data store for initialization, or NULL if no data is to be copied.
     /// @param usage - Specifies the expected usage pattern of the data store.
     /// @see glBufferData
-    static void data(GLsizei size, const GLtype* data,
+    void data(GLsizei size, const GLtype* data,
                      BufferUsage usage = BufferUsage::StaticDraw) {
+        CHECK_BINDING();
+        if(buffer_t == BufferType::Array)
+            CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+
         gl( BufferData(buffer_t, size, data, usage) );
     }
     #endif // glBufferData
@@ -64,8 +78,12 @@ public:
     /// @param data - Specifies a vector of data to upload.
     /// @param usage - Specifies the expected usage pattern of the data store.
     /// @see glBufferData
-    static void data(const std::vector<GLtype>& data,
+    void data(const std::vector<GLtype>& data,
                      BufferUsage usage = BufferUsage::StaticDraw) {
+        CHECK_BINDING();
+        if(buffer_t == BufferType::Array)
+            CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+
         gl( BufferData(buffer_t, data.size() * sizeof(GLtype), data.data(), usage) );
     }
     #endif // glBufferData
@@ -77,7 +95,11 @@ public:
     /// @param size - Specifies the size in bytes of the data store region being replaced.
     /// @param data - Specifies a pointer to the new data that will be copied into the data store.
     /// @see glBufferSubData
-    static void subData(GLintptr offset, GLsizei size, const GLtype* data) {
+    void subData(GLintptr offset, GLsizei size, const GLtype* data) {
+        CHECK_BINDING();
+        if(buffer_t == BufferType::Array)
+            CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+
         gl( BufferSubData(buffer_t, offset, size, data) );
     }
     #endif // glBufferSubData
@@ -88,7 +110,11 @@ public:
     /// @param offset - Specifies the offset into the buffer object's data store where data replacement will begin, measured in bytes.
     /// @param data - Specifies a vector containing the new data that will be copied into the data store.
     /// @see glBufferSubData
-    static void subData(GLintptr offset, const std::vector<GLtype>& data) {
+    void subData(GLintptr offset, const std::vector<GLtype>& data) {
+        CHECK_BINDING();
+        if(buffer_t == BufferType::Array)
+            CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+
         gl( BufferSubData(buffer_t, offset, data.size() * sizeof(GLtype), data.data()) );
     }
     #endif // glBufferSubData
@@ -98,7 +124,9 @@ public:
     /// @brief A getter for the buffer's size.
     /// @return The size of the buffer currently bound to the buffer objects default target in bytes.
     /// @see glGetBufferParameteriv, GL_BUFFER_SIZE
-    static size_t size() {
+    size_t size() {
+        CHECK_BINDING();
+
         GLint data;
         gl( GetBufferParameteriv(buffer_t, GL_BUFFER_SIZE, &data) );
         return data;
@@ -124,6 +152,8 @@ public:
         /// @param access - Specifies the access policy (R, W, R/W).
         /// @see glMapBuffer
         Map(BufferMapAccess access = BufferMapAccess::Read) {
+            CHECK_FOR_DEFAULT_BINDING(getBindingTarget(buffer_t));
+
             m_data = gl( MapBuffer(buffer_t, access) );
             m_size = BufferObject<buffer_t>::size();
         }
@@ -134,6 +164,8 @@ public:
         /// @param access - Specifies the access policy (R, W, R/W).
         /// @see glMapBufferRange
         Map(GLintptr offset, GLsizeiptr length, BufferMapAccess access = BufferMapAccess::Read) {
+            CHECK_FOR_DEFAULT_BINDING(getBindingTarget(buffer_t));
+
             m_data = gl( MapBufferRange(buffer_t, offset, length, access) );
             m_size = BufferObject<buffer_t>::size();
         }
@@ -141,6 +173,8 @@ public:
         /// Unmaps the buffer.
         /// @see glUnmapBuffer
         ~Map() {
+            CHECK_FOR_DEFAULT_BINDING(getBindingTarget(buffer_t));
+
             gl( UnmapBuffer(buffer_t) );
         }
 

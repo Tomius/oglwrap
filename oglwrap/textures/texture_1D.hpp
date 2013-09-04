@@ -30,13 +30,15 @@ public:
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
     /// @see glTexImage1D
-    static void upload(
+    void upload(
         PixelDataInternalFormat internalFormat,
         GLsizei width,
         PixelDataFormat format,
         PixelDataType type,
         const void *data
     ) {
+        CHECK_BINDING();
+
         gl( TexImage1D(
             TexType::Tex1D, 0, internalFormat, width, 0, format, type, data
         ));
@@ -50,7 +52,7 @@ public:
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
     /// @see glTexImage1D
-    static void upload_Mipmap(
+    void upload_Mipmap(
         GLint level,
         PixelDataInternalFormat internalFormat,
         GLsizei width,
@@ -58,6 +60,8 @@ public:
         PixelDataType type,
         const void *data
     ) {
+        CHECK_BINDING();
+
         gl( TexImage1D(
             TexType::Tex1D, level, internalFormat, width, 0, format, type, data
         ));
@@ -70,13 +74,15 @@ public:
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
     /// @see glTexSubImage1D
-    static void subUpload(
+    void subUpload(
         GLint xOffset,
         GLsizei width,
         PixelDataFormat format,
         PixelDataType type,
         const void *data
     ) {
+        CHECK_BINDING();
+
         gl( TexSubImage1D(
             TexType::Tex1D, 0, xOffset, width, format, type, data
         ));
@@ -90,7 +96,7 @@ public:
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
     /// @see glTexSubImage1D
-    static void subUpload_Mipmap(
+    void subUpload_Mipmap(
         GLint level,
         GLint xOffset,
         GLsizei width,
@@ -98,6 +104,8 @@ public:
         PixelDataType type,
         const void *data
     ) {
+        CHECK_BINDING();
+
         gl( TexSubImage1D(
             TexType::Tex1D, level, xOffset, width, format, type, data
         ));
@@ -108,12 +116,14 @@ public:
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width - Specifies the number of texels to copy.
     /// @see glCopyTexImage1D
-    static void copy(
+    void copy(
         PixelDataInternalFormat internalFormat,
         GLint x,
         GLint y,
         GLsizei width
     ) {
+        CHECK_BINDING();
+
         gl( CopyTexImage1D(
             TexType::Tex1D, 0, internalFormat, x, y, width, 0
         ));
@@ -125,13 +135,15 @@ public:
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width - Specifies the number of texels to copy.
     /// @see glCopyTexImage1D
-    static void copy_Mipmap(
+    void copy_Mipmap(
         GLint level,
         PixelDataInternalFormat internalFormat,
         GLint x,
         GLint y,
         GLsizei width
     ) {
+        CHECK_BINDING();
+
         gl( CopyTexImage1D(
             TexType::Tex1D, level, internalFormat, x, y, width, 0
         ));
@@ -142,12 +154,14 @@ public:
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width - Specifies the number of texels to copy.
     /// @see glCopyTexSubImage1D
-    static void copySub(
+    void copySub(
         GLint xOffset,
         GLint x,
         GLint y,
         GLsizei width
     ) {
+        CHECK_BINDING();
+
         gl( CopyTexSubImage1D(
             TexType::Tex1D, 0, xOffset, x, y, width
         ));
@@ -159,13 +173,15 @@ public:
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width - Specifies the number of texels to copy.
     /// @see glCopyTexSubImage1D
-    static void copySub_Mipmap(
+    void copySub_Mipmap(
         GLint level,
         GLint xOffset,
         GLint x,
         GLint y,
         GLsizei width
     ) {
+        CHECK_BINDING();
+
         gl( CopyTexSubImage1D(
             TexType::Tex1D, level, xOffset, x, y, width
         ));
@@ -174,7 +190,9 @@ public:
     /// Returns the width of a mipmap of the currently bound texture of this class.
     /// @param level - Specifies the mipmap whose size should be queried.
     /// @see glGetTexLevelParameteriv, GL_TEXTURE_WIDTH
-    static GLsizei width(GLint level = 0)  {
+    GLsizei width(GLint level = 0) {
+        CHECK_BINDING();
+
         GLsizei w;
         gl( GetTexLevelParameteriv(TexType::Tex1D, level, GL_TEXTURE_WIDTH, &w) );
         return w;
@@ -185,7 +203,8 @@ public:
     /// @param level - Specifies the level-of-detail number of the desired image. Level 0 is the base image level. Level n is the nth mipmap reduction image.
     /// @param img - Returns the compressed texture image.
     /// @see glGetCompressedTexImage
-    static void getCompressedImage(GLint level, GLvoid* img) {
+    void getCompressedImage(GLint level, GLvoid* img) {
+        CHECK_BINDING();
         gl( GetCompressedTexImage(TexType::Tex1D, level, img) );
     }
     #endif // glGetCompressedTexImage

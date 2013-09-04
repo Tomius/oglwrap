@@ -265,8 +265,15 @@ public:
             cerr << "The following OpenGL function: " << endl << endl;
             cerr << errinfo.funcSignature << endl;
             cerr << "Has generated the error because one of the following(s) were true:" << endl;
-            cerr << errinfo.errors[errIdx] << std::endl;
+            cerr << errinfo.errors[errIdx];
         }
+
+        cerr << endl;
+        size_t lineSize = strlen("---------========={[  ]}=========---------") +
+                          strlen(glErrorNames[errIdx]);
+        for(size_t i = 0; i < lineSize; i++)
+            std::cerr << '-';
+        std::cerr << std::endl;
     }
 };
 
