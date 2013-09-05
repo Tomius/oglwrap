@@ -250,7 +250,7 @@ public:
         }
     }
 
-    void PrintError(const std::string& functionCall) {
+    void print_error(const std::string& functionCall) {
         using namespace std;
 
         size_t errIdx = getErrorIndex();

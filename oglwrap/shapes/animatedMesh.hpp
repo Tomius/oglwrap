@@ -26,21 +26,23 @@ static inline aiMatrix4x4 convertMatrix(const glm::mat4& m) {
     };
 }
 
-static inline bool isIdentity(const glm::mat4& m) {
-    glm::mat4 identity;
-    for(int i = 0; i < 4; i++) {
-        for(int j = 0; j < 4; j++) {
-            if(fabs(identity[i][j] - m[i][j]) > 1e-5)
-                return false;
-        }
-    }
-    return true;
-}
-
 static inline std::ostream& operator<<(std::ostream& os, const glm::vec3& v) {
     os << v.x << ", " << v.y << ", " << v.z;
     return os;
 }
+
+namespace _AnimFlag {
+enum AnimFlag {
+    None = 0x0,
+    Repeat = 0x1,
+    // MirroredRepeat sets the Repeat flag, and MirroredRepeat is not the same as (Mirrored & Repeat)
+    MirroredRepeat = 0x3,
+    Mirrored = 0x4,
+    Backwards = 0x8,
+    Interruptable = 0x10
+};
+}
+typedef _AnimFlag::AnimFlag AnimFlag;
 
 template <unsigned char numBoneAttribs = 1>
 /// A class for loading and displaying nearly any kind of animated mesh.
@@ -96,52 +98,60 @@ class AnimatedMesh : public Mesh {
     };
 
     struct BoneInfo {
-        glm::mat4 boneOffset;
-        glm::mat4 finalTransformation;
+        glm::mat4 bone_offset;
+        glm::mat4 final_transform;
     };
 
-    std::vector<ArrayBuffer> boneBuffers;
-    std::vector<BoneInfo> boneInfo;
-    std::map<std::string, unsigned> boneMapping; // maps a bone name to its index
+    std::vector<ArrayBuffer> bone_buffers;
+    std::vector<BoneInfo> bone_info;
+    std::map<std::string, unsigned> bone_mapping; // maps a bone name to its index
 
-    size_t numBones;
-    glm::mat4 globalInverseTransform;
+    size_t num_bones;
+    glm::mat4 global_inverse_transform;
 
     // vector::push_back(Assimp::Importer()) wouldn't work, because it has
     // a weird copy constructor, that doesn't actually copy. It must be dynamic.
-    std::vector<Assimp::Importer*> animationImporters;
+    std::vector<Assimp::Importer*> animation_importers;
     std::vector<const aiScene*> animations;
-    std::map<std::string, size_t> animNames; // maps user defined animation names to indexes.
+    std::map<std::string, size_t> anim_names; // maps user defined animation names to indexes.
 
+    const aiScene *last_anim, *current_anim;
+    float default_transition_time, transition_time, end_of_last_anim, last_period_time;
 
-    const aiScene *lastAnim, *currentAnim;
-    float endOfLastAnim, transitionTime, lastPeriodTime;
+    size_t default_idx, curr_idx, last_idx;
+    std::vector<glm::vec3> start_offsets;
+    std::vector<glm::vec3> end_offsets;
 
-    size_t currIdx, lastIdx;
-    std::vector<glm::vec3> startOffsets;
-    std::vector<glm::vec3> endOffsets;
+    glm::vec3 last_offset, current_offset, last_transition_offset;
+    unsigned last_loop_count;
 
-    glm::vec3 lastOffset, currentOffset, lastTransitionOffset;
-    unsigned lastLoopCount;
+    std::string root_bone;
 
-    std::string rootBone;
+    std::vector<unsigned> default_flags;
+    unsigned last_flags, current_flags;
+    bool update_flags;
 
 public:
     AnimatedMesh(const std::string& filename, unsigned int flags)
         : Mesh(filename, flags)
-        , boneBuffers(scene->mNumMeshes)
-        , numBones(0)
-        , lastAnim(nullptr)
-        , currentAnim(nullptr)
-        , endOfLastAnim(0)
-        , transitionTime(0)
-        , lastPeriodTime(0)
-        , currIdx(0)
-        , lastIdx(0)
-        , lastLoopCount(0) {
+        , bone_buffers(scene->mNumMeshes)
+        , num_bones(0)
+        , last_anim(nullptr)
+        , current_anim(nullptr)
+        , default_transition_time(0)
+        , transition_time(0)
+        , end_of_last_anim(0)
+        , last_period_time(0)
+        , default_idx(0)
+        , curr_idx(0)
+        , last_idx(0)
+        , last_loop_count(0)
+        , last_flags(0)
+        , current_flags(0)
+        , update_flags(0) {
 
         glm::mat4 matrix = convertMatrix(scene->mRootNode->mTransformation);
-        globalInverseTransform = glm::inverse(matrix);
+        global_inverse_transform = glm::inverse(matrix);
 
         if(numBoneAttribs != getRecommendedNumBoneAttribs())
             std::cerr << "Error in AnimatedMesh '" << filename << "'\n" <<
@@ -152,92 +162,20 @@ public:
     }
 
     ~AnimatedMesh() {
-        for(auto i = animationImporters.begin(); i != animationImporters.end(); i++)
+        for(auto i = animation_importers.begin(); i != animation_importers.end(); i++)
             delete *i;
     }
 
 private:
+
     // It shouldn't be copyable
     AnimatedMesh(const AnimatedMesh& src);
     void operator=(const AnimatedMesh& rhs);
-
-public:
-    unsigned char getNumBoneAttribs() {
-        return numBoneAttribs;
-    }
-
-    void addAnimation(const std::string& filename, const std::string& animName) {
-        if(animNames.find(animName) != animNames.end()){
-            std::string err = "Animation name '" + animName + "' isn't unique for '" + filename + "'";
-            throw std::runtime_error(err);
-        }
-        size_t idx = animations.size();
-        animNames[animName] = idx;
-        animationImporters.push_back(new Assimp::Importer());
-        animations.push_back(animationImporters[idx]->ReadFile(filename, aiProcess_Debone));
-
-        if(!animations[idx]) {
-            throw std::runtime_error("Error parsing " + filename
-                + " : " + animationImporters[idx]->GetErrorString());
-        }
-
-        auto node = getRootBone(scene->mRootNode, animations[idx]);
-        if(!node) {
-            throw std::runtime_error(
-                "Animation error: The mesh's skeleton, and the animated skeleton '" +
-                animName + "' doesn't have a single bone in common.");
-        }
-
-        aiVector3D v = node->mPositionKeys[0].mValue;
-        startOffsets.push_back(glm::vec3(v.x, v.y, v.z));
-        v = node->mPositionKeys[node->mNumPositionKeys - 1].mValue;
-        endOffsets.push_back(glm::vec3(v.x, v.y, v.z));
-    }
-
-    void setCurrentAnimation(const std::string& animName, float currentTime, float transitionTime = 0.0f) {
-        if(animNames.find(animName) == animNames.end()) {
-            throw std::invalid_argument(
-                "Tried to set current animation to '" + animName + "', "
-                "but the AnimatedMesh doesn't have an animation with name"
-            );
-        }
-
-        setCurrentAnimation(animNames[animName], currentTime, transitionTime);
-    }
-
-    void setCurrentAnimation(size_t animIndex, float currentTime, float transitionTime = 0.0f) {
-        size_t tempLastIdx = currIdx;
-        currIdx = animIndex;
-
-        auto nextanim = animations[currIdx];
-        if(currentAnim == nextanim || (endOfLastAnim + this->transitionTime) > currentTime)
-            return;
-        lastIdx = tempLastIdx;
-        lastAnim = currentAnim;
-        currentAnim = nextanim;
-        this->transitionTime = transitionTime;
-        lastPeriodTime = currentTime - endOfLastAnim;
-        lastTransitionOffset = glm::vec3();
-        endOfLastAnim = currentTime;
-        if(lastAnim)
-            lastOffset = startOffsets[currIdx];
-        else
-            lastAnim = currentAnim;
-        currentOffset = startOffsets[currIdx];
-    }
-
-    glm::vec3 offsetSinceLastFrame() {
-        auto ret = currentOffset - lastOffset;
-        lastOffset = currentOffset;
-        ret.y = 0; // FIXME
-        return ret;
-    }
 
 /*         //=====:==-==-==:=====\\                                 //=====:==-==-==:=====\\
     <---<}>==~=~=~==--==--==~=~=~==<{>----- Skin definition -----<}>==~=~=~==--==--==~=~=~==<{>--->
            \\=====:==-==-==:=====//                                 \\=====:==-==-==:=====//          */
 
-private:
     void mapBones() {
         for(size_t entry = 0; entry < entries.size(); entry++) {
             const aiMesh* pMesh = scene->mMeshes[entry];
@@ -247,12 +185,12 @@ private:
                 size_t boneIndex = 0;
 
                 // Search for this bone in the BoneMap
-                if(boneMapping.find(boneName) == boneMapping.end()) {
+                if(bone_mapping.find(boneName) == bone_mapping.end()) {
                     // Allocate an index for the new bone
-                    boneIndex = numBones++;
-                    boneInfo.push_back(BoneInfo());
-                    boneInfo[boneIndex].boneOffset = convertMatrix(pMesh->mBones[i]->mOffsetMatrix);
-                    boneMapping[boneName] = boneIndex;
+                    boneIndex = num_bones++;
+                    bone_info.push_back(BoneInfo());
+                    bone_info[boneIndex].bone_offset = convertMatrix(pMesh->mBones[i]->mOffsetMatrix);
+                    bone_mapping[boneName] = boneIndex;
                 }
             }
         }
@@ -265,10 +203,10 @@ private:
         const aiNodeAnim* pNodeAnim = findNodeAnim(pAnimation, nodeName);
 
         if(pNodeAnim) {
-            if(rootBone.empty()) {
-                rootBone = nodeName;
+            if(root_bone.empty()) {
+                root_bone = nodeName;
             } else {
-                if(rootBone != nodeName) {
+                if(root_bone != nodeName) {
                     throw std::runtime_error(
                         "Animation error: the animated skeletons have different root bones."
                     );
@@ -300,7 +238,7 @@ private:
             // -------======{[ Create the bone ID's and weights data ]}======-------
             for(unsigned i = 0; i < pMesh->mNumBones; i++) {
                 std::string boneName(pMesh->mBones[i]->mName.data);
-                size_t boneIndex = boneMapping[boneName];
+                size_t boneIndex = bone_mapping[boneName];
 
                 for(unsigned j = 0; j < pMesh->mBones[i]->mNumWeights; j++) {
                     unsigned vertexID = pMesh->mBones[i]->mWeights[j].mVertexId;
@@ -315,8 +253,8 @@ private:
                 boneAttribSet++
             ) {
                 entries[entry].vao.bind();
-                boneBuffers[entry].bind();
-                boneBuffers[entry].data(bones[entry]);
+                bone_buffers[entry].bind();
+                bone_buffers[entry].data(bones[entry]);
 
                 const size_t stride = sizeof(VertexBoneData<Index_t>);
                 intptr_t baseOffset =
@@ -334,6 +272,10 @@ private:
 
 public:
 
+    unsigned char getNumBoneAttribs() {
+        return numBoneAttribs;
+    }
+
     /// Loads in bone weight and id information to the given array of attribute arrays.
     /** Uploads the bone weight and id to an array of attribute arrays, and sets it up for use.
       * For example if you specified "in vec4 boneIds[3]" you have to give "prog | boneIds"
@@ -344,9 +286,9 @@ public:
     void setup_bones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights) {
         mapBones();
 
-        if(numBones < UCHAR_MAX)
+        if(num_bones < UCHAR_MAX)
             loadBones<unsigned char>(DataType::UnsignedByte, boneIDs, boneWeights);
-        else if(numBones < USHRT_MAX)
+        else if(num_bones < USHRT_MAX)
             loadBones<unsigned short>(DataType::UnsignedShort, boneIDs, boneWeights);
         else // more than 65535 bones? WTF???
             loadBones<unsigned int>(DataType::UnsignedInt, boneIDs, boneWeights);
@@ -474,15 +416,14 @@ private:
     // Recursive function that travels through the entire node hierarchy
     void readNodeHeirarchy(float animationTime,
                            const aiNode* pNode,
-                           const glm::mat4& parentTransform = glm::mat4(),
-                           bool root = true) {
+                           const glm::mat4& parentTransform = glm::mat4()) {
         using namespace glm;
 
         std::string nodeName(pNode->mName.data);
 
         // You probably want to be able to select different than animations than the 0th.
         // But with Maya's DAE_FBX exporter, it is not possible.
-        const aiAnimation* pAnimation = currentAnim->mAnimations[0];
+        const aiAnimation* pAnimation = current_anim->mAnimations[0];
         const aiNodeAnim* pNodeAnim = findNodeAnim(pAnimation, nodeName);
 
         mat4 nodeTransform = convertMatrix(pNode->mTransformation);
@@ -501,10 +442,17 @@ private:
             calcInterpolatedPosition(translation, animationTime, pNodeAnim);
             mat4 translationM;
 
-            if(nodeName == rootBone) {
-                currentOffset = vec3(translation.x, 0, translation.z);
+            if(nodeName == root_bone) {
+                if(current_flags & AnimFlag::Mirrored) {
+                    current_offset = -vec3(translation.x, 0, translation.z);
+                } else {
+                    current_offset = vec3(translation.x, 0, translation.z);
+                }
+
+                if((current_flags & AnimFlag::Mirrored) && (current_flags & AnimFlag::Backwards))
+                    current_offset += end_offsets[curr_idx] + start_offsets[curr_idx];
+
                 translationM = translate(mat4(), vec3(0, translation.y, 0)); // FIXME!!
-                root = false;
             } else {
                 translationM = translate(mat4(), vec3(translation.x, translation.y, translation.z));
             }
@@ -515,14 +463,14 @@ private:
 
         mat4 globalTransformation = parentTransform * nodeTransform;
 
-        if(boneMapping.find(nodeName) != boneMapping.end()) {
-            unsigned boneIndex = boneMapping[nodeName];
-            boneInfo[boneIndex].finalTransformation =
-                globalInverseTransform * globalTransformation * boneInfo[boneIndex].boneOffset;
+        if(bone_mapping.find(nodeName) != bone_mapping.end()) {
+            unsigned boneIndex = bone_mapping[nodeName];
+            bone_info[boneIndex].final_transform =
+                global_inverse_transform * globalTransformation * bone_info[boneIndex].bone_offset;
         }
 
         for(unsigned i = 0; i < pNode->mNumChildren; i++) {
-            readNodeHeirarchy(animationTime, pNode->mChildren[i], globalTransformation, root);
+            readNodeHeirarchy(animationTime, pNode->mChildren[i], globalTransformation);
         }
     }
 
@@ -537,15 +485,23 @@ private:
 
         // You probably want to be able to select different than animations than the 0th.
         // But with Maya's DAE_FBX exporter, it is not possible.
-        const aiAnimation* prevAnimation = lastAnim->mAnimations[0];
-        const aiAnimation* nextAnimation = currentAnim->mAnimations[0];
+        const aiAnimation* prevAnimation = last_anim->mAnimations[0];
+        const aiAnimation* nextAnimation = current_anim->mAnimations[0];
         const aiNodeAnim* prevNodeAnim = findNodeAnim(prevAnimation, nodeName);
         const aiNodeAnim* nextNodeAnim = findNodeAnim(nextAnimation, nodeName);
 
         mat4 nodeTransform = convertMatrix(pNode->mTransformation);
 
         if(prevNodeAnim && nextNodeAnim) {
-            float factor = transitionTime > 1e-10 ? (nextAnimationTime / transitionTime) : 0.0f;
+            float factor;
+            if(current_flags & AnimFlag::Backwards) {
+                factor = transition_time > 1e-10 ?
+                    ( ((float)current_anim->mAnimations[0]->mDuration - nextAnimationTime)
+                       / transition_time )
+                    : 0.0f;
+            } else {
+                factor = transition_time > 1e-10 ? (nextAnimationTime / transition_time) : 0.0f;
+            }
 
             // Interpolate the transformations and get the matrices
             aiVector3D prevScaling, nextScaling;
@@ -567,12 +523,22 @@ private:
             aiVector3D translation = interpolate(prevTranslation, nextTranslation, factor);
             mat4 translationM;
 
-            if(nodeName == rootBone) {
-                vec3 transitionOffset = (startOffsets[currIdx] - startOffsets[lastIdx]) * factor;
-                currentOffset =
+            if(nodeName == root_bone) {
+                vec3 transitionOffset;
+                if( !(current_flags & AnimFlag::Backwards) ) {
+                    transitionOffset = (start_offsets[curr_idx] - start_offsets[last_idx]) * factor;
+                }
+                current_offset =
                     vec3(nextTranslation.x, 0, nextTranslation.z) +
-                    transitionOffset - lastTransitionOffset;
-                lastTransitionOffset = transitionOffset;
+                    transitionOffset - last_transition_offset;
+
+                if(current_flags & AnimFlag::Mirrored)
+                    current_offset *= -1;
+
+                if((current_flags & AnimFlag::Mirrored) && (current_flags & AnimFlag::Backwards))
+                    current_offset += end_offsets[curr_idx];
+
+                last_transition_offset = transitionOffset;
                 translationM = translate(mat4(), vec3(0, translation.y, 0)); // FIXME!!
             } else {
                 translationM = translate(mat4(), vec3(translation.x, translation.y, translation.z));
@@ -584,10 +550,10 @@ private:
 
         mat4 globalTransformation = parentTransform * nodeTransform;
 
-        if(boneMapping.find(nodeName) != boneMapping.end()) {
-            unsigned boneIndex = boneMapping[nodeName];
-            boneInfo[boneIndex].finalTransformation =
-                globalInverseTransform * globalTransformation * boneInfo[boneIndex].boneOffset;
+        if(bone_mapping.find(nodeName) != bone_mapping.end()) {
+            unsigned boneIndex = bone_mapping[nodeName];
+            bone_info[boneIndex].final_transform =
+                global_inverse_transform * globalTransformation * bone_info[boneIndex].bone_offset;
         }
 
         for(unsigned i = 0; i < pNode->mNumChildren; i++) {
@@ -597,47 +563,278 @@ private:
         }
     }
 
-public:
-
-    void updateBoneInfo(float timeInSeconds) {
-        if(!currentAnim || currentAnim->mAnimations == 0 ||
-           !lastAnim || lastAnim->mAnimations == 0) {
+    void updateBoneInfo(float time_in_seconds) {
+        if(!current_anim || current_anim->mAnimations == 0 ||
+           !last_anim || last_anim->mAnimations == 0) {
             throw std::runtime_error("Tried to run an invalid animation.");
         }
 
-        float prevTicksPerSecond = lastAnim->mAnimations[0]->mTicksPerSecond > 1e-10 ? // != 0
-                                   lastAnim->mAnimations[0]->mTicksPerSecond : 24.0f;
-        float nextTicksPerSecond = currentAnim->mAnimations[0]->mTicksPerSecond > 1e-10 ? // != 0
-                                   currentAnim->mAnimations[0]->mTicksPerSecond : 24.0f;
 
-        float prevTimeInTicks = lastPeriodTime * prevTicksPerSecond;
-        float currentTimeInTicks = (timeInSeconds - endOfLastAnim) * nextTicksPerSecond;
-        float prevAnimationTime = fmod(prevTimeInTicks, (float)lastAnim->mAnimations[0]->mDuration);
-        float currentAnimationTime = fabs(fmod(currentTimeInTicks, (float)currentAnim->mAnimations[0]->mDuration));
+        float last_ticks_per_second = last_anim->mAnimations[0]->mTicksPerSecond > 1e-10 ? // != 0
+                                      last_anim->mAnimations[0]->mTicksPerSecond : 24.0f;
 
-        unsigned loopCount = currentTimeInTicks / (float)currentAnim->mAnimations[0]->mDuration;
-        if(loopCount > lastLoopCount) {
-            lastOffset -= endOffsets[currIdx] - startOffsets[currIdx];
+        float last_time_in_ticks = last_period_time * last_ticks_per_second;
+        float last_animation_time;
+        if(last_flags & AnimFlag::Repeat) {
+            last_animation_time = fmod(last_time_in_ticks, (float)last_anim->mAnimations[0]->mDuration);
+        } else {
+            last_animation_time = std::min(last_time_in_ticks, (float)last_anim->mAnimations[0]->mDuration);
         }
-        lastLoopCount = loopCount;
 
-        if(endOfLastAnim + transitionTime < timeInSeconds) {
+        if(last_flags & AnimFlag::Backwards) {
+            last_animation_time = (float)last_anim->mAnimations[0]->mDuration - last_animation_time;
+        }
+
+
+        float current_ticks_per_second = current_anim->mAnimations[0]->mTicksPerSecond > 1e-10 ? // != 0
+                                         current_anim->mAnimations[0]->mTicksPerSecond : 24.0f;
+
+        float current_time_in_ticks = (time_in_seconds - end_of_last_anim) * current_ticks_per_second;
+        float current_animation_time;
+        if(current_flags & AnimFlag::Repeat) {
+            current_animation_time = fmod(current_time_in_ticks, (float)current_anim->mAnimations[0]->mDuration);
+        } else {
+            if(current_time_in_ticks < (float)current_anim->mAnimations[0]->mDuration)
+                current_animation_time = current_time_in_ticks;
+            else {
+                force_anim_to_default(time_in_seconds);
+                updateBoneInfo(time_in_seconds);
+                return;
+            }
+        }
+
+        if(current_flags & AnimFlag::Backwards) {
+            current_animation_time = (float)current_anim->mAnimations[0]->mDuration - current_animation_time;
+        }
+
+        unsigned loop_count = current_time_in_ticks / (float)current_anim->mAnimations[0]->mDuration;
+        if(loop_count > last_loop_count) {
+            if((current_flags & AnimFlag::MirroredRepeat) == AnimFlag::MirroredRepeat) {
+                // The Mirrored and Backwards flags can not be negated here,
+                // as it would make half of the animation data counted as
+                // they are true, and the other half of the data, as these
+                // flags are false. They are updated at the end of this function.
+                update_flags = true;
+            }
+            if( ((current_flags & AnimFlag::Backwards) == AnimFlag::Backwards) !=
+                ((current_flags & AnimFlag::Mirrored) == AnimFlag::Mirrored) ) {
+                last_offset += end_offsets[curr_idx] - start_offsets[curr_idx];
+            } else {
+                last_offset -= end_offsets[curr_idx] - start_offsets[curr_idx];
+            }
+        }
+        last_loop_count = loop_count;
+
+        if(end_of_last_anim + transition_time < time_in_seconds) {
             // Normal animation
-            readNodeHeirarchy(currentAnimationTime, scene->mRootNode);
+            readNodeHeirarchy(current_animation_time, scene->mRootNode);
         } else {
             // Transition between two animations.
-            transitionReadNodeHeirarchy(prevAnimationTime, currentAnimationTime, scene->mRootNode);
+            transitionReadNodeHeirarchy(last_animation_time, current_animation_time, scene->mRootNode);
+        }
+
+        if(update_flags) {
+            current_flags ^= AnimFlag::Mirrored;
+            current_flags ^= AnimFlag::Backwards;
+            update_flags = false;
         }
     }
 
-    void boneTransform(float timeInSeconds,
+public:
+    // -------======{[ Bone transformation updater ]}======-------
+
+    void boneTransform(float time_in_seconds,
                        LazyUniform<glm::mat4>& bones) {
-        updateBoneInfo(timeInSeconds);
+        updateBoneInfo(time_in_seconds);
 
-        for(unsigned i = 0; i < numBones; i++) {
-            bones[i] = boneInfo[i].finalTransformation;
+        for(unsigned i = 0; i < num_bones; i++) {
+            bones[i] = bone_info[i].final_transform;
         }
     }
+
+    // -------======{[ Animation changers ]}======-------
+
+    void add_animation(const std::string& filename,
+                       const std::string& animName,
+                       unsigned flags = AnimFlag::None) {
+
+        if(anim_names.find(animName) != anim_names.end()){
+            std::string err = "Animation name '" + animName + "' isn't unique for '" + filename + "'";
+            throw std::runtime_error(err);
+        }
+        size_t idx = animations.size();
+        anim_names[animName] = idx;
+        animation_importers.push_back(new Assimp::Importer());
+        animations.push_back(animation_importers[idx]->ReadFile(filename, aiProcess_Debone));
+
+        if(!animations[idx]) {
+            throw std::runtime_error("Error parsing " + filename
+                + " : " + animation_importers[idx]->GetErrorString());
+        }
+
+        auto node = getRootBone(scene->mRootNode, animations[idx]);
+        if(!node) {
+            throw std::runtime_error(
+                "Animation error: The mesh's skeleton, and the animated skeleton '" +
+                animName + "' doesn't have a single bone in common.");
+        }
+
+        aiVector3D v = node->mPositionKeys[0].mValue;
+        start_offsets.push_back(glm::vec3(v.x, v.y, v.z));
+        v = node->mPositionKeys[node->mNumPositionKeys - 1].mValue;
+        end_offsets.push_back(glm::vec3(v.x, v.y, v.z));
+
+        default_flags.push_back(flags);
+    }
+
+    void set_default_animation(const std::string& animName,
+                               float default_transition_time = 0.0f) {
+
+        if(anim_names.find(animName) == anim_names.end()) {
+            throw std::invalid_argument(
+                "Tried to set current animation to '" + animName + "', "
+                "but the AnimatedMesh doesn't have an animation with name"
+            );
+        }
+
+        set_default_animation(anim_names[animName], default_transition_time);
+    }
+
+    void set_default_animation(size_t animIndex,
+                               float default_transition_time = 0.0f) {
+
+        if(!(default_flags[animIndex] & AnimFlag::Repeat)) {
+            throw std::invalid_argument(
+                "Tried to set a default animation that didn't have the repeat "
+                "flag, but the default animation must be a cycle."
+            );
+        }
+
+        default_idx = animIndex;
+        this->default_transition_time = default_transition_time;
+    }
+
+private:
+    void change_animation(size_t animIndex,
+                          float currentTime,
+                          float transition_time,
+                          unsigned flags) {
+
+        last_idx = curr_idx;
+        curr_idx = animIndex;
+        last_anim = current_anim;
+        current_anim = animations[animIndex];
+        this->transition_time = transition_time;
+        last_period_time = currentTime - end_of_last_anim;
+        last_transition_offset = glm::vec3();
+        end_of_last_anim = currentTime;
+
+
+        if(last_anim) {
+            if(flags & AnimFlag::Backwards) {
+                last_offset = end_offsets[curr_idx];
+            } else {
+                last_offset = start_offsets[curr_idx];
+            }
+        } else {
+            last_anim = current_anim;
+        }
+
+        if(flags & AnimFlag::Backwards) {
+            current_offset = end_offsets[curr_idx];
+        } else {
+            current_offset = start_offsets[curr_idx];
+        }
+
+        last_flags = current_flags;
+        current_flags = flags;
+    }
+
+public:
+    void set_current_animation(const std::string& animName,
+                              float currentTime,
+                              float transition_time,
+                              unsigned flags) {
+
+        if((end_of_last_anim + this->transition_time) <= currentTime
+           && (current_flags & AnimFlag::Interruptable)
+        ) {
+            force_current_animation(animName, currentTime, transition_time, flags);
+        }
+    }
+
+    void force_current_animation(const std::string& animName,
+                                 float currentTime,
+                                 float transition_time,
+                                 unsigned flags) {
+
+        if(anim_names.find(animName) == anim_names.end()) {
+            throw std::invalid_argument(
+                "Tried to set current animation to '" + animName + "', "
+                "but the AnimatedMesh doesn't have an animation with name"
+            );
+        }
+
+        size_t animIndex = anim_names[animName];
+
+        if(current_anim == animations[animIndex]) {
+            return;
+        }
+
+        change_animation(animIndex, currentTime, transition_time, flags);
+    }
+
+    void set_current_animation(const std::string& animName,
+                               float currentTime,
+                               float transition_time = 0.0f) {
+
+        if((end_of_last_anim + this->transition_time) <= currentTime
+           && (current_flags & AnimFlag::Interruptable)
+        ) {
+            force_current_animation(animName, currentTime, transition_time);
+        }
+    }
+
+    void force_current_animation(const std::string& animName,
+                                 float currentTime,
+                                 float transition_time = 0.0f) {
+
+        if(anim_names.find(animName) == anim_names.end()) {
+            throw std::invalid_argument(
+                "Tried to set current animation to '" + animName + "', "
+                "but the AnimatedMesh doesn't have an animation with name"
+            );
+        }
+
+        size_t animIndex = anim_names[animName];
+
+        if(current_anim == animations[animIndex]) {
+            return;
+        }
+
+        change_animation(animIndex, currentTime, transition_time, default_flags[animIndex]);
+    }
+
+    void set_anim_to_default(float currentTime) {
+        if(current_flags & AnimFlag::Interruptable)
+            force_anim_to_default(currentTime);
+    }
+
+    void force_anim_to_default(float currentTime) {
+        assert(default_flags[default_idx] & AnimFlag::Repeat);
+        if(current_anim == animations[default_idx])
+            return;
+
+        change_animation(default_idx, currentTime, default_transition_time, default_flags[default_idx]);
+    }
+
+    glm::vec3 offset_since_last_frame() {
+        auto ret = current_offset - last_offset;
+        last_offset = current_offset;
+        ret.y = 0; // FIXME
+        return ret;
+    }
+
 }; // AnimatedMesh
 
 } // namespace oglwrap
