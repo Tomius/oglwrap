@@ -45,45 +45,46 @@ inline std::string cut_end_of_pretty_func(const std::string& func) {
 inline void __CheckError(const char *file, const char *func, int line, const char* glfunc = nullptr) {
     OGLWRAP_LAST_ERROR = glGetError();
     if (OGLWRAP_LAST_ERROR != GL_NO_ERROR) {
+        std::stringstream sstream;
 
-        std::cerr << std::endl << "---------========={[ ";
+        sstream << "\n---------========={[ ";
 
         switch (OGLWRAP_LAST_ERROR)
         {
             case GL_INVALID_ENUM:
-                std::cerr << "GL_INVALID_ENUM";
+                sstream << "GL_INVALID_ENUM";
                 break;
             case GL_INVALID_VALUE:
-                std::cerr << "GL_INVALID_VALUE";
+                sstream << "GL_INVALID_VALUE";
                 break;
             case GL_INVALID_OPERATION:
-                std::cerr << "GL_INVALID_OPERATION";
+                sstream << "GL_INVALID_OPERATION";
                 break;
             case GL_STACK_OVERFLOW:
-                std::cerr << "GL_STACK_OVERFLOW";
+                sstream << "GL_STACK_OVERFLOW";
                 break;
             case GL_STACK_UNDERFLOW:
-                std::cerr << "GL_STACK_UNDERFLOW";
+                sstream << "GL_STACK_UNDERFLOW";
                 break;
             case GL_OUT_OF_MEMORY:
-                std::cerr << "GL_OUT_OF_MEMORY";
+                sstream << "GL_OUT_OF_MEMORY";
                 break;
             case GL_INVALID_FRAMEBUFFER_OPERATION:
-                std::cerr << "GL_INVALID_FRAMEBUFFER_OPERATION";
+                sstream << "GL_INVALID_FRAMEBUFFER_OPERATION";
                 break;
         };
 
-        std::cerr << " ]}=========---------" << std::endl << std::endl;
+        sstream << " ]}=========---------\n" << std::endl;
 
         if(glfunc)
-            std::cerr << "Caused by " << glfunc << std::endl;
-        std::cerr << "In function: " << cut_end_of_pretty_func(func) << std::endl;
-        std::cerr << "In '" << file << "' at line " << line << std::endl << std::endl;
+            sstream << "Caused by " << glfunc << std::endl;
+        sstream << "In function: " << cut_end_of_pretty_func(func) << std::endl;
+        sstream << "In '" << file << "' at line " << line << std::endl << std::endl;
 
         static DebugOutput dbg_output;
-        dbg_output.print_error(glfunc);
+        dbg_output.print_error(glfunc, sstream);
 
-        ErrorCallback();
+        error_callback(sstream.str());
     }
 }
 #else

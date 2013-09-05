@@ -250,7 +250,7 @@ public:
         }
     }
 
-    void print_error(const std::string& functionCall) {
+    void print_error(const std::string& functionCall, std::stringstream& sstream) {
         using namespace std;
 
         size_t errIdx = getErrorIndex();
@@ -262,18 +262,18 @@ public:
 
         if(errorMap.find(funcName) != errorMap.end() && !errorMap[funcName].errors[errIdx].empty()) {
             ErrorInfo errinfo = errorMap[funcName];
-            cerr << "The following OpenGL function: " << endl << endl;
-            cerr << errinfo.funcSignature << endl;
-            cerr << "Has generated the error because one of the following(s) were true:" << endl;
-            cerr << errinfo.errors[errIdx];
+            sstream << "The following OpenGL function: " << endl << endl;
+            sstream << errinfo.funcSignature << endl;
+            sstream << "Has generated the error because one of the following(s) were true:" << endl;
+            sstream << errinfo.errors[errIdx];
         }
 
-        cerr << endl;
+        sstream << endl;
         size_t lineSize = strlen("---------========={[  ]}=========---------") +
                           strlen(glErrorNames[errIdx]);
         for(size_t i = 0; i < lineSize; i++)
-            std::cerr << '-';
-        std::cerr << std::endl;
+            sstream << '-';
+        sstream << endl;
     }
 };
 

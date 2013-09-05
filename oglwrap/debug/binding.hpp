@@ -46,31 +46,33 @@ static std::string OGLWRAP_LAST_BIND_TARGET;
 
     /// A function used by CHECK_FOR_DEFAULT_BINDING() macro
     inline void __print_another_object_is_bound_error(const char *file, const char *func, int line) {
-        std::cerr << "\n---------========={[ BIND CHECK FAILURE ]}=========---------\n" << std::endl;
-        std::cerr << "In function: " << cut_end_of_pretty_func(func) << std::endl;
-        std::cerr << "In '" << file << "' at line " << line << "\n\n";
-        std::cerr << "The function is called through an object that is different ";
-        std::cerr << "than the one, currently bound to " << OGLWRAP_LAST_BIND_TARGET << ".\n";
-        std::cerr << "Did you forget to call .bind() on the object? \n\n";
+        std::stringstream sstream;
+        sstream << "\n---------========={[ BIND CHECK FAILURE ]}=========---------\n" << std::endl;
+        sstream << "In function: " << cut_end_of_pretty_func(func) << std::endl;
+        sstream << "In '" << file << "' at line " << line << "\n\n";
+        sstream << "The function is called through an object that is different ";
+        sstream << "than the one, currently bound to " << OGLWRAP_LAST_BIND_TARGET << ".\n";
+        sstream << "Did you forget to call .bind() on the object? \n\n";
         for(size_t i = 0; i < strlen("---------========={[ BIND CHECK FAILURE ]}=========---------"); i++)
-            std::cerr << '-';
-        std::cerr << std::endl;
+            sstream << '-';
+        sstream << std::endl;
 
-        ErrorCallback();
+        error_callback(sstream.str());
     }
 
     /// A function used by CHECK_FOR_DEFAULT_BINDING_EXPLICIT() macro
     inline void __print_default_object_is_bound_error(const char *file, const char *func, int line) {
-        std::cerr << "\n---------========={[ BIND CHECK FAILURE ]}=========---------\n" << std::endl;
-        std::cerr << "In function: " << cut_end_of_pretty_func(func) << std::endl;
-        std::cerr << "In '" << file << "' at line " << line << "\n\n";
-        std::cerr << "The function requires an object to be bound to " << OGLWRAP_LAST_BIND_TARGET;
-        std::cerr << " but only the default object '0' is bound to that target.\n\n";
+        std::stringstream sstream;
+        sstream << "\n---------========={[ BIND CHECK FAILURE ]}=========---------\n" << std::endl;
+        sstream << "In function: " << cut_end_of_pretty_func(func) << std::endl;
+        sstream << "In '" << file << "' at line " << line << "\n\n";
+        sstream << "The function requires an object to be bound to " << OGLWRAP_LAST_BIND_TARGET;
+        sstream << " but only the default object '0' is bound to that target.\n\n";
         for(size_t i = 0; i < strlen("---------========={[ BIND CHECK FAILURE ]}=========---------"); i++)
-            std::cerr << '-';
-        std::cerr << std::endl;
+            sstream << '-';
+        sstream << std::endl;
 
-        ErrorCallback();
+        error_callback(sstream.str());
     }
 
     /// Checks if the program is the currently active one, and if not, it returns prints out an error, and calls use on that program.
@@ -83,17 +85,18 @@ static std::string OGLWRAP_LAST_BIND_TARGET;
 
     /// A function used by the CHECK_ACTIVE_PROGRAM() macro
     inline void __print_another_program_is_active_error(const char *file, const char *func, int line) {
-        std::cerr << "\n---------========={[ ACTIVE PROGRAM CHECK FAILURE ]}=========---------\n" << std::endl;
-        std::cerr << "In function: " << cut_end_of_pretty_func(func) << std::endl;
-        std::cerr << "In '" << file << "' at line " << line << "\n\n";
-        std::cerr << "The currently active program is different than "
+        std::stringstream sstream;
+        sstream << "\n---------========={[ ACTIVE PROGRAM CHECK FAILURE ]}=========---------\n" << std::endl;
+        sstream << "In function: " << cut_end_of_pretty_func(func) << std::endl;
+        sstream << "In '" << file << "' at line " << line << "\n\n";
+        sstream << "The currently active program is different than "
                   << "the one, this function is supposed to operate on.\n";
-        std::cerr << "Did you forget to call .use() on the program? \n\n";
+        sstream << "Did you forget to call .use() on the program? \n\n";
         for(size_t i = 0; i < strlen("---------========={[ ACTIVE PROGRAM CHECK FAILURE ]}=========---------"); i++)
-            std::cerr << '-';
-        std::cerr << std::endl;
+            sstream << '-';
+        sstream << std::endl;
 
-        ErrorCallback();
+        error_callback(sstream.str());
     }
 #else
     /// @brief Calls the isBound() member function, and prints an error, and binds it, if it returns false.
