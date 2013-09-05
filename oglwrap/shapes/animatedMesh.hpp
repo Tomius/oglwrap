@@ -525,15 +525,16 @@ private:
 
             if(nodeName == root_bone) {
                 vec3 transitionOffset;
-                if( !(current_flags & AnimFlag::Backwards) ) {
+                if(!(current_flags & AnimFlag::Backwards)) {
                     transitionOffset = (start_offsets[curr_idx] - start_offsets[last_idx]) * factor;
                 }
                 current_offset =
                     vec3(nextTranslation.x, 0, nextTranslation.z) +
                     transitionOffset - last_transition_offset;
 
-                if(current_flags & AnimFlag::Mirrored)
+                if(current_flags & AnimFlag::Mirrored) {
                     current_offset *= -1;
+                }
 
                 if((current_flags & AnimFlag::Mirrored) && (current_flags & AnimFlag::Backwards))
                     current_offset += end_offsets[curr_idx];
@@ -734,7 +735,10 @@ private:
             if(flags & AnimFlag::Backwards) {
                 last_offset = end_offsets[curr_idx];
             } else {
-                last_offset = start_offsets[curr_idx];
+                if(flags & AnimFlag::Mirrored)
+                    last_offset = -start_offsets[curr_idx];
+                else
+                    last_offset = start_offsets[curr_idx];
             }
         } else {
             last_anim = current_anim;
@@ -743,7 +747,10 @@ private:
         if(flags & AnimFlag::Backwards) {
             current_offset = end_offsets[curr_idx];
         } else {
-            current_offset = start_offsets[curr_idx];
+            if(flags & AnimFlag::Mirrored)
+                current_offset = -start_offsets[curr_idx];
+            else
+                current_offset = start_offsets[curr_idx];
         }
 
         last_flags = current_flags;
