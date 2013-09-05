@@ -55,6 +55,8 @@ static std::string OGLWRAP_LAST_BIND_TARGET;
         for(size_t i = 0; i < strlen("---------========={[ BIND CHECK FAILURE ]}=========---------"); i++)
             std::cerr << '-';
         std::cerr << std::endl;
+
+        ErrorCallback();
     }
 
     /// A function used by CHECK_FOR_DEFAULT_BINDING_EXPLICIT() macro
@@ -67,6 +69,8 @@ static std::string OGLWRAP_LAST_BIND_TARGET;
         for(size_t i = 0; i < strlen("---------========={[ BIND CHECK FAILURE ]}=========---------"); i++)
             std::cerr << '-';
         std::cerr << std::endl;
+
+        ErrorCallback();
     }
 
     /// Checks if the program is the currently active one, and if not, it returns prints out an error, and calls use on that program.
@@ -88,6 +92,8 @@ static std::string OGLWRAP_LAST_BIND_TARGET;
         for(size_t i = 0; i < strlen("---------========={[ ACTIVE PROGRAM CHECK FAILURE ]}=========---------"); i++)
             std::cerr << '-';
         std::cerr << std::endl;
+
+        ErrorCallback();
     }
 #else
     /// @brief Calls the isBound() member function, and prints an error, and binds it, if it returns false.

@@ -13,12 +13,12 @@ namespace oglwrap {
 #if OGLWRAP_USE_ARB_DEBUG_OUTPUT
     #define glfunc(func) func;
 #else
-    static DebugOutput dbgout;
+    static DebugOutput OGLWRAP_DEBUG_OUTPUT;
 
     #define glfunc(func) \
         func;\
         OGLWRAP_CHECK_ERROR_NAMED(#func); \
-        dbgout.PrintError(#func);
+        OGLWRAP_DEBUG_OUTPUT.PrintError(#func);
 #endif // OGLWRAP_USE_ARB_DEBUG_OUTPUT
 
 /// Prints additional info in case of a specific OpenGL error.
@@ -82,6 +82,8 @@ inline void __CheckError(const char *file, const char *func, int line, const cha
             std::cerr << "Caused by " << glfunc << std::endl;
         std::cerr << "In function: " << cut_end_of_pretty_func(func) << std::endl;
         std::cerr << "In '" << file << "' at line " << line << std::endl << std::endl;
+
+        ErrorCallback();
     }
 }
 #else

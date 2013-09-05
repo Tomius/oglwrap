@@ -8,6 +8,10 @@
 /* TODO:
     - shapes -> block multiply setup calls
     - document shapes
+    - context class
+    - program uniforms
+    - uniform blocks
+    - 4.0+ features.
 */
 
 // standard headers
@@ -24,6 +28,7 @@
 
 // basic headers, required by all others below
 #include "config.hpp"
+#include "debug/callback.hpp"
 #include "debug/error.hpp"
 #include "enums.hpp"
 #include "debug/binding.hpp"
