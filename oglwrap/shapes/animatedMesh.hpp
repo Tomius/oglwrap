@@ -129,7 +129,6 @@ class AnimatedMesh : public Mesh {
 
     std::vector<unsigned> default_flags;
     unsigned last_flags, current_flags;
-    bool update_flags;
 
 public:
     AnimatedMesh(const std::string& filename, unsigned int flags)
@@ -147,8 +146,7 @@ public:
         , last_idx(0)
         , last_loop_count(0)
         , last_flags(0)
-        , current_flags(0)
-        , update_flags(0) {
+        , current_flags(0) {
 
         glm::mat4 matrix = convertMatrix(scene->mRootNode->mTransformation);
         global_inverse_transform = glm::inverse(matrix);
@@ -449,9 +447,6 @@ private:
                     current_offset = vec3(translation.x, 0, translation.z);
                 }
 
-                if((current_flags & AnimFlag::Mirrored) && (current_flags & AnimFlag::Backwards))
-                    current_offset += end_offsets[curr_idx] + start_offsets[curr_idx];
-
                 translationM = translate(mat4(), vec3(0, translation.y, 0)); // FIXME!!
             } else {
                 translationM = translate(mat4(), vec3(translation.x, translation.y, translation.z));
@@ -524,6 +519,13 @@ private:
             mat4 translationM;
 
             if(nodeName == root_bone) {
+                // Transition Offset is a utility that helps you in creating better transitions between
+                // animations. For example, if you want one of the character's leg to stay in it's place,
+                // throughout the transition, it might only be possible if the character's center of mass
+                // doesn't start from the origin on the XZ axis in the new animation. This utility is about
+                // to interpolate the position of the center of mass from the origin to the place, where
+                // it starts in the new animation. It isn't necessary, just makes the transition more
+                // realistic. But it definitely has no use, when the animation is played backwards.
                 vec3 transitionOffset;
                 if(!(current_flags & AnimFlag::Backwards)) {
                     transitionOffset = (start_offsets[curr_idx] - start_offsets[last_idx]) * factor;
@@ -535,9 +537,6 @@ private:
                 if(current_flags & AnimFlag::Mirrored) {
                     current_offset *= -1;
                 }
-
-                if((current_flags & AnimFlag::Mirrored) && (current_flags & AnimFlag::Backwards))
-                    current_offset += end_offsets[curr_idx];
 
                 last_transition_offset = transitionOffset;
                 translationM = translate(mat4(), vec3(0, translation.y, 0)); // FIXME!!
@@ -608,24 +607,6 @@ private:
             current_animation_time = (float)current_anim->mAnimations[0]->mDuration - current_animation_time;
         }
 
-        unsigned loop_count = current_time_in_ticks / (float)current_anim->mAnimations[0]->mDuration;
-        if(loop_count > last_loop_count) {
-            if((current_flags & AnimFlag::MirroredRepeat) == AnimFlag::MirroredRepeat) {
-                // The Mirrored and Backwards flags can not be negated here,
-                // as it would make half of the animation data counted as
-                // they are true, and the other half of the data, as these
-                // flags are false. They are updated at the end of this function.
-                update_flags = true;
-            }
-            if( ((current_flags & AnimFlag::Backwards) == AnimFlag::Backwards) !=
-                ((current_flags & AnimFlag::Mirrored) == AnimFlag::Mirrored) ) {
-                last_offset += end_offsets[curr_idx] - start_offsets[curr_idx];
-            } else {
-                last_offset -= end_offsets[curr_idx] - start_offsets[curr_idx];
-            }
-        }
-        last_loop_count = loop_count;
-
         if(end_of_last_anim + transition_time < time_in_seconds) {
             // Normal animation
             readNodeHeirarchy(current_animation_time, scene->mRootNode);
@@ -634,10 +615,30 @@ private:
             transitionReadNodeHeirarchy(last_animation_time, current_animation_time, scene->mRootNode);
         }
 
-        if(update_flags) {
-            current_flags ^= AnimFlag::Mirrored;
-            current_flags ^= AnimFlag::Backwards;
-            update_flags = false;
+        // Start a new loop if necessary
+        if(current_flags & AnimFlag::Repeat) {
+
+            unsigned loop_count = current_time_in_ticks / (float)current_anim->mAnimations[0]->mDuration;
+
+            if(loop_count > last_loop_count) {
+                if((current_flags & AnimFlag::MirroredRepeat) == AnimFlag::MirroredRepeat) {
+                    current_flags ^= AnimFlag::Mirrored;
+                    current_flags ^= AnimFlag::Backwards;
+                }
+
+                if(current_flags & AnimFlag::Backwards) {
+                    last_offset = current_offset = end_offsets[curr_idx];
+                } else {
+                    last_offset = current_offset = start_offsets[curr_idx];
+                }
+
+                if(current_flags & AnimFlag::Mirrored) {
+                    last_offset *= -1;
+                    current_offset *= -1;
+                }
+            }
+
+            last_loop_count = loop_count;
         }
     }
 
@@ -730,27 +731,20 @@ private:
         last_transition_offset = glm::vec3();
         end_of_last_anim = currentTime;
 
-
-        if(last_anim) {
-            if(flags & AnimFlag::Backwards) {
-                last_offset = end_offsets[curr_idx];
-            } else {
-                if(flags & AnimFlag::Mirrored)
-                    last_offset = -start_offsets[curr_idx];
-                else
-                    last_offset = start_offsets[curr_idx];
-            }
+        if(flags & AnimFlag::Backwards) {
+            last_offset = current_offset = end_offsets[curr_idx];
         } else {
-            last_anim = current_anim;
+            last_offset = current_offset = start_offsets[curr_idx];
         }
 
-        if(flags & AnimFlag::Backwards) {
-            current_offset = end_offsets[curr_idx];
-        } else {
-            if(flags & AnimFlag::Mirrored)
-                current_offset = -start_offsets[curr_idx];
-            else
-                current_offset = start_offsets[curr_idx];
+        if(flags & AnimFlag::Mirrored) {
+            last_offset *= -1;
+            current_offset *= -1;
+        }
+
+        if(!last_anim) {
+            last_offset = glm::vec3();
+            last_anim = current_anim;
         }
 
         last_flags = current_flags;
