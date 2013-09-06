@@ -10,10 +10,9 @@
     - document shapes
     - context class
     - program uniforms
-    - static VertexAttribArrays
-    - VertexAttribArray Formats
-    - uniform blocks
-    - 4.0+ features.
+    - uniform blocks / shader storage
+    - separable shader stages.
+    - some 4.0+ features are still missing.
 */
 
 // standard headers
