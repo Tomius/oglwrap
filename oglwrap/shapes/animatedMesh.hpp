@@ -107,6 +107,7 @@ class AnimatedMesh : public Mesh {
     std::map<std::string, unsigned> bone_mapping; // maps a bone name to its index
 
     size_t num_bones;
+    bool is_setup_bones;
     glm::mat4 global_inverse_transform;
 
     // vector::push_back(Assimp::Importer()) wouldn't work, because it has
@@ -135,6 +136,7 @@ public:
         : Mesh(filename, flags)
         , bone_buffers(scene->mNumMeshes)
         , num_bones(0)
+        , is_setup_bones(false)
         , last_anim(nullptr)
         , current_anim(nullptr)
         , default_transition_time(0)
@@ -274,7 +276,7 @@ public:
         return numBoneAttribs;
     }
 
-    /// Loads in bone weight and id information to the given array of attribute arrays.
+    /// @brief Loads in bone weight and id information to the given array of attribute arrays.
     /** Uploads the bone weight and id to an array of attribute arrays, and sets it up for use.
       * For example if you specified "in vec4 boneIds[3]" you have to give "prog | boneIds"
       * Calling this function changes the currently active VAO and ArrayBuffer.
@@ -282,6 +284,12 @@ public:
     /// @param boneIDs - The array of attributes array to use as destination for bone IDs.
     /// @param boneWeights - The array of attributes array to use as destination for bone weights.
     void setup_bones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights) {
+
+        if(is_setup_bones) {
+            std::logic_error("AnimatedMesh::setup_bones is called multiply times on the same object");
+        } else {
+            is_setup_bones = true;
+
         mapBones();
 
         if(num_bones < UCHAR_MAX)

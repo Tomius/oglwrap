@@ -30,13 +30,15 @@ protected:
     const aiScene* scene;
 
     std::string filename;
-    bool rdy2draw, useMaterials;
     std::vector<MeshEntry> entries;
     std::vector<Texture2D> textures;
+
+    bool is_setup_positions, is_setup_normals, is_setup_texcoords, useMaterials;
 
     // It shouldn't be copyable
     Mesh(const Mesh& src);
     void operator=(const Mesh& rhs);
+
 public:
     Mesh(const std::string& filename, unsigned int flags)
         : scene(importer.ReadFile(
@@ -44,9 +46,11 @@ public:
               flags | aiProcess_Triangulate
           ))
         , filename(filename)
-        , rdy2draw(false)
-        , useMaterials(false)
-        , entries(scene->mNumMeshes) {
+        , entries(scene->mNumMeshes)
+        , is_setup_positions(false)
+        , is_setup_normals(false)
+        , is_setup_texcoords(false)
+        , useMaterials(false) {
 
         if(!scene) {
             throw std::runtime_error("Error parsing " + filename + " : " + importer.GetErrorString());
@@ -55,7 +59,7 @@ public:
 
 private:
     template <class IdxType>
-    /// A template for setting different types (byte/short/int) of indices.
+    /// @brief A template for setting different types (byte/short/int) of indices.
     /** This expect the correct vao to be already bound!! */
     /// @param index - The index of the entry
     void setIndices(size_t index) {
@@ -79,12 +83,18 @@ private:
     }
 
 public:
-    /// Loads in vertex positions and indices, and uploads the former into an attribute array.
+    /// @brief Loads in vertex positions and indices, and uploads the former into an attribute array.
     /** Uploads the vertex positions data to an attribute array, and sets it up for use.
       * Calling this function changes the currently active VAO and ArrayBuffer.
       * The mesh cannot be drawn without calling this function. */
     /// @param attrib - The attribute array to use as destination.
     void setup_positions(VertexAttribArray attrib) {
+        if(is_setup_positions) {
+            std::logic_error("Mesh::setup_position is called multiply times on the same object");
+        } else {
+            is_setup_positions = true;
+        }
+
         for(size_t i = 0; i < entries.size(); i++) {
             const aiMesh* paiMesh = scene->mMeshes[i];
 
@@ -119,14 +129,20 @@ public:
         }
 
         VertexArray::unbind();
-        rdy2draw = true;
     }
 
-    /// Loads in vertex normals, and uploads it to an attribute array.
+    /// @brief Loads in vertex normals, and uploads it to an attribute array.
     /** Uploads the vertex normals data to an attribute array, and sets it up for use.
       * Calling this function changes the currently active VAO and ArrayBuffer. */
     /// @param attrib - The attribute array to use as destination.
     void setup_normals(VertexAttribArray attrib) {
+
+        if(is_setup_normals) {
+            std::logic_error("Mesh::setup_normals is called multiply times on the same object");
+        } else {
+            is_setup_normals = true;
+        }
+
         for(size_t i = 0; i < entries.size(); i++) {
             const aiMesh* paiMesh = scene->mMeshes[i];
 
@@ -163,7 +179,7 @@ public:
         return true;
     }
 
-    /// Loads in vertex texture coordinates (the 0th set), and the materials.
+    /// @brief Loads in vertex texture coordinates (the 0th set), and the materials.
     /** Uploads the vertex textures coordinates data to an attribute array,
       * and sets it up for use. Also loads in the materials (textures) for
       * the mesh. May write to the stderr if a material is missing.
@@ -171,6 +187,12 @@ public:
     /// @param attrib - The attribute array to use as destination.
     /// @param texCoordSet - Specifies the index of the texture coordinate set that should be used
     void setup_texCoords(VertexAttribArray attrib, unsigned char texCoordSet = 0) {
+
+        if(is_setup_texcoords) {
+            std::logic_error("Mesh::setup_texCoords is called multiply times on the same object");
+        } else {
+            is_setup_texcoords = true;
+        }
 
         // Initialize TexCoords
         for(size_t i = 0; i < entries.size(); i++) {
@@ -235,7 +257,7 @@ public:
 
     /// Renders the mesh.
     void render() {
-        if(!rdy2draw) {
+        if(!is_setup_positions) {
             return;
         }
         for(unsigned int i = 0 ; i < entries.size(); i++) {
@@ -344,6 +366,8 @@ public:
         return max;
     }
 
+    /// Returns the recommended number of bone attributes you should use for this (skinned) mesh.
+    /** It's a helper function for the AnimatedMesh class */
     unsigned char getRecommendedNumBoneAttribs() const {
         const unsigned char mbpv = maxBonesPerVertex();
         return (mbpv%4 == 0) ? (mbpv/4) : (mbpv/4 + 1);

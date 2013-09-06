@@ -12,14 +12,18 @@ class Cube {
 
     VertexArray vao;
     ArrayBuffer positions, normals, texcoords, tangents;
-    bool rdy2draw;
+    bool is_setup_positions, is_setup_normals, is_setup_texcoords, is_setup_tangents;
 
 public:
 
     /// Constructs a cube centered at the origin with the given width, height, depth.
     /// @param w,h,d - The width, height, depth of the cube, respectively.
     Cube(float w = 1.0f, float h = 1.0f, float d = 1.0f)
-        : w(w), h(h), d(d), rdy2draw(false)
+        : w(w), h(h), d(d)
+        , is_setup_positions(false)
+        , is_setup_normals(false)
+        , is_setup_texcoords(false)
+        , is_setup_tangents(false)
     {}
 
 private:
@@ -34,6 +38,12 @@ public:
       * Calling this function changes the currently active VAO and ArrayBuffer. */
     /// @param attrib - The attribute array to use as destination.
     void setup_positions(VertexAttribArray attrib) {
+
+        if(is_setup_positions) {
+            std::logic_error("Cube::setup_position is called multiply times on the same object");
+        } else {
+            is_setup_positions = true;
+        }
 
         /*       (E)-----(A)
                  /|      /|
@@ -74,8 +84,6 @@ public:
         positions.data(sizeof(pos), pos);
         attrib.setup<glm::vec3>().enable();
         vao.unbind();
-
-        rdy2draw = true;
     }
 
     /// Creates vertex normals, and uploads it to an attribute array.
@@ -83,6 +91,13 @@ public:
       * Calling this function changes the currently active VAO and ArrayBuffer. */
     /// @param attrib - The attribute array to use as destination.
     void setup_normals(VertexAttribArray attrib) {
+
+        if(is_setup_normals) {
+            std::logic_error("Cube::setup_normals is called multiply times on the same object");
+        } else {
+            is_setup_normals = true;
+        }
+
         const float n[6][3] = {
             {+1,  0,  0},
             { 0, +1,  0},
@@ -114,6 +129,13 @@ public:
       * Calling this function changes the currently active VAO and ArrayBuffer. */
     /// @param attrib - The attribute array to use as destination.
     void setup_texCoords(VertexAttribArray attrib) {
+
+        if(is_setup_texcoords) {
+            std::logic_error("Cube::setup_texCoords is called multiply times on the same object");
+        } else {
+            is_setup_texcoords = true;
+        }
+
         const float n[6][2] = {
             {+1, +1},
             {+1,  0},
@@ -146,6 +168,12 @@ public:
       * Calling this function changes the currently active VAO and ArrayBuffer.
       * @param attrib - The attribute array to use as destination. */
     void setup_tangents(VertexAttribArray attrib) {
+        if(is_setup_tangents) {
+            std::logic_error("Cube::setup_tangents is called multiply times on the same object");
+        } else {
+            is_setup_tangents = true;
+        }
+
         const float n[6][3] = {
             { 0,  0, -1},
             {+1,  0,  0},
@@ -175,7 +203,7 @@ public:
     /// Draws the cube.
     /** This call changes the currently active VAO. */
     void draw() {
-        if(rdy2draw) {
+        if(is_setup_positions) {
             vao.bind();
             gl( DrawArrays(GL_TRIANGLES, 0, 108 * sizeof(float)) );
             vao.unbind();
