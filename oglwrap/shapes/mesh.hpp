@@ -16,6 +16,7 @@ namespace oglwrap {
 class Mesh : protected RefCounted {
 protected:
 
+    /// A class to store per mesh data (the class loads in a scene, that might contain multiply meshes).
     struct MeshEntry {
         VertexArray vao;
         ArrayBuffer verts, normals, texCoords;
@@ -26,20 +27,36 @@ protected:
         MeshEntry() : materialIndex(0xFFFFFFFF) {} // Invalid material
     };
 
+    /// The assimp importer. The scene actually belongs to this.
     Assimp::Importer importer;
+
+    /// A pointer to the scene stored by the importer. But this is the working interface for it.
     const aiScene* scene;
 
+    /// The name of the file loaded in. It is stored to be able to print it out if an error happens.
     std::string filename;
+
+    /// The vao-s and buffers per mesh.
     std::vector<MeshEntry> entries;
+
+    /// The materials
     std::vector<Texture2D> textures;
 
-    bool is_setup_positions, is_setup_normals, is_setup_texcoords, useMaterials;
+    /// Stores if the setup_positions function is called (they shouldn't be called more than once).
+    bool is_setup_positions;
+    /// Stores if the setup_normals function is called (they shouldn't be called more than once).
+    bool is_setup_normals;
+    /// Stores if the setup_texcoords function is called (they shouldn't be called more than once).
+    bool is_setup_texcoords;
 
     // It shouldn't be copyable
     Mesh(const Mesh& src);
     void operator=(const Mesh& rhs);
 
 public:
+    /// @brief Loads in the mesh from a file, and does some post-processing on it.
+    /// @param filename - The name of the file to load in.
+    /// @param flags - The assimp post-process flags.
     Mesh(const std::string& filename, unsigned int flags)
         : scene(importer.ReadFile(
               filename.c_str(),
@@ -49,8 +66,7 @@ public:
         , entries(scene->mNumMeshes)
         , is_setup_positions(false)
         , is_setup_normals(false)
-        , is_setup_texcoords(false)
-        , useMaterials(false) {
+        , is_setup_texcoords(false) {
 
         if(!scene) {
             throw std::runtime_error("Error parsing " + filename + " : " + importer.GetErrorString());
@@ -224,7 +240,6 @@ public:
         // Then initialize the materials (they can't be used without texture coordinates).
         textures.resize(scene->mNumMaterials);
         if(scene->mNumMaterials) {
-            useMaterials = true;
 
             // Extract the directory part from the file name
             std::string::size_type SlashIndex = filename.find_last_of("/");
@@ -263,7 +278,7 @@ public:
         for(unsigned int i = 0 ; i < entries.size(); i++) {
             entries[i].vao.bind();
 
-            if(useMaterials) {
+            if(is_setup_texcoords) {
                 const unsigned int materialIndex = entries[i].materialIndex;
                 if(materialIndex < textures.size()) {
                     textures[materialIndex].bind();
@@ -338,39 +353,6 @@ public:
         glm::vec3 center, edges;
         boundingCuboid(center, edges);
         return std::max(edges.x, std::max(edges.y, edges.z)) / 2;
-    }
-
-    /// @brief This is for animated meshes, to figure out the template argument for the skinned mesh class.
-    /** Without this, you would have to create a AnimatedMesh in order to know how to create the AnimatedMesh*/
-    unsigned char maxBonesPerVertex() const {
-        std::vector<unsigned char> bonesPerVertex[scene->mNumMeshes];
-        for(size_t entry = 0; entry < entries.size(); entry++) {
-            const aiMesh* pMesh = scene->mMeshes[entry];
-            bonesPerVertex[entry].resize(pMesh->mNumVertices);
-            for(unsigned i = 0; i < pMesh->mNumBones; i++) {
-                for(unsigned j = 0; j < pMesh->mBones[i]->mNumWeights; j++) {
-                    unsigned vertexID = pMesh->mBones[i]->mWeights[j].mVertexId;
-                    bonesPerVertex[entry][vertexID]++;
-                }
-            }
-        }
-
-        unsigned char max = 0;
-        for(size_t i = 0; i < scene->mNumMeshes; i++) {
-            for(size_t j = 0; j < scene->mMeshes[i]->mNumVertices; j++) {
-                if(bonesPerVertex[i][j] > max) {
-                    max = bonesPerVertex[i][j];
-                }
-            }
-        }
-        return max;
-    }
-
-    /// Returns the recommended number of bone attributes you should use for this (skinned) mesh.
-    /** It's a helper function for the AnimatedMesh class */
-    unsigned char getRecommendedNumBoneAttribs() const {
-        const unsigned char mbpv = maxBonesPerVertex();
-        return (mbpv%4 == 0) ? (mbpv/4) : (mbpv/4 + 1);
     }
 }; // Mesh class
 

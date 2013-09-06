@@ -263,11 +263,11 @@ typedef _BufferUsage::BufferUsage BufferUsage;
 
 namespace _BufferMapAccess {
 enum BufferMapAccess {
-#ifdef GL_MAP_READ_BIT
-    Read = GL_MAP_READ_BIT,
+#ifdef GL_READ_ONLY
+    Read = GL_READ_ONLY,
 #endif
-#ifdef GL_MAP_WRITE_BIT
-    Write = GL_MAP_WRITE_BIT,
+#ifdef GL_WRITE_ONLY
+    Write = GL_WRITE_ONLY,
 #endif
 #ifdef GL_READ_WRITE
     ReadWrite = GL_READ_WRITE
@@ -275,6 +275,36 @@ enum BufferMapAccess {
 };
 }
 typedef _BufferMapAccess::BufferMapAccess BufferMapAccess;
+
+namespace _BufferMapAccessFlags {
+enum BufferMapAccessFlags {
+#ifdef GL_MAP_READ_BIT
+    Read_Bit = GL_MAP_READ_BIT,
+#endif
+#ifdef GL_MAP_WRITE_BIT
+    Write_Bit = GL_MAP_WRITE_BIT,
+#endif
+#ifdef GL_MAP_INVALIDATE_RANGE_BIT
+    Invalidate_Range_Bit = GL_MAP_INVALIDATE_RANGE_BIT,
+#endif
+#ifdef GL_MAP_INVALIDATE_BUFFER_BIT
+    Invalidate_Buffer_Bit = GL_MAP_INVALIDATE_BUFFER_BIT,
+#endif
+#ifdef GL_MAP_FLUSH_EXPLICIT_BIT
+    Flush_Explicit_Bit = GL_MAP_FLUSH_EXPLICIT_BIT,
+#endif
+#ifdef GL_MAP_UNSYNCHRONIZED_BIT
+    Unsynchronized_Bit = GL_MAP_UNSYNCHRONIZED_BIT,
+#endif
+#ifdef GL_MAP_PERSISTENT_BIT
+    Persistent_Bit = GL_MAP_PERSISTENT_BIT,
+#endif
+#ifdef GL_MAP_COHERENT_BIT
+    Coherent_Bit = GL_MAP_COHERENT_BIT
+#endif
+};
+}
+typedef _BufferMapAccessFlags::BufferMapAccessFlags BufferMapAccessFlags;
 
 // -------======{[ Framebuffers ]}======-------
 

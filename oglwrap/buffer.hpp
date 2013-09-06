@@ -121,15 +121,23 @@ public:
 
     #ifdef glGetBufferParameteriv
     #ifdef GL_BUFFER_SIZE
+    /// @brief A static version of size, without bind checking.
+    static size_t s_size() {
+        GLint data;
+        gl( GetBufferParameteriv(buffer_t, GL_BUFFER_SIZE, &data) );
+        return data;
+    }
+    #endif // GL_BUFFER_SIZE
+    #endif // glGetBufferParameteriv
+
+    #ifdef glGetBufferParameteriv
+    #ifdef GL_BUFFER_SIZE
     /// @brief A getter for the buffer's size.
     /// @return The size of the buffer currently bound to the buffer objects default target in bytes.
     /// @see glGetBufferParameteriv, GL_BUFFER_SIZE
     size_t size() {
         CHECK_BINDING();
-
-        GLint data;
-        gl( GetBufferParameteriv(buffer_t, GL_BUFFER_SIZE, &data) );
-        return data;
+        return s_size();
     }
     #endif // GL_BUFFER_SIZE
     #endif // glGetBufferParameteriv
@@ -144,35 +152,37 @@ public:
     #ifdef glMapBufferRange
     template <class T>
     /// Mapping moves the data of the buffer to the client address space.
-    class Map {
+    class TypedMap {
         void *m_data; ///< The pointer to the data fetched from the buffer.
         size_t m_size; ///< The size of the data fetched from the buffer.
     public:
         /// Maps the whole buffer.
         /// @param access - Specifies the access policy (R, W, R/W).
         /// @see glMapBuffer
-        Map(BufferMapAccess access = BufferMapAccess::Read) {
+        TypedMap(BufferMapAccess access = BufferMapAccess::ReadWrite) {
             CHECK_FOR_DEFAULT_BINDING(getBindingTarget(buffer_t));
 
             m_data = gl( MapBuffer(buffer_t, access) );
-            m_size = BufferObject<buffer_t>::size();
+            m_size = BufferObject<buffer_t>::s_size();
         }
 
         /// Maps a range of the buffer.
         /// @param length - Specifies a length of the range to be mapped (in bytes).
         /// @param offset - Specifies a the starting offset within the buffer of the range to be mapped (in bytes).
-        /// @param access - Specifies the access policy (R, W, R/W).
+        /// @param access - Specifies a combination of access flags indicating the desired access to the range.
         /// @see glMapBufferRange
-        Map(GLintptr offset, GLsizeiptr length, BufferMapAccess access = BufferMapAccess::Read) {
+        TypedMap(GLintptr offset,
+                 GLsizeiptr length,
+                 GLbitfield access = BufferMapAccessFlags::Read_Bit | BufferMapAccessFlags::Write_Bit) {
             CHECK_FOR_DEFAULT_BINDING(getBindingTarget(buffer_t));
 
             m_data = gl( MapBufferRange(buffer_t, offset, length, access) );
-            m_size = BufferObject<buffer_t>::size();
+            m_size = BufferObject<buffer_t>::s_size();
         }
 
         /// Unmaps the buffer.
         /// @see glUnmapBuffer
-        ~Map() {
+        ~TypedMap() {
             CHECK_FOR_DEFAULT_BINDING(getBindingTarget(buffer_t));
 
             gl( UnmapBuffer(buffer_t) );
@@ -194,6 +204,9 @@ public:
         }
 
     }; // class Map
+
+    typedef TypedMap<GLbyte> Map;
+
     #endif // glMapBufferRange
     #endif // glUnmapBuffer
     #endif // glMapBuffer

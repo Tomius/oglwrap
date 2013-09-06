@@ -20,6 +20,6 @@ inline void default_error_callback(std::string error_message) {
   * into your code. It's INCREDIBLY useful! */
 static void (*error_callback)(std::string) = default_error_callback;
 
-}
+} // namespace oglwrap
 
 #endif // OGLWRAP_DEBUG

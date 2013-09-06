@@ -9,14 +9,21 @@
 namespace oglwrap {
 
 // Conversion between oglplus and glm matrices
+
+/// Converts an assimp aiMatrix4x4 to glm mat4
+/// @param m - the matrix to convert
 static inline glm::mat4 convertMatrix(const aiMatrix4x4& m) {
     return glm::transpose(glm::make_mat4(&m.a1));
 }
 
+/// Converts an assimp aiMatrix3x3 to glm mat4
+/// @param m - the matrix to convert
 static inline glm::mat4 convertMatrix(const aiMatrix3x3& m) {
     return glm::mat4(glm::transpose(glm::make_mat3(&m.a1)));
 }
 
+/// Converts a glm mat4 to an assimp aiMatrix4x4
+/// @param m - the matrix to convert
 static inline aiMatrix4x4 convertMatrix(const glm::mat4& m) {
     return aiMatrix4x4 {
         m[0][0], m[1][0], m[2][0], m[3][0],
@@ -26,35 +33,51 @@ static inline aiMatrix4x4 convertMatrix(const glm::mat4& m) {
     };
 }
 
+/// Prints a glm vector to a given ostream. It's only for debugging.
 static inline std::ostream& operator<<(std::ostream& os, const glm::vec3& v) {
     os << v.x << ", " << v.y << ", " << v.z;
     return os;
 }
 
 namespace _AnimFlag {
+/// Animation modifying flags.
 enum AnimFlag {
+    /// Doesn't do anything.
     None = 0x0,
+
+    /// Repeats the animation until it's interrupted by another animation.
     Repeat = 0x1,
-    // MirroredRepeat sets the Repeat flag, and MirroredRepeat is not the same as (Mirrored & Repeat)
+
+    /// Repeats the animation, but repeats it like OpenGL's MirroredRepeat.
+    /** You can get this effect by setting repeat to true, and negating the
+      * mirrored and backwards flags after every repetition. */
     MirroredRepeat = 0x3,
+
+    /// Mirrors the movement during the animation.
+    /** For example, for a walking with Mirrored flag will cause Moonwalk.
+      * (The character will be animated as he/she was moving forwards, back
+      * he/she actually moves backwards.) */
+    /// @see Youtube @ Moonwalk
     Mirrored = 0x4,
+
+    /// Plays the animation backwards
     Backwards = 0x8,
+
+    /// Marks the animation as interruptable by other animations.
+    /** Tip: if your animation is a cycle, 99% that you'll want it be
+      * interruptable, however, single animations like a jump, usually
+      * shouldn't be interrupted by another animations. */
     Interruptable = 0x10
 };
 }
 typedef _AnimFlag::AnimFlag AnimFlag;
 
-template <unsigned char numBoneAttribs = 1>
-/// A class for loading and displaying nearly any kind of animated mesh.
-/** Usage: specify the numBoneAttribs to be the maximum of bone influences per
-  * vertex divided by four, counted up. You should specify the skinned mesh's
-  * filename in the constructor, and add it's animations manually, with the
-  * AddAnimation function. It is recommended to only export the animated bones
-  * to these files. Currently it does not support multiple animation per file,
-  * as I'm unable to export that way from either Blender or Maya or 3Ds max,
-  * but if you can do it, please send me mail, and I'll implement it. */
 class AnimatedMesh : public Mesh {
+
     template<class Index_t>
+    /// A struct containing an "ivec4" for the boneIDs, and a vec4 for bone weights.
+    /** The boneIDs part is not fixed to be int (unsigned), it becomes the smallest type
+      * that possible to store the all the ids of the bones. */
     struct VertexBoneData_PerAttribute {
         Index_t ids[4];
         float weights[4];
@@ -66,99 +89,155 @@ class AnimatedMesh : public Mesh {
     };
 
     template<class Index_t>
+    /// Contains an array of VertexBoneData_PerAttribute. The size ma
     struct VertexBoneData {
-        VertexBoneData_PerAttribute<Index_t> data[numBoneAttribs];
+        std::vector<VertexBoneData_PerAttribute<Index_t>> data;
 
         void AddBoneData(Index_t boneID, float weight) {
-            for(int i = 0; i < numBoneAttribs; i++) {
-                for(int j = 0; j < 4; j++) {
-                    if(data[i].weights[j] < 1e-10) { // if equals 0
-                        data[i].ids[j] = boneID;
-                        data[i].weights[j] = weight;
-                        return;
+            do {
+                for(size_t i = 0; i < data.size(); i++) {
+                    for(int j = 0; j < 4; j++) {
+                        if(data[i].weights[j] < 1e-10) { // if equals 0
+                            data[i].ids[j] = boneID;
+                            data[i].weights[j] = weight;
+                            return;
+                        }
                     }
                 }
-            }
 
-            // If there wasn't enough space to "allocate" a new slot for the bone:
-            // replace the bone with the smallest influence
-            size_t minMajorIndex = 0, minMinorIndex = 0;
-            for(int i = 0; i < numBoneAttribs; i++) {
-                for(int j = 0; j < 4; j++) {
-                    if(data[i].weights[j] < data[minMajorIndex].weights[minMinorIndex]){
-                        minMajorIndex = i;
-                        minMinorIndex = j;
-                    }
-                }
-            }
+                // If there isn't enough space yet, then make some new
+                data.push_back(VertexBoneData_PerAttribute<Index_t>());
 
-            data[minMajorIndex].ids[minMinorIndex] = boneID;
-            data[minMajorIndex].weights[minMinorIndex] = weight;
+            } while(data.size() < 8); // Bone attributes shouldn't use up all the 16 attribute slots.
         }
     };
 
+    /// A structure for storing the default, relative-to-parent, and current transformations.
     struct BoneInfo {
         glm::mat4 bone_offset;
         glm::mat4 final_transform;
     };
 
+    /// The OpenGL buffers for the bones.
     std::vector<ArrayBuffer> bone_buffers;
-    std::vector<BoneInfo> bone_info;
-    std::map<std::string, unsigned> bone_mapping; // maps a bone name to its index
 
+    /// The transformations of the bones.
+    std::vector<BoneInfo> bone_info;
+
+    /// Maps a bone name to its index
+    std::map<std::string, unsigned> bone_mapping;
+
+    /// The number of the bones.
     size_t num_bones;
+
+    /// The maximum of per mesh bone attribute number's maximum for the entire scene.
+    unsigned char max_bone_attrib_num;
+
+    /// Stores if setup_bones is called. It shouldn't be called more than once.
     bool is_setup_bones;
+
+    /// Stores the root node transform's inverse-
     glm::mat4 global_inverse_transform;
 
-    // vector::push_back(Assimp::Importer()) wouldn't work, because it has
-    // a weird copy constructor, that doesn't actually copy. It must be dynamic.
+    /// @brief Stores the importers that store the additional animations loaded by addAnimation calls.
+    /** Has to be a pointer. vector::push_back(Assimp::Importer()) wouldn't work, because it has
+      * a weird copy constructor, that doesn't actually copy. It must be dynamic. */
     std::vector<Assimp::Importer*> animation_importers;
+
+    /// Handles for the animations
     std::vector<const aiScene*> animations;
-    std::map<std::string, size_t> anim_names; // maps user defined animation names to indexes.
 
-    const aiScene *last_anim, *current_anim;
-    float default_transition_time, transition_time, end_of_last_anim, last_period_time;
+    /// maps user defined animation names to indexes.
+    std::map<std::string, size_t> anim_names;
 
-    size_t default_idx, curr_idx, last_idx;
+    /// @brief The handle for the previous animation.
+    /** It is stored for transitions between animations. */
+    const aiScene *last_anim;
+
+    /// The handle to the currently running animation.
+    const aiScene *current_anim;
+
+    /// The index of the default animation.
+    size_t default_idx;
+
+    /// @brief The index of the previous animation.
+    /** It is stored for transitions between animations. */
+    size_t last_idx;
+
+    /// The index of the currently running animation.
+    size_t curr_idx;
+
+    /// The fading time that is used when changing the animation back to the default one.
+    float default_transition_time;
+
+    /// The fading time between the previous and the current animation.
+    float transition_time;
+
+    /// @brief The time of when did the last animation end.
+    /** It is needed to know the time in the current animation. */
+    float end_of_last_anim,
+
+    /// @brief The animation of time the previous animation.
+    /** It is needed to make the transition between two animations. */
+    float last_period_time;
+
+    /// The offset values at the starts of the animations
     std::vector<glm::vec3> start_offsets;
+
+    /// The offset values at the ends of the animations
     std::vector<glm::vec3> end_offsets;
 
-    glm::vec3 last_offset, current_offset, last_transition_offset;
+    /// @brief The offset value in the last frame.
+    /** It is needed to know how much did the offset change,
+      * and that value is used to move the character. */
+    glm::vec3 last_offset;
+
+    /// The current offset of the root bone of the animated object inside the animation, on the XZ plain.
+    glm::vec3 current_offset;
+
+    /// @brief The transition offset in the last frame.
+    /** transition offset difference is used to move the character
+      * from the origin to the starting position of the animation linearly */
+    glm::vec3 last_transition_offset;
+
+    /// It is used to detect when did the animation start a new cycle.
+    /** For animations that have AnimFlag::Repeat flag specified only, of course. */
     unsigned last_loop_count;
 
+    /// The name of the root bone. It's usually not equal to the root node. It is need to get the offsets.
     std::string root_bone;
 
+    /// Default animation flags specified in the addAnimation function.
     std::vector<unsigned> default_flags;
-    unsigned last_flags, current_flags;
+
+    /// The flags of the last animation. Some flags might modify how transitions should be made.
+    unsigned last_flags;
+
+    /// The current animation modifier flags.
+    unsigned current_flags;
 
 public:
     AnimatedMesh(const std::string& filename, unsigned int flags)
         : Mesh(filename, flags)
         , bone_buffers(scene->mNumMeshes)
         , num_bones(0)
+        , max_bone_attrib_num(0)
         , is_setup_bones(false)
         , last_anim(nullptr)
         , current_anim(nullptr)
+        , default_idx(0)
+        , last_idx(0)
+        , curr_idx(0)
         , default_transition_time(0)
         , transition_time(0)
         , end_of_last_anim(0)
         , last_period_time(0)
-        , default_idx(0)
-        , curr_idx(0)
-        , last_idx(0)
         , last_loop_count(0)
         , last_flags(0)
         , current_flags(0) {
 
         glm::mat4 matrix = convertMatrix(scene->mRootNode->mTransformation);
         global_inverse_transform = glm::inverse(matrix);
-
-        if(numBoneAttribs != getRecommendedNumBoneAttribs())
-            std::cerr << "Error in AnimatedMesh '" << filename << "'\n" <<
-            "The class was created with " << (int)numBoneAttribs << " bone "
-            "attribute(s), but the mesh needs " << (int)getRecommendedNumBoneAttribs() <<
-            " bone attribute(s) to do its best." << std::endl;
-
     }
 
     ~AnimatedMesh() {
@@ -229,13 +308,18 @@ private:
     void loadBones(DataType idx_t,
                    LazyVertexAttribArray boneIDs,
                    LazyVertexAttribArray boneWeights) {
-        std::vector<std::vector<VertexBoneData<Index_t>>> bones(entries.size());
+
+        const size_t per_attrib_size = sizeof(VertexBoneData_PerAttribute<Index_t>);
+
+        std::vector<unsigned char> per_mesh_attrib_max(entries.size());
 
         for(size_t entry = 0; entry < entries.size(); entry++) {
+            std::vector<VertexBoneData<Index_t>> bones;
             const aiMesh* pMesh = scene->mMeshes[entry];
-            bones[entry].resize(pMesh->mNumVertices);
+            bones.resize(pMesh->mNumVertices);
 
             // -------======{[ Create the bone ID's and weights data ]}======-------
+
             for(unsigned i = 0; i < pMesh->mNumBones; i++) {
                 std::string boneName(pMesh->mBones[i]->mName.data);
                 size_t boneIndex = bone_mapping[boneName];
@@ -243,37 +327,101 @@ private:
                 for(unsigned j = 0; j < pMesh->mBones[i]->mNumWeights; j++) {
                     unsigned vertexID = pMesh->mBones[i]->mWeights[j].mVertexId;
                     float weight = pMesh->mBones[i]->mWeights[j].mWeight;
-                    bones[entry][vertexID].AddBoneData(boneIndex, weight);
+                    bones[vertexID].AddBoneData(boneIndex, weight);
                 }
             }
 
             // -------======{[ Upload the bone data ]}======-------
-            for(int boneAttribSet = 0;
-                boneAttribSet < std::min(getRecommendedNumBoneAttribs(), numBoneAttribs);
-                boneAttribSet++
-            ) {
-                entries[entry].vao.bind();
-                bone_buffers[entry].bind();
-                bone_buffers[entry].data(bones[entry]);
 
-                const size_t stride = sizeof(VertexBoneData<Index_t>);
-                intptr_t baseOffset =
-                    boneAttribSet * sizeof(VertexBoneData_PerAttribute<Index_t>);
+            entries[entry].vao.bind();
+            bone_buffers[entry].bind();
+
+            // I can't just upload to the buffer with .data(), as bones aren't stored in a continuous buffer,
+            // and it is an array of not fixed sized arrays, but OpenGL needs it in fix sized parts.
+
+            // Get the current number of max bone attributes.
+            unsigned char& current_attrib_max = per_mesh_attrib_max[entry];
+            for(size_t i = 0; i < bones.size(); i++) {
+                if(bones[i].data.size() > current_attrib_max)
+                    current_attrib_max = bones[i].data.size();
+            }
+
+            size_t per_vertex_size = current_attrib_max * per_attrib_size;
+
+            // First we have to allocate the buffer's storage.
+            bone_buffers[entry].data(
+                bones.size() * per_vertex_size,
+                (void*)0
+            );
+
+            // Then upload the bones data in continuous, fix-sized parts.
+            {
+                // The map gets unmapped when it's lifetime ends
+                ArrayBuffer::Map bones_buffer_map(BufferMapAccess::Write);
+                GLintptr offset = 0;
+                for(size_t i = 0; i < bones.size(); i++) {
+                    size_t curr_size = bones[i].data.size() * per_attrib_size;
+
+                    // Copy the bone data
+                    memcpy(
+                        (GLbyte*)bones_buffer_map.data() + offset, // destination
+                        bones[i].data.data(),  // source
+                        curr_size // length
+                    );
+
+                    // Zero out all the remaining memory.
+                    if(per_vertex_size > curr_size) {
+                        memset(
+                            (GLbyte*)bones_buffer_map.data() + offset + curr_size, // memory place
+                            0, // value
+                            per_vertex_size - curr_size // length
+                        );
+                    }
+
+                    offset += per_vertex_size;
+                }
+            }
+
+
+            // -------======{[ Shader plumbing ]}======-------
+
+            // Check if the current bone attribute number
+            // is bigger then the max of the scene.
+            if(current_attrib_max > max_bone_attrib_num)
+                max_bone_attrib_num = current_attrib_max;
+
+
+            // Actual plumbing.
+            for(unsigned char boneAttribSet = 0; boneAttribSet < current_attrib_max; boneAttribSet++) {
+                const size_t stride = current_attrib_max * per_attrib_size;
+
+                intptr_t baseOffset = boneAttribSet * per_attrib_size;
                 intptr_t weightOffset = baseOffset + 4 * sizeof(Index_t);
 
                 boneIDs[boneAttribSet].setup(4, idx_t, stride, (const void*)baseOffset).enable();
                 boneWeights[boneAttribSet].setup(4, DataType::Float, stride, (const void*)weightOffset).enable();
             }
-
-            VertexArray::unbind();
         }
 
+        // Static setup the VertexArrays that aren't enabled, to all zero.
+        // Remember (0, 0, 0, 1) is the default, which isn't what we want.
+        for(size_t entry = 0; entry < entries.size(); entry++) {
+            for(int i = per_mesh_attrib_max[entry]; i < max_bone_attrib_num; i++) {
+                boneIDs[i].static_setup(glm::ivec4(0, 0, 0, 0));
+                boneWeights[i].static_setup(glm::vec4(0, 0, 0, 0));
+            }
+        }
+
+        // Unbind the last vao, so it won't be modified from outside.
+        // And also, this way, if someone forget's to bind his own vao,
+        // will get an error message from the bind checker.
+        VertexArray::unbind();
     }
 
 public:
 
-    unsigned char getNumBoneAttribs() {
-        return numBoneAttribs;
+    unsigned char get_bone_attrib_num() const {
+        return max_bone_attrib_num;
     }
 
     /// @brief Loads in bone weight and id information to the given array of attribute arrays.
@@ -289,6 +437,7 @@ public:
             std::logic_error("AnimatedMesh::setup_bones is called multiply times on the same object");
         } else {
             is_setup_bones = true;
+        }
 
         mapBones();
 

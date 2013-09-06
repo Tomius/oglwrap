@@ -6,7 +6,6 @@
 #pragma once
 
 /* TODO:
-    - shapes -> block multiply setup calls
     - document shapes
     - context class
     - program uniforms
