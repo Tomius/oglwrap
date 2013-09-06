@@ -10,6 +10,8 @@
     - document shapes
     - context class
     - program uniforms
+    - static VertexAttribArrays
+    - VertexAttribArray Formats
     - uniform blocks
     - 4.0+ features.
 */

@@ -67,7 +67,9 @@ public:
 
     template <class GLtype>
     /// @brief Sets up an attribute. It can be templated with any OpenGL type or glm vector.
-    /** So you can write setup<ivec3>(); instead of IPointer(3, WholeDataType::Int); */
+    /** Integers and doubles won't be converted to floats, if you want that call pointer()
+      * So you can write setup<ivec3>(); instead of IPointer(3, WholeDataType::Int);
+      * but if you want Pointer(3, DataType::Int) you explicitly have to call that function. */
     /// @param values_per_vertex - The dimension of the attribute data divided by the dimension of the template parameter.
     /// @see glVertexAttribPointer, glVertexAttribIPointer, glVertexAttribLPointer
     VertexAttribArrayObject& setup(GLuint values_per_vertex = 1) {
@@ -78,6 +80,9 @@ public:
     #ifdef glVertexAttribPointer
     #ifdef glVertexAttribIPointer
     /// @brief Sets up an attribute for arbitrary data type.
+    /** Integers and doubles won't be converted to floats, if you want that call pointer()
+      * So you can write setup<ivec3>(); instead of IPointer(3, WholeDataType::Int);
+      * but if you want Pointer(3, DataType::Int) you explicitly have to call that function. */
     /// @param values_per_vertex - The dimension of the attribute data. For example is 3 for a vec3. The initial value is 4.
     /// @param type - The data type of each component in the array.
     /// @param stride - Specifies the byte offset between consecutive generic vertex attributes. If stride is 0, the generic vertex attributes are understood to be tightly packed in the array. The initial value is 0.
@@ -91,7 +96,7 @@ public:
             case DataType::Float:
             case DataType::HalfFloat:
             case DataType::Fixed:
-                pointer(values_per_vertex, FloatDataType(type), false, stride, offset_pointer);
+                pointer(values_per_vertex, type, false, stride, offset_pointer);
                 break;
             case DataType::Double:
                 #ifdef glVertexAttribLPointer
@@ -113,7 +118,7 @@ public:
     #endif // glVertexAttribPointer
 
     #ifdef glVertexAttribPointer
-    /// @brief Sets up an attribute for float type data.
+    /// @brief Sets up an attribute for float type data. You can upload any data type to it, but it will be converted to float.
     /// @param values_per_vertex - The dimension of the attribute data. For example is 3 for a vec3. The initial value is 4.
     /// @param type - The data type of each component in the array.
     /// @param normalized - specifies whether fixed-point data values should be normalized (GL_TRUE) or converted directly as fixed-point values (GL_FALSE) when they are accessed.
@@ -121,7 +126,7 @@ public:
     /// @param offset_pointer - Specifies a offset of the first component of the first generic vertex attribute in the array in the data store of the buffer currently bound to the GL_ARRAY_BUFFER target. The initial value is 0.
     /// @see glVertexAttribPointer
     VertexAttribArrayObject& pointer(GLuint values_per_vertex = 4,
-                                     FloatDataType type = FloatDataType::Float,
+                                     DataType type = DataType::Float,
                                      bool normalized = false,
                                      GLsizei stride = 0,
                                      const void *offset_pointer = nullptr) {
@@ -269,15 +274,15 @@ public:
 // -------======{[ VertexAttribArrayObject::setup specializations ]}======-------
 #ifdef glVertexAttribPointer
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<float>(GLuint values_per_vertex) {
-    pointer(values_per_vertex, FloatDataType::Float);
+inline VertexAttribArrayObject& VertexAttribArrayObject::setup<GLfloat>(GLuint values_per_vertex) {
+    pointer(values_per_vertex, DataType::Float);
     return *this;
 }
 #endif // glVertexAttribPointer
 
 #ifdef glVertexAttribIPointer
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<char>(GLuint values_per_vertex) {
+inline VertexAttribArrayObject& VertexAttribArrayObject::setup<GLbyte>(GLuint values_per_vertex) {
     ipointer(values_per_vertex, WholeDataType::Byte);
     return *this;
 }
@@ -285,7 +290,7 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<char>(GLuint valu
 
 #ifdef glVertexAttribIPointer
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<unsigned char>(GLuint values_per_vertex) {
+inline VertexAttribArrayObject& VertexAttribArrayObject::setup<GLubyte>(GLuint values_per_vertex) {
     ipointer(values_per_vertex, WholeDataType::UnsignedByte);
     return *this;
 }
@@ -293,7 +298,7 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<unsigned char>(GL
 
 #ifdef glVertexAttribIPointer
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<short>(GLuint values_per_vertex) {
+inline VertexAttribArrayObject& VertexAttribArrayObject::setup<GLshort>(GLuint values_per_vertex) {
     ipointer(values_per_vertex, WholeDataType::Short);
     return *this;
 }
@@ -301,7 +306,7 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<short>(GLuint val
 
 #ifdef glVertexAttribIPointer
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<unsigned short>(GLuint values_per_vertex) {
+inline VertexAttribArrayObject& VertexAttribArrayObject::setup<GLushort>(GLuint values_per_vertex) {
     ipointer(values_per_vertex, WholeDataType::UnsignedShort);
     return *this;
 }
@@ -309,7 +314,7 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<unsigned short>(G
 
 #ifdef glVertexAttribIPointer
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<int>(GLuint values_per_vertex) {
+inline VertexAttribArrayObject& VertexAttribArrayObject::setup<GLint>(GLuint values_per_vertex) {
     ipointer(values_per_vertex, WholeDataType::Int);
     return *this;
 }
@@ -317,7 +322,7 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<int>(GLuint value
 
 #ifdef glVertexAttribIPointer
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<unsigned int>(GLuint values_per_vertex) {
+inline VertexAttribArrayObject& VertexAttribArrayObject::setup<GLuint>(GLuint values_per_vertex) {
     ipointer(values_per_vertex, WholeDataType::UnsignedInt);
     return *this;
 }
@@ -326,7 +331,7 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<unsigned int>(GLu
 #ifdef glVertexAttribPointer
 template<>
 inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::vec2>(GLuint) {
-    pointer(2, FloatDataType::Float);
+    pointer(2, DataType::Float);
     return *this;
 }
 #endif // glVertexAttribPointer
@@ -358,7 +363,7 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::uvec2>(GLuin
 #ifdef glVertexAttribPointer
 template<>
 inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::vec3>(GLuint) {
-    pointer(3, FloatDataType::Float);
+    pointer(3, DataType::Float);
     return *this;
 }
 #endif // glVertexAttribPointer
@@ -390,7 +395,7 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::uvec3>(GLuin
 #ifdef glVertexAttribPointer
 template<>
 inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::vec4>(GLuint) {
-    pointer(4, FloatDataType::Float);
+    pointer(4, DataType::Float);
     return *this;
 }
 #endif // glVertexAttribPointer
