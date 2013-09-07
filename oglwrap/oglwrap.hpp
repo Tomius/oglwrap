@@ -6,7 +6,6 @@
 #pragma once
 
 /* TODO:
-    - document shapes
     - context class
     - program uniforms
     - uniform blocks / shader storage

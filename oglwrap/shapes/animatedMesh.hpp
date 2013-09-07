@@ -124,7 +124,10 @@ class AnimatedMesh : public Mesh {
     /// The transformations of the bones.
     std::vector<BoneInfo> bone_info;
 
-    /// Maps a bone name to its index
+    /// Maps a bone name to its index.
+    /** It is needed as usually multiply meshes share the same bone, but with
+      * different index. The only way to reference it, without getting too much
+      * multiplies, is to reference them by their name */
     std::map<std::string, unsigned> bone_mapping;
 
     /// The number of the bones.
@@ -247,14 +250,17 @@ public:
 
 private:
 
-    // It shouldn't be copyable
+    /// Just a private declaration of the copy constructor... it shouldn't be copyable.
     AnimatedMesh(const AnimatedMesh& src);
+
+    /// Just a private declaration of the assign operator... it shouldn't be copyable.
     void operator=(const AnimatedMesh& rhs);
 
 /*         //=====:==-==-==:=====\\                                 //=====:==-==-==:=====\\
     <---<}>==~=~=~==--==--==~=~=~==<{>----- Skin definition -----<}>==~=~=~==--==--==~=~=~==<{>--->
            \\=====:==-==-==:=====//                                 \\=====:==-==-==:=====//          */
 
+    /// Fills the bone_mapping with data.
     void mapBones() {
         for(size_t entry = 0; entry < entries.size(); entry++) {
             const aiMesh* pMesh = scene->mMeshes[entry];
@@ -275,13 +281,14 @@ private:
         }
     }
 
-    const aiNodeAnim* getRootBone(const aiNode* pNode, const aiScene* anim) {
-        std::string nodeName(pNode->mName.data);
+    /// A recursive functions that should be started from the root node, and it returns the first bone under it.
+    const aiNodeAnim* getRootBone(const aiNode* node, const aiScene* anim) {
+        std::string nodeName(node->mName.data);
 
-        const aiAnimation* pAnimation = anim->mAnimations[0];
-        const aiNodeAnim* pNodeAnim = findNodeAnim(pAnimation, nodeName);
+        const aiAnimation* animation = anim->mAnimations[0];
+        const aiNodeAnim* nodeAnim = findNodeAnim(animation, nodeName);
 
-        if(pNodeAnim) {
+        if(nodeAnim) {
             if(root_bone.empty()) {
                 root_bone = nodeName;
             } else {
@@ -291,11 +298,11 @@ private:
                     );
                 }
             }
-            return pNodeAnim;
+            return nodeAnim;
         }
         else {
-            for(unsigned i = 0; i < pNode->mNumChildren; i++) {
-                auto childsReturn = getRootBone(pNode->mChildren[i], anim);
+            for(unsigned i = 0; i < node->mNumChildren; i++) {
+                auto childsReturn = getRootBone(node->mChildren[i], anim);
                 if(childsReturn)
                     return childsReturn;
             }
@@ -305,6 +312,14 @@ private:
     }
 
     template <class Index_t>
+    /// @brief Creates bone attributes data, and shader plumbs them.
+    /** It is a template, as the type of boneIDs shouldn't be fix. Most of the times,
+      * a skeleton won't contain more than 256 bones, but that doesn't mean boneIDs
+      * should be forced to GLubyte, it works with shorts and even ints too. Although
+      * I really doubt anyone would be using a skeleton with more than 65535 bones... */
+    /// @param idx_t - The oglwrap enum, naming the datatype that should be used.
+    /// @param boneIDs - Should be an array of attributes, that will be shader plumbed for the boneIDs data.
+    /// @param boneWeights - Should be an array of attributes, that will be shader plumbed for the boneWeights data.
     void loadBones(DataType idx_t,
                    LazyVertexAttribArray boneIDs,
                    LazyVertexAttribArray boneWeights) {
@@ -419,7 +434,7 @@ private:
     }
 
 public:
-
+    /// Returns the size that boneIds and BoneWeights attribute arrays should be
     unsigned char get_bone_attrib_num() const {
         return max_bone_attrib_num;
     }
@@ -455,10 +470,13 @@ public:
 
 private:
 
-    unsigned findPosition(float animationTime, const aiNodeAnim* pNodeAnim) {
+    /// Returns the index of the currently active translation keyframe for the given animation and time.
+    /// @param animationTime - The time elapsed since the start of this animation.
+    /// @param nodeAnim - The animation node, in which the function should search for a keyframe.
+    unsigned findPosition(float animationTime, const aiNodeAnim* nodeAnim) {
         // Find the first one that is bigger or equals
-        for(unsigned i = 0; i < pNodeAnim->mNumPositionKeys - 1; i++) {
-            if(animationTime <= (float)pNodeAnim->mPositionKeys[i + 1].mTime) {
+        for(unsigned i = 0; i < nodeAnim->mNumPositionKeys - 1; i++) {
+            if(animationTime <= (float)nodeAnim->mPositionKeys[i + 1].mTime) {
                 return i;
             }
         }
@@ -466,18 +484,24 @@ private:
         throw std::runtime_error("Animation Error - Position keyframe not found");
     }
 
-    unsigned findRotation(float animationTime, const aiNodeAnim* pNodeAnim) {
-        for(unsigned i = 0; i < pNodeAnim->mNumRotationKeys - 1; i++) {
-            if(animationTime <= (float)pNodeAnim->mRotationKeys[i + 1].mTime) {
+    /// Returns the index of the currently active rotation keyframe for the given animation and time.
+    /// @param animationTime - The time elapsed since the start of this animation.
+    /// @param nodeAnim - The animation node, in which the function should search for a keyframe.
+    unsigned findRotation(float animationTime, const aiNodeAnim* nodeAnim) {
+        for(unsigned i = 0; i < nodeAnim->mNumRotationKeys - 1; i++) {
+            if(animationTime <= (float)nodeAnim->mRotationKeys[i + 1].mTime) {
                 return i;
             }
         }
         throw std::runtime_error("Animation Error - Rotation keyframe not found");
     }
 
-    unsigned findScaling(float animationTime, const aiNodeAnim* pNodeAnim) {
-        for(unsigned i = 0; i < pNodeAnim->mNumScalingKeys - 1; i++) {
-            if(animationTime <= (float)pNodeAnim->mScalingKeys[i + 1].mTime) {
+    /// Returns the index of the currently active scaling keyframe for the given animation and time.
+    /// @param animationTime - The time elapsed since the start of this animation.
+    /// @param nodeAnim - The animation node, in which the function should search for a keyframe.
+    unsigned findScaling(float animationTime, const aiNodeAnim* nodeAnim) {
+        for(unsigned i = 0; i < nodeAnim->mNumScalingKeys - 1; i++) {
+            if(animationTime <= (float)nodeAnim->mScalingKeys[i + 1].mTime) {
                 return i;
             }
         }
@@ -485,20 +509,28 @@ private:
     }
 
     template<class T>
+    /// Interpolates two things.
+    /// @param a - the first thing.
+    /// @param b - the second thing.
+    /// @param alpha - Specifies how 'b' will the result be.
     T interpolate(const T& a, const T& b, float alpha) {
         return a + alpha * (b - a);
     }
 
-    void calcInterpolatedPosition(aiVector3D& out, float animTime, const aiNodeAnim* pNodeAnim) {
-        const auto& keys = pNodeAnim->mPositionKeys;
-        const auto& numKeys = pNodeAnim->mNumPositionKeys;
+    /// Returns a linearly interpolated value between the previous and next translation keyframes.
+    /// @param out - Returns the result here.
+    /// @param animationTime - The time elapsed since the start of this animation.
+    /// @param nodeAnim - The animation node, in which the function should search for the keyframes.
+    void calcInterpolatedPosition(aiVector3D& out, float animTime, const aiNodeAnim* nodeAnim) {
+        const auto& keys = nodeAnim->mPositionKeys;
+        const auto& numKeys = nodeAnim->mNumPositionKeys;
 
         if(numKeys == 1) {
             out = keys[0].mValue;
             return;
         }
 
-        size_t i = findPosition(animTime, pNodeAnim);
+        size_t i = findPosition(animTime, nodeAnim);
         float deltaTime = keys[i + 1].mTime - keys[i].mTime;
         float factor = (animTime - (float)keys[i].mTime) / deltaTime;
         if(factor < 0.0f)
@@ -511,16 +543,20 @@ private:
         out = interpolate(start, end, factor);
     }
 
-    void calcInterpolatedRotation(aiQuaternion& out, float animTime, const aiNodeAnim* pNodeAnim) {
-        const auto& keys = pNodeAnim->mRotationKeys;
-        const auto& numKeys = pNodeAnim->mNumRotationKeys;
+    /// Returns a spherically interpolated value (always choosing the short path) between the previous and next rotation keyframes.
+    /// @param out - Returns the result here.
+    /// @param animationTime - The time elapsed since the start of this animation.
+    /// @param nodeAnim - The animation node, in which the function should search for the keyframes.
+    void calcInterpolatedRotation(aiQuaternion& out, float animTime, const aiNodeAnim* nodeAnim) {
+        const auto& keys = nodeAnim->mRotationKeys;
+        const auto& numKeys = nodeAnim->mNumRotationKeys;
 
         if(numKeys == 1) {
             out = keys[0].mValue;
             return;
         }
 
-        size_t i = findRotation(animTime, pNodeAnim);
+        size_t i = findRotation(animTime, nodeAnim);
         float deltaTime = keys[i + 1].mTime - keys[i].mTime;
         float factor = (animTime - (float)keys[i].mTime) / deltaTime;
         if(factor < 0.0f)
@@ -534,16 +570,20 @@ private:
         out = out.Normalize();
     }
 
-    void calcInterpolatedScaling(aiVector3D& out, float animTime, const aiNodeAnim* pNodeAnim) {
-        const auto& keys = pNodeAnim->mScalingKeys;
-        const auto& numKeys = pNodeAnim->mNumScalingKeys;
+    /// @brief Returns a linearly interpolated value between the previous and next scaling keyframes.
+    /// @param out - Returns the result here.
+    /// @param animationTime - The time elapsed since the start of this animation.
+    /// @param nodeAnim - The animation node, in which the function should search for the keyframes.
+    void calcInterpolatedScaling(aiVector3D& out, float animTime, const aiNodeAnim* nodeAnim) {
+        const auto& keys = nodeAnim->mScalingKeys;
+        const auto& numKeys = nodeAnim->mNumScalingKeys;
 
         if(numKeys == 1) {
             out = keys[0].mValue;
             return;
         }
 
-        size_t i = findRotation(animTime, pNodeAnim);
+        size_t i = findRotation(animTime, nodeAnim);
         float deltaTime = keys[i + 1].mTime - keys[i].mTime;
         float factor = (animTime - (float)keys[i].mTime) / deltaTime;
         if(factor < 0.0f)
@@ -556,45 +596,57 @@ private:
         out = interpolate(start, end, factor);
     }
 
-    const aiNodeAnim* findNodeAnim(const aiAnimation* pAnimation, const std::string nodeName) {
-        for(unsigned i = 0; i < pAnimation->mNumChannels; i++) {
-            const aiNodeAnim* pNodeAnim = pAnimation->mChannels[i];
+    /// @brief Returns the animation node in the given animation, referenced by its name.
+    /** Returns nullptr if it doesn't find a node with that name,
+      * which usually means that it's not a bone. */
+    /// @param animation - The animation, this function should search in.
+    /// @param nodeName - The name of the bone to search.
+    const aiNodeAnim* findNodeAnim(const aiAnimation* animation, const std::string nodeName) {
+        for(unsigned i = 0; i < animation->mNumChannels; i++) {
+            const aiNodeAnim* nodeAnim = animation->mChannels[i];
 
-            if(std::string(pNodeAnim->mNodeName.data) == nodeName) {
-                return pNodeAnim;
+            if(std::string(nodeAnim->mNodeName.data) == nodeName) {
+                return nodeAnim;
             }
         }
 
         return nullptr;
     }
 
-    // Recursive function that travels through the entire node hierarchy
+    /// @brief Recursive function that travels through the entire node hierarchy, and creates transformation values in world space.
+    /** Bone transformations are stored relative to their parents. That's why it is needed.
+      * Also note, that the translation of the root node on the XZ plane is treated differently, that offset isn't
+      * baked into the animation, you can get the offset with the offset_since_last_frame() function, and you have to
+      * externally do the object's movement, as normally it will stay right where it was at the start of the animation. */
+    /// @param animationTime - The current animation time.
+    /// @param node - The node (bone) whose, and whose child's transformation should be updated. You should call this function with the root node.
+    /// @param parentTransform - The transformation of the parent node. You should call it with an identity matrix.
     void readNodeHeirarchy(float animationTime,
-                           const aiNode* pNode,
+                           const aiNode* node,
                            const glm::mat4& parentTransform = glm::mat4()) {
         using namespace glm;
 
-        std::string nodeName(pNode->mName.data);
+        std::string nodeName(node->mName.data);
 
         // You probably want to be able to select different than animations than the 0th.
         // But with Maya's DAE_FBX exporter, it is not possible.
-        const aiAnimation* pAnimation = current_anim->mAnimations[0];
-        const aiNodeAnim* pNodeAnim = findNodeAnim(pAnimation, nodeName);
+        const aiAnimation* animation = current_anim->mAnimations[0];
+        const aiNodeAnim* nodeAnim = findNodeAnim(animation, nodeName);
 
-        mat4 nodeTransform = convertMatrix(pNode->mTransformation);
+        mat4 nodeTransform = convertMatrix(node->mTransformation);
 
-        if(pNodeAnim) {
+        if(nodeAnim) {
             // Interpolate the transformations and get the matrices
             aiVector3D scaling;
-            calcInterpolatedScaling(scaling, animationTime, pNodeAnim);
+            calcInterpolatedScaling(scaling, animationTime, nodeAnim);
             mat4 scalingM = scale(mat4(), vec3(scaling.x, scaling.y, scaling.z));
 
             aiQuaternion rotation;
-            calcInterpolatedRotation(rotation, animationTime, pNodeAnim);
+            calcInterpolatedRotation(rotation, animationTime, nodeAnim);
             mat4 rotationM = convertMatrix(rotation.GetMatrix());
 
             aiVector3D translation;
-            calcInterpolatedPosition(translation, animationTime, pNodeAnim);
+            calcInterpolatedPosition(translation, animationTime, nodeAnim);
             mat4 translationM;
 
             if(nodeName == root_bone) {
@@ -621,19 +673,23 @@ private:
                 global_inverse_transform * globalTransformation * bone_info[boneIndex].bone_offset;
         }
 
-        for(unsigned i = 0; i < pNode->mNumChildren; i++) {
-            readNodeHeirarchy(animationTime, pNode->mChildren[i], globalTransformation);
+        for(unsigned i = 0; i < node->mNumChildren; i++) {
+            readNodeHeirarchy(animationTime, node->mChildren[i], globalTransformation);
         }
     }
 
-    // ReadNodeHierarchy for transitions between animations.
+    /// @brief Does the same thing as readNodeHierarchy, but it is used to create transitions between animations, so it interpolates between four keyframes not two.
+    /// @param prevAnimationTime - The animation time of when, the last animation was interrupted.
+    /// @param nextAnimationTime - The current animation time.
+    /// @param node - The node (bone) whose, and whose child's transformation should be updated. You should call this function with the root node.
+    /// @param parentTransform - The transformation of the parent node. You should call it with an identity matrix.
     void transitionReadNodeHeirarchy(float prevAnimationTime,
                                      float nextAnimationTime,
-                                     const aiNode* pNode,
+                                     const aiNode* node,
                                      const glm::mat4& parentTransform  = glm::mat4()) {
         using namespace glm;
 
-        std::string nodeName(pNode->mName.data);
+        std::string nodeName(node->mName.data);
 
         // You probably want to be able to select different than animations than the 0th.
         // But with Maya's DAE_FBX exporter, it is not possible.
@@ -642,7 +698,7 @@ private:
         const aiNodeAnim* prevNodeAnim = findNodeAnim(prevAnimation, nodeName);
         const aiNodeAnim* nextNodeAnim = findNodeAnim(nextAnimation, nodeName);
 
-        mat4 nodeTransform = convertMatrix(pNode->mTransformation);
+        mat4 nodeTransform = convertMatrix(node->mTransformation);
 
         if(prevNodeAnim && nextNodeAnim) {
             float factor;
@@ -713,13 +769,15 @@ private:
                 global_inverse_transform * globalTransformation * bone_info[boneIndex].bone_offset;
         }
 
-        for(unsigned i = 0; i < pNode->mNumChildren; i++) {
+        for(unsigned i = 0; i < node->mNumChildren; i++) {
             transitionReadNodeHeirarchy(
-                prevAnimationTime, nextAnimationTime, pNode->mChildren[i], globalTransformation
+                prevAnimationTime, nextAnimationTime, node->mChildren[i], globalTransformation
             );
         }
     }
 
+    /// @brief Does what it's name says, updates the bones transformations.
+    /// @param time_in_seconds - Expected to be a time value in seconds. It doesn't matter, since when does it count the time, just it should be counting up.
     void updateBoneInfo(float time_in_seconds) {
         if(!current_anim || current_anim->mAnimations == 0 ||
            !last_anim || last_anim->mAnimations == 0) {
@@ -802,6 +860,9 @@ private:
 public:
     // -------======{[ Bone transformation updater ]}======-------
 
+    /// @brief Updates the bones transformation and uploads them into the given uniforms.
+    /// @param time_in_seconds - Expect a time value as a float, optimally since the start of the program.
+    /// @param bones - The uniform naming the bones array. It should be indexable.
     void boneTransform(float time_in_seconds,
                        LazyUniform<glm::mat4>& bones) {
         updateBoneInfo(time_in_seconds);
@@ -813,6 +874,15 @@ public:
 
     // -------======{[ Animation changers ]}======-------
 
+    /// @brief Adds an external animation from a file.
+    /** You should give this animation a name, you will be able to
+      * reference it with this name in the future. You can also set
+      * the default animation modifier flags for this animation.
+      * These flags will be used everytime you change to this animation
+      * without explicitly specifying new flags. */
+    /// @param filename - The name of the file, from where to load the animation.
+    /// @param animName - The name with you wanna reference this animation.
+    /// @param flags - You can specify animation modifiers, like repeat the animation after it ends, play it backwards, etc...
     void add_animation(const std::string& filename,
                        const std::string& animName,
                        unsigned flags = AnimFlag::None) {
@@ -846,34 +916,36 @@ public:
         default_flags.push_back(flags);
     }
 
+    /// @brief Sets the default animation, that will be played if you don't set to play another one.
+    /// @param animName - The user-defined name of the animation that should be set to be default.
+    /// @param default_transition_time - The fading time that should be used when changing to the default animation.
     void set_default_animation(const std::string& animName,
                                float default_transition_time = 0.0f) {
 
         if(anim_names.find(animName) == anim_names.end()) {
             throw std::invalid_argument(
-                "Tried to set current animation to '" + animName + "', "
-                "but the AnimatedMesh doesn't have an animation with name"
+                "Tried to set default animation to '" + animName + "', "
+                "but the AnimatedMesh doesn't have an animation with that name"
             );
         }
 
-        set_default_animation(anim_names[animName], default_transition_time);
-    }
-
-    void set_default_animation(size_t animIndex,
-                               float default_transition_time = 0.0f) {
-
-        if(!(default_flags[animIndex] & AnimFlag::Repeat)) {
-            throw std::invalid_argument(
-                "Tried to set a default animation that didn't have the repeat "
-                "flag, but the default animation must be a cycle."
-            );
-        }
-
-        default_idx = animIndex;
+        default_idx = anim_names[animName];
         this->default_transition_time = default_transition_time;
+
+        if(!(default_flags[default_idx] & AnimFlag::Repeat)) {
+            throw std::invalid_argument(
+                "Tried to set a default animation that didn't have the "
+                "repeat flag, but the default animation must be a cycle."
+            );
+        }
     }
 
 private:
+    /// @brief Changes the current animation to a specified one.
+    /// @param animIndex - The index of the new animation.
+    /// @param currentTime - The current time in seconds, optimally since the start of the program.
+    /// @param transition_time - The fading time to be used for the transition.
+    /// @param flags - A bitfield containing the animation specifier flags.
     void change_animation(size_t animIndex,
                           float currentTime,
                           float transition_time,
@@ -909,6 +981,14 @@ private:
     }
 
 public:
+    /// @brief Tries to change the current animation to a specified one.
+    /** Only changes it if the current animation is interruptable,
+      * it's not currently in a transition, and new animation is
+      * not the same as the one currently playing. */
+    /// @param animName - The user-defined name of the animation.
+    /// @param currentTime - The current time in seconds, optimally since the start of the program.
+    /// @param transition_time - The fading time to be used for the transition.
+    /// @param flags - A bitfield containing the animation specifier flags.
     void set_current_animation(const std::string& animName,
                               float currentTime,
                               float transition_time,
@@ -921,6 +1001,12 @@ public:
         }
     }
 
+    /// @brief Forces the current animation to a specified one.
+    /** Only changes it if the new animation is not the same as the one currently playing. */
+    /// @param animName - The user-defined name of the animation.
+    /// @param currentTime - The current time in seconds, optimally since the start of the program.
+    /// @param transition_time - The fading time to be used for the transition.
+    /// @param flags - A bitfield containing the animation specifier flags.
     void force_current_animation(const std::string& animName,
                                  float currentTime,
                                  float transition_time,
@@ -942,6 +1028,14 @@ public:
         change_animation(animIndex, currentTime, transition_time, flags);
     }
 
+    /// @brief Tries to change the current animation to a specified one, using the default anim modifier flags specified for this anim.
+    /** Only changes it if the current animation is interruptable,
+      * it's not currently in a transition, and new animation is
+      * not the same as the one currently playing. */
+    /// @param animName - The user-defined name of the animation.
+    /// @param currentTime - The current time in seconds, optimally since the start of the program.
+    /// @param transition_time - The fading time to be used for the transition.
+    /// @param flags - A bitfield containing the animation specifier flags.
     void set_current_animation(const std::string& animName,
                                float currentTime,
                                float transition_time = 0.0f) {
@@ -953,6 +1047,11 @@ public:
         }
     }
 
+    /// @brief Forces the current animation to a specified one, using the default anim modifier flags specified for this anim.
+    /** Only changes it if the new animation is not the same as the one currently playing. */
+    /// @param animName - The user-defined name of the animation.
+    /// @param currentTime - The current time in seconds, optimally since the start of the program.
+    /// @param transition_time - The fading time to be used for the transition.
     void force_current_animation(const std::string& animName,
                                  float currentTime,
                                  float transition_time = 0.0f) {
@@ -973,19 +1072,31 @@ public:
         change_animation(animIndex, currentTime, transition_time, default_flags[animIndex]);
     }
 
+    /// @brief Tries to change the current animation to the default one.
+    /** Only changes it if the current animation is interruptable,
+      * it's not currently in a transition, and new animation is
+      * not the same as the one currently playing. Will use the default
+      * anim modifier flags for the default anim. */
+    /// @param currentTime - The current time in seconds, optimally since the start of the program.
     void set_anim_to_default(float currentTime) {
         if(current_flags & AnimFlag::Interruptable)
             force_anim_to_default(currentTime);
     }
 
+    /// @brief Forces the current animation to the default one.
+    /** Only changes it if the new animation is not the same as the one currently
+      * playing. Will use the default anim modifier flags for the default anim. */
+    /// @param currentTime - The current time in seconds, optimally since the start of the program.
     void force_anim_to_default(float currentTime) {
         assert(default_flags[default_idx] & AnimFlag::Repeat);
-        if(current_anim == animations[default_idx])
-            return;
-
-        change_animation(default_idx, currentTime, default_transition_time, default_flags[default_idx]);
+        if(current_anim != animations[default_idx])
+            change_animation(default_idx, currentTime, default_transition_time, default_flags[default_idx]);
     }
 
+    /// Returns the offset of the root bone, since it was last queried.
+    /** It should be queried every frame (hence the name),
+      * but it works even if you only query every 10th frame,
+      * just the animation will "lag", and will look bad. */
     glm::vec3 offset_since_last_frame() {
         auto ret = current_offset - last_offset;
         last_offset = current_offset;
