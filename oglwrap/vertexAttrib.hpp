@@ -62,12 +62,13 @@ protected:
 public:
     /// Default constructor, sets the location to invalid.
     VertexAttribArrayObject() : location(INVALID_LOCATION) ,inited(false) {}
+
     /// @brief You can specify the attribute slot you use for the attribute.
     VertexAttribArrayObject(GLuint vertexAttribSlot) : location(vertexAttribSlot) ,inited(false) {}
 
 private:
     template <class GLtype>
-    /// A helper function for static setup
+    /// @brief A helper function for static setup
     /// @param value - The default value to be used for this attribute.
     void static_setup_helper(const GLtype value) {
         throw std::invalid_argument(
