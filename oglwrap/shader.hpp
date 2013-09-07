@@ -7,8 +7,8 @@
 namespace oglwrap {
 
 // -------======{[ Shader ]}======-------
-#if !OGLWRAP_CHECK_DEPENDENCIES || (glCreateShader)
-#if !OGLWRAP_CHECK_DEPENDENCIES || (glDeleteShader)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glCreateShader)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDeleteShader)
 /// A specialization of the ObjectExt class for Shaders (they aren't created with glGen*)
 template<ShaderType shader_t>
 class ShaderObject : public RefCounted {
@@ -76,7 +76,7 @@ public:
     /// Creates the an empty shader object.
     Shader() : compiled(false) { }
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glShaderSource)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glShaderSource)
     /// Creates a shader and sets the file as the shader source.
     /// @param file - The file to load and set as shader source.
     /// @see glShaderSource
@@ -86,7 +86,7 @@ public:
     }
     #endif // glShaderSource
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glShaderSource)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glShaderSource)
     /// Uploads a string as the shader's source.
     /// @param source - string containing the shader code.
     /// @see glShaderSource
@@ -96,7 +96,7 @@ public:
     }
     #endif // glShaderSource
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glShaderSource)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glShaderSource)
     /// Loads a file and uploads it as shader source
     /// @param file - the shader file's path
     /// @see glShaderSource
@@ -123,9 +123,9 @@ public:
     }
     #endif // glShaderSource
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glCompileShader)
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glGetShaderiv)
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glGetShaderInfoLog)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glCompileShader)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetShaderiv)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetShaderInfoLog)
     /// Compiles the shader code.
     /** If the compilation fails, it throws a std::runtime_error, containing the
       * compilation info as .what(). The compilation happens automatically
@@ -150,32 +150,32 @@ public:
 
             const char * strShaderType = nullptr;
             switch(shader_t) {
-                #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_COMPUTE_SHADER)
+                #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COMPUTE_SHADER)
                 case ShaderType::Compute:
                     strShaderType = "compute";
                     break;
                 #endif
-                #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_VERTEX_SHADER)
+                #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_VERTEX_SHADER)
                 case ShaderType::Vertex:
                     strShaderType = "vertex";
                     break;
                 #endif
-                #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_GEOMETRY_SHADER)
+                #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_GEOMETRY_SHADER)
                 case ShaderType::Geometry:
                     strShaderType = "geometry";
                     break;
                 #endif
-                #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_FRAGMENT_SHADER)
+                #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FRAGMENT_SHADER)
                 case ShaderType::Fragment:
                     strShaderType = "fragment";
                     break;
                 #endif
-                #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_TESS_CONTROL_SHADER)
+                #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TESS_CONTROL_SHADER)
                 case ShaderType::TessControl:
                     strShaderType = "tessellation control";
                     break;
                 #endif
-                #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_TESS_EVALUATION_SHADER)
+                #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TESS_EVALUATION_SHADER)
                 case ShaderType::TessEval:
                     strShaderType = "tessellation evaluation";
                     break;
@@ -201,7 +201,7 @@ public:
 };
 
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (GL_COMPUTE_SHADER)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COMPUTE_SHADER)
 /// A Shader that is used for computing arbitrary information.
 /** A Compute Shader is a Shader Stage that is used entirely for computing arbitrary information.
   * While it can do rendering, it is generally used for tasks not directly related to drawing
@@ -211,7 +211,7 @@ public:
 typedef Shader<ShaderType::Compute> ComputeShader;
 #endif // GL_COMPUTE_SHADER
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (GL_VERTEX_SHADER)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_VERTEX_SHADER)
 /// A Shader that handles the processing of individual vertices.
 /** The Vertex Shader is the programmable Shader stage in the rendering pipeline that handles the
   * processing of individual vertices. Vertex shaders are fed Vertex Attribute data, as specified
@@ -222,7 +222,7 @@ typedef Shader<ShaderType::Compute> ComputeShader;
 typedef Shader<ShaderType::Vertex> VertexShader;
 #endif // GL_VERTEX_SHADER
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (GL_GEOMETRY_SHADER)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_GEOMETRY_SHADER)
 /// A Shader that governs the processing of Primitives.
 /** A Geometry Shader is a Shader program written in GLSL that governs the processing of Primitives.
   * Geometry shaders reside between the Vertex Shaders (or the optional Tessellation stage) and the
@@ -232,7 +232,7 @@ typedef Shader<ShaderType::Vertex> VertexShader;
 typedef Shader<ShaderType::Geometry> GeometryShader;
 #endif // GL_GEOMETRY_SHADER
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (GL_FRAGMENT_SHADER)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FRAGMENT_SHADER)
 /// A Shader that processes a Fragment from the rasterization process into a set of colors and a single depth value.
 /** A Fragment Shader is a user-supplied program that, when executed, will process a Fragment from the
   * rasterization process into a set of colors and a single depth value. The fragment shader is the OpenGL
@@ -247,7 +247,7 @@ typedef Shader<ShaderType::Geometry> GeometryShader;
 typedef Shader<ShaderType::Fragment> FragmentShader;
 #endif // GL_FRAGMENT_SHADER
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (GL_TESS_CONTROL_SHADER)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TESS_CONTROL_SHADER)
 /// A shader that controls how much tessellation a particular patch gets and also defines the size of a patch.
 /** The Tessellation Control Shader (TCS) is a Shader program written in GLSL. It sits between the Vertex
   * Shader and the Tessellation Evaluation Shader. The TCS controls how much tessellation a particular patch
@@ -260,7 +260,7 @@ typedef Shader<ShaderType::Fragment> FragmentShader;
 typedef Shader<ShaderType::TessControl> TessControlShader;
 #endif // GL_TESS_CONTROL_SHADER
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (GL_TESS_EVALUATION_SHADER)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TESS_EVALUATION_SHADER)
 /// A shader that generates vertices from the patch data.
 /** The Tessellation Evaluation Shader (TES) is a Shader program written in GLSL that takes the results
   * of a Tessellation operation and computes the interpolated positions and other per-vertex data from them.
@@ -278,8 +278,8 @@ typedef Shader<ShaderType::TessEval> TessEvalShader;
 
 // -------======{[ Shader Program ]}======-------
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (glCreateProgram)
-#if !OGLWRAP_CHECK_DEPENDENCIES || (glDeleteProgram)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glCreateProgram)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDeleteProgram)
 /// A specialization of the ObjectExt class for Programs (they aren't created with glGen*)
 class ProgramObject : public RefCounted {
     /// The C handle for the object.
@@ -335,7 +335,7 @@ public:
     }
 };
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (glDetachShader)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDetachShader)
 /// @brief The program object can combine multiple shader stages (built from shader objects) into a single, linked whole.
 /// glCreateProgram, glDeleteProgram
 class Program {
@@ -359,7 +359,7 @@ public:
         }
     }
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glAttachShader)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glAttachShader)
     template<ShaderType shader_t>
     /// @brief Attaches a shader to this program object.
     /// @param shader Specifies the shader object that is to be attached.
@@ -371,7 +371,7 @@ public:
     }
     #endif // glAttachShader
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glAttachShader)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glAttachShader)
     template<ShaderType shader_t>
     /// @brief Attaches a shader object to the program.
     /// @param shader Specifies the shader object that is to be attached.
@@ -382,9 +382,9 @@ public:
     }
     #endif // glAttachShader
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glLinkProgram)
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glGetProgramiv)
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glGetProgramInfoLog)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glLinkProgram)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetProgramiv)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetProgramInfoLog)
     /// @brief Links the program.
     /** If the linking fails, it throws a std::runtime_error containing the linking info. */
     /// @see glLinkProgram, glGetProgramiv, glGetProgramInfoLog
@@ -416,7 +416,7 @@ public:
     #endif // glGetProgramiv
     #endif // glLinkProgram
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glUseProgram)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUseProgram)
     /// @brief Installs the program as a part of the current rendering state.
     /// @see glUseProgram
     const Program& use() const {
@@ -428,7 +428,7 @@ public:
     }
     #endif
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glUseProgram)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUseProgram)
     /// @brief Installs the default OpenGL shading program to the current rendering state.
     /// @see glUseProgram
     static void unuse() {

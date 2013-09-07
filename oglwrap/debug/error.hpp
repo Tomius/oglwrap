@@ -29,11 +29,11 @@ namespace oglwrap {
   * check for OpenGL related errors after every gl* function call, and
   * prints out where did the error happen to stderr. */
 /// @see glGetError
-#define OGLWRAP_CHECK_ERROR() _CheckError(__FILE__, __PRETTY_FUNCTION__, __LINE__)
+#define OGLWRAP_CHECK_ERROR() oglwrap::__CheckError(__FILE__, __PRETTY_FUNCTION__, __LINE__)
 
 /// @brief Same as OGLWRAP_CHECK_ERROR, but you can specify the called functions's name.
 /// @see OGLWRAP_CHECK_ERROR
-#define OGLWRAP_CHECK_ERROR_NAMED(glfunc) __CheckError(__FILE__, __PRETTY_FUNCTION__, __LINE__, glfunc)
+#define OGLWRAP_CHECK_ERROR_NAMED(glfunc) oglwrap::__CheckError(__FILE__, __PRETTY_FUNCTION__, __LINE__, glfunc)
 
 /// Cuts the [with: ... part of the pretty func (not quite useful with oglwrap, but looks ugly).
 inline std::string cut_end_of_pretty_func(const std::string& func) {

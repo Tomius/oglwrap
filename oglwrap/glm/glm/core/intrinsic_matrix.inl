@@ -1,11 +1,30 @@
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// OpenGL Mathematics Copyright (c) 2005 - 2011 G-Truc Creation (www.g-truc.net)
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// Created : 2009-06-05
-// Updated : 2009-06-05
-// Licence : This source is under MIT License
-// File    : glm/core/intrinsic_common.inl
-///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+/// OpenGL Mathematics (glm.g-truc.net)
+///
+/// Copyright (c) 2005 - 2013 G-Truc Creation (www.g-truc.net)
+/// Permission is hereby granted, free of charge, to any person obtaining a copy
+/// of this software and associated documentation files (the "Software"), to deal
+/// in the Software without restriction, including without limitation the rights
+/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+/// copies of the Software, and to permit persons to whom the Software is
+/// furnished to do so, subject to the following conditions:
+/// 
+/// The above copyright notice and this permission notice shall be included in
+/// all copies or substantial portions of the Software.
+/// 
+/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+/// THE SOFTWARE.
+///
+/// @ref core
+/// @file glm/core/intrinsic_common.inl
+/// @date 2009-06-05 / 2011-06-15
+/// @author Christophe Riccio
+///////////////////////////////////////////////////////////////////////////////////
 
 namespace glm{
 namespace detail{
@@ -27,7 +46,7 @@ GLM_FUNC_QUALIFIER matType sse_comp_mul_ps
 	out[3] = _mm_mul_ps(in1[3], in2[3]);
 }
 
-GLM_FUNC_QUALIFIER void sse_add_ps(__m128 in1[4], __m128 in2[4], __m128 out[4])
+GLM_FUNC_QUALIFIER void sse_add_ps(__m128 const in1[4], __m128 const in2[4], __m128 out[4])
 {
 	{
 		out[0] = _mm_add_ps(in1[0], in2[0]);
@@ -37,7 +56,7 @@ GLM_FUNC_QUALIFIER void sse_add_ps(__m128 in1[4], __m128 in2[4], __m128 out[4])
 	}
 }
 
-GLM_FUNC_QUALIFIER void sse_sub_ps(__m128 in1[4], __m128 in2[4], __m128 out[4])
+GLM_FUNC_QUALIFIER void sse_sub_ps(__m128 const in1[4], __m128 const in2[4], __m128 out[4])
 {
 	{
 		out[0] = _mm_sub_ps(in1[0], in2[0]);
@@ -47,7 +66,7 @@ GLM_FUNC_QUALIFIER void sse_sub_ps(__m128 in1[4], __m128 in2[4], __m128 out[4])
 	}
 }
 
-GLM_FUNC_QUALIFIER __m128 sse_mul_ps(__m128 m[4], __m128 v)
+GLM_FUNC_QUALIFIER __m128 sse_mul_ps(__m128 const m[4], __m128 v)
 {
 	__m128 v0 = _mm_shuffle_ps(v, v, _MM_SHUFFLE(0, 0, 0, 0));
 	__m128 v1 = _mm_shuffle_ps(v, v, _MM_SHUFFLE(1, 1, 1, 1));
@@ -66,7 +85,7 @@ GLM_FUNC_QUALIFIER __m128 sse_mul_ps(__m128 m[4], __m128 v)
 	return a2;
 }
 
-GLM_FUNC_QUALIFIER __m128 sse_mul_ps(__m128 v, __m128 m[4])
+GLM_FUNC_QUALIFIER __m128 sse_mul_ps(__m128 v, __m128 const m[4])
 {
 	__m128 i0 = m[0];
 	__m128 i1 = m[1];

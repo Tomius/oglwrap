@@ -9,15 +9,15 @@
 
 namespace oglwrap {
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (glGenRenderbuffers)
-#if !OGLWRAP_CHECK_DEPENDENCIES || (glDeleteRenderbuffers)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGenRenderbuffers)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDeleteRenderbuffers)
 /// @brief A buffer that servers as a storage for a framebuffer.
 /// @see glGenRenderbuffers, glDeleteRenderbuffers
 class RenderBuffer {
     /// The handle for the render buffer.
     ObjectExt<glGenRenderbuffers, glDeleteRenderbuffers> renderbuffer;
 public:
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glBindRenderbuffer)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindRenderbuffer)
     /// @brief Binds this renderbuffer.
     /// @see glBindRenderbuffer
     void bind() {
@@ -25,7 +25,7 @@ public:
     }
     #endif // glBindRenderbuffer
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glBindRenderbuffer)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindRenderbuffer)
     /// @brief Unbinds this renderbuffer.
     /// @see glBindRenderbuffer
     void unbind() {
@@ -42,7 +42,7 @@ public:
         return renderbuffer == GLuint(currentlyBoundBuffer);
     }
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glRenderbufferStorage)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glRenderbufferStorage)
     /// @brief Establish data storage, format and dimensions of a renderbuffer object's image.
     /// @see glRenderbufferStorage
     void storage(PixelDataInternalFormat internalFormat, GLsizei width, GLsizei height) {
@@ -51,7 +51,7 @@ public:
     }
     #endif // glRenderbufferStorage
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glRenderbufferStorageMultisample)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glRenderbufferStorageMultisample)
     /// @brief Establish data storage, format, dimensions and sample count of a renderbuffer object's image.
     /// @see glRenderbufferStorageMultisample
     void storageMultisample(
@@ -70,13 +70,17 @@ public:
 #endif // glDeleteRenderbuffers
 #endif // glGenRenderbuffers
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (glGenFramebuffers)
-#if !OGLWRAP_CHECK_DEPENDENCIES || (glDeleteFramebuffers)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGenFramebuffers)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDeleteFramebuffers)
 /// A buffer that you can draw to.
 template<FramebufferType fbo_t>
 class FramebufferObject {
     ObjectExt<glGenFramebuffers, glDeleteFramebuffers> framebuffer; ///< The handle for the framebuffer
 public:
+
+    /// Default constructor
+    FramebufferObject() {}
+
     template<FramebufferType another_fbo_t>
     /// Creates a copy of the framebuffer, or casts it to another type.
     /** Important: if you use this to change the type of the active framebuffer,
@@ -85,7 +89,7 @@ public:
         : framebuffer(src.Expose())
     { }
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glBindFramebuffer)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindFramebuffer)
     /// @brief Binds the framebuffer for reading and/or drawing.
     /// @param target - The target to bind the framebuffer to.
     /// @see glBindFramebuffer
@@ -94,7 +98,7 @@ public:
     }
     #endif // glBindFramebuffer
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glBindFramebuffer)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindFramebuffer)
     /// @brief Unbinds the buffer from the target it is currently bound to.
     /// @see glBindFramebuffer
     void unbind() {
@@ -102,7 +106,7 @@ public:
     }
     #endif // glBindFramebuffer
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glCheckFramebufferStatus)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glCheckFramebufferStatus)
     /// @brief Returns the status of a bound framebuffer.
     /** Throws an exception if the framebuffer isn't bound. */
     /// @see glCheckFramebufferStatus
@@ -120,7 +124,7 @@ public:
         return framebuffer == GLuint(currentlyBoundBuffer);
     }
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glCheckFramebufferStatus)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glCheckFramebufferStatus)
     /// @brief Throws a logic error exception if the framebuffer isn't complete.
     /// @see glCheckFramebufferStatus
     void validate() {
@@ -178,7 +182,7 @@ public:
     }
     #endif // glCheckFramebufferStatus
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glFramebufferRenderbuffer)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glFramebufferRenderbuffer)
     /// @brief Attach a renderbuffer as a logical buffer to the currently bound framebuffer object
     /// @param attachment - Specifies the attachment point to which renderbuffer should be attached.
     /// @param renderBuffer - Specifies the renderbuffer object that is to be attached.
@@ -190,7 +194,7 @@ public:
     }
     #endif // glFramebufferRenderbuffer
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glFramebufferTexture)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glFramebufferTexture)
     template <TexType texture_t>
     /// @brief Attach a level of a texture object as a logical buffer to the currently bound framebuffer object
     /// @param attachment - Specifies the attachment point of the framebuffer.
@@ -200,11 +204,11 @@ public:
     void attachTexture(FramebufferAttachment attachment, const TextureBase<texture_t>& texture, GLuint level) {
         CHECK_BINDING();
 
-        gl( FramebufferTexture(fbo_t, attachment, texture.Expose(), level) );
+        gl( FramebufferTexture(fbo_t, attachment, texture.expose(), level) );
     }
     #endif // glFramebufferTexture
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glFramebufferTexture2D)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glFramebufferTexture2D)
     /// @brief Attach a level of a cube map as a logical buffer to the currently bound framebuffer object.
     /// @param attachment - Specifies the attachment point of the framebuffer.
     /// @param target - Specifies which face of the cube map is to be attached.

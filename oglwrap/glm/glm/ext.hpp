@@ -1,11 +1,59 @@
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// OpenGL Mathematics Copyright (c) 2005 - 2011 G-Truc Creation (www.g-truc.net)
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// Created : 2009-05-01
-// Updated : 2010-12-13
-// Licence : This source is under MIT License
-// File    : glm/ext.hpp
-///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+/// OpenGL Mathematics (glm.g-truc.net)
+///
+/// Copyright (c) 2005 - 2013 G-Truc Creation (www.g-truc.net)
+/// Permission is hereby granted, free of charge, to any person obtaining a copy
+/// of this software and associated documentation files (the "Software"), to deal
+/// in the Software without restriction, including without limitation the rights
+/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+/// copies of the Software, and to permit persons to whom the Software is
+/// furnished to do so, subject to the following conditions:
+/// 
+/// The above copyright notice and this permission notice shall be included in
+/// all copies or substantial portions of the Software.
+/// 
+/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+/// THE SOFTWARE.
+///
+/// @file glm/glm.hpp
+/// @date 2009-05-01 / 2011-05-16
+/// @author Christophe Riccio
+///
+/// @ref core (Dependence)
+/// 
+/// @defgroup gtc GTC Extensions (Stable)
+///
+/// @brief Functions and types that the GLSL specification doesn't define, but useful to have for a C++ program.
+/// 
+/// GTC extensions aim to be stable. 
+/// 
+/// Even if it's highly unrecommended, it's possible to include all the extensions at once by
+/// including <glm/ext.hpp>. Otherwise, each extension needs to be included  a specific file.
+/// 
+/// @defgroup gtx GTX Extensions (Experimental)
+/// 
+/// @brief Functions and types that the GLSL specification doesn't define, but 
+/// useful to have for a C++ program.
+/// 
+/// Experimental extensions are useful functions and types, but the development of
+/// their API and functionality is not necessarily stable. They can change 
+/// substantially between versions. Backwards compatibility is not much of an issue
+/// for them.
+/// 
+/// Even if it's highly unrecommended, it's possible to include all the extensions 
+/// at once by including <glm/ext.hpp>. Otherwise, each extension needs to be 
+/// included  a specific file.
+/// 
+/// @defgroup virtrev VIRTREV Extensions
+/// 
+/// @brief Extensions develop and maintain by Mathieu [matrem] Roumillac
+/// (http://www.opengl.org/discussion_boards/ubbthreads.php?ubb=showprofile&User=22660).
+///////////////////////////////////////////////////////////////////////////////////
 
 #ifndef glm_ext
 #define glm_ext
@@ -15,15 +63,21 @@
 #	pragma message("GLM: All extensions included (not recommanded)")
 #endif//GLM_MESSAGES
 
+#include "./gtc/constants.hpp"
+#include "./gtc/epsilon.hpp"
 #include "./gtc/half_float.hpp"
 #include "./gtc/matrix_access.hpp"
 #include "./gtc/matrix_integer.hpp"
 #include "./gtc/matrix_inverse.hpp"
 #include "./gtc/matrix_transform.hpp"
+#include "./gtc/noise.hpp"
 #include "./gtc/quaternion.hpp"
+#include "./gtc/random.hpp"
+#include "./gtc/reciprocal.hpp"
 #include "./gtc/swizzle.hpp"
 #include "./gtc/type_precision.hpp"
 #include "./gtc/type_ptr.hpp"
+#include "./gtc/ulp.hpp"
 
 #include "./gtx/associated_min_max.hpp"
 #include "./gtx/bit.hpp"
@@ -33,7 +87,6 @@
 #include "./gtx/color_space_YCoCg.hpp"
 #include "./gtx/compatibility.hpp"
 #include "./gtx/component_wise.hpp"
-#include "./gtx/epsilon.hpp"
 #include "./gtx/euler_angles.hpp"
 #include "./gtx/extend.hpp"
 #include "./gtx/extented_min_max.hpp"
@@ -54,7 +107,6 @@
 #include "./gtx/matrix_query.hpp"
 #include "./gtx/mixed_product.hpp"
 #include "./gtx/multiple.hpp"
-#include "./gtx/noise.hpp"
 #include "./gtx/norm.hpp"
 #include "./gtx/normal.hpp"
 #include "./gtx/normalize_dot.hpp"
@@ -66,17 +118,13 @@
 #include "./gtx/polar_coordinates.hpp"
 #include "./gtx/projection.hpp"
 #include "./gtx/quaternion.hpp"
-#include "./gtx/random.hpp"
 #include "./gtx/raw_data.hpp"
-#include "./gtx/reciprocal.hpp"
 #include "./gtx/rotate_vector.hpp"
 #include "./gtx/spline.hpp"
 #include "./gtx/std_based_type.hpp"
 #include "./gtx/string_cast.hpp"
 #include "./gtx/transform.hpp"
 #include "./gtx/transform2.hpp"
-#include "./gtx/ulp.hpp"
-#include "./gtx/unsigned_int.hpp"
 #include "./gtx/vec1.hpp"
 #include "./gtx/vector_access.hpp"
 #include "./gtx/vector_angle.hpp"

@@ -178,7 +178,7 @@ class AnimatedMesh : public Mesh {
 
     /// @brief The time of when did the last animation end.
     /** It is needed to know the time in the current animation. */
-    float end_of_last_anim,
+    float end_of_last_anim;
 
     /// @brief The animation of time the previous animation.
     /** It is needed to make the transition between two animations. */

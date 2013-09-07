@@ -6,8 +6,8 @@
 
 namespace oglwrap {
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (glGenTransformFeedbacks)
-#if !OGLWRAP_CHECK_DEPENDENCIES || (glDeleteTransformFeedbacks)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGenTransformFeedbacks)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDeleteTransformFeedbacks)
 /// A wrapper class for transform feedback.
 /** Transform Feedback is the process of altering the rendering pipeline so that primitives
   * processed by a Vertex Shader and optionally a Geometry Shader will be written to buffer
@@ -41,7 +41,7 @@ public:
         }
     }
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glBindTransformFeedback)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindTransformFeedback)
     /// Binds the transform feedback.
     /// @see glBindTransformFeedback
     void bind() const {
@@ -49,7 +49,7 @@ public:
     }
     #endif // glBindTransformFeedback
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glBindTransformFeedback)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindTransformFeedback)
     /// Unbinds the currently bound transform feedback.
     /// @see glBindTransformFeedback
     void unbind() const {
@@ -66,7 +66,7 @@ public:
         return handle == GLuint(currentlyBoundTFB);
     }
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glBeginTransformFeedback)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBeginTransformFeedback)
     /// Begins the transform feedback mode.
     /// @param mode - The primitive type the TFB should use.
     /// @see glBeginTransformFeedback
@@ -77,7 +77,7 @@ public:
     }
     #endif // glBeginTransformFeedback
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glEndTransformFeedback)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glEndTransformFeedback)
     /// Ends the transform feedback mode.
     /// @see glEndTransformFeedback
     void end() {
@@ -87,7 +87,7 @@ public:
     }
     #endif // glEndTransformFeedback
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glPauseTransformFeedback)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glPauseTransformFeedback)
     /// Pauses transform feedback operations on the currently active transform feedback object.
     /// @see glPauseTransformFeedback
     void pause() {
@@ -97,7 +97,7 @@ public:
     }
     #endif // glPauseTransformFeedback
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glResumeTransformFeedback)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glResumeTransformFeedback)
     /// Resumes transform feedback operations on the currently active transform feedback object.
     /// @see glResumeTransformFeedback
     void resume() {

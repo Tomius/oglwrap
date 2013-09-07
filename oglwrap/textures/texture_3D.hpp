@@ -10,7 +10,7 @@
 namespace oglwrap {
 
 // -------======{[ 3D Textures' declaration ]}======-------
-#if !OGLWRAP_CHECK_DEPENDENCIES || (GL_TEXTURE_3D)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_3D)
 template<Tex3DType texture_t>
 /// The base class describing functionality for all 2D textures.
 /** You should rather use the typedefed versions than this template. */
@@ -27,7 +27,7 @@ public:
     Texture3D_Base(const TextureBase<another_texture_t>& src)
         :TextureBase<texture_t>(src) {}
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glTexImage3D)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glTexImage3D)
     /// @brief Uploads the base image.
     /// @param internalFormat - Specifies the number, order, and size of the color components in the texture.
     /// @param width - Specifies the width of the texture image. All implementations support texture images that are at least 1024 texels wide.
@@ -54,7 +54,7 @@ public:
     }
     #endif // glTexImage3D
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glTexImage3D)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glTexImage3D)
     /// @brief Uploads a mipmap of the image.
     /// @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
     /// @param internalFormat - Specifies the number, order, and size of the color components in the texture.
@@ -83,7 +83,7 @@ public:
     }
     #endif // glTexImage3D
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glTexSubImage3D)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glTexSubImage3D)
     /// @brief Updates a part of the base image.
     /// @param xOffset/yOffset/zOffset - Specifies a texel offset in the x/y/z direction within the texture array.
     /// @param width/height/depth - Specifies the width/height/depth of the texture subimage.
@@ -110,7 +110,7 @@ public:
     }
     #endif // glTexSubImage3D
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glTexSubImage3D)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glTexSubImage3D)
     /// @brief Updates a part of a mipmap image.
     /// @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
     /// @param xOffset/yOffset/zOffset - Specifies a texel offset in the x/y/z direction within the texture array.
@@ -139,7 +139,7 @@ public:
     }
     #endif // glTexSubImage3D
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glCopyTexSubImage3D)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glCopyTexSubImage3D)
     /// @brief Copies pixels from the current GL_READ_BUFFER and updates part of the base mipmap of this texture with them.
     /// @param xOffset/yOffset/zOffset - Specifies the texel offset in the x/y/z direction within the destination texture array.
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
@@ -160,7 +160,7 @@ public:
     }
     #endif // glCopyTexSubImage3D
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glCopyTexSubImage3D)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glCopyTexSubImage3D)
     /// @brief Copies pixels from the current GL_READ_BUFFER and updates part of a mipmap of this texture.
     /// @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
     /// @param xOffset/yOffset/zOffset - Specifies the texel offset in the x/y/z direction within the destination texture array.
@@ -216,7 +216,7 @@ public:
         return data;
     }
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glGetCompressedTexImage)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetCompressedTexImage)
     /// @brief Return a compressed texture image
     /// @param level - Specifies the level-of-detail number of the desired image. Level 0 is the base image level. Level n is the nth mipmap reduction image.
     /// @param img - Returns the compressed texture image.
@@ -228,13 +228,13 @@ public:
     #endif
 };
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (GL_TEXTURE_3D)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_3D)
 /// @brief Three-dimensional texture.
 /// @see GL_TEXTURE_3D
 typedef Texture3D_Base<Tex3DType::Tex3D> Texture3D;
 #endif // GL_TEXTURE_3D
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (GL_TEXTURE_2D_ARRAY)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_2D_ARRAY)
 /// An array of two dimensional textures
 /// @see GL_TEXTURE_2D_ARRAY
 typedef Texture3D_Base<Tex3DType::Tex2DArray> Texture2D_Array;

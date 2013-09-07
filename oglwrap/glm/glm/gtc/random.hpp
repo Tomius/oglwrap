@@ -112,4 +112,3 @@ namespace glm
 #include "random.inl"
 
 #endif//GLM_GTC_random
-

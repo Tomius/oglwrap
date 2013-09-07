@@ -184,4 +184,3 @@ namespace glm
 #include "constants.inl"
 
 #endif//GLM_GTC_constants
-

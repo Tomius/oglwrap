@@ -198,7 +198,7 @@ public:
         return w;
     }
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glGetCompressedTexImage)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetCompressedTexImage)
     /// Return a compressed texture image
     /// @param level - Specifies the level-of-detail number of the desired image. Level 0 is the base image level. Level n is the nth mipmap reduction image.
     /// @param img - Returns the compressed texture image.

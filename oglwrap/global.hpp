@@ -3,7 +3,6 @@
 */
 
 #pragma once
-#include "vertexAttrib.hpp"
 
 /// A global operator that is a VertexArray constructor with nicer syntax.
 /** I think (prog | "Position") does look better than VertexAttribArray(prog, "Position") */

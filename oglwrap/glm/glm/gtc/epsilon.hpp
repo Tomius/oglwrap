@@ -92,4 +92,3 @@ namespace glm
 #include "epsilon.inl"
 
 #endif//GLM_GTC_epsilon
-

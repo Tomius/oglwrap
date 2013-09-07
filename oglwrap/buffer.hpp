@@ -6,8 +6,8 @@
 
 namespace oglwrap {
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (glGenBuffers)
-#if !OGLWRAP_CHECK_DEPENDENCIES || (glDeleteBuffers)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGenBuffers)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDeleteBuffers)
 template<BufferType buffer_t>
 /// Buffer Objects are OpenGL data stores, arrays on the server memory.
 /** Buffer Objects are OpenGL Objects that store an array
@@ -31,7 +31,7 @@ public:
         : buffer(src.Expose())
     { }
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glBindBuffer)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindBuffer)
     /// @brief Bind a buffer object to its default target.
     /// @see glBindBuffer
     void bind() const {
@@ -39,7 +39,7 @@ public:
     }
     #endif // glBindBuffer
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glBindBuffer)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindBuffer)
     /// @brief Unbind a buffer object from its default target.
     /// @see glBindBuffer
     static void unbind() {
@@ -55,7 +55,7 @@ public:
         return buffer == GLuint(currentlyBoundBuffer);
     }
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glBufferData)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBufferData)
     template<typename GLtype>
     /// @brief Creates and initializes a buffer object's data store.
     /// @param size - Specifies the size in bytes of the buffer object's new data store.
@@ -72,7 +72,7 @@ public:
     }
     #endif // glBufferData
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glBufferData)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBufferData)
     template<typename GLtype>
     /// @brief Creates and initializes a buffer object's data store.
     /// @param data - Specifies a vector of data to upload.
@@ -88,7 +88,7 @@ public:
     }
     #endif // glBufferData
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glBufferSubData)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBufferSubData)
     template<typename GLtype>
     /// @brief Updates a subset of a buffer object's data store.
     /// @param offset - Specifies the offset into the buffer object's data store where data replacement will begin, measured in bytes.
@@ -104,7 +104,7 @@ public:
     }
     #endif // glBufferSubData
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glBufferSubData)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBufferSubData)
     template<typename GLtype>
     /// @brief Updates a subset of a buffer object's data store.
     /// @param offset - Specifies the offset into the buffer object's data store where data replacement will begin, measured in bytes.
@@ -119,8 +119,8 @@ public:
     }
     #endif // glBufferSubData
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glGetBufferParameteriv)
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_BUFFER_SIZE)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetBufferParameteriv)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_BUFFER_SIZE)
     /// @brief A static version of size, without bind checking.
     static size_t s_size() {
         GLint data;
@@ -130,8 +130,8 @@ public:
     #endif // GL_BUFFER_SIZE
     #endif // glGetBufferParameteriv
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glGetBufferParameteriv)
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_BUFFER_SIZE)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetBufferParameteriv)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_BUFFER_SIZE)
     /// @brief A getter for the buffer's size.
     /// @return The size of the buffer currently bound to the buffer objects default target in bytes.
     /// @see glGetBufferParameteriv, GL_BUFFER_SIZE
@@ -147,9 +147,9 @@ public:
         return buffer;
     }
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glMapBuffer)
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glUnmapBuffer)
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (glMapBufferRange)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glMapBuffer)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUnmapBuffer)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glMapBufferRange)
     template <class T>
     /// Mapping moves the data of the buffer to the client address space.
     class TypedMap {
@@ -212,7 +212,7 @@ public:
     #endif // glMapBuffer
 };
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (GL_ARRAY_BUFFER)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_ARRAY_BUFFER)
 /// A Buffer that stores vertex attribute data.
 /** The buffer will be used as a source for vertex data,
   * but only when VertexAttribArray::Pointer​ is called. */
@@ -220,7 +220,7 @@ public:
 typedef BufferObject<BufferType::Array> ArrayBuffer;
 #endif // GL_ARRAY_BUFFER
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (GL_ELEMENT_ARRAY_BUFFER)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_ELEMENT_ARRAY_BUFFER)
 /// A buffer that stores the order of the vertices for a draw call.
 /** All rendering functions of the form gl*Draw*Elements*​ will use the pointer field as a byte offset from
   * the beginning of the buffer object bound to this target. The indices used for indexed rendering will be
@@ -230,15 +230,15 @@ typedef BufferObject<BufferType::Array> ArrayBuffer;
 typedef BufferObject<BufferType::ElementArray> IndexBuffer;
 #endif // GL_ELEMENT_ARRAY_BUFFER
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (GL_TEXTURE_BUFFER)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_BUFFER)
 /// A Buffer that stores texture pixels.
 /** This buffer has no special semantics, it is intended to use as a buffer object for Buffer Textures. */
 /// @see GL_TEXTURE_BUFFER
 typedef BufferObject<BufferType::Texture> TextureBuffer;
 #endif // GL_TEXTURE_BUFFER
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (glBindBufferBase)
-#if !OGLWRAP_CHECK_DEPENDENCIES || (glBindBufferRange)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindBufferBase)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindBufferRange)
 template<IndexedBufferType buffer_t>
 /// Buffer objects that have an array of binding targets, like UniformBuffers.
 /** Buffer Objects are OpenGL Objects that store an array
@@ -270,13 +270,13 @@ public:
     }
 };
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (GL_UNIFORM_BUFFER)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNIFORM_BUFFER)
 /// @brief An indexed buffer binding for buffers used as storage for uniform blocks.
 /// @see GL_UNIFORM_BUFFER
 typedef IndexedBufferObject<IndexedBufferType::Uniform> UniformBuffer;
 #endif // GL_UNIFORM_BUFFER
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (GL_TRANSFORM_FEEDBACK_BUFFER)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TRANSFORM_FEEDBACK_BUFFER)
 /// @brief An indexed buffer binding for buffers used in Transform Feedback operations.
 /// @see GL_TRANSFORM_FEEDBACK_BUFFER
 typedef IndexedBufferObject<IndexedBufferType::TransformFeedback> TransformFeedbackBuffer;
