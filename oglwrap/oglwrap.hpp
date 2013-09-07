@@ -15,6 +15,7 @@
 
 // standard headers
 #include <map>
+#include <cmath>
 #include <vector>
 #include <string>
 #include <cctype>

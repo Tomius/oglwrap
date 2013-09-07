@@ -1,43 +1,17 @@
-///////////////////////////////////////////////////////////////////////////////////
-/// OpenGL Mathematics (glm.g-truc.net)
-///
-/// Copyright (c) 2005 - 2013 G-Truc Creation (www.g-truc.net)
-/// Permission is hereby granted, free of charge, to any person obtaining a copy
-/// of this software and associated documentation files (the "Software"), to deal
-/// in the Software without restriction, including without limitation the rights
-/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-/// copies of the Software, and to permit persons to whom the Software is
-/// furnished to do so, subject to the following conditions:
-/// 
-/// The above copyright notice and this permission notice shall be included in
-/// all copies or substantial portions of the Software.
-/// 
-/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-/// THE SOFTWARE.
-///
-/// @ref gtx_ocl_type
-/// @file glm/gtx/ocl_type.hpp
-/// @date 2009-05-07 / 2011-06-07
-/// @author Christophe Riccio
-///
-/// @see core (dependence)
-/// @see gtx_extented_min_max (dependence)
-///
-/// @defgroup gtx_ocl_type GLM_GTX_ocl_type
-/// @ingroup gtx
-/// 
-/// @brief OpenCL types.
-/// 
-/// <glm/gtx/ocl_type.hpp> need to be included to use these functionalities.
-///////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// OpenGL Mathematics Copyright (c) 2005 - 2011 G-Truc Creation (www.g-truc.net)
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Created : 2009-05-07
+// Updated : 2009-05-07
+// Licence : This source is under MIT License
+// File    : glm/gtx/number_precision.hpp
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Dependency:
+// - GLM core
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef GLM_GTX_ocl_type
-#define GLM_GTX_ocl_type GLM_VERSION
+#ifndef glm_gtx_ocl_type
+#define glm_gtx_ocl_type
 
 // Dependency:
 #include "../glm.hpp"
@@ -47,12 +21,13 @@
 #endif
 
 namespace glm{
-namespace gtx
+namespace gtx{
+namespace ocl_type ///< GLM_GTX_ocl_type extension: OpenCL types.
 {
 	///////////////////////////
 	// Scalar types 
 
-	/// @addtogroup gtx_ocl_type
+	/// \addtogroup gtx_ocl_type
 	/// @{
 
 	typedef detail::int8						cl_char;		//!< \brief 8bit signed integer. (from GLM_GTX_ocl_type extension)
@@ -79,7 +54,7 @@ namespace gtx
 	typedef detail::uint32						cl_uint1;		//!< \brief 32bit signed integer. (from GLM_GTX_ocl_type extension)
 	typedef detail::uint64						cl_ulong1;		//!< \brief 64bit signed integer. (from GLM_GTX_ocl_type extension)
 
-	//typedef detail::float16					cl_half1;	//!< \brief Half-precision floating-point scalar. (from GLM_GTX_ocl_type extension)
+	//typedef detail::float16						cl_half1;	//!< \brief Half-precision floating-point scalar. (from GLM_GTX_ocl_type extension)
 	typedef detail::float32						cl_float1;	//!< \brief Single-precision floating-point scalar. (from GLM_GTX_ocl_type extension)
 
 
@@ -93,7 +68,7 @@ namespace gtx
 	typedef detail::tvec2<detail::uint32>		cl_uint2;		//!< \brief 32bit signed integer. (from GLM_GTX_ocl_type extension)
 	typedef detail::tvec2<detail::uint64>		cl_ulong2;		//!< \brief 64bit signed integer. (from GLM_GTX_ocl_type extension)
 
-	//typedef detail::tvec2<detail::float16>	cl_half2;	//!< \brief Half-precision floating-point scalar. (from GLM_GTX_ocl_type extension)
+	//typedef detail::tvec2<detail::float16>		cl_half2;	//!< \brief Half-precision floating-point scalar. (from GLM_GTX_ocl_type extension)
 	typedef detail::tvec2<detail::float32>		cl_float2;	//!< \brief Single-precision floating-point scalar. (from GLM_GTX_ocl_type extension)
 
 
@@ -107,7 +82,7 @@ namespace gtx
 	typedef detail::tvec3<detail::uint32>		cl_uint3;		//!< \brief 32bit signed integer. (from GLM_GTX_ocl_type extension)
 	typedef detail::tvec3<detail::uint64>		cl_ulong3;		//!< \brief 64bit signed integer. (from GLM_GTX_ocl_type extension)
 
-	//typedef detail::tvec3<detail::float16>	cl_half3;	//!< \brief Half-precision floating-point scalar. (from GLM_GTX_ocl_type extension)
+	//typedef detail::tvec3<detail::float16>		cl_half3;	//!< \brief Half-precision floating-point scalar. (from GLM_GTX_ocl_type extension)
 	typedef detail::tvec3<detail::float32>		cl_float3;	//!< \brief Single-precision floating-point scalar. (from GLM_GTX_ocl_type extension)
 
 
@@ -120,14 +95,16 @@ namespace gtx
 	typedef detail::tvec4<detail::uint32>		cl_uint4;		//!< \brief 32bit signed integer. (from GLM_GTX_ocl_type extension)
 	typedef detail::tvec4<detail::uint64>		cl_ulong4;		//!< \brief 64bit signed integer. (from GLM_GTX_ocl_type extension)
 
-	//typedef detail::tvec4<detail::float16>	cl_half4;	//!< \brief Half-precision floating-point scalar. (from GLM_GTX_ocl_type extension)
+	//typedef detail::tvec4<detail::float16>		cl_half4;	//!< \brief Half-precision floating-point scalar. (from GLM_GTX_ocl_type extension)
 	typedef detail::tvec4<detail::float32>		cl_float4;	//!< \brief Single-precision floating-point scalar. (from GLM_GTX_ocl_type extension)
 
 	/// @}
+}//namespace ocl_type
 }//namespace gtx
 }//namespace glm
 
 #include "ocl_type.inl"
 
-#endif//GLM_GTX_ocl_type
+namespace glm{using namespace gtx::ocl_type;}
 
+#endif//glm_gtx_ocl_type

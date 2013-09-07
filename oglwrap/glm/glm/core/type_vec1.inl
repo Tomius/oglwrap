@@ -1,36 +1,23 @@
-///////////////////////////////////////////////////////////////////////////////////
-/// OpenGL Mathematics (glm.g-truc.net)
-///
-/// Copyright (c) 2005 - 2013 G-Truc Creation (www.g-truc.net)
-/// Permission is hereby granted, free of charge, to any person obtaining a copy
-/// of this software and associated documentation files (the "Software"), to deal
-/// in the Software without restriction, including without limitation the rights
-/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-/// copies of the Software, and to permit persons to whom the Software is
-/// furnished to do so, subject to the following conditions:
-/// 
-/// The above copyright notice and this permission notice shall be included in
-/// all copies or substantial portions of the Software.
-/// 
-/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-/// THE SOFTWARE.
-///
-/// @ref core
-/// @file glm/core/type_vec1.inl
-/// @date 2008-08-25 / 2011-06-15
-/// @author Christophe Riccio
-///////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// OpenGL Mathematics Copyright (c) 2005 - 2011 G-Truc Creation (www.g-truc.net)
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Created : 2008-08-25
+// Updated : 2010-02-04
+// Licence : This source is under MIT License
+// File    : glm/core/type_vec1.inl
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 namespace glm{
 namespace detail
 {
 	template <typename T>
-	GLM_FUNC_QUALIFIER GLM_CONSTEXPR typename tvec1<T>::size_type tvec1<T>::length() const
+	GLM_FUNC_QUALIFIER typename tvec1<T>::size_type tvec1<T>::length() const
+	{
+		return 1;
+	}
+
+	template <typename T>
+	GLM_FUNC_QUALIFIER typename tvec1<T>::size_type tvec1<T>::value_size()
 	{
 		return 1;
 	}
@@ -44,7 +31,7 @@ namespace detail
 		size_type i
 	)
 	{
-		assert(i < this->length());
+		assert(i < value_size());
 		return (&x)[i];
 	}
 
@@ -54,7 +41,7 @@ namespace detail
 		size_type i
 	) const
 	{
-		assert(i < this->length());
+		assert(i < value_size());
 		return (&x)[i];
 	}
 
@@ -159,101 +146,82 @@ namespace detail
 	}
 
 	template <typename T>
-	template <typename U> 
-	GLM_FUNC_QUALIFIER tvec1<T> & tvec1<T>::operator=
-	(
-		tvec1<U> const & v
-	)
-	{
-		this->x = T(v.x);
-		return *this;
-	}
-
-	template <typename T>
-	template <typename U> 
 	GLM_FUNC_QUALIFIER tvec1<T> & tvec1<T>::operator+=
 	(
-		U const & s
+		value_type const & s
 	)
 	{
-		this->x += T(s);
+		this->x += s;
 		return *this;
 	}
 
 	template <typename T>
-	template <typename U> 
 	GLM_FUNC_QUALIFIER tvec1<T> & tvec1<T>::operator+=
 	(
-		tvec1<U> const & v
+		tvec1<T> const & v
 	)
 	{
-		this->x += T(v.x);
+		this->x += v.x;
 		return *this;
 	}
 
 	template <typename T>
-	template <typename U> 
 	GLM_FUNC_QUALIFIER tvec1<T> & tvec1<T>::operator-=
 	(
-		U const & s
+		value_type const & s
 	)
 	{
-		this->x -= T(s);
+		this->x -= s;
 		return *this;
 	}
 
 	template <typename T>
-	template <typename U> 
 	GLM_FUNC_QUALIFIER tvec1<T> & tvec1<T>::operator-=
 	(
-		tvec1<U> const & v
+		tvec1<T> const & v
 	)
 	{
-		this->x -= T(v.x);
+		this->x -= v.x;
 		return *this;
 	}
 
 	template <typename T>
-	template <typename U> 
 	GLM_FUNC_QUALIFIER tvec1<T> & tvec1<T>::operator*=
 	(
-		U const & s
+		value_type const & s
 	)
 	{
-		this->x *= T(s);
+		this->x *= s;
 		return *this;
 	}
 
 	template <typename T>
-	template <typename U> 
 	GLM_FUNC_QUALIFIER tvec1<T> & tvec1<T>::operator*=
 	(	
-		tvec1<U> const & v
+		tvec1<T> const & v
 	)
 	{
-		this->x *= T(v.x);
+		this->x *= v.x;
 		return *this;
 	}
 
 	template <typename T>
-	template <typename U> 
 	GLM_FUNC_QUALIFIER tvec1<T> & tvec1<T>::operator/=
 	(
-		U const & s
+		value_type const & s
 	)
 	{
-		this->x /= T(s);
+		this->x /= s;
 		return *this;
 	}
 
 	template <typename T>
-	template <typename U> 
 	GLM_FUNC_QUALIFIER tvec1<T> & tvec1<T>::operator/=
 	(
-		tvec1<U> const & v
+		tvec1<T> const & v
 	)
 	{
-		this->x /= T(v.x);
+		this->x /= v.x;
 		return *this;
 	}
 
@@ -298,134 +266,122 @@ namespace detail
 	// Unary bit operators
 
 	template <typename T>
-	template <typename U> 
 	GLM_FUNC_QUALIFIER tvec1<T> & tvec1<T>::operator%=
 	(
-		U const & s
+		value_type const & s
 	)
 	{
-		this->x %= T(s);
+		this->x %= s;
 		return *this;
 	}
 
 	template <typename T>
-	template <typename U> 
 	GLM_FUNC_QUALIFIER tvec1<T> & tvec1<T>::operator%=
 	(
-		tvec1<U> const & v
+		tvec1<T> const & v
 	)
 	{
-		this->x %= T(v.x);
+		this->x %= v.x;
 		return *this;
 	}
 
 	template <typename T>
-	template <typename U> 
 	GLM_FUNC_QUALIFIER tvec1<T> & tvec1<T>::operator&=
 	(
-		U const & s
+		value_type const & s
 	)
 	{
-		this->x &= T(s);
+		this->x &= s;
 		return *this;
 	}
 
 	template <typename T>
-	template <typename U> 
 	GLM_FUNC_QUALIFIER tvec1<T> & tvec1<T>::operator&=
 	(
-		tvec1<U> const & v
+		tvec1<T> const & v
 	)
 	{
-		this->x &= T(v.x);
+		this->x &= v.x;
 		return *this;
 	}
 
 	template <typename T>
-	template <typename U> 
 	GLM_FUNC_QUALIFIER tvec1<T> & tvec1<T>::operator|=
 	(
-		U const & s
+		value_type const & s
 	)
 	{
-		this->x |= T(s);
+		this->x |= s;
 		return *this;
 	}
 
 	template <typename T>
-	template <typename U> 
 	GLM_FUNC_QUALIFIER tvec1<T> & tvec1<T>::operator|=
 	(
-		tvec1<U> const & v
+		tvec1<T> const & v
 	)
 	{
-		this->x |= U(v.x);
+		this->x |= v.x;
 		return *this;
 	}
 
 	template <typename T>
-	template <typename U> 
 	GLM_FUNC_QUALIFIER tvec1<T> & tvec1<T>::operator^=
 	(
-		U const & s
+		value_type const & s
 	)
 	{
-		this->x ^= T(s);
+		this->x ^= s;
 		return *this;
 	}
 
 	template <typename T>
-	template <typename U> 
 	GLM_FUNC_QUALIFIER tvec1<T> & tvec1<T>::operator^=
 	(
-		tvec1<U> const & v
+		tvec1<T> const & v
 	)
 	{
-		this->x ^= T(v.x);
+		this->x ^= v.x;
 		return *this;
 	}
 
 	template <typename T>
-	template <typename U> 
 	GLM_FUNC_QUALIFIER tvec1<T> & tvec1<T>::operator<<=
 	(
-		U const & s
+		value_type const & s
 	)
 	{
-		this->x <<= T(s);
+		this->x <<= s;
 		return *this;
 	}
 
 	template <typename T>
-	template <typename U> 
 	GLM_FUNC_QUALIFIER tvec1<T> & tvec1<T>::operator<<=
 	(
-		tvec1<U> const & v
+		tvec1<T> const & v
 	)
 	{
-		this->x <<= T(v.x);
+		this->x <<= v.x;
 		return *this;
 	}
 
 	template <typename T>
-	template <typename U> 
 	GLM_FUNC_QUALIFIER tvec1<T> & tvec1<T>::operator>>=
 	(
-		U const & s
+		value_type const & s
 	)
 	{
-		this->x >>= T(s);
+		this->x >>= s;
 		return *this;
 	}
 
 	template <typename T>
-	template <typename U> 
 	GLM_FUNC_QUALIFIER tvec1<T> & tvec1<T>::operator>>=
 	(
-		tvec1<U> const & v
+		tvec1<T> const & v
 	)
 	{
-		this->x >>= T(v.x);
+		this->x >>= v.x;
 		return *this;
 	}
 

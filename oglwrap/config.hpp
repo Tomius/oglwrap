@@ -11,6 +11,7 @@
         #define OGLWRAP_CHECK_DEPENDENCIES 1
     #else // else all #if defined(gl*) would evaluate as false, so better just disable dependency check
         #define OGLWRAP_CHECK_DEPENDENCIES 0
+    #endif
 #endif
 
 /// If true, enables error checking, and DebugOutputs.

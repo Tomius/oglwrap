@@ -1,36 +1,23 @@
-///////////////////////////////////////////////////////////////////////////////////
-/// OpenGL Mathematics (glm.g-truc.net)
-///
-/// Copyright (c) 2005 - 2013 G-Truc Creation (www.g-truc.net)
-/// Permission is hereby granted, free of charge, to any person obtaining a copy
-/// of this software and associated documentation files (the "Software"), to deal
-/// in the Software without restriction, including without limitation the rights
-/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-/// copies of the Software, and to permit persons to whom the Software is
-/// furnished to do so, subject to the following conditions:
-/// 
-/// The above copyright notice and this permission notice shall be included in
-/// all copies or substantial portions of the Software.
-/// 
-/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-/// THE SOFTWARE.
-///
-/// @ref core
-/// @file glm/core/type_tvec2.inl
-/// @date 2008-08-18 / 2011-06-15
-/// @author Christophe Riccio
-///////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// OpenGL Mathematics Copyright (c) 2005 - 2011 G-Truc Creation (www.g-truc.net)
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Created : 2008-08-18
+// Updated : 2010-10-26
+// Licence : This source is under MIT License
+// File    : glm/core/type_tvec2.inl
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 namespace glm{
 namespace detail
 {
 	template <typename T>
-	GLM_FUNC_QUALIFIER GLM_CONSTEXPR typename tvec2<T>::size_type tvec2<T>::length() const
+	GLM_FUNC_QUALIFIER typename tvec2<T>::size_type tvec2<T>::length() const
+	{
+		return 2;
+	}
+
+	template <typename T>
+	GLM_FUNC_QUALIFIER typename tvec2<T>::size_type tvec2<T>::value_size()
 	{
 		return 2;
 	}
@@ -45,7 +32,7 @@ namespace detail
 		size_type i
 	)
 	{
-		assert(i < this->length());
+		assert(i < value_size());
 		return (&x)[i];
 	}
 
@@ -56,7 +43,7 @@ namespace detail
 		size_type i
 	) const
 	{
-		assert(i < this->length());
+		assert(i < value_size());
 		return (&x)[i];
 	}
 
@@ -136,11 +123,11 @@ namespace detail
 	template <typename U, typename V> 
 	GLM_FUNC_QUALIFIER tvec2<T>::tvec2
 	(
-		U const & a, 
-		V const & b
+		U const & x, 
+		V const & y
 	) :
-		x(value_type(a)),
-		y(value_type(b))
+		x(value_type(x)),
+		y(value_type(y))
 	{}
 
 	//////////////////////////////////////
@@ -1024,5 +1011,6 @@ namespace detail
 	{
 		return tvec2<T>(this->x, this->y);
 	}
+
 }//namespace detail
 }//namespace glm

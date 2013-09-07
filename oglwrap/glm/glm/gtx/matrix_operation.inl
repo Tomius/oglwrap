@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// OpenGL Mathematics Copyright (c) 2005 - 2013 G-Truc Creation (www.g-truc.net)
+// OpenGL Mathematics Copyright (c) 2005 - 2011 G-Truc Creation (www.g-truc.net)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Created : 2009-08-29
 // Updated : 2009-08-29
@@ -7,7 +7,9 @@
 // File    : glm/gtx/matrix_operation.inl
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace glm
+namespace glm{
+namespace gtx{
+namespace matrix_operation
 {
 	template <typename valType> 
 	GLM_FUNC_QUALIFIER detail::tmat2x2<valType> diagonal2x2
@@ -121,4 +123,7 @@ namespace glm
 		Result[1][1] = v[1];
 		return Result;		
 	}
+
+}//namespace matrix_operation
+}//namespace gtx
 }//namespace glm

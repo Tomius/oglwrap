@@ -1,47 +1,21 @@
-///////////////////////////////////////////////////////////////////////////////////
-/// OpenGL Mathematics (glm.g-truc.net)
-///
-/// Copyright (c) 2005 - 2013 G-Truc Creation (www.g-truc.net)
-/// Permission is hereby granted, free of charge, to any person obtaining a copy
-/// of this software and associated documentation files (the "Software"), to deal
-/// in the Software without restriction, including without limitation the rights
-/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-/// copies of the Software, and to permit persons to whom the Software is
-/// furnished to do so, subject to the following conditions:
-/// 
-/// The above copyright notice and this permission notice shall be included in
-/// all copies or substantial portions of the Software.
-/// 
-/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-/// THE SOFTWARE.
-///
-/// @ref gtx_simd_vec4
-/// @file glm/gtx/simd_vec4.hpp
-/// @date 2009-05-07 / 2011-06-07
-/// @author Christophe Riccio
-///
-/// @see core (dependence)
-///
-/// @defgroup gtx_simd_vec4 GLM_GTX_simd_vec4
-/// @ingroup gtx
-/// 
-/// @brief SIMD implementation of vec4 type.
-/// 
-/// <glm/gtx/simd_vec4.hpp> need to be included to use these functionalities.
-///////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// OpenGL Mathematics Copyright (c) 2005 - 2011 G-Truc Creation (www.g-truc.net)
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Created : 2009-05-07
+// Updated : 2009-05-07
+// Licence : This source is under MIT License
+// File    : glm/gtx/simd_vec4.hpp
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Dependency:
+// - GLM core
+// - intrinsic
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef GLM_GTX_simd_vec4
-#define GLM_GTX_simd_vec4 GLM_VERSION
+#ifndef glm_gtx_simd_vec4
+#define glm_gtx_simd_vec4
 
 // Dependency:
 #include "../glm.hpp"
-
-#if(GLM_ARCH != GLM_ARCH_PURE)
 
 #if(GLM_ARCH & GLM_ARCH_SSE2)
 #	include "../core/intrinsic_common.hpp"
@@ -53,14 +27,6 @@
 #if(defined(GLM_MESSAGES) && !defined(glm_ext))
 #	pragma message("GLM: GLM_GTX_simd_vec4 extension included")
 #endif
-
-
-// Warning silencer for nameless struct/union.
-#if (GLM_COMPILER & GLM_COMPILER_VC)
-#   pragma warning(push)
-#   pragma warning(disable:4201)   // warning C4201: nonstandard extension used : nameless struct/union
-#endif
-
 
 namespace glm{
 namespace detail
@@ -77,15 +43,7 @@ namespace detail
 		typedef fvec4SIMD type;
 		typedef tvec4<bool> bool_type;
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (GLM_SIMD_ENABLE_XYZW_UNION)
-        union
-        {
-		    __m128 Data;
-            struct {float x, y, z, w;};
-        };
-#else
-        __m128 Data;
-#endif
+		__m128 Data;
 
 		//////////////////////////////////////
 		// Implicit basic constructors
@@ -153,10 +111,13 @@ namespace detail
 	};
 }//namespace detail
 
+namespace gtx{
+namespace simd_vec4 ///< GLM_GTX_simd_vec4 extension: SIMD implementation of vec4 type.
+{
 	typedef glm::detail::fvec4SIMD simdVec4;
 
-	/// @addtogroup gtx_simd_vec4
-	/// @{
+	/// \addtogroup gtx_simd_vec4
+	///@{
 
 	//! Convert a simdVec4 to a vec4.
 	//! (From GLM_GTX_simd_vec4 extension)
@@ -305,8 +266,8 @@ namespace detail
 	//! you would want a threshold function with a smooth
 	//! transition. This is equivalent to:
 	//! genType t;
-	//! t = clamp ((x - edge0) / (edge1 - edge0), 0, 1);
-	//! return t * t * (3 - 2 * t);
+	//! t = clamp ((x – edge0) / (edge1 – edge0), 0, 1);
+	//! return t * t * (3 – 2 * t);
 	//! Results are undefined if edge0 >= edge1.
 	//! (From GLM_GTX_simd_vec4 extension, common function)
 	detail::fvec4SIMD smoothstep(
@@ -502,17 +463,12 @@ namespace detail
 		detail::fvec4SIMD const & x);
 
 	/// @}
+}//namespace simd_vec4
+}//namespace gtx
 }//namespace glm
 
 #include "simd_vec4.inl"
 
+namespace glm{using namespace gtx::simd_vec4;}
 
-#if (GLM_COMPILER & GLM_COMPILER_VC)
-#   pragma warning(pop)
-#endif
-
-
-#endif//(GLM_ARCH != GLM_ARCH_PURE)
-
-#endif//GLM_GTX_simd_vec4
-
+#endif//glm_gtx_simd_vec4

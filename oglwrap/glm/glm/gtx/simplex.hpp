@@ -68,4 +68,3 @@ namespace glm{using namespace gtx::simplex;}
 
 #endif//glm_gtx_spline
 
-
