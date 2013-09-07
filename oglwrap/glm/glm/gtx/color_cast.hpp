@@ -122,3 +122,4 @@ namespace glm
 #include "color_cast.inl"
 
 #endif//GLM_GTX_color_cast
+

@@ -97,3 +97,4 @@ namespace glm
 #include "fast_exponential.inl"
 
 #endif//GLM_GTX_fast_exponential
+

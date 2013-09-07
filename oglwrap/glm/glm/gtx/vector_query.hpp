@@ -110,3 +110,4 @@ namespace glm
 #include "vector_query.inl"
 
 #endif//GLM_GTX_vector_query
+

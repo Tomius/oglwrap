@@ -77,3 +77,4 @@ GLM_FUNC_QUALIFIER __m128 sse_normalize_fast_ps(  float * RESTRICT vOut, float *
 
 #endif//GLM_ARCH
 #endif//glm_detail_intrinsic_exponential
+

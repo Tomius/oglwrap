@@ -65,3 +65,4 @@ namespace glm
 #include "normal.inl"
 
 #endif//GLM_GTX_normal
+

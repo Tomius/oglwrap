@@ -428,3 +428,4 @@ namespace glm
 #include "func_common.inl"
 
 #endif//GLM_CORE_func_common
+

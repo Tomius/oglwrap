@@ -97,3 +97,4 @@ inline void __CheckError(const char *file, const char *func, int line, const cha
 #define gl(func) glfunc(gl##func)
 
 } // namespace oglwrap
+

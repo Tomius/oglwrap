@@ -204,3 +204,4 @@ namespace detail
 #endif//(GLM_ARCH != GLM_ARCH_PURE)
 
 #endif//GLM_GTX_simd_mat4
+

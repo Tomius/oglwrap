@@ -141,3 +141,4 @@ namespace glm
 #include "matrix_major_storage.inl"
 
 #endif//GLM_GTX_matrix_major_storage
+

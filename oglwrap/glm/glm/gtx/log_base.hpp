@@ -63,3 +63,4 @@ namespace glm
 #include "log_base.inl"
 
 #endif//GLM_GTX_log_base
+

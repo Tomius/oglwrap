@@ -70,3 +70,4 @@ namespace glm
 #include "polar_coordinates.inl"
 
 #endif//GLM_GTX_polar_coordinates
+

@@ -480,3 +480,4 @@ namespace detail
 #endif//GLM_COMPILER
 
 #endif//glm_core_detail
+

@@ -77,7 +77,7 @@ namespace detail
 		typedef fvec4SIMD type;
 		typedef tvec4<bool> bool_type;
 
-#ifdef GLM_SIMD_ENABLE_XYZW_UNION
+#if !OGLWRAP_CHECK_DEPENDENCIES || (GLM_SIMD_ENABLE_XYZW_UNION)
         union
         {
 		    __m128 Data;
@@ -515,3 +515,4 @@ namespace detail
 #endif//(GLM_ARCH != GLM_ARCH_PURE)
 
 #endif//GLM_GTX_simd_vec4
+

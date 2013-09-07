@@ -116,3 +116,4 @@ namespace detail
 #include "type_half.inl"
 
 #endif//glm_core_type_half
+

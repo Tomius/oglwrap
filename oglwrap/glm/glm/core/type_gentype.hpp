@@ -167,3 +167,4 @@ namespace detail
 //#include "type_gentype.inl"
 
 #endif//glm_core_type_gentype
+

@@ -85,3 +85,4 @@ namespace glm
 #include "func_noise.inl"
 
 #endif//glm_core_func_noise
+

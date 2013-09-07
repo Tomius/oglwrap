@@ -23,3 +23,4 @@ static void (*error_callback)(std::string) = default_error_callback;
 } // namespace oglwrap
 
 #endif // OGLWRAP_DEBUG
+

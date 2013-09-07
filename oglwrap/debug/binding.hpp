@@ -129,13 +129,13 @@ inline BufferBinding getBindingTarget(BufferType buffer_t) {
     BufferBinding target;
 
     switch(buffer_t) {
-        #ifdef GL_ARRAY_BUFFER_BINDING
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_ARRAY_BUFFER_BINDING)
         case BufferType::Array:
             target = BufferBinding::Array;
             OGLWRAP_LAST_BIND_TARGET = "GL_ARRAY_BUFFER_BINDING";
             break;
         #endif
-        #ifdef GL_ATOMIC_COUNTER_BUFFER_BINDING
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_ATOMIC_COUNTER_BUFFER_BINDING)
         case BufferType::AtomicCounter:
             target = BufferBinding::AtomicCounter;
             OGLWRAP_LAST_BIND_TARGET = "GL_ATOMIC_COUNTER_BUFFER_BINDING";
@@ -143,69 +143,69 @@ inline BufferBinding getBindingTarget(BufferType buffer_t) {
         #endif
 
         // Note: these two do not end with _BINDING
-        #ifdef GL_COPY_READ_BUFFER
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_COPY_READ_BUFFER)
         case BufferType::CopyRead:
             target = BufferBinding::CopyRead;
             OGLWRAP_LAST_BIND_TARGET = "GL_COPY_READ_BUFFER";
             break;
         #endif
-        #ifdef GL_COPY_WRITE_BUFFER
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_COPY_WRITE_BUFFER)
         case BufferType::CopyWrite:
             target = BufferBinding::CopyWrite;
             OGLWRAP_LAST_BIND_TARGET = "GL_COPY_WRITE_BUFFER";
             break;
         #endif
 
-        #ifdef GL_DISPATCH_INDIRECT_BUFFER_BINDING
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_DISPATCH_INDIRECT_BUFFER_BINDING)
         case BufferType::DispatchIndirect:
             target = BufferBinding::DispatchIndirect;
             OGLWRAP_LAST_BIND_TARGET = "GL_DISPATCH_INDIRECT_BUFFER_BINDING";
             break;
         #endif
-        #ifdef GL_DRAW_INDIRECT_BUFFER_BINDING
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_DRAW_INDIRECT_BUFFER_BINDING)
         case BufferType::DrawIndirect:
             target = BufferBinding::DrawIndirect;
             OGLWRAP_LAST_BIND_TARGET = "GL_DRAW_INDIRECT_BUFFER_BINDING";
             break;
         #endif
-        #ifdef GL_ELEMENT_ARRAY_BUFFER_BINDING
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_ELEMENT_ARRAY_BUFFER_BINDING)
         case BufferType::ElementArray:
             target = BufferBinding::ElementArray;
             OGLWRAP_LAST_BIND_TARGET = "GL_ELEMENT_ARRAY_BUFFER_BINDING";
             break;
         #endif
-        #ifdef GL_PIXEL_PACK_BUFFER_BINDING
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_PIXEL_PACK_BUFFER_BINDING)
         case BufferType::PixelPack:
             target = BufferBinding::PixelPack;
             OGLWRAP_LAST_BIND_TARGET = "GL_PIXEL_PACK_BUFFER_BINDING";
             break;
         #endif
-        #ifdef GL_PIXEL_UNPACK_BUFFER_BINDING
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_PIXEL_UNPACK_BUFFER_BINDING)
         case BufferType::PixelUnpack:
             target = BufferBinding::PixelUnpack;
             OGLWRAP_LAST_BIND_TARGET = "GL_PIXEL_UNPACK_BUFFER_BINDING";
             break;
         #endif
-        #ifdef GL_SHADER_STORAGE_BUFFER_BINDING
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_SHADER_STORAGE_BUFFER_BINDING)
         case BufferType::ShaderStorage:
             target = BufferBinding::ShaderStorage;
             OGLWRAP_LAST_BIND_TARGET = "GL_SHADER_STORAGE_BUFFER_BINDING";
             break;
         #endif
         // Note: It's not BUFFER_BINDING but BINDING_BUFFER.
-        #ifdef GL_TEXTURE_BINDING_BUFFER
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_TEXTURE_BINDING_BUFFER)
         case BufferType::Texture:
             target = BufferBinding::Texture;
             OGLWRAP_LAST_BIND_TARGET = "GL_TEXTURE_BINDING_BUFFER";
             break;
         #endif
-        #ifdef GL_TRANSFORM_FEEDBACK_BUFFER_BINDING
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_TRANSFORM_FEEDBACK_BUFFER_BINDING)
         case BufferType::TransformFeedback:
             target = BufferBinding::TransformFeedback;
             OGLWRAP_LAST_BIND_TARGET = "GL_TRANSFORM_FEEDBACK_BUFFER_BINDING";
             break;
         #endif
-        #ifdef GL_UNIFORM_BUFFER_BINDING
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_UNIFORM_BUFFER_BINDING)
         case BufferType::Uniform:
             target = BufferBinding::Uniform;
             OGLWRAP_LAST_BIND_TARGET = "GL_UNIFORM_BUFFER_BINDING";
@@ -222,19 +222,19 @@ inline FramebufferBinding getBindingTarget(FramebufferType fbo_t) {
     FramebufferBinding target;
 
     switch(fbo_t) {
-        #ifdef GL_READ_FRAMEBUFFER_BINDING
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_READ_FRAMEBUFFER_BINDING)
         case FramebufferType::Read:
             target = FramebufferBinding::Read;
             OGLWRAP_LAST_BIND_TARGET = "GL_READ_FRAMEBUFFER_BINDING";
             break;
         #endif
-        #ifdef GL_DRAW_FRAMEBUFFER_BINDING
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_DRAW_FRAMEBUFFER_BINDING)
         case FramebufferType::Draw:
             target = FramebufferBinding::Draw;
             OGLWRAP_LAST_BIND_TARGET = "GL_DRAW_FRAMEBUFFER_BINDING";
             break;
         #endif
-        #ifdef GL_FRAMEBUFFER_BINDING
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_FRAMEBUFFER_BINDING)
         case FramebufferType::Read_Draw:
             target = FramebufferBinding::Read_Draw;
             OGLWRAP_LAST_BIND_TARGET = "GL_FRAMEBUFFER_BINDING";
@@ -252,43 +252,43 @@ inline TexBinding getBindingTarget(TexType fbo_t) {
     TexBinding target;
 
     switch(fbo_t) {
-        #ifdef GL_TEXTURE_BINDING_1D
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_TEXTURE_BINDING_1D)
         case TexType::Tex1D:
             target = TexBinding::Tex1D;
             OGLWRAP_LAST_BIND_TARGET = "GL_TEXTURE_BINDING_1D";
             break;
         #endif
-        #ifdef GL_TEXTURE_BINDING_2D
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_TEXTURE_BINDING_2D)
         case TexType::Tex2D:
             target = TexBinding::Tex2D;
             OGLWRAP_LAST_BIND_TARGET = "GL_TEXTURE_BINDING_2D";
             break;
         #endif
-        #ifdef GL_TEXTURE_BINDING_3D
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_TEXTURE_BINDING_3D)
         case TexType::Tex3D:
             target = TexBinding::Tex3D;
             OGLWRAP_LAST_BIND_TARGET = "GL_TEXTURE_BINDING_3D";
             break;
         #endif
-        #ifdef GL_TEXTURE_BINDING_RECTANGLE
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_TEXTURE_BINDING_RECTANGLE)
         case TexType::TexRect:
             target = TexBinding::TexRect;
             OGLWRAP_LAST_BIND_TARGET = "GL_TEXTURE_BINDING_RECTANGLE";
             break;
         #endif
-        #ifdef GL_TEXTURE_BINDING_1D_ARRAY
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_TEXTURE_BINDING_1D_ARRAY)
         case TexType::Tex1DArray:
             target = TexBinding::Tex1DArray;
             OGLWRAP_LAST_BIND_TARGET = "GL_TEXTURE_BINDING_1D_ARRAY";
             break;
         #endif
-        #ifdef GL_TEXTURE_BINDING_2D_ARRAY
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_TEXTURE_BINDING_2D_ARRAY)
         case TexType::Tex2DArray:
             target = TexBinding::Tex2DArray;
             OGLWRAP_LAST_BIND_TARGET = "GL_TEXTURE_BINDING_2D_ARRAY";
             break;
         #endif
-        #ifdef GL_TEXTURE_BINDING_CUBE_MAP
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_TEXTURE_BINDING_CUBE_MAP)
         case TexType::TexCubeMap:
             target = TexBinding::TexCubeMap;
             OGLWRAP_LAST_BIND_TARGET = "GL_TEXTURE_BINDING_CUBE_MAP";
@@ -300,3 +300,4 @@ inline TexBinding getBindingTarget(TexType fbo_t) {
 }
 
 } // namespace oglwarp
+

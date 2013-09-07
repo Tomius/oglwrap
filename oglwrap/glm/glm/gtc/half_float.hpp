@@ -452,3 +452,4 @@ namespace detail
 #include "half_float.inl"
 
 #endif//GLM_GTC_half_float
+

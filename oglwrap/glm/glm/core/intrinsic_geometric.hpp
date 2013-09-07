@@ -74,3 +74,4 @@ namespace detail
 
 #endif//GLM_ARCH
 #endif//glm_core_intrinsic_geometric
+

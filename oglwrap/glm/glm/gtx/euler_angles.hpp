@@ -154,3 +154,4 @@ namespace glm
 #include "euler_angles.inl"
 
 #endif//GLM_GTX_euler_angles
+

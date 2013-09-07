@@ -263,3 +263,4 @@ namespace detail
 #endif
 
 #endif //glm_core_type_mat3x2
+

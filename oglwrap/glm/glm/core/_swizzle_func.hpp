@@ -785,3 +785,4 @@
 //GLM_SWIZZLE_GEN_VEC_FROM_VEC4(valType, detail::vec4, detail::vec2, detail::vec3, detail::vec4)
 
 #endif//glm_core_swizzle_func
+

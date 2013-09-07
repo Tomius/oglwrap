@@ -94,3 +94,4 @@ namespace glm
 #include "color_space.inl"
 
 #endif//GLM_GTX_color_space
+

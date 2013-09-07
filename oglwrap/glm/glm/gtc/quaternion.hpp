@@ -379,3 +379,4 @@ namespace detail
 #include "quaternion.inl"
 
 #endif//GLM_GTC_quaternion
+

@@ -373,3 +373,4 @@ namespace glm
 #include "swizzle.inl"
 
 #endif//GLM_GTC_swizzle
+

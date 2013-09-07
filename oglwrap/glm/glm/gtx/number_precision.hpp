@@ -86,3 +86,4 @@ namespace gtx
 #include "number_precision.inl"
 
 #endif//GLM_GTX_number_precision
+

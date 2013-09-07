@@ -98,3 +98,4 @@ namespace glm
 #include "fast_trigonometry.inl"
 
 #endif//GLM_GTX_fast_trigonometry
+

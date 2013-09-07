@@ -138,3 +138,4 @@ namespace glm
 #include "bit.inl"
 
 #endif//GLM_GTX_bit
+

@@ -318,3 +318,4 @@ namespace detail
 #endif//GLM_EXTERNAL_TEMPLATE
 
 #endif//glm_core_type_mat4x4
+

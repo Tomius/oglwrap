@@ -81,3 +81,4 @@ namespace glm
 #include "verbose_operator.inl"
 
 #endif//GLM_GTX_verbose_operator
+

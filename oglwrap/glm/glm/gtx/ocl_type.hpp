@@ -130,3 +130,4 @@ namespace gtx
 #include "ocl_type.inl"
 
 #endif//GLM_GTX_ocl_type
+

@@ -68,3 +68,4 @@ namespace glm
 #include "string_cast.inl"
 
 #endif//GLM_GTX_string_cast
+

@@ -115,3 +115,4 @@ namespace glm
 #include "matrix_query.inl"
 
 #endif//GLM_GTX_matrix_query
+

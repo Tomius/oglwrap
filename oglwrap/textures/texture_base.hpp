@@ -155,7 +155,7 @@ public:
     /// @see glTexParameterf, GL_TEXTURE_MAX_ANISOTROPY_EXT
     void anisotropy(float value) {
         CHECK_BINDING();
-        #ifdef GL_TEXTURE_MAX_ANISOTROPY_EXT
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_TEXTURE_MAX_ANISOTROPY_EXT)
         gl( TexParameterf(texture_t, GL_TEXTURE_MAX_ANISOTROPY_EXT, value) );
         #endif
     }
@@ -165,7 +165,7 @@ public:
     /// @see glGetFloatv, glTexParameterf, GL_TEXTURE_MAX_ANISOTROPY_EXT
     void maxAnisotropy() {
         CHECK_BINDING();
-        #ifdef GL_TEXTURE_MAX_ANISOTROPY_EXT
+        #if !OGLWRAP_CHECK_DEPENDENCIES || (GL_TEXTURE_MAX_ANISOTROPY_EXT)
         GLfloat maxAniso = 0.0f;
         gl( GetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAniso) );
         gl( TexParameterf(texture_t, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAniso) );
@@ -204,4 +204,5 @@ public:
 };
 
 } // namespace oglwrap
+
 

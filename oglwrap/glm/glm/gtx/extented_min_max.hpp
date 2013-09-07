@@ -192,3 +192,4 @@ namespace glm
 #include "extented_min_max.inl"
 
 #endif//GLM_GTX_extented_min_max
+

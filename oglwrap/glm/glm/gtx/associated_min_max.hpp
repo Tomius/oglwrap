@@ -104,3 +104,4 @@ namespace glm
 #include "associated_min_max.inl"
 
 #endif//GLM_GTX_associated_min_max
+

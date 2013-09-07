@@ -10,3 +10,4 @@ inline oglwrap::LazyVertexAttribArray operator|(oglwrap::Program& prog, const st
     return oglwrap::LazyVertexAttribArray(prog, file);
 }
 
+

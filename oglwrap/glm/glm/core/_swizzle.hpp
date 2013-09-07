@@ -850,3 +850,4 @@ namespace glm
 	struct { glm::detail::swizzle<4,T,P,3,3,3,3> E3 ## E3 ## E3 ## E3; }; 
 
 #endif//glm_core_swizzle
+

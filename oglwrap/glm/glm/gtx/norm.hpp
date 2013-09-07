@@ -131,3 +131,4 @@ namespace glm
 #include "norm.inl"
 
 #endif//GLM_GTX_norm
+

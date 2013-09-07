@@ -74,3 +74,4 @@ namespace glm
 #include "gradient_paint.inl"
 
 #endif//GLM_GTX_gradient_paint
+

@@ -74,3 +74,4 @@ namespace glm
 #include "normalize_dot.inl"
 
 #endif//GLM_GTX_normalize_dot
+

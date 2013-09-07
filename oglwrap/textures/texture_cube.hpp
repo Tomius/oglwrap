@@ -8,7 +8,7 @@ namespace oglwrap {
 
 // -------======{[ TextureCube declaration ]}======-------
 
-#ifdef GL_TEXTURE_CUBE_MAP
+#if !OGLWRAP_CHECK_DEPENDENCIES || (GL_TEXTURE_CUBE_MAP)
 /// @brief A set of 6 2D textures, that is used to be sampled with 3D direction vectors.
 /// @see GL_TEXTURE_CUBE_MAP
 class TextureCube : public TextureBase<TexType::TexCubeMap> {
@@ -255,7 +255,7 @@ public:
         }
     }
 
-    #ifdef glGetCompressedTexImage
+    #if !OGLWRAP_CHECK_DEPENDENCIES || (glGetCompressedTexImage)
     /// Return the compressed texture image of one side
     /// @param target - Specifies which one of the six sides of the cube to use as target.
     /// @param level - Specifies the level-of-detail number of the desired image. Level 0 is the base image level. Level n is the nth mipmap reduction image.
@@ -328,4 +328,5 @@ public:
 #endif // GL_TEXTURE_CUBE_MAP
 
 } // namespace oglwrap
+
 

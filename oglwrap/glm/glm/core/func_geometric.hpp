@@ -136,3 +136,4 @@ namespace glm
 #include "func_geometric.inl"
 
 #endif//glm_core_func_geometric
+

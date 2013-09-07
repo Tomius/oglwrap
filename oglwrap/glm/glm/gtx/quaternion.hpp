@@ -193,3 +193,4 @@ namespace glm
 #include "quaternion.inl"
 
 #endif//GLM_GTX_quaternion
+

@@ -268,3 +268,4 @@ namespace detail
 #endif
 
 #endif //glm_core_type_mat4x2
+

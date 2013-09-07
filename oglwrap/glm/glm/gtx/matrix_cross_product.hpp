@@ -69,3 +69,4 @@ namespace glm
 #include "matrix_cross_product.inl"
 
 #endif//GLM_GTX_matrix_cross_product
+

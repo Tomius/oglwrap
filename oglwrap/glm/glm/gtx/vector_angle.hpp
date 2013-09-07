@@ -86,3 +86,4 @@ namespace glm
 #include "vector_angle.inl"
 
 #endif//GLM_GTX_vector_angle
+

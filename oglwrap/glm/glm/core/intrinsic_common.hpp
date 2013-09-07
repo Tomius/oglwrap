@@ -87,3 +87,4 @@ namespace detail
 
 #endif//GLM_ARCH
 #endif//glm_detail_intrinsic_common
+

@@ -29,27 +29,28 @@
 #include <cmath>
 
 //! Workaround for compatibility with other libraries
-#ifdef max
+#if !OGLWRAP_CHECK_DEPENDENCIES || (max)
 #undef max
 #endif
 
 //! Workaround for compatibility with other libraries
-#ifdef min
+#if !OGLWRAP_CHECK_DEPENDENCIES || (min)
 #undef min
 #endif
 
 //! Workaround for Android
-#ifdef isnan
+#if !OGLWRAP_CHECK_DEPENDENCIES || (isnan)
 #undef isnan
 #endif
 
 //! Workaround for Android
-#ifdef isinf
+#if !OGLWRAP_CHECK_DEPENDENCIES || (isinf)
 #undef isinf
 #endif
 
 //! Workaround for Chrone Native Client
-#ifdef log2
+#if !OGLWRAP_CHECK_DEPENDENCIES || (log2)
 #undef log2
 #endif
+
 

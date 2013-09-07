@@ -110,3 +110,4 @@ namespace glm
 #include "matrix_operation.inl"
 
 #endif//GLM_GTX_matrix_operation
+

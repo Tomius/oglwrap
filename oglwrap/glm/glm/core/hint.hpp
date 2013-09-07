@@ -38,3 +38,4 @@ namespace glm
 }//namespace glm
 
 #endif//glm_core_type
+

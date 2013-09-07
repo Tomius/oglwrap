@@ -82,3 +82,4 @@ namespace glm
 #include "color_space_YCoCg.inl"
 
 #endif//glm_gtx_color_space_YCoCg
+

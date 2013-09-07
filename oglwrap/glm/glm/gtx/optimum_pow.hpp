@@ -89,3 +89,4 @@ namespace gtx
 #include "optimum_pow.inl"
 
 #endif//GLM_GTX_optimum_pow
+

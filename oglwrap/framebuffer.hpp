@@ -9,15 +9,15 @@
 
 namespace oglwrap {
 
-#ifdef glGenRenderbuffers
-#ifdef glDeleteRenderbuffers
+#if !OGLWRAP_CHECK_DEPENDENCIES || (glGenRenderbuffers)
+#if !OGLWRAP_CHECK_DEPENDENCIES || (glDeleteRenderbuffers)
 /// @brief A buffer that servers as a storage for a framebuffer.
 /// @see glGenRenderbuffers, glDeleteRenderbuffers
 class RenderBuffer {
     /// The handle for the render buffer.
     ObjectExt<glGenRenderbuffers, glDeleteRenderbuffers> renderbuffer;
 public:
-    #ifdef glBindRenderbuffer
+    #if !OGLWRAP_CHECK_DEPENDENCIES || (glBindRenderbuffer)
     /// @brief Binds this renderbuffer.
     /// @see glBindRenderbuffer
     void bind() {
@@ -25,7 +25,7 @@ public:
     }
     #endif // glBindRenderbuffer
 
-    #ifdef glBindRenderbuffer
+    #if !OGLWRAP_CHECK_DEPENDENCIES || (glBindRenderbuffer)
     /// @brief Unbinds this renderbuffer.
     /// @see glBindRenderbuffer
     void unbind() {
@@ -42,7 +42,7 @@ public:
         return renderbuffer == GLuint(currentlyBoundBuffer);
     }
 
-    #ifdef glRenderbufferStorage
+    #if !OGLWRAP_CHECK_DEPENDENCIES || (glRenderbufferStorage)
     /// @brief Establish data storage, format and dimensions of a renderbuffer object's image.
     /// @see glRenderbufferStorage
     void storage(PixelDataInternalFormat internalFormat, GLsizei width, GLsizei height) {
@@ -51,7 +51,7 @@ public:
     }
     #endif // glRenderbufferStorage
 
-    #ifdef glRenderbufferStorageMultisample
+    #if !OGLWRAP_CHECK_DEPENDENCIES || (glRenderbufferStorageMultisample)
     /// @brief Establish data storage, format, dimensions and sample count of a renderbuffer object's image.
     /// @see glRenderbufferStorageMultisample
     void storageMultisample(
@@ -70,8 +70,8 @@ public:
 #endif // glDeleteRenderbuffers
 #endif // glGenRenderbuffers
 
-#ifdef glGenFramebuffers
-#ifdef glDeleteFramebuffers
+#if !OGLWRAP_CHECK_DEPENDENCIES || (glGenFramebuffers)
+#if !OGLWRAP_CHECK_DEPENDENCIES || (glDeleteFramebuffers)
 /// A buffer that you can draw to.
 template<FramebufferType fbo_t>
 class FramebufferObject {
@@ -85,7 +85,7 @@ public:
         : framebuffer(src.Expose())
     { }
 
-    #ifdef glBindFramebuffer
+    #if !OGLWRAP_CHECK_DEPENDENCIES || (glBindFramebuffer)
     /// @brief Binds the framebuffer for reading and/or drawing.
     /// @param target - The target to bind the framebuffer to.
     /// @see glBindFramebuffer
@@ -94,7 +94,7 @@ public:
     }
     #endif // glBindFramebuffer
 
-    #ifdef glBindFramebuffer
+    #if !OGLWRAP_CHECK_DEPENDENCIES || (glBindFramebuffer)
     /// @brief Unbinds the buffer from the target it is currently bound to.
     /// @see glBindFramebuffer
     void unbind() {
@@ -102,7 +102,7 @@ public:
     }
     #endif // glBindFramebuffer
 
-    #ifdef glCheckFramebufferStatus
+    #if !OGLWRAP_CHECK_DEPENDENCIES || (glCheckFramebufferStatus)
     /// @brief Returns the status of a bound framebuffer.
     /** Throws an exception if the framebuffer isn't bound. */
     /// @see glCheckFramebufferStatus
@@ -120,7 +120,7 @@ public:
         return framebuffer == GLuint(currentlyBoundBuffer);
     }
 
-    #ifdef glCheckFramebufferStatus
+    #if !OGLWRAP_CHECK_DEPENDENCIES || (glCheckFramebufferStatus)
     /// @brief Throws a logic error exception if the framebuffer isn't complete.
     /// @see glCheckFramebufferStatus
     void validate() {
@@ -178,7 +178,7 @@ public:
     }
     #endif // glCheckFramebufferStatus
 
-    #ifdef glFramebufferRenderbuffer
+    #if !OGLWRAP_CHECK_DEPENDENCIES || (glFramebufferRenderbuffer)
     /// @brief Attach a renderbuffer as a logical buffer to the currently bound framebuffer object
     /// @param attachment - Specifies the attachment point to which renderbuffer should be attached.
     /// @param renderBuffer - Specifies the renderbuffer object that is to be attached.
@@ -190,7 +190,7 @@ public:
     }
     #endif // glFramebufferRenderbuffer
 
-    #ifdef glFramebufferTexture
+    #if !OGLWRAP_CHECK_DEPENDENCIES || (glFramebufferTexture)
     template <TexType texture_t>
     /// @brief Attach a level of a texture object as a logical buffer to the currently bound framebuffer object
     /// @param attachment - Specifies the attachment point of the framebuffer.
@@ -204,7 +204,7 @@ public:
     }
     #endif // glFramebufferTexture
 
-    #ifdef glFramebufferTexture2D
+    #if !OGLWRAP_CHECK_DEPENDENCIES || (glFramebufferTexture2D)
     /// @brief Attach a level of a cube map as a logical buffer to the currently bound framebuffer object.
     /// @param attachment - Specifies the attachment point of the framebuffer.
     /// @param target - Specifies which face of the cube map is to be attached.
@@ -233,3 +233,4 @@ typedef FramebufferObject<FramebufferType::Draw> Draw_Framebuffer;
 #endif // glGenFramebuffers
 
 } // namespace oglwrap
+

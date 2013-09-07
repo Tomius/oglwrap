@@ -80,3 +80,4 @@ namespace glm
 #include "component_wise.inl"
 
 #endif//GLM_GTX_component_wise
+

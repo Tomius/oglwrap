@@ -102,3 +102,4 @@ namespace glm
 #include "integer.inl"
 
 #endif//GLM_GTX_integer
+

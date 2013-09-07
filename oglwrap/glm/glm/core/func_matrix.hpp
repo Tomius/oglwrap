@@ -148,3 +148,4 @@ namespace glm
 #include "func_matrix.inl"
 
 #endif//GLM_CORE_func_matrix
+

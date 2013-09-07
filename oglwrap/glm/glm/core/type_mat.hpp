@@ -39,3 +39,4 @@ namespace detail
 }//namespace glm
 
 #endif//glm_core_type_mat
+

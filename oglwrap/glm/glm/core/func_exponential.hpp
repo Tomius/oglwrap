@@ -121,3 +121,4 @@ namespace glm
 #include "func_exponential.inl"
 
 #endif//glm_core_func_exponential
+

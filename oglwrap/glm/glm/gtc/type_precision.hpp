@@ -667,3 +667,4 @@ namespace glm
 #include "type_precision.inl"
 
 #endif//GLM_GTC_type_precision
+
