@@ -16,7 +16,7 @@ class Cube {
 
 public:
 
-    /// Constructs a cube centered at the origin with the given width, height, depth.
+    /// @brief Constructs a cube centered at the origin with the given width, height, depth.
     /// @param w,h,d - The width, height, depth of the cube, respectively.
     Cube(float w = 1.0f, float h = 1.0f, float d = 1.0f)
         : w(w), h(h), d(d)
@@ -33,7 +33,7 @@ private:
     };
 
 public:
-    /// Creates vertex positions, and uploads it to an attribute array.
+    /// @brief Creates vertex positions, and uploads it to an attribute array.
     /** Uploads the vertex positions data to an attribute array, and sets it up for use.
       * Calling this function changes the currently active VAO and ArrayBuffer. */
     /// @param attrib - The attribute array to use as destination.
@@ -86,7 +86,7 @@ public:
         vao.unbind();
     }
 
-    /// Creates vertex normals, and uploads it to an attribute array.
+    /// @brief Creates vertex normals, and uploads it to an attribute array.
     /** Uploads the vertex normals data to an attribute array, and sets it up for use.
       * Calling this function changes the currently active VAO and ArrayBuffer. */
     /// @param attrib - The attribute array to use as destination.
@@ -124,7 +124,7 @@ public:
         vao.unbind();
     };
 
-    /// Creates vertex texture coordinates, and uploads it to an attribute array.
+    /// @brief Creates vertex texture coordinates, and uploads it to an attribute array.
     /** Uploads the vertex normals data to an attribute array, and sets it up for use.
       * Calling this function changes the currently active VAO and ArrayBuffer. */
     /// @param attrib - The attribute array to use as destination.
@@ -163,7 +163,7 @@ public:
         vao.unbind();
     }
 
-    /// Creates vertex tangents, and uploads it to an attribute array.
+    /// @brief Creates vertex tangents, and uploads it to an attribute array.
     /** Uploads the tangents normals data to an attribute array, and sets it up for use.
       * Calling this function changes the currently active VAO and ArrayBuffer.
       * @param attrib - The attribute array to use as destination. */
@@ -200,7 +200,7 @@ public:
         vao.unbind();
     }
 
-    /// Draws the cube.
+    /// @brief Draws the cube.
     /** This call changes the currently active VAO. */
     void draw() {
         if(is_setup_positions) {

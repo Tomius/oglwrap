@@ -9,7 +9,7 @@ namespace oglwrap {
 // -------======{[ Vertex Array declaration ]}======-------
 #ifdef glGenVertexArrays
 #ifdef glDeleteVertexArrays
-/// VAO is an object that remembers which ArrayBuffers to use for a draw call.
+/// @brief VAO is an object that remembers which ArrayBuffers to use for a draw call.
 /** A Vertex Array Object (VAO) is an object that encapsulates all of the
   * state needed to specify vertex data. They define the format of the vertex
   * data as well as the sources for the vertex arrays. Note that VAOs do not
@@ -20,7 +20,7 @@ class VertexArray {
     ObjectExt<glGenVertexArrays, glDeleteVertexArrays> vao; ///< The handle for the VAO
 public:
     #ifdef glBindVertexArray
-    /// Binds the Vertex Array object, so that it will be used for the further draw calls.
+    /// @brief Binds the Vertex Array object, so that it will be used for the further draw calls.
     /// @see glBindVertexArray
     void bind() {
         gl( BindVertexArray(vao) );
@@ -28,7 +28,7 @@ public:
     #endif
 
     #ifdef glBindVertexArray
-    /// Unbinds the currently active VAO.
+    /// @brief Unbinds the currently active VAO.
     /// @see glBindVertexArray
     static void unbind() {
         gl( BindVertexArray(0) );
