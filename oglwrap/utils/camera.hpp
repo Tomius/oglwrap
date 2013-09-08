@@ -166,17 +166,20 @@ public:
 /// A simple camera class using SFML. Its position depends on an external target, usually a character.
 /** It can be controlled with the WASD keys and the mouse */
 class ThirdPersonalCamera : public Camera {
-    /// The target's position and the normalized forward vector
+    // The target's position and the normalized forward vector
     glm::vec3 target, fwd;
 
-    /// Rotation angles(in radians) relative to the pos Z axis in the XZ and YZ planes.
+    // Rotation angles(in radians) relative to the pos Z axis in the XZ and YZ planes.
     float rotx, roty;
 
-    /// Initial distance  between the camera and target, and the current and destination distance modifier.
-    /** It's nearly a must to interpolate this, it looks very ugly without it */
+    // Initial distance  between the camera and target, and the current and destination distance modifier.
+    /* It's nearly a must to interpolate this, it looks very ugly without it */
     float currDistMod, destDistMod;
 
-    /// a private constant number
+    // Don't interpolate at the first updateTarget call.
+    bool firstCall;
+
+    // Private constant number
     const float initialDistance, maxPitchAngle, mouseSensitivity, mouseScrollSensitivity;
 public:
     /// @brief Creates the third-personal camera.
@@ -193,6 +196,7 @@ public:
         , roty(atan2(fwd.z, fwd.x))
         , currDistMod(1.0)
         , destDistMod(1.0)
+        , firstCall(true)
         , initialDistance(glm::length(target - pos))
         , maxPitchAngle(60./90. * M_PI_2)
         , mouseSensitivity(mouseSensitivity)
@@ -263,10 +267,22 @@ public:
             destDistMod = 2.0f;
     }
 
-    /// Updates the target of the camera
+    /// Updates the target of the camera. Is expected to be called every frame.
     /// @param target - the position of the object the camera should follow.
-    void updateTarget(const glm::vec3& target) {
-        this->target = target;
+    void updateTarget(const glm::vec3& _target) {
+        if(firstCall) {
+            target = _target;
+            firstCall = false;
+            return;
+        }
+
+        target = glm::vec3(_target.x, target.y, _target.z);
+
+        float diff = _target.y - target.y;
+        const float offs = std::max(fabs(diff * diff / 5.0), 0.1);
+        if(fabs(diff) > offs) { // FIXME @ this constant
+            target.y += diff / fabs(diff) * offs;
+        }
     }
 
     /// Returns the camera matrix.

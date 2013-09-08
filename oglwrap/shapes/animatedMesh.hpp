@@ -624,7 +624,6 @@ private:
     void readNodeHeirarchy(float animationTime,
                            const aiNode* node,
                            const glm::mat4& parentTransform = glm::mat4()) {
-        using namespace glm;
 
         std::string nodeName(node->mName.data);
 
@@ -633,39 +632,39 @@ private:
         const aiAnimation* animation = current_anim->mAnimations[0];
         const aiNodeAnim* nodeAnim = findNodeAnim(animation, nodeName);
 
-        mat4 nodeTransform = convertMatrix(node->mTransformation);
+        glm::mat4 nodeTransform = convertMatrix(node->mTransformation);
 
         if(nodeAnim) {
             // Interpolate the transformations and get the matrices
             aiVector3D scaling;
             calcInterpolatedScaling(scaling, animationTime, nodeAnim);
-            mat4 scalingM = scale(mat4(), vec3(scaling.x, scaling.y, scaling.z));
+            glm::mat4 scalingM = glm::scale(glm::mat4(), glm::vec3(scaling.x, scaling.y, scaling.z));
 
             aiQuaternion rotation;
             calcInterpolatedRotation(rotation, animationTime, nodeAnim);
-            mat4 rotationM = convertMatrix(rotation.GetMatrix());
+            glm::mat4 rotationM = convertMatrix(rotation.GetMatrix());
 
             aiVector3D translation;
             calcInterpolatedPosition(translation, animationTime, nodeAnim);
-            mat4 translationM;
+            glm::mat4 translationM;
 
             if(nodeName == root_bone) {
                 if(current_flags & AnimFlag::Mirrored) {
-                    current_offset = -vec3(translation.x, 0, translation.z);
+                    current_offset = -glm::vec3(translation.x, 0, translation.z);
                 } else {
-                    current_offset = vec3(translation.x, 0, translation.z);
+                    current_offset = glm::vec3(translation.x, 0, translation.z);
                 }
 
-                translationM = translate(mat4(), vec3(0, translation.y, 0)); // FIXME!!
+                translationM = glm::translate(glm::mat4(), glm::vec3(0, translation.y, 0)); // FIXME!!
             } else {
-                translationM = translate(mat4(), vec3(translation.x, translation.y, translation.z));
+                translationM = glm::translate(glm::mat4(), glm::vec3(translation.x, translation.y, translation.z));
             }
 
             // Combine the transformations
             nodeTransform = translationM * rotationM * scalingM;
         }
 
-        mat4 globalTransformation = parentTransform * nodeTransform;
+        glm::mat4 globalTransformation = parentTransform * nodeTransform;
 
         if(bone_mapping.find(nodeName) != bone_mapping.end()) {
             unsigned boneIndex = bone_mapping[nodeName];
@@ -687,7 +686,6 @@ private:
                                      float nextAnimationTime,
                                      const aiNode* node,
                                      const glm::mat4& parentTransform  = glm::mat4()) {
-        using namespace glm;
 
         std::string nodeName(node->mName.data);
 
@@ -698,7 +696,7 @@ private:
         const aiNodeAnim* prevNodeAnim = findNodeAnim(prevAnimation, nodeName);
         const aiNodeAnim* nextNodeAnim = findNodeAnim(nextAnimation, nodeName);
 
-        mat4 nodeTransform = convertMatrix(node->mTransformation);
+        glm::mat4 nodeTransform = convertMatrix(node->mTransformation);
 
         if(prevNodeAnim && nextNodeAnim) {
             float factor;
@@ -716,20 +714,20 @@ private:
             calcInterpolatedScaling(prevScaling, prevAnimationTime, prevNodeAnim);
             calcInterpolatedScaling(nextScaling, nextAnimationTime, nextNodeAnim);
             aiVector3D scaling = interpolate(prevScaling, nextScaling, factor);
-            mat4 scalingM = scale(mat4(), vec3(scaling.x, scaling.y, scaling.z));
+            glm::mat4 scalingM = glm::scale(glm::mat4(), glm::vec3(scaling.x, scaling.y, scaling.z));
 
             aiQuaternion prevRotation, nextRotation, rotation;
             calcInterpolatedRotation(prevRotation, prevAnimationTime, prevNodeAnim);
             calcInterpolatedRotation(nextRotation, nextAnimationTime, nextNodeAnim);
             // spherical interpolation, and it always chooses the shorter path (exactly what we want).
             aiQuaternion::Interpolate(rotation, prevRotation, nextRotation, factor);
-            mat4 rotationM = convertMatrix(rotation.GetMatrix());
+            glm::mat4 rotationM = convertMatrix(rotation.GetMatrix());
 
             aiVector3D prevTranslation, nextTranslation;
             calcInterpolatedPosition(prevTranslation, prevAnimationTime, prevNodeAnim);
             calcInterpolatedPosition(nextTranslation, nextAnimationTime, nextNodeAnim);
             aiVector3D translation = interpolate(prevTranslation, nextTranslation, factor);
-            mat4 translationM;
+            glm::mat4 translationM;
 
             if(nodeName == root_bone) {
                 // Transition Offset is a utility that helps you in creating better transitions between
@@ -739,12 +737,12 @@ private:
                 // to interpolate the position of the center of mass from the origin to the place, where
                 // it starts in the new animation. It isn't necessary, just makes the transition more
                 // realistic. But it definitely has no use, when the animation is played backwards.
-                vec3 transitionOffset;
+                glm::vec3 transitionOffset;
                 if(!(current_flags & AnimFlag::Backwards)) {
                     transitionOffset = (start_offsets[curr_idx] - start_offsets[last_idx]) * factor;
                 }
                 current_offset =
-                    vec3(nextTranslation.x, 0, nextTranslation.z) +
+                    glm::vec3(nextTranslation.x, 0, nextTranslation.z) +
                     transitionOffset - last_transition_offset;
 
                 if(current_flags & AnimFlag::Mirrored) {
@@ -752,16 +750,16 @@ private:
                 }
 
                 last_transition_offset = transitionOffset;
-                translationM = translate(mat4(), vec3(0, translation.y, 0)); // FIXME!!
+                translationM = glm::translate(glm::mat4(), glm::vec3(0, translation.y, 0)); // FIXME!!
             } else {
-                translationM = translate(mat4(), vec3(translation.x, translation.y, translation.z));
+                translationM = glm::translate(glm::mat4(), glm::vec3(translation.x, translation.y, translation.z));
             }
 
             // Combine the transformations
             nodeTransform = translationM * rotationM * scalingM;
         }
 
-        mat4 globalTransformation = parentTransform * nodeTransform;
+        glm::mat4 globalTransformation = parentTransform * nodeTransform;
 
         if(bone_mapping.find(nodeName) != bone_mapping.end()) {
             unsigned boneIndex = bone_mapping[nodeName];
