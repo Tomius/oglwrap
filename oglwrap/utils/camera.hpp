@@ -279,7 +279,7 @@ public:
         target = glm::vec3(_target.x, target.y, _target.z);
 
         float diff = _target.y - target.y;
-        const float offs = std::max(fabs(diff * diff / 5.0), 0.1);
+        const float offs = std::max(fabs(diff * diff / 5.0), 0.05);
         if(fabs(diff) > offs) { // FIXME @ this constant
             target.y += diff / fabs(diff) * offs;
         }
@@ -287,7 +287,7 @@ public:
 
     /// Returns the camera matrix.
     glm::mat4 cameraMatrix() const {
-        return glm::lookAt(target - fwd, target, glm::vec3(0.0f, 1.0f, 0.0f));
+        return glm::lookAt(target - fwd, target, glm::vec3(0, 1, 0));
     }
 
     /// Returns the camera's target.
