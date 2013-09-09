@@ -136,6 +136,9 @@ class AnimatedMesh : public Mesh {
     /// The maximum of per mesh bone attribute number's maximum for the entire scene.
     unsigned char max_bone_attrib_num;
 
+    /// The maximum of per mesh bone attribute number's maximum per mesh.
+    std::vector<unsigned char> per_mesh_attrib_max;
+
     /// Stores if setup_bones is called. It shouldn't be called more than once.
     bool is_setup_bones;
 
@@ -312,21 +315,16 @@ private:
     }
 
     template <class Index_t>
-    /// @brief Creates bone attributes data, and shader plumbs them.
+    /// @brief Creates bone attributes data. Changes the active VAO.
     /** It is a template, as the type of boneIDs shouldn't be fix. Most of the times,
       * a skeleton won't contain more than 256 bones, but that doesn't mean boneIDs
       * should be forced to GLubyte, it works with shorts and even ints too. Although
       * I really doubt anyone would be using a skeleton with more than 65535 bones... */
-    /// @param idx_t - The oglwrap enum, naming the datatype that should be used.
-    /// @param boneIDs - Should be an array of attributes, that will be shader plumbed for the boneIDs data.
-    /// @param boneWeights - Should be an array of attributes, that will be shader plumbed for the boneWeights data.
-    void loadBones(DataType idx_t,
-                   LazyVertexAttribArray boneIDs,
-                   LazyVertexAttribArray boneWeights) {
+    void loadBones() {
 
         const size_t per_attrib_size = sizeof(VertexBoneData_PerAttribute<Index_t>);
 
-        std::vector<unsigned char> per_mesh_attrib_max(entries.size());
+        per_mesh_attrib_max.resize(entries.size());
 
         for(size_t entry = 0; entry < entries.size(); entry++) {
             std::vector<VertexBoneData<Index_t>> bones;
@@ -361,6 +359,9 @@ private:
                     current_attrib_max = bones[i].data.size();
             }
 
+            if(current_attrib_max > max_bone_attrib_num)
+                max_bone_attrib_num = current_attrib_max;
+
             size_t per_vertex_size = current_attrib_max * per_attrib_size;
 
             // First we have to allocate the buffer's storage.
@@ -384,7 +385,8 @@ private:
                         curr_size // length
                     );
 
-                    // Zero out all the remaining memory.
+                    // Zero out all the remaining memory. Remember a
+                    // bone with a 0.0f weight doesn't have any influence
                     if(per_vertex_size > curr_size) {
                         memset(
                             (GLbyte*)bones_buffer_map.data() + offset + curr_size, // memory place
@@ -396,17 +398,45 @@ private:
                     offset += per_vertex_size;
                 }
             }
+        }
 
+        // Unbind the last vao, so it won't be modified from outside.
+        // And also, this way, if someone forget's to bind his own vao,
+        // will get an error message from the bind checker.
+        VertexArray::unbind();
+    }
 
-            // -------======{[ Shader plumbing ]}======-------
+    /// @brief Creates the bone attributes data (the skinning.)
+    /** It actually just calls the loadBones function with the appropriate template parameter */
+    void create_bones_data() {
+        mapBones();
 
-            // Check if the current bone attribute number
-            // is bigger then the max of the scene.
-            if(current_attrib_max > max_bone_attrib_num)
-                max_bone_attrib_num = current_attrib_max;
+        if(num_bones < UCHAR_MAX)
+            loadBones<unsigned char>();
+        else if(num_bones < USHRT_MAX)
+            loadBones<unsigned short>();
+        else // more than 65535 bones? WTF???
+            loadBones<unsigned int>();
+    }
 
+    template <class Index_t>
+    /// @brief Shader plumbs the bone data.
+    /** It is a template, as the type of boneIDs shouldn't be fix. Most of the times,
+      * a skeleton won't contain more than 256 bones, but that doesn't mean boneIDs
+      * should be forced to GLubyte, it works with shorts and even ints too. Although
+      * I really doubt anyone would be using a skeleton with more than 65535 bones... */
+    /// @param idx_t - The oglwrap enum, naming the data type that should be used.
+    /// @param boneIDs - Should be an array of attributes, that will be shader plumbed for the boneIDs data.
+    /// @param boneWeights - Should be an array of attributes, that will be shader plumbed for the boneWeights data.
+    void shader_plumb_bones(DataType idx_t, LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights) {
+        const size_t per_attrib_size = sizeof(VertexBoneData_PerAttribute<Index_t>);
 
-            // Actual plumbing.
+        for(size_t entry = 0; entry < entries.size(); entry++) {
+
+            entries[entry].vao.bind();
+            bone_buffers[entry].bind();
+            unsigned char current_attrib_max = per_mesh_attrib_max[entry];
+
             for(unsigned char boneAttribSet = 0; boneAttribSet < current_attrib_max; boneAttribSet++) {
                 const size_t stride = current_attrib_max * per_attrib_size;
 
@@ -416,12 +446,10 @@ private:
                 boneIDs[boneAttribSet].setup(4, idx_t, stride, (const void*)baseOffset).enable();
                 boneWeights[boneAttribSet].setup(4, DataType::Float, stride, (const void*)weightOffset).enable();
             }
-        }
 
-        // Static setup the VertexArrays that aren't enabled, to all zero.
-        // Remember (0, 0, 0, 1) is the default, which isn't what we want.
-        for(size_t entry = 0; entry < entries.size(); entry++) {
-            for(int i = per_mesh_attrib_max[entry]; i < max_bone_attrib_num; i++) {
+            // Static setup the VertexArrays that aren't enabled, to all zero.
+            // Remember (0, 0, 0, 1) is the default, which isn't what we want.
+            for(int i = current_attrib_max; i < max_bone_attrib_num; i++) {
                 boneIDs[i].static_setup(glm::ivec4(0, 0, 0, 0));
                 boneWeights[i].static_setup(glm::vec4(0, 0, 0, 0));
             }
@@ -434,8 +462,15 @@ private:
     }
 
 public:
-    /// Returns the size that boneIds and BoneWeights attribute arrays should be
-    unsigned char get_bone_attrib_num() const {
+    /// @brief Returns the size that boneIds and BoneWeights attribute arrays should be.
+    /** Will change the currently active VAO at the first call. */
+    unsigned char get_bone_attrib_num() {
+
+        // If loadBones hasn't been called yet, than have to create
+        // the bones data first to know max_bone_attrib_num.
+        if(per_mesh_attrib_max.size() == 0)
+            create_bones_data();
+
         return max_bone_attrib_num;
     }
 
@@ -454,14 +489,16 @@ public:
             is_setup_bones = true;
         }
 
-        mapBones();
+        // If the bones data hasn't been created yet, than call the function to do it.
+        if(per_mesh_attrib_max.size() == 0)
+            create_bones_data();
 
         if(num_bones < UCHAR_MAX)
-            loadBones<unsigned char>(DataType::UnsignedByte, boneIDs, boneWeights);
+            shader_plumb_bones<unsigned char>(DataType::UnsignedByte, boneIDs, boneWeights);
         else if(num_bones < USHRT_MAX)
-            loadBones<unsigned short>(DataType::UnsignedShort, boneIDs, boneWeights);
+            shader_plumb_bones<unsigned short>(DataType::UnsignedShort, boneIDs, boneWeights);
         else // more than 65535 bones? WTF???
-            loadBones<unsigned int>(DataType::UnsignedInt, boneIDs, boneWeights);
+            shader_plumb_bones<unsigned int>(DataType::UnsignedInt, boneIDs, boneWeights);
     }
 
 /*         //=====:==-==-==:=====\\                           //=====:==-==-==:=====\\
