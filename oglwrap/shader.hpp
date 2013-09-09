@@ -7,6 +7,79 @@
 namespace oglwrap {
 
 // -------======{[ Shader ]}======-------
+
+/// A class that can load shader sources in from files, and do some preprocessing on them
+class ShaderSource {
+    std::string src; /// The source
+    std::string filename; /// The file's name stored to make debugging easier.
+public:
+    /// Default constructor.
+    ShaderSource() : filename("Unnamed shader") { }
+
+    /// @brief Loads in the shader from a file.
+    /// @param file - The path to the file.
+    ShaderSource(const std::string& file) {
+        source_file(file);
+    }
+
+    /// @brief Adds a string as the shader source.
+    /// @param source_string - The source string.
+    void source(const std::string& source_string) {
+        src = source_string;
+    }
+
+    /// @brief Loads in the shader from a file.
+    /// @param file - The path to the file.
+    void source_file(const std::string& file) {
+        filename = file;
+        std::ifstream shaderFile(file.c_str());
+        if(!shaderFile.is_open()) {
+            shaderFile.open("shaders/" + file);
+        }
+        if(!shaderFile.is_open()) {
+            throw std::runtime_error("Shader file '" + file + "' not found.");
+        }
+        std::stringstream shaderString;
+        shaderString << shaderFile.rdbuf();
+
+        // Remove the EOF from the end of the string.
+        src = shaderString.str();
+        if(src[src.length() - 1] == EOF)
+            src.pop_back();
+    }
+
+    template<typename T>
+    /// @brief Inserts a value for a #define preprocessor in the shader.
+    /// @param macro_name - The name of the macro.
+    /// @param value - The value to insert.
+    void insert_macro_value(const std::string& macro_name, const T& value) {
+        size_t macro_pos = src.find("#define " + macro_name);
+        if(macro_pos == std::string::npos) {
+            throw std::invalid_argument(
+                "ShaderSource::insert_macro_value is called for '" + filename +
+                "', but the shader doesn't have any macro named " + macro_name
+            );
+        }
+
+        size_t macro_end = src.find('\n', macro_pos);
+
+        std::stringstream sstream;
+        sstream << src.substr(0, macro_pos + strlen("#define ") + macro_name.length());
+        sstream << ' ' << value << src.substr(macro_end);
+        src = sstream.str();
+    }
+
+    /// Returns the file's name that was loaded in.
+    std::string const& get_file_name() const {
+        return filename;
+    }
+
+    /// Returns the source.
+    std::string const& get_source() const {
+        return src;
+    }
+};
+
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glCreateShader)
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDeleteShader)
 /// A specialization of the ObjectExt class for Shaders (they aren't created with glGen*)
@@ -92,6 +165,17 @@ public:
     /// @see glShaderSource
     void source(const std::string& source)  {
         const char *str = source.c_str();
+        gl( ShaderSource(shader, 1, &str, nullptr) );
+    }
+    #endif // glShaderSource
+
+        #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glShaderSource)
+    /// Uploads a ShaderSource as the shader's source.
+    /// @param source - string containing the shader code.
+    /// @see glShaderSource
+    void source(const ShaderSource& source)  {
+        const char *str = source.get_source().c_str();
+        filename = source.get_file_name();
         gl( ShaderSource(shader, 1, &str, nullptr) );
     }
     #endif // glShaderSource

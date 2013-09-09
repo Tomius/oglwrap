@@ -460,9 +460,21 @@ private:
     }
 
 public:
+    /// @brief Returns the number of bones this scene has.
+    /** May change the currently active VAO and ArrayBuffer at the first call. */
+    size_t get_num_bones() {
+
+        // If loadBones hasn't been called yet, than have to create
+        // the bones data first to know the number of bones.
+        if(per_mesh_attrib_max.size() == 0)
+            create_bones_data();
+
+        return num_bones;
+    }
+
     /// @brief Returns the size that boneIds and BoneWeights attribute arrays should be.
     /** May change the currently active VAO and ArrayBuffer at the first call. */
-    unsigned char get_bone_attrib_num() {
+    size_t get_bone_attrib_num() {
 
         // If loadBones hasn't been called yet, than have to create
         // the bones data first to know max_bone_attrib_num.
