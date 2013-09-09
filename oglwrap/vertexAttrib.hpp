@@ -170,6 +170,8 @@ public:
             Init();
 
         CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+        CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_ARRAY_BUFFER_BINDING);
+
         gl( VertexAttribPointer(location, values_per_vertex, type, normalized, stride, offset_pointer) );
         return *this;
     }
@@ -190,6 +192,7 @@ public:
             Init();
 
         CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+        CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_ARRAY_BUFFER_BINDING);
         gl( VertexAttribIPointer(location, values_per_vertex, type, stride, offset_pointer) );
         return *this;
     }
@@ -208,6 +211,7 @@ public:
             Init();
 
         CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+        CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_ARRAY_BUFFER_BINDING);
         gl( VertexAttribLPointer(location, values_per_vertex, DataType::Double, stride, offset_pointer) );
         return *this;
     }

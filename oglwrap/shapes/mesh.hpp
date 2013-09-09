@@ -101,7 +101,7 @@ private:
 public:
     /// @brief Loads in vertex positions and indices, and uploads the former into an attribute array.
     /** Uploads the vertex positions data to an attribute array, and sets it up for use.
-      * Calling this function changes the currently active VAO and ArrayBuffer.
+      * Calling this function changes the currently active VAO, ArrayBuffer and IndexBuffer.
       * The mesh cannot be drawn without calling this function. */
     /// @param attrib - The attribute array to use as destination.
     void setup_positions(VertexAttribArray attrib) {
@@ -145,6 +145,7 @@ public:
         }
 
         VertexArray::unbind();
+        ArrayBuffer::unbind();
     }
 
     /// @brief Loads in vertex normals, and uploads it to an attribute array.
@@ -179,6 +180,7 @@ public:
         }
 
         VertexArray::unbind();
+        ArrayBuffer::unbind();
     }
 
     /// Checks if every mesh in the scene has texcoords
@@ -236,6 +238,7 @@ public:
         }
 
         VertexArray::unbind();
+        ArrayBuffer::unbind();
 
         // Then initialize the materials (they can't be used without texture coordinates).
         textures.resize(scene->mNumMaterials);
@@ -271,6 +274,7 @@ public:
     }
 
     /// Renders the mesh.
+    /** Changes the currently active VAO */
     void render() {
         if(!is_setup_positions) {
             return;
@@ -286,11 +290,11 @@ public:
             }
 
             gl(DrawElements(
-                   GL_TRIANGLES,
-                   entries[i].idxCount,
-                   entries[i].idxType,
-                   0
-               ));
+               GL_TRIANGLES,
+               entries[i].idxCount,
+               entries[i].idxType,
+               0
+           ));
         }
 
         VertexArray::unbind();

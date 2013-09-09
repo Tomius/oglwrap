@@ -315,7 +315,7 @@ private:
     }
 
     template <class Index_t>
-    /// @brief Creates bone attributes data. Changes the active VAO.
+    /// @brief Creates bone attributes data.
     /** It is a template, as the type of boneIDs shouldn't be fix. Most of the times,
       * a skeleton won't contain more than 256 bones, but that doesn't mean boneIDs
       * should be forced to GLubyte, it works with shorts and even ints too. Although
@@ -400,10 +400,9 @@ private:
             }
         }
 
-        // Unbind the last vao, so it won't be modified from outside.
-        // And also, this way, if someone forget's to bind his own vao,
-        // will get an error message from the bind checker.
+        // Unbind our things, so they won't be modified from outside
         VertexArray::unbind();
+        ArrayBuffer::unbind();
     }
 
     /// @brief Creates the bone attributes data (the skinning.)
@@ -455,15 +454,14 @@ private:
             }
         }
 
-        // Unbind the last vao, so it won't be modified from outside.
-        // And also, this way, if someone forget's to bind his own vao,
-        // will get an error message from the bind checker.
+        // Unbind our things, so they won't be modified from outside
         VertexArray::unbind();
+        ArrayBuffer::unbind();
     }
 
 public:
     /// @brief Returns the size that boneIds and BoneWeights attribute arrays should be.
-    /** Will change the currently active VAO at the first call. */
+    /** May change the currently active VAO and ArrayBuffer at the first call. */
     unsigned char get_bone_attrib_num() {
 
         // If loadBones hasn't been called yet, than have to create
@@ -477,8 +475,7 @@ public:
     /// @brief Loads in bone weight and id information to the given array of attribute arrays.
     /** Uploads the bone weight and id to an array of attribute arrays, and sets it up for use.
       * For example if you specified "in vec4 boneIds[3]" you have to give "prog | boneIds"
-      * Calling this function changes the currently active VAO and ArrayBuffer.
-      * The mesh cannot be drawn without calling this function. */
+      * Calling this function changes the currently active VAO and ArrayBuffer. */
     /// @param boneIDs - The array of attributes array to use as destination for bone IDs.
     /// @param boneWeights - The array of attributes array to use as destination for bone weights.
     void setup_bones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights) {

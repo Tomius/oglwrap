@@ -39,9 +39,9 @@ static std::string OGLWRAP_LAST_BIND_TARGET;
     /// @param bindTarget - The target to check. Expected to be an explicit OpenGL macro name.
     #define CHECK_FOR_DEFAULT_BINDING_EXPLICIT(bindTarget) \
         OGLWRAP_LAST_BIND_TARGET = #bindTarget; \
-        GLint __currently_bound_target; \
-        glGetIntegerv(bindTarget, &__currently_bound_target); \
-        if(__currently_bound_target == 0) \
+        GLint __currently_bound_target_for_##bindTarget; \
+        glGetIntegerv(bindTarget, &__currently_bound_target_for_##bindTarget); \
+        if(__currently_bound_target_for_##bindTarget == 0) \
             __print_default_object_is_bound_error(__FILE__, __PRETTY_FUNCTION__, __LINE__);
 
     /// A function used by CHECK_FOR_DEFAULT_BINDING() macro
