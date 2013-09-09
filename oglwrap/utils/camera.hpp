@@ -240,12 +240,15 @@ public:
             roty += diff.x * mouseSensitivity * 0.0035f;
             rotx += -diff.y * mouseSensitivity * 0.0035f;
 
-            if(fabs(rotx) > maxPitchAngle)
-                rotx = rotx/fabs(rotx) * maxPitchAngle;
+            // Positive rotx is down
+            if(rotx < -maxPitchAngle)
+                rotx = -maxPitchAngle;
+            if(rotx > 0)
+                rotx = 0;
         }
 
         float distDiffMod = destDistMod - currDistMod;
-        if(fabs(distDiffMod) > 1e-2) {
+        if(fabs(distDiffMod) > dt * mouseScrollSensitivity) {
             int sign = distDiffMod / fabs(distDiffMod);
             currDistMod += sign * dt * mouseScrollSensitivity;
         }
