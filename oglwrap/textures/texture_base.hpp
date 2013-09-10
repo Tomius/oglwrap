@@ -54,12 +54,14 @@ public:
         gl( ActiveTexture(GL_TEXTURE0 + texUnit) );
     }
 
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGenerateMipmap)
     /// @brief Generates mipmaps for the currently uploaded image to this texture class.
     /// @see glGenerateMipmap
     void generateMipmap() {
         CHECK_BINDING();
         gl( GenerateMipmap(texture_t) );
     }
+    #endif
 
     /// @brief Sets the border color for this texture class.
     /// @param color - Specifies the value, the border color should be set to.
@@ -172,6 +174,7 @@ public:
         #endif // GL_TEXTURE_MAX_ANISOTROPY_EXT
     }
 
+    #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGenBuffers) && defined(glDeleteBuffers) && defined(GL_TEXTURE_BUFFER))
     /// @brief Assigns a buffer storing the texel data to the texture.
     /// @param internalFormat - Specifies the internal format of the data in the store belonging to buffer. It must be a sized, uncompressed internal format.
     /// @param buffer - Specifies the name of the buffer object whose storage to attach to the active buffer texture.
@@ -180,6 +183,7 @@ public:
         CHECK_BINDING();
         gl( TexBuffer(texture_t, internalFormat, buffer.Expose()) );
     }
+    #endif
 
     /// @brief Sets the compare mode.
     /// @param mode - The desired compare mode.

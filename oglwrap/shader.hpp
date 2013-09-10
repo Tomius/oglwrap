@@ -80,8 +80,7 @@ public:
     }
 };
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glCreateShader)
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDeleteShader)
+#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glCreateShader) && defined(glDeleteShader))
 /// A specialization of the ObjectExt class for Shaders (they aren't created with glGen*)
 template<ShaderType shader_t>
 class ShaderObject : public RefCounted {
@@ -207,9 +206,7 @@ public:
     }
     #endif // glShaderSource
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glCompileShader)
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetShaderiv)
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetShaderInfoLog)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glCompileShader) && defined(glGetShaderiv) && defined(glGetShaderInfoLog))
     /// Compiles the shader code.
     /** If the compilation fails, it throws a std::runtime_error, containing the
       * compilation info as .what(). The compilation happens automatically
@@ -274,9 +271,7 @@ public:
             throw std::runtime_error(str.str());
         }
     }
-    #endif // glGetShaderInfoLog
-    #endif // glGetShaderiv
-    #endif // glCompileShader
+    #endif // glCompileShader && glGetShaderInfoLog && glGetShaderiv
 
     /// Returns the C OpenGL handle for the shader.
     const ShaderObject<shader_t>& expose() const  {
@@ -357,13 +352,11 @@ typedef Shader<ShaderType::TessControl> TessControlShader;
 typedef Shader<ShaderType::TessEval> TessEvalShader;
 #endif // GL_TESS_EVALUATION_SHADER
 
-#endif // glDeleteShader
-#endif // glCreateShader
+#endif // glCreateShader && glDeleteShader
 
 // -------======{[ Shader Program ]}======-------
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glCreateProgram)
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDeleteProgram)
+#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glCreateProgram) && defined(glDeleteProgram))
 /// A specialization of the ObjectExt class for Programs (they aren't created with glGen*)
 class ProgramObject : public RefCounted {
     /// The C handle for the object.
@@ -466,9 +459,7 @@ public:
     }
     #endif // glAttachShader
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glLinkProgram)
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetProgramiv)
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetProgramInfoLog)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glLinkProgram) && defined(glGetProgramiv) && defined(glGetProgramInfoLog))
     /// @brief Links the program.
     /** If the linking fails, it throws a std::runtime_error containing the linking info. */
     /// @see glLinkProgram, glGetProgramiv, glGetProgramInfoLog
@@ -496,9 +487,7 @@ public:
 
         return *this;
     }
-    #endif // glGetProgramInfoLog
-    #endif // glGetProgramiv
-    #endif // glLinkProgram
+    #endif // glLinkProgram && glGetProgramiv && glGetProgramInfoLog
 
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUseProgram)
     /// @brief Installs the program as a part of the current rendering state.
@@ -534,8 +523,7 @@ public:
     }
 };
 #endif // glDetachShader
-#endif // glDeleteProgram
-#endif // glCreateProgram
+#endif // glCreateProgram && glDeleteProgram
 
 } // namespace oglwrap
 

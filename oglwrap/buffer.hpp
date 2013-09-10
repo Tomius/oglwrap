@@ -6,8 +6,7 @@
 
 namespace oglwrap {
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGenBuffers)
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDeleteBuffers)
+#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGenBuffers) && defined(glDeleteBuffers))
 template<BufferType buffer_t>
 /// Buffer Objects are OpenGL data stores, arrays on the server memory.
 /** Buffer Objects are OpenGL Objects that store an array
@@ -119,19 +118,16 @@ public:
     }
     #endif // glBufferSubData
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetBufferParameteriv)
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_BUFFER_SIZE)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGetBufferParameteriv) && defined(GL_BUFFER_SIZE))
     /// @brief A static version of size, without bind checking.
     static size_t s_size() {
         GLint data;
         gl( GetBufferParameteriv(buffer_t, GL_BUFFER_SIZE, &data) );
         return data;
     }
-    #endif // GL_BUFFER_SIZE
-    #endif // glGetBufferParameteriv
+    #endif // glGetBufferParameteriv && GL_BUFFER_SIZE
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetBufferParameteriv)
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_BUFFER_SIZE)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGetBufferParameteriv) && defined(GL_BUFFER_SIZE))
     /// @brief A getter for the buffer's size.
     /// @return The size of the buffer currently bound to the buffer objects default target in bytes.
     /// @see glGetBufferParameteriv, GL_BUFFER_SIZE
@@ -139,17 +135,14 @@ public:
         CHECK_BINDING();
         return s_size();
     }
-    #endif // GL_BUFFER_SIZE
-    #endif // glGetBufferParameteriv
+    #endif // glGetBufferParameteriv && GL_BUFFER_SIZE
 
     /// Returns the handle for the buffer.
     const ObjectExt<glGenBuffers, glDeleteBuffers>& Expose() const {
         return buffer;
     }
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glMapBuffer)
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUnmapBuffer)
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glMapBufferRange)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glMapBuffer) && defined(glUnmapBuffer) && defined(glMapBufferRange))
     template <class T>
     /// Mapping moves the data of the buffer to the client address space.
     class TypedMap {
@@ -207,9 +200,7 @@ public:
 
     typedef TypedMap<GLbyte> Map;
 
-    #endif // glMapBufferRange
-    #endif // glUnmapBuffer
-    #endif // glMapBuffer
+    #endif // glMapBuffer && glUnmapBuffer && glMapBufferRange
 };
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_ARRAY_BUFFER)
@@ -237,8 +228,7 @@ typedef BufferObject<BufferType::ElementArray> IndexBuffer;
 typedef BufferObject<BufferType::Texture> TextureBuffer;
 #endif // GL_TEXTURE_BUFFER
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindBufferBase)
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindBufferRange)
+#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glBindBufferBase) && defined(glBindBufferRange))
 template<IndexedBufferType buffer_t>
 /// Buffer objects that have an array of binding targets, like UniformBuffers.
 /** Buffer Objects are OpenGL Objects that store an array
@@ -282,10 +272,8 @@ typedef IndexedBufferObject<IndexedBufferType::Uniform> UniformBuffer;
 typedef IndexedBufferObject<IndexedBufferType::TransformFeedback> TransformFeedbackBuffer;
 #endif // GL_TRANSFORM_FEEDBACK_BUFFER
 
-#endif // glBindBufferBase
-#endif // glBindBufferRange
+#endif // glBindBufferRange && glBindBufferBase
 
-#endif // glDeleteBuffers
-#endif // glGenBuffers
+#endif // glGenBuffers && glDeleteBuffers
 } // namespace oglwrap
 

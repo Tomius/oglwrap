@@ -6,8 +6,7 @@
 
 namespace oglwrap {
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGenTransformFeedbacks)
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDeleteTransformFeedbacks)
+#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGenTransformFeedbacks) && defined(glDeleteTransformFeedbacks))
 /// A wrapper class for transform feedback.
 /** Transform Feedback is the process of altering the rendering pipeline so that primitives
   * processed by a Vertex Shader and optionally a Geometry Shader will be written to buffer
@@ -107,8 +106,7 @@ public:
     }
     #endif // glResumeTransformFeedback
 };
-#endif // glDeleteTransformFeedbacks
-#endif // glGenTransformFeedbacks
+#endif // glGenTransformFeedbacks && glDeleteTransformFeedbacks
 
 };
 

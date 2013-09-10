@@ -7,8 +7,7 @@
 namespace oglwrap {
 
 // -------======{[ Vertex Array declaration ]}======-------
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGenVertexArrays)
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDeleteVertexArrays)
+#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGenVertexArrays) && defined(glDeleteVertexArrays))
 /// @brief VAO is an object that remembers which ArrayBuffers to use for a draw call.
 /** A Vertex Array Object (VAO) is an object that encapsulates all of the
   * state needed to specify vertex data. They define the format of the vertex
@@ -40,8 +39,7 @@ public:
         return vao;
     }
 };
-#endif // glDeleteVertexArrays
-#endif // glGenVertexArrays
+#endif // glGenVertexArrays && glDeleteVertexArrays
 
 // -------======{[ Vertex Attribute Array ]}======-------
 
@@ -55,6 +53,7 @@ class VertexAttribArrayObject {
 protected:
     GLuint location; /// < The vertexAttribSlot
     bool inited; /// < For the LazyVertexAttribArray
+
     /// Init function for the for the LazyVertexAttribArray
     virtual void Init() {
         inited = true;
@@ -113,8 +112,7 @@ public:
         return *this;
     }
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribPointer)
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
+    #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glVertexAttribPointer) && defined(glVertexAttribIPointer))
     /// @brief Sets up an attribute for arbitrary data type.
     /** Integers and doubles won't be converted to floats, if you want that call pointer()
       * So you can write setup<ivec3>(); instead of IPointer(3, WholeDataType::Int);
@@ -150,8 +148,7 @@ public:
         }
         return *this;
     }
-    #endif // glVertexAttribIPointer
-    #endif // glVertexAttribPointer
+    #endif // glVertexAttribPointer && glVertexAttribIPointer
 
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribPointer)
     /// @brief Sets up an attribute for float type data. You can upload any data type to it, but it will be converted to float.
@@ -660,7 +657,6 @@ inline void VertexAttribArrayObject::static_setup_helper(const glm::uvec4 value)
     gl( VertexAttribI4uiv(location, glm::value_ptr(value)) );
 }
 #endif // glVertexAttribI4uiv
-
 
 #endif // glGetAttribLocation
 

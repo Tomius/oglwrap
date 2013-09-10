@@ -9,8 +9,7 @@
 
 namespace oglwrap {
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGenRenderbuffers)
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDeleteRenderbuffers)
+#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGenRenderbuffers) && defined(glDeleteRenderbuffers))
 /// @brief A buffer that servers as a storage for a framebuffer.
 /// @see glGenRenderbuffers, glDeleteRenderbuffers
 class RenderBuffer {
@@ -67,11 +66,9 @@ public:
         return renderbuffer;
     }
 };
-#endif // glDeleteRenderbuffers
-#endif // glGenRenderbuffers
+#endif // glGenRenderbuffers && glDeleteRenderbuffers
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGenFramebuffers)
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDeleteFramebuffers)
+#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGenFramebuffers) && defined(glDeleteFramebuffers))
 /// A buffer that you can draw to.
 template<FramebufferType fbo_t>
 class FramebufferObject {
@@ -233,8 +230,7 @@ typedef FramebufferObject<FramebufferType::Read_Draw> Framebuffer;
 typedef FramebufferObject<FramebufferType::Read> Read_Framebuffer;
 typedef FramebufferObject<FramebufferType::Draw> Draw_Framebuffer;
 
-#endif // glDeleteFramebuffers
-#endif // glGenFramebuffers
+#endif // glGenFramebuffers && glDeleteFramebuffers
 
 } // namespace oglwrap
 
