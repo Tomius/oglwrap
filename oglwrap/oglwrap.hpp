@@ -6,11 +6,15 @@
 #pragma once
 
 /* TODO:
-    - context class
-    - program uniforms
-    - uniform blocks / shader storage
-    - separable shader stages.
-    - some 4.0+ features are still missing.
+    - General:
+        - context class
+        - program uniforms
+        - uniform blocks / shader storage
+        - separable shader stages.
+        - some 4.0+ features are still missing.
+    - Animation:
+        - anim speed modifier.
+        - animation stack.
 */
 
 // standard headers

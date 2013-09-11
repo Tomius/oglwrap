@@ -282,7 +282,7 @@ public:
         target = glm::vec3(_target.x, target.y, _target.z);
 
         float diff = _target.y - target.y;
-        const float offs = std::max(fabs(diff * diff / 5.0), 0.05);
+        const float offs = std::max(fabs(diff / 5.0), 0.05);
         if(fabs(diff) > offs) { // FIXME @ this constant
             target.y += diff / fabs(diff) * offs;
         }
