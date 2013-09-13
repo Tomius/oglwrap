@@ -273,7 +273,7 @@ public:
     /// Updates the target of the camera. Is expected to be called every frame.
     /// @param target - the position of the object the camera should follow.
     void updateTarget(const glm::vec3& _target) {
-       // target = _target;
+        //target = _target;
         if(firstCall) {
             target = _target;
             firstCall = false;

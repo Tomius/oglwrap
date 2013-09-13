@@ -464,9 +464,6 @@ public:
     /** If the linking fails, it throws a std::runtime_error containing the linking info. */
     /// @see glLinkProgram, glGetProgramiv, glGetProgramInfoLog
     const Program& link() const {
-        if(*linked) {
-            return *this;
-        }
         gl( LinkProgram(program) );
         *linked = true;
 

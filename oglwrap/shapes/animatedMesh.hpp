@@ -225,6 +225,12 @@ class AnimatedMesh : public Mesh {
     /// The current animation modifier flags.
     unsigned current_flags;
 
+    /// Speed modifier
+    float current_speed;
+
+    /// Default speed modifiers
+    std::vector<float> speed_modifiers;
+
 public:
     AnimatedMesh(const std::string& filename, unsigned int flags)
         : Mesh(filename, flags)
@@ -854,7 +860,8 @@ private:
         float current_ticks_per_second = current_anim->mAnimations[0]->mTicksPerSecond > 1e-10 ? // != 0
                                          current_anim->mAnimations[0]->mTicksPerSecond : 24.0f;
 
-        float current_time_in_ticks = (time_in_seconds - end_of_last_anim) * current_ticks_per_second;
+        float current_time_in_ticks =
+            (time_in_seconds - end_of_last_anim) * current_speed * current_ticks_per_second;
         float current_animation_time;
         if(current_flags & AnimFlag::Repeat) {
             current_animation_time = fmod(current_time_in_ticks, (float)current_anim->mAnimations[0]->mDuration);
@@ -872,7 +879,7 @@ private:
             current_animation_time = (float)current_anim->mAnimations[0]->mDuration - current_animation_time;
         }
 
-        if(end_of_last_anim + transition_time < time_in_seconds) {
+        if(transition_time < current_speed * (time_in_seconds - end_of_last_anim)) {
             // Normal animation
             readNodeHeirarchy(current_animation_time, scene->mRootNode);
         } else {
@@ -935,7 +942,8 @@ public:
     /// @param flags - You can specify animation modifiers, like repeat the animation after it ends, play it backwards, etc...
     void add_animation(const std::string& filename,
                        const std::string& animName,
-                       unsigned flags = AnimFlag::None) {
+                       unsigned flags = AnimFlag::None,
+                       float speed = 1.0f) {
 
         if(anim_names.find(animName) != anim_names.end()){
             std::string err = "Animation name '" + animName + "' isn't unique for '" + filename + "'";
@@ -964,6 +972,7 @@ public:
         end_offsets.push_back(glm::vec3(v.x, v.y, v.z));
 
         default_flags.push_back(flags);
+        speed_modifiers.push_back(speed);
     }
 
     /// @brief Sets the default animation, that will be played if you don't set to play another one.
@@ -999,7 +1008,8 @@ private:
     void change_animation(size_t animIndex,
                           float currentTime,
                           float transition_time,
-                          unsigned flags) {
+                          unsigned flags,
+                          float speed = 1.0f) {
 
         last_idx = curr_idx;
         curr_idx = animIndex;
@@ -1027,7 +1037,14 @@ private:
         }
 
         last_flags = current_flags;
-        current_flags = flags;
+        if(speed > 0.0f) {
+            current_flags = flags;
+        } else {
+            speed *= -1;
+            current_flags = flags | AnimFlag::Backwards;
+        }
+
+        current_speed = speed;
     }
 
 public:
@@ -1040,14 +1057,15 @@ public:
     /// @param transition_time - The fading time to be used for the transition.
     /// @param flags - A bitfield containing the animation specifier flags.
     void set_current_animation(const std::string& animName,
-                              float currentTime,
-                              float transition_time,
-                              unsigned flags) {
+                               float currentTime,
+                               float transition_time,
+                               unsigned flags,
+                               float speed = 0.0f) {
 
         if((end_of_last_anim + this->transition_time) <= currentTime
            && (current_flags & AnimFlag::Interruptable)
         ) {
-            force_current_animation(animName, currentTime, transition_time, flags);
+            force_current_animation(animName, currentTime, transition_time, flags, speed);
         }
     }
 
@@ -1060,7 +1078,8 @@ public:
     void force_current_animation(const std::string& animName,
                                  float currentTime,
                                  float transition_time,
-                                 unsigned flags) {
+                                 unsigned flags,
+                                 float speed = 0.0f) {
 
         if(anim_names.find(animName) == anim_names.end()) {
             throw std::invalid_argument(
@@ -1075,7 +1094,23 @@ public:
             return;
         }
 
-        change_animation(animIndex, currentTime, transition_time, flags);
+        if(fabs(speed) < 1e-5) {
+            change_animation(
+                animIndex,
+                currentTime,
+                transition_time,
+                flags,
+                speed_modifiers[animIndex]
+            );
+        } else {
+            change_animation(
+                animIndex,
+                currentTime,
+                transition_time,
+                flags,
+                speed
+            );
+        }
     }
 
     /// @brief Tries to change the current animation to a specified one, using the default anim modifier flags specified for this anim.
@@ -1088,12 +1123,13 @@ public:
     /// @param flags - A bitfield containing the animation specifier flags.
     void set_current_animation(const std::string& animName,
                                float currentTime,
-                               float transition_time = 0.0f) {
+                               float transition_time = 0.0f,
+                               float speed = 0.0f) {
 
         if((end_of_last_anim + this->transition_time) <= currentTime
            && (current_flags & AnimFlag::Interruptable)
         ) {
-            force_current_animation(animName, currentTime, transition_time);
+            force_current_animation(animName, currentTime, transition_time, speed);
         }
     }
 
@@ -1104,7 +1140,8 @@ public:
     /// @param transition_time - The fading time to be used for the transition.
     void force_current_animation(const std::string& animName,
                                  float currentTime,
-                                 float transition_time = 0.0f) {
+                                 float transition_time = 0.0f,
+                                 float speed = 0.0f) {
 
         if(anim_names.find(animName) == anim_names.end()) {
             throw std::invalid_argument(
@@ -1119,7 +1156,23 @@ public:
             return;
         }
 
-        change_animation(animIndex, currentTime, transition_time, default_flags[animIndex]);
+        if(fabs(speed) < 1e-5) {
+            change_animation(
+                animIndex,
+                currentTime,
+                transition_time,
+                default_flags[animIndex],
+                speed_modifiers[animIndex]
+            );
+        } else {
+            change_animation(
+                animIndex,
+                currentTime,
+                transition_time,
+                default_flags[animIndex],
+                speed
+            );
+        }
     }
 
     /// @brief Tries to change the current animation to the default one.
@@ -1140,7 +1193,13 @@ public:
     void force_anim_to_default(float currentTime) {
         assert(default_flags[default_idx] & AnimFlag::Repeat);
         if(current_anim != animations[default_idx])
-            change_animation(default_idx, currentTime, default_transition_time, default_flags[default_idx]);
+            change_animation(
+                default_idx,
+                currentTime,
+                default_transition_time,
+                default_flags[default_idx],
+                speed_modifiers[default_idx]
+            );
     }
 
     /// Returns the offset of the root bone, since it was last queried.
