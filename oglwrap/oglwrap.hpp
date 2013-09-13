@@ -13,7 +13,6 @@
         - separable shader stages.
         - some 4.0+ features are still missing.
     - Animation:
-        - anim speed modifier.
         - animation stack.
 */
 

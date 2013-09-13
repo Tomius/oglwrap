@@ -915,6 +915,7 @@ private:
     }
 
 public:
+
     // -------======{[ Bone transformation updater ]}======-------
 
     /// @brief Updates the bones transformation and uploads them into the given uniforms.
@@ -940,6 +941,7 @@ public:
     /// @param filename - The name of the file, from where to load the animation.
     /// @param animName - The name with you wanna reference this animation.
     /// @param flags - You can specify animation modifiers, like repeat the animation after it ends, play it backwards, etc...
+    /// @param speed - Sets the default speed of the animation. If it's 1, it will be played with the its default speed. If it's negative, it will be played backwards.
     void add_animation(const std::string& filename,
                        const std::string& animName,
                        unsigned flags = AnimFlag::None,
@@ -1005,6 +1007,7 @@ private:
     /// @param currentTime - The current time in seconds, optimally since the start of the program.
     /// @param transition_time - The fading time to be used for the transition.
     /// @param flags - A bitfield containing the animation specifier flags.
+    /// @param speed - Sets the speed of the animation. If it's 0, will play with the speed specified at the addAnim. If it's negative, it will be played backwards.
     void change_animation(size_t animIndex,
                           float currentTime,
                           float transition_time,
@@ -1056,6 +1059,7 @@ public:
     /// @param currentTime - The current time in seconds, optimally since the start of the program.
     /// @param transition_time - The fading time to be used for the transition.
     /// @param flags - A bitfield containing the animation specifier flags.
+    /// @param speed - Sets the speed of the animation. If it's 0, will play with the speed specified at the addAnim. If it's negative, it will be played backwards.
     void set_current_animation(const std::string& animName,
                                float currentTime,
                                float transition_time,
@@ -1075,6 +1079,7 @@ public:
     /// @param currentTime - The current time in seconds, optimally since the start of the program.
     /// @param transition_time - The fading time to be used for the transition.
     /// @param flags - A bitfield containing the animation specifier flags.
+    /// @param speed - Sets the speed of the animation. If it's 0, will play with the speed specified at the addAnim. If it's negative, it will be played backwards.
     void force_current_animation(const std::string& animName,
                                  float currentTime,
                                  float transition_time,
@@ -1121,6 +1126,7 @@ public:
     /// @param currentTime - The current time in seconds, optimally since the start of the program.
     /// @param transition_time - The fading time to be used for the transition.
     /// @param flags - A bitfield containing the animation specifier flags.
+    /// @param speed - Sets the speed of the animation. If it's 0, will play with the speed specified at the addAnim. If it's negative, it will be played backwards.
     void set_current_animation(const std::string& animName,
                                float currentTime,
                                float transition_time = 0.0f,
@@ -1138,6 +1144,7 @@ public:
     /// @param animName - The user-defined name of the animation.
     /// @param currentTime - The current time in seconds, optimally since the start of the program.
     /// @param transition_time - The fading time to be used for the transition.
+    /// @param speed - Sets the speed of the animation. If it's 0, will play with the speed specified at the addAnim. If it's negative, it will be played backwards.
     void force_current_animation(const std::string& animName,
                                  float currentTime,
                                  float transition_time = 0.0f,
