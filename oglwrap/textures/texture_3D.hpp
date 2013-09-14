@@ -16,14 +16,13 @@ template<Tex3DType texture_t>
 /** You should rather use the typedefed versions than this template. */
 class Texture3D_Base : public TextureBase<TexType(texture_t)> {
 public:
-
     /// @brief Generates an empty texture.
     /// @see glGenTextures
     Texture3D_Base() {}
 
-    template <TexType another_texture_t>
-    /// @brief Copies a 3D texture or changes the type of a texture to Texture3D
-    /// @param src - The texture to copy or cast to Texture3D
+    template <Tex3DType another_texture_t>
+    /// @brief Copies a 3D texture or casts a three-dimensional texture to another 3d tex type.
+    /// @param src - The texture to copy or cast.
     Texture3D_Base(const TextureBase<another_texture_t>& src)
         :TextureBase<texture_t>(src) {}
 

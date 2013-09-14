@@ -194,7 +194,7 @@ public:
     }
 
     /// @brief Sets the compare function.
-    /// @param mode - The desired compare function.
+    /// @param func - The desired compare function.
     /// @see glTexParameteri, GL_TEXTURE_COMPARE_FUNC
     void compareFunc (CompFunc func) {
         CHECK_BINDING();

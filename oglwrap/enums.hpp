@@ -503,7 +503,10 @@ enum Tex2DType {
     Tex1DArray = GL_TEXTURE_1D_ARRAY,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_RECTANGLE)
-    TexRect = GL_TEXTURE_RECTANGLE
+    TexRect = GL_TEXTURE_RECTANGLE,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_CUBE_MAP)
+    TexCubeMap = GL_TEXTURE_CUBE_MAP
 #endif
 };
 }

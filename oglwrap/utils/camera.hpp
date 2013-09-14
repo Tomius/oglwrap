@@ -63,6 +63,7 @@ public:
     /// @param pos - The position of the camera.
     /// @param target - The position of the camera's target (what it is looking at).
     /// @param speedPerSec - Move speed in OpenGL units per second
+    /// @param mouseSensitivity - The relative sensitivity to mouse movement.
     FreeFlyCamera(const glm::vec3& pos,
                   const glm::vec3& target = glm::vec3(),
                   float speedPerSec = 5.0f,
@@ -185,7 +186,8 @@ public:
     /// @brief Creates the third-personal camera.
     /// @param pos - The position of the camera.
     /// @param target - The position of the camera's target (what it is looking at).
-    /// @param speedPerSec - Move speed in OpenGL units per second
+    /// @param mouseSensitivity - The relative sensitivity to mouse movement.
+    /// @param mouseScrollSensitivity - The relative sensitivity to mouse scrolling.
     ThirdPersonalCamera(const glm::vec3& pos,
                         const glm::vec3& target = glm::vec3(),
                         float mouseSensitivity = 1.0f,
@@ -206,6 +208,7 @@ public:
     }
 
     /// Updates the camera's position and rotation.
+    /// @param time - The current time in seconds.
     /// @param window - The currently active SFML window.
     /// @param fixMouse - Specifies if the mouse should be locked into the middle of the screen.
     void updateRotation(float time, const sf::Window& window, bool fixMouse = false) {
@@ -271,9 +274,8 @@ public:
     }
 
     /// Updates the target of the camera. Is expected to be called every frame.
-    /// @param target - the position of the object the camera should follow.
+    /// @param _target - the position of the object the camera should follow.
     void updateTarget(const glm::vec3& _target) {
-        //target = _target;
         if(firstCall) {
             target = _target;
             firstCall = false;
@@ -283,8 +285,8 @@ public:
         target = glm::vec3(_target.x, target.y, _target.z);
 
         float diff = _target.y - target.y;
-        const float offs = std::max(fabs(diff / 3.0), 0.02);
-        if(fabs(diff) > offs) { // FIXME @ this constant
+        const float offs = std::max(fabs(diff / 2.0), 0.05);
+        if(fabs(diff) > offs) {
             target.y += diff / fabs(diff) * offs;
         }
     }

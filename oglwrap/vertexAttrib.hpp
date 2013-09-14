@@ -310,8 +310,8 @@ public:
 
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindAttribLocation)
     /// @brief Associates a generic vertex attribute index with a named attribute variable
-    /// @param program - Specifies the handle of the program object in which the association is to be made.
-    /// @param name - Specifies a null terminated string containing the name of the vertex shader attribute variable to which index is to be bound.
+    /// @param prog - Specifies the handle of the program object in which the association is to be made.
+    /// @param identifier - Specifies a null terminated string containing the name of the vertex shader attribute variable to which index is to be bound.
     /// @see glBindAttribLocation
     void bindLocation(const Program& prog, const std::string& identifier) const {
         gl( BindAttribLocation(prog.expose(), location, identifier.c_str()) );

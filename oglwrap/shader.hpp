@@ -49,7 +49,7 @@ public:
     }
 
     template<typename T>
-    /// @brief Inserts a value for a #define preprocessor in the shader.
+    /// @brief Inserts a value for a defined preprocessor in the shader.
     /// @param macro_name - The name of the macro.
     /// @param value - The value to insert.
     void insert_macro_value(const std::string& macro_name, const T& value) {

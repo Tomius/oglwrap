@@ -1,4 +1,4 @@
-/** @file animationMesh.hpp
+/** @file animatedMesh.hpp
     @brief An animation loader using assimp
 */
 
@@ -1044,7 +1044,7 @@ private:
             current_flags = flags;
         } else {
             speed *= -1;
-            current_flags = flags | AnimFlag::Backwards;
+            current_flags = flags ^ AnimFlag::Backwards;
         }
 
         current_speed = speed;
@@ -1125,7 +1125,6 @@ public:
     /// @param animName - The user-defined name of the animation.
     /// @param currentTime - The current time in seconds, optimally since the start of the program.
     /// @param transition_time - The fading time to be used for the transition.
-    /// @param flags - A bitfield containing the animation specifier flags.
     /// @param speed - Sets the speed of the animation. If it's 0, will play with the speed specified at the addAnim. If it's negative, it will be played backwards.
     void set_current_animation(const std::string& animName,
                                float currentTime,

@@ -17,11 +17,11 @@ public:
     /// @see glGenTextures
     TextureCube() {}
 
-    template <TexType texture_t>
-    /// Copies a 2D texture or changes the type of a texture to Texture2D
-    /// @param src - The texture to copy or cast to Texture2D
-    TextureCube(const TextureBase<texture_t>& src)
-        :TextureBase<TexType::TexCubeMap>(src) {}
+    template <Tex2DType another_texture_t>
+    /// Copies a 2D texture or casts a two-dimensional texture to another 2d texture type.
+    /// @param src - The texture to copy or cast.
+    TextureCube(const TextureBase<another_texture_t>& src)
+        : TextureBase<another_texture_t>(src) {}
 
     /// Uploads one a base image for one side of the cube.
     /// @param target - Specifies which one of the six sides of the cube to use as target.

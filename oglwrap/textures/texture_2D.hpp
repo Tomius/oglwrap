@@ -21,9 +21,9 @@ public:
     /// @see glGenTextures
     Texture2D_Base() {}
 
-    template <TexType another_texture_t>
-    /// Copies a 2D texture or changes the type of a texture to Texture2D
-    /// @param src - The texture to copy or cast to Texture2D
+    template <Tex2DType another_texture_t>
+    /// Copies a 2D texture or casts a two-dimensional texture to another 2d texture type.
+    /// @param src - The texture to copy or cast.
     Texture2D_Base(const TextureBase<another_texture_t>& src)
         :TextureBase<texture_t>(src) {}
 

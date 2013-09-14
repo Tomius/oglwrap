@@ -88,7 +88,6 @@ public:
 
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindFramebuffer)
     /// @brief Binds the framebuffer for reading and/or drawing.
-    /// @param target - The target to bind the framebuffer to.
     /// @see glBindFramebuffer
     void bind() {
         gl( BindFramebuffer(fbo_t, framebuffer) );
