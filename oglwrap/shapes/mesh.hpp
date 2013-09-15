@@ -39,8 +39,19 @@ protected:
     /// The vao-s and buffers per mesh.
     std::vector<MeshEntry> entries;
 
-    /// The materials
-    std::vector<Texture2D> textures;
+    /// A struct containin the state and data of a material type.
+    struct MaterialInfo {
+        bool active;
+        int texUnit;
+        std::vector<Texture2D> textures;
+
+        MaterialInfo()
+            : active(false), texUnit(0) {
+        }
+    };
+
+    /// The materials.
+    std::map<aiTextureType, MaterialInfo> materials;
 
     /// Stores if the setup_positions function is called (they shouldn't be called more than once).
     bool is_setup_positions;
@@ -49,8 +60,10 @@ protected:
     /// Stores if the setup_texcoords function is called (they shouldn't be called more than once).
     bool is_setup_texcoords;
 
-    // It shouldn't be copyable
+    /// It shouldn't be copyable.
     Mesh(const Mesh& src);
+
+    /// It shouldn't be copyable.
     void operator=(const Mesh& rhs);
 
 public:
@@ -197,13 +210,13 @@ public:
         return true;
     }
 
-    /// @brief Loads in vertex texture coordinates (the 0th set), and the materials.
+    /// Loads in vertex texture coordinates (the 0th set), and the materials.
     /** Uploads the vertex textures coordinates data to an attribute array,
       * and sets it up for use. Also loads in the materials (textures) for
       * the mesh. May write to the stderr if a material is missing.
-      * Calling this function changes the currently active VAO and ArrayBuffer. */
-    /// @param attrib - The attribute array to use as destination.
-    /// @param texCoordSet - Specifies the index of the texture coordinate set that should be used
+      * Calling this function changes the currently active VAO and ArrayBuffer.
+      * @param attrib - The attribute array to use as destination.
+      * @param texCoordSet - Specifies the index of the texture coordinate set that should be used */
     void setup_texCoords(VertexAttribArray attrib, unsigned char texCoordSet = 0) {
 
         if(is_setup_texcoords) {
@@ -239,9 +252,19 @@ public:
 
         VertexArray::unbind();
         ArrayBuffer::unbind();
+    }
 
-        // Then initialize the materials (they can't be used without texture coordinates).
-        textures.resize(scene->mNumMaterials);
+    template<aiTextureType tex_type>
+    /// Sets arbitary type of textures to a specified texture unit.
+    /** Changes the currently active texture unit and Texture2D binding.
+      * @param texture_unit - Specifies the texture unit to use for the textures. */
+    void setup_textures(unsigned short texture_unit) {
+        Texture2D::active(texture_unit);
+
+        materials[tex_type].active = true;
+        materials[tex_type].texUnit = texture_unit;
+        materials[tex_type].textures.resize(scene->mNumMaterials);
+
         if(scene->mNumMaterials) {
 
             // Extract the directory part from the file name
@@ -261,16 +284,30 @@ public:
                 const aiMaterial* pMaterial = scene->mMaterials[i];
 
                 aiString filepath;
-                if(pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0 &&
-                        pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &filepath,
-                                              NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-                    textures[i].bind();
-                    textures[i].loadTexture(dir + filepath.data);
-                    textures[i].minFilter(MinF::Linear);
-                    textures[i].magFilter(MagF::Linear);
+                if(pMaterial->GetTexture(tex_type, 0, &filepath) == AI_SUCCESS) {
+                    materials[tex_type].textures[i].bind();
+                    materials[tex_type].textures[i].loadTexture(dir + filepath.data);
+                    materials[tex_type].textures[i].minFilter(MinF::Linear);
+                    materials[tex_type].textures[i].magFilter(MagF::Linear);
                 }
             }
         }
+
+        Texture2D::unbind();
+    }
+
+    /// Sets the diffuse textures up to a specified texture unit.
+    /** Changes the currently active texture unit and Texture2D binding.
+      * @param texture_unit - Specifies the texture unit to use for the diffuse textures. */
+    void setup_diffuse_textures(unsigned short texture_unit) {
+        setup_textures<aiTextureType_DIFFUSE>(texture_unit);
+    }
+
+    /// Sets the specular textures up to a specified texture unit.
+    /** Changes the currently active texture unit and Texture2D binding.
+      * @param texture_unit - Specifies the texture unit to use for the specular textures. */
+    void setup_specular_textures(unsigned short texture_unit) {
+        setup_textures<aiTextureType_SPECULAR>(texture_unit);
     }
 
     /// Renders the mesh.
@@ -282,11 +319,12 @@ public:
         for(unsigned int i = 0 ; i < entries.size(); i++) {
             entries[i].vao.bind();
 
-            if(is_setup_texcoords) {
-                const unsigned int materialIndex = entries[i].materialIndex;
-                if(materialIndex < textures.size()) {
-                    textures[materialIndex].bind();
-                }
+            const unsigned int materialIndex = entries[i].materialIndex;
+            for(auto iter = materials.begin(); iter != materials.end(); iter++) {
+                auto material = iter->second;
+                if(material.active == true && materialIndex < material.textures.size())
+                    material.textures[materialIndex].active(material.texUnit);
+                    material.textures[materialIndex].bind();
             }
 
             gl(DrawElements(
