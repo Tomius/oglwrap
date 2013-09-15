@@ -274,7 +274,7 @@ public:
     }
 
     /// Renders the mesh.
-    /** Changes the currently active VAO */
+    /** Changes the currently active VAO and may change the Texture2D binding */
     void render() {
         if(!is_setup_positions) {
             return;
@@ -298,6 +298,7 @@ public:
         }
 
         VertexArray::unbind();
+        Texture2D::unbind();
     }
 
     /// Gives information about the mesh's bounding cuboid.
