@@ -208,15 +208,16 @@ public:
     }
 
     /// Updates the camera's position and rotation.
-    /// @param time - The current time in seconds.
     /// @param window - The currently active SFML window.
     /// @param fixMouse - Specifies if the mouse should be locked into the middle of the screen.
-    void updateRotation(float time, const sf::Window& window, bool fixMouse = false) {
+    void updateRotation(const sf::Window& window, bool fixMouse = false) {
         using namespace glm;
 
-        static float lastTime = 0;
-        float dt = time - lastTime;
-        lastTime = time;
+        static sf::Clock clock;
+        static float prevTime = 0;
+        float time = clock.getElapsedTime().asSeconds();
+        float dt =  time - prevTime;
+        prevTime = time;
 
         sf::Vector2i loc = sf::Mouse::getPosition(window);
         sf::Vector2i diff;
@@ -276,6 +277,12 @@ public:
     /// Updates the target of the camera. Is expected to be called every frame.
     /// @param _target - the position of the object the camera should follow.
     void updateTarget(const glm::vec3& _target) {
+        static sf::Clock clock;
+        static float prevTime = 0;
+        float time = clock.getElapsedTime().asSeconds();
+        float dt =  time - prevTime;
+        prevTime = time;
+
         if(firstCall) {
             target = _target;
             firstCall = false;
@@ -285,7 +292,7 @@ public:
         target = glm::vec3(_target.x, target.y, _target.z);
 
         float diff = _target.y - target.y;
-        const float offs = std::max(fabs(diff / 2.0), 0.05);
+        const float offs = std::max(fabs(diff / 2.0f), 0.05) * dt * 20.0f;
         if(fabs(diff) > offs) {
             target.y += diff / fabs(diff) * offs;
         }
