@@ -60,7 +60,6 @@ enum AnimFlag {
     /** For example, for a walking with Mirrored flag will cause Moonwalk.
       * (The character will be animated as he/she was moving forwards, back
       * he/she actually moves backwards.) */
-    /// @see Youtube @ Moonwalk
     Mirrored = 0x4,
 
     /// Plays the animation backwards
