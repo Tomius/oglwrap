@@ -11,6 +11,7 @@
         - program uniforms
         - uniform blocks / shader storage
         - separable shader stages.
+        - texture storage functions.
         - some 4.0+ features are still missing.
     - Animation:
         - animation stack.
