@@ -340,8 +340,8 @@ public:
     }
 
     /// Gives information about the mesh's bounding cuboid.
-    /// @param center - The vec3 where bounding cuboid's center is to be returned.
-    /// @param edges - The vec3 where bounding cuboid's edge lengths are to be returned.
+    /** @param center - The vec3 where bounding cuboid's center is to be returned.
+      * @param edges - The vec3 where bounding cuboid's edge lengths are to be returned. */
     void boundingCuboid(glm::vec3& center, glm::vec3& edges) {
         // Idea: get the minimums and maximums of the vertex positions
         // in each coordinate. Then the average of the mins and maxes
