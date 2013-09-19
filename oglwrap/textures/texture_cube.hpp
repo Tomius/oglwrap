@@ -128,6 +128,24 @@ public:
         ));
     }
 
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glTexStorage2D)
+    /// Simultaneously specify storage for all levels of a two-dimensional or one-dimensional array texture
+    /** @param target - Specifies which one of the six sides of the cube to use as target.
+      * @param levels - Specify the number of texture levels.
+      * @param internalformat - Specifies the sized internal format to be used to store texture image data.
+      * @param width - Specifies the width of the texture, in texels.
+      * @param height - Specifies the height of the texture, in texels. */
+    void Storage(CubeTarget target,
+                 GLsizei levels,
+                 GLenum internalformat,
+                 GLsizei width,
+                 GLsizei height) {
+        CHECK_BINDING();
+
+        gl( TexStorage2D(target, levels, internalformat, width, height) );
+    }
+    #endif // glTexStorage2D
+
     /// Copies pixels from the current GL_READ_BUFFER into the base mipmap of one side of the cube.
     /// @param target - Specifies which one of the six sides of the cube to use as target.
     /// @param internalFormat - Specifies the internal format of the texture.

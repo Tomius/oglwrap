@@ -123,6 +123,22 @@ public:
         ));
     }
 
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glTexStorage2D)
+    /// Simultaneously specify storage for all levels of a two-dimensional or one-dimensional array texture
+    /** @param levels - Specify the number of texture levels.
+      * @param internalformat - Specifies the sized internal format to be used to store texture image data.
+      * @param width - Specifies the width of the texture, in texels.
+      * @param height - Specifies the height of the texture, in texels. */
+    void Storage(GLsizei levels,
+                 GLenum internalformat,
+                 GLsizei width,
+                 GLsizei height) {
+        CHECK_BINDING_TEXTURE2D();
+
+        gl( TexStorage2D(texture_t, levels, internalformat, width, height) );
+    }
+    #endif // glTexStorage2D
+
     /// Copies pixels from the current GL_READ_BUFFER into the base mipmap of this texture.
     /// @param internalFormat - Specifies the internal format of the texture.
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.

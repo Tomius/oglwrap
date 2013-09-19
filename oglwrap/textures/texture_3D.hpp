@@ -182,6 +182,24 @@ public:
     }
     #endif // glCopyTexSubImage3D
 
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glTexStorage3D)
+    /// Simultaneously specify storage for all levels of a three-dimensional, two-dimensional array or cube-map array texture.
+    /** @param levels - Specify the number of texture levels.
+      * @param internalformat - Specifies the sized internal format to be used to store texture image data.
+      * @param width - Specifies the width of the texture, in texels.
+      * @param height - Specifies the height of the texture, in texels.
+      * @param depth - Specifies the depth of the texture, in texels. */
+    void Storage(GLsizei levels,
+                 GLenum internalformat,
+                 GLsizei width,
+                 GLsizei height,
+                 GLsizei depth) {
+        CHECK_BINDING_TEXTURE3D();
+
+        gl( TexStorage3D(texture_t, levels, internalformat, width, height, depth) );
+    }
+    #endif // glTexStorage3D
+
     /// @brief Returns the width of a mipmap of the currently bound texture of this class.
     /// @param level - Specifies the mipmap whose size should be queried.
     /// @see glGetTexLevelParameteriv, GL_TEXTURE_WIDTH
