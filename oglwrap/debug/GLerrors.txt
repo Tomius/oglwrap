@@ -92,24 +92,24 @@ GL_INVALID_OPERATION is generated if renderbuffer is not zero or the name of a r
 
 glRenderbufferStorage
 void glRenderbufferStorage(GLenum  target,
-                           GLenum  internalformat,
+                           GLenum  internalFormat,
                            GLsizei width,
                            GLsizei height);
 GL_INVALID_ENUM is generated if target is not GL_RENDERBUFFER.
 GL_INVALID_VALUE is generated if either of width or height is negative, or greater than the value of GL_MAX_RENDERBUFFER_SIZE.
-GL_INVALID_ENUM is generated if internalformat is not a color-renderable, depth-renderable, or stencil-renderable format.
+GL_INVALID_ENUM is generated if internalFormat is not a color-renderable, depth-renderable, or stencil-renderable format.
 GL_OUT_OF_MEMORY is generated if the GL is unable to create a data store of the requested size.
 
 glRenderbufferStorageMultisample
 void glRenderbufferStorageMultisample(GLenum  target,
                                       GLsizei samples,
-                                      GLenum  internalformat,
+                                      GLenum  internalFormat,
                                       GLsizei width,
                                       GLsizei height);
 GL_INVALID_ENUM is generated if target is not GL_RENDERBUFFER.
 GL_INVALID_VALUE is generated if samples is greater than GL_MAX_SAMPLES.
-GL_INVALID_ENUM is generated if internalformat is not a color-renderable, depth-renderable, or stencil-renderable format.
-GL_INVALID_OPERATION is generated if internalformat is a signed or unsigned integer format and samples is greater than the value of GL_MAX_INTEGER_SAMPLES
+GL_INVALID_ENUM is generated if internalFormat is not a color-renderable, depth-renderable, or stencil-renderable format.
+GL_INVALID_OPERATION is generated if internalFormat is a signed or unsigned integer format and samples is greater than the value of GL_MAX_INTEGER_SAMPLES
 GL_INVALID_VALUE is generated if either of width or height is negative, or greater than the value of GL_MAX_RENDERBUFFER_SIZE.
 GL_OUT_OF_MEMORY is generated if the GL is unable to create a data store of the requested size.
 
@@ -449,7 +449,7 @@ GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to t
 glCopyTexImage
 void glCopyTexImage1D(GLenum  target,
                       GLint   level,
-                      GLenum  internalformat,
+                      GLenum  internalFormat,
                       GLint   x,
                       GLint   y,
                       GLsizei width,
@@ -457,10 +457,10 @@ void glCopyTexImage1D(GLenum  target,
 GL_INVALID_ENUM is generated if target is not one of the allowable values.
 GL_INVALID_VALUE is generated if level is less than 0.
 GL_INVALID_VALUE may be generated if level is greater than log 2 ⁢ max , where max is the returned value of GL_MAX_TEXTURE_SIZE.
-GL_INVALID_VALUE is generated if internalformat is not an allowable value.
+GL_INVALID_VALUE is generated if internalFormat is not an allowable value.
 GL_INVALID_VALUE is generated if width is less than 0 or greater than GL_MAX_TEXTURE_SIZE.
 GL_INVALID_VALUE is generated if border is not 0.
-GL_INVALID_OPERATION is generated if internalformat is GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT24, or GL_DEPTH_COMPONENT32 and there is no depth buffer.
+GL_INVALID_OPERATION is generated if internalFormat is GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT24, or GL_DEPTH_COMPONENT32 and there is no depth buffer.
 
 glCopyTexSubImage1D
 void glCopyTexSubImage1D(GLenum  target,
@@ -567,7 +567,7 @@ GL_INVALID_OPERATION is generated if a non-zero buffer object name is bound to t
 glCopyTexImage2D
 void glCopyTexImage2D(GLenum  target,
                       GLint   level,
-                      GLenum  internalformat,
+                      GLenum  internalFormat,
                       GLint   x,
                       GLint   y,
                       GLsizei width,
@@ -578,8 +578,8 @@ GL_INVALID_VALUE is generated if level is less than 0.
 GL_INVALID_VALUE may be generated if level is greater than log2 ⁢max, where max is the returned value of GL_MAX_TEXTURE_SIZE.
 GL_INVALID_VALUE is generated if width is less than 0 or greater than GL_MAX_TEXTURE_SIZE.
 GL_INVALID_VALUE is generated if border is not 0.
-GL_INVALID_VALUE is generated if internalformat is not an accepted format.
-GL_INVALID_OPERATION is generated if internalformat is GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT24, or GL_DEPTH_COMPONENT32 and there is no depth buffer.
+GL_INVALID_VALUE is generated if internalFormat is not an accepted format.
+GL_INVALID_OPERATION is generated if internalFormat is GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT24, or GL_DEPTH_COMPONENT32 and there is no depth buffer.
 
 glCopyTexSubImage2D
 void glCopyTexSubImage2D(GLenum  target,

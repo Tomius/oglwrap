@@ -36,12 +36,6 @@ static inline aiMatrix4x4 convertMatrix(const glm::mat4& m) {
     };
 }
 
-/// Prints a glm vector to a given ostream. It's only for debugging.
-static inline std::ostream& operator<<(std::ostream& os, const glm::vec3& v) {
-    os << v.x << ", " << v.y << ", " << v.z;
-    return os;
-}
-
 namespace _AnimFlag {
 /// Animation modifying flags.
 enum AnimFlag {

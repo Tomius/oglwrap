@@ -126,16 +126,16 @@ public:
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glTexStorage2D)
     /// Simultaneously specify storage for all levels of a two-dimensional or one-dimensional array texture
     /** @param levels - Specify the number of texture levels.
-      * @param internalformat - Specifies the sized internal format to be used to store texture image data.
+      * @param internalFormat - Specifies the sized internal format to be used to store texture image data.
       * @param width - Specifies the width of the texture, in texels.
       * @param height - Specifies the height of the texture, in texels. */
     void Storage(GLsizei levels,
-                 GLenum internalformat,
+                 GLenum internalFormat,
                  GLsizei width,
                  GLsizei height) {
         CHECK_BINDING_TEXTURE2D();
 
-        gl( TexStorage2D(texture_t, levels, internalformat, width, height) );
+        gl( TexStorage2D(texture_t, levels, internalFormat, width, height) );
     }
     #endif // glTexStorage2D
 

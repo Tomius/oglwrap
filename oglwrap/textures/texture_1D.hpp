@@ -103,14 +103,14 @@ public:
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glTexStorage1D)
     /// Simultaneously specify storage for all levels of a one-dimensional texture
     /** @param levels - Specify the number of texture levels.
-      * @param internalformat - Specifies the sized internal format to be used to store texture image data.
+      * @param internalFormat - Specifies the sized internal format to be used to store texture image data.
       * @param width - Specifies the width of the texture, in texels. */
     void Storage(GLsizei levels,
-                 GLenum internalformat,
+                 GLenum internalFormat,
                  GLsizei width) {
         CHECK_BINDING();
 
-        gl( TexStorage1D(TexType::Tex1D, levels, internalformat, width) );
+        gl( TexStorage1D(TexType::Tex1D, levels, internalFormat, width) );
     }
     #endif // glTexStorage1D
 

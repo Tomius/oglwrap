@@ -211,6 +211,8 @@ inline BufferBinding getBindingTarget(BufferType buffer_t) {
             OGLWRAP_LAST_BIND_TARGET = "GL_UNIFORM_BUFFER_BINDING";
             break;
         #endif
+        default:
+            abort();
     }
 
     return target;
@@ -240,6 +242,8 @@ inline FramebufferBinding getBindingTarget(FramebufferType fbo_t) {
             OGLWRAP_LAST_BIND_TARGET = "GL_FRAMEBUFFER_BINDING";
             break;
         #endif
+        default:
+            abort();
     }
 
     return target;
@@ -294,6 +298,8 @@ inline TexBinding getBindingTarget(TexType fbo_t) {
             OGLWRAP_LAST_BIND_TARGET = "GL_TEXTURE_BINDING_CUBE_MAP";
             break;
         #endif
+        default:
+            abort();
     }
 
     return target;

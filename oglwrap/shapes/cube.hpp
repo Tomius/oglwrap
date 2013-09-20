@@ -12,6 +12,7 @@ class Cube {
 
     VertexArray vao;
     ArrayBuffer positions, normals, texcoords, tangents;
+    IndexBuffer indices;
     bool is_setup_positions, is_setup_normals, is_setup_texcoords, is_setup_tangents;
 
 public:
@@ -40,7 +41,7 @@ public:
     void setup_positions(VertexAttribArray attrib) {
 
         if(is_setup_positions) {
-            std::logic_error("Cube::setup_position is called multiply times on the same object");
+            throw std::logic_error("Cube::setup_position is called multiply times on the same object");
         } else {
             is_setup_positions = true;
         }
@@ -79,10 +80,11 @@ public:
             E, H, A,    D, A, H
         };
 
+        // Care with -fipa-pure-const flag
         vao.bind();
         positions.bind();
         positions.data(sizeof(pos), pos);
-        attrib.setup<glm::vec3>().enable();
+        attrib.setup<float>(3).enable();
         vao.unbind();
     }
 
@@ -216,12 +218,12 @@ public:
     }
 
     /// Returns the center of the cube's bounding sphere
-    glm::vec3 bondingSphere_Center() const {
+    glm::vec3 boundingSphere_Center() const {
         return glm::vec3(0.0f);
     }
 
     /// Returns the radius of the cube's bounding sphere
-    float bondingSphere_Radius() const {
+    float boundingSphere_Radius() const {
         return sqrt(w*w + h*h + d*d);
     }
 };
