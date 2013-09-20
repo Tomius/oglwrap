@@ -119,7 +119,7 @@ public:
     /// @param attrib - The attribute array to use as destination.
     void setup_positions(VertexAttribArray attrib) {
         if(is_setup_positions) {
-            std::logic_error("Mesh::setup_position is called multiply times on the same object");
+            throw std::logic_error("Mesh::setup_position is called multiply times on the same object");
         } else {
             is_setup_positions = true;
         }
@@ -168,7 +168,7 @@ public:
     void setup_normals(VertexAttribArray attrib) {
 
         if(is_setup_normals) {
-            std::logic_error("Mesh::setup_normals is called multiply times on the same object");
+            throw std::logic_error("Mesh::setup_normals is called multiply times on the same object");
         } else {
             is_setup_normals = true;
         }
@@ -220,7 +220,7 @@ public:
     void setup_texCoords(VertexAttribArray attrib, unsigned char texCoordSet = 0) {
 
         if(is_setup_texcoords) {
-            std::logic_error("Mesh::setup_texCoords is called multiply times on the same object");
+            throw std::logic_error("Mesh::setup_texCoords is called multiply times on the same object");
         } else {
             is_setup_texcoords = true;
         }

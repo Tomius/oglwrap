@@ -495,7 +495,7 @@ public:
     void setup_bones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights) {
 
         if(is_setup_bones) {
-            std::logic_error("AnimatedMesh::setup_bones is called multiply times on the same object");
+            throw std::logic_error("AnimatedMesh::setup_bones is called multiply times on the same object");
         } else {
             is_setup_bones = true;
         }

@@ -12,7 +12,6 @@ class Cube {
 
     VertexArray vao;
     ArrayBuffer positions, normals, texcoords, tangents;
-    IndexBuffer indices;
     bool is_setup_positions, is_setup_normals, is_setup_texcoords, is_setup_tangents;
 
 public:
