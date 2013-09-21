@@ -5,7 +5,7 @@
 #pragma once
 
 #if OGLWRAP_IMAGEMAGICK
-#include <ImageMagick/Magick++.h>
+#include <Magick++.h>
 #endif
 
 #include "textures/texture_base.hpp"

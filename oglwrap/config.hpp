@@ -4,10 +4,16 @@
 
 #pragma once
 
+#ifdef GL_LINE
+    #define OGLWRAP_OPENGL_INCLUDED 1
+#else
+    #define OGLWRAP_OPENGL_INCLUDED 0
+#endif
+
 /// If true, loads only the extensions, that are available.
 /** By default, it's only turned on, if a GL header is included. */
 #ifndef OGLWRAP_CHECK_DEPENDENCIES
-    #ifdef GL_LINE // If an OpenGL header is loaded.
+    #if OGLWRAP_OPENGL_INCLUDED // If an OpenGL header is loaded.
         #define OGLWRAP_CHECK_DEPENDENCIES 1
     #else // else all #if defined(gl*) would evaluate as false, so better just disable dependency check
         #define OGLWRAP_CHECK_DEPENDENCIES 0
@@ -41,3 +47,10 @@
     #define OGLWRAP_IMAGEMAGICK 1
 #endif
 
+/// A Code-completion tricker, for internal use only.
+#undef OGLWRAP_NOT_ONLY_BINDCHECKED_FUNCTIONS
+#if OGLWRAP_OPENGL_INCLUDED
+    #define OGLWRAP_NOT_ONLY_BINDCHECKED_FUNCTIONS 1
+#else
+    #define OGLWRAP_NOT_ONLY_BINDCHECKED_FUNCTIONS 0
+#endif

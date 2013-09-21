@@ -12,6 +12,29 @@ namespace oglwrap {
 /// @see GL_TEXTURE_1D
 class Texture1D : public TextureBase<TexType::Tex1D> {
 public:
+
+    #if OGLWRAP_NOT_ONLY_BINDCHECKED_FUNCTIONS
+    /// Uploads the base image.
+    /** @param internalFormat - Specifies the number, order, and size of the color components in the texture.
+      * @param width - Specifies the width of the texture image. All implementations support texture images that are at least 1024 texels wide.
+      * @param format - Specifies the format of the pixel data.
+      * @param type - Specifies the data type of the pixel data.
+      * @param data - Specifies a pointer to the image data in memory.
+      * @see glTexImage1D */
+    static void Upload(
+        PixelDataInternalFormat internalFormat,
+        GLsizei width,
+        PixelDataFormat format,
+        PixelDataType type,
+        const void *data
+    ) {
+        gl( TexImage1D(
+            TexType::Tex1D, 0, internalFormat, width, 0, format, type, data
+        ));
+    }
+    #endif
+
+
     /// Uploads the base image.
     /** @param internalFormat - Specifies the number, order, and size of the color components in the texture.
       * @param width - Specifies the width of the texture image. All implementations support texture images that are at least 1024 texels wide.
@@ -25,13 +48,33 @@ public:
         PixelDataFormat format,
         PixelDataType type,
         const void *data
-    ) {
+    ) const {
         CHECK_BINDING();
+        Upload(internalFormat, width, format, type, data);
+    }
 
+    #if OGLWRAP_NOT_ONLY_BINDCHECKED_FUNCTIONS
+    /// Uploads a mipmap of the image.
+    /** @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
+      * @param internalFormat - Specifies the number, order, and size of the color components in the texture.
+      * @param width - Specifies the width of the texture image. All implementations support texture images that are at least 1024 texels wide.
+      * @param format - Specifies the format of the pixel data.
+      * @param type - Specifies the data type of the pixel data.
+      * @param data - Specifies a pointer to the image data in memory.
+      * @see glTexImage1D */
+    static void Upload_mipmap(
+        GLint level,
+        PixelDataInternalFormat internalFormat,
+        GLsizei width,
+        PixelDataFormat format,
+        PixelDataType type,
+        const void *data
+    ) {
         gl( TexImage1D(
-            TexType::Tex1D, 0, internalFormat, width, 0, format, type, data
+            TexType::Tex1D, level, internalFormat, width, 0, format, type, data
         ));
     }
+    #endif
 
     /// Uploads a mipmap of the image.
     /** @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
@@ -48,11 +91,27 @@ public:
         PixelDataFormat format,
         PixelDataType type,
         const void *data
-    ) {
+    ) const {
         CHECK_BINDING();
+        Upload_mipmap(level, internalFormat, width, format, type, data);
+    }
 
-        gl( TexImage1D(
-            TexType::Tex1D, level, internalFormat, width, 0, format, type, data
+    /// Updates a part of the base image.
+    /** @param xOffset - Specifies a texel offset in the x direction within the texture array.
+      * @param width - Specifies the width of the texture subimage.
+      * @param format - Specifies the format of the pixel data.
+      * @param type - Specifies the data type of the pixel data.
+      * @param data - Specifies a pointer to the image data in memory.
+      * @see glTexSubImage1D */
+    static void SubUpload(
+        GLint xOffset,
+        GLsizei width,
+        PixelDataFormat format,
+        PixelDataType type,
+        const void *data
+    ) {
+        gl( TexSubImage1D(
+            TexType::Tex1D, 0, xOffset, width, format, type, data
         ));
     }
 
@@ -69,12 +128,9 @@ public:
         PixelDataFormat format,
         PixelDataType type,
         const void *data
-    ) {
+    ) const {
         CHECK_BINDING();
-
-        gl( TexSubImage1D(
-            TexType::Tex1D, 0, xOffset, width, format, type, data
-        ));
+        SubUpload(xOffset, width, format, type, data);
     }
 
     /// Updates a part of a mipmap image.
@@ -105,12 +161,23 @@ public:
     /** @param levels - Specify the number of texture levels.
       * @param internalFormat - Specifies the sized internal format to be used to store texture image data.
       * @param width - Specifies the width of the texture, in texels. */
-    void storage(GLsizei levels,
+    static void Storage(GLsizei levels,
                  GLenum internalFormat,
                  GLsizei width) {
-        CHECK_BINDING();
-
         gl( TexStorage1D(TexType::Tex1D, levels, internalFormat, width) );
+    }
+    #endif // glTexStorage1D
+
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glTexStorage1D)
+    /// Simultaneously specify storage for all levels of a one-dimensional texture
+    /** @param levels - Specify the number of texture levels.
+      * @param internalFormat - Specifies the sized internal format to be used to store texture image data.
+      * @param width - Specifies the width of the texture, in texels. */
+    void storage(GLsizei levels,
+                 GLenum internalFormat,
+                 GLsizei width) const {
+        CHECK_BINDING();
+        Storage(levels, internalFormat, width);
     }
     #endif // glTexStorage1D
 
