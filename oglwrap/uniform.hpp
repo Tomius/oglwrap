@@ -51,9 +51,7 @@ template<typename GLtype>
 /** It queries the location of the uniform in the constructor and also notifies on the
   * stderr, if getting the location of the variable, or setting it didn't work. */
 class Uniform : public UniformObject<GLtype> {
-    #if OGLWRAP_DEBUG
     const std::string identifier;
-    #endif
 public:
     /// @brief Queries a variable named 'identifier' in the 'program', and stores it's location.
     /** It writes to stderr if the query didn't work. */
@@ -61,9 +59,7 @@ public:
     /// @param identifier - The name of the uniform that is to be set.
     /// @see glGetUniformLocation
     Uniform(Program& program, const std::string& identifier)
-    #if OGLWRAP_DEBUG
-    :identifier(identifier)
-    #endif
+        :identifier(identifier)
     {
         CHECK_ACTIVE_PROGRAM(program);
 
@@ -83,11 +79,8 @@ public:
 
         OGLWRAP_PRINT_ERROR(
             GL_INVALID_OPERATION,
-            std::string("Uniform::set is called ") +
-            #if OGLWRAP_DEBUG
-            "for uniform '" + identifier + "'" +
-            #endif
-            " but the uniform template parameter and the actual uniform type mismatches, "
+            "Uniform::set is called for uniform '" + identifier + "' but the uniform"
+            " template parameter and the actual uniform type mismatches, "
             "or there is no current program object."
         )
     }
@@ -111,9 +104,7 @@ template<typename GLtype>
 /** It queries the location of the uniform in the constructor and also notifies on the
     stderr, if getting the location of the variable, or setting it didn't work. */
 class IndexedUniform : public UniformObject<GLtype> {
-    #if OGLWRAP_DEBUG
     std::string identifier;
-    #endif
 public:
     /// @brief Queries a variable named 'identifier' in the 'program', and stores it's location.
     /** It writes to stderr if the query didn't work. */
@@ -125,9 +116,7 @@ public:
     {
         std::stringstream id;
         id << _identifier << '[' << idx << ']';
-        #if OGLWRAP_DEBUG
-            identifier = id.str();
-        #endif
+        identifier = id.str();
 
         CHECK_ACTIVE_PROGRAM(program);
 
@@ -147,11 +136,8 @@ public:
 
         OGLWRAP_PRINT_ERROR(
             GL_INVALID_OPERATION,
-            std::string("Uniform::set is called ") +
-            #if OGLWRAP_DEBUG
-            "for uniform '" + identifier + "'" +
-            #endif
-            " but the uniform template parameter and the actual uniform type mismatches, "
+            "Uniform::set is called for uniform '" + identifier + "' but the uniform"
+            " template parameter and the actual uniform type mismatches, "
             "or there is no current program object."
         )
     }
