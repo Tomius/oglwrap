@@ -13,12 +13,12 @@ namespace oglwrap {
 class Texture1D : public TextureBase<TexType::Tex1D> {
 public:
     /// Uploads the base image.
-    /// @param internalFormat - Specifies the number, order, and size of the color components in the texture.
-    /// @param width - Specifies the width of the texture image. All implementations support texture images that are at least 1024 texels wide.
-    /// @param format - Specifies the format of the pixel data.
-    /// @param type - Specifies the data type of the pixel data.
-    /// @param data - Specifies a pointer to the image data in memory.
-    /// @see glTexImage1D
+    /** @param internalFormat - Specifies the number, order, and size of the color components in the texture.
+      * @param width - Specifies the width of the texture image. All implementations support texture images that are at least 1024 texels wide.
+      * @param format - Specifies the format of the pixel data.
+      * @param type - Specifies the data type of the pixel data.
+      * @param data - Specifies a pointer to the image data in memory.
+      * @see glTexImage1D */
     void upload(
         PixelDataInternalFormat internalFormat,
         GLsizei width,
@@ -34,13 +34,13 @@ public:
     }
 
     /// Uploads a mipmap of the image.
-    /// @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
-    /// @param internalFormat - Specifies the number, order, and size of the color components in the texture.
-    /// @param width - Specifies the width of the texture image. All implementations support texture images that are at least 1024 texels wide.
-    /// @param format - Specifies the format of the pixel data.
-    /// @param type - Specifies the data type of the pixel data.
-    /// @param data - Specifies a pointer to the image data in memory.
-    /// @see glTexImage1D
+    /** @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
+      * @param internalFormat - Specifies the number, order, and size of the color components in the texture.
+      * @param width - Specifies the width of the texture image. All implementations support texture images that are at least 1024 texels wide.
+      * @param format - Specifies the format of the pixel data.
+      * @param type - Specifies the data type of the pixel data.
+      * @param data - Specifies a pointer to the image data in memory.
+      * @see glTexImage1D */
     void upload_mipmap(
         GLint level,
         PixelDataInternalFormat internalFormat,
@@ -57,12 +57,12 @@ public:
     }
 
     /// Updates a part of the base image.
-    /// @param xOffset - Specifies a texel offset in the x direction within the texture array.
-    /// @param width - Specifies the width of the texture subimage.
-    /// @param format - Specifies the format of the pixel data.
-    /// @param type - Specifies the data type of the pixel data.
-    /// @param data - Specifies a pointer to the image data in memory.
-    /// @see glTexSubImage1D
+    /** @param xOffset - Specifies a texel offset in the x direction within the texture array.
+      * @param width - Specifies the width of the texture subimage.
+      * @param format - Specifies the format of the pixel data.
+      * @param type - Specifies the data type of the pixel data.
+      * @param data - Specifies a pointer to the image data in memory.
+      * @see glTexSubImage1D */
     void subUpload(
         GLint xOffset,
         GLsizei width,
@@ -78,13 +78,13 @@ public:
     }
 
     /// Updates a part of a mipmap image.
-    /// @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
-    /// @param xOffset - Specifies a texel offset in the x direction within the texture array.
-    /// @param width - Specifies the width of the texture subimage.
-    /// @param format - Specifies the format of the pixel data.
-    /// @param type - Specifies the data type of the pixel data.
-    /// @param data - Specifies a pointer to the image data in memory.
-    /// @see glTexSubImage1D
+    /** @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
+      * @param xOffset - Specifies a texel offset in the x direction within the texture array.
+      * @param width - Specifies the width of the texture subimage.
+      * @param format - Specifies the format of the pixel data.
+      * @param type - Specifies the data type of the pixel data.
+      * @param data - Specifies a pointer to the image data in memory.
+      * @see glTexSubImage1D */
     void subUpload_mipmap(
         GLint level,
         GLint xOffset,
@@ -115,10 +115,10 @@ public:
     #endif // glTexStorage1D
 
     /// Copies pixels from the current GL_READ_BUFFER into the base mipmap of this texture.
-    /// @param internalFormat - Specifies the internal format of the texture.
-    /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
-    /// @param width - Specifies the number of texels to copy.
-    /// @see glCopyTexImage1D
+    /** @param internalFormat - Specifies the internal format of the texture.
+      * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
+      * @param width - Specifies the number of texels to copy.
+      * @see glCopyTexImage1D */
     void copy(
         PixelDataInternalFormat internalFormat,
         GLint x,
@@ -133,11 +133,11 @@ public:
     }
 
     /// Copies pixels from the current GL_READ_BUFFER into a mipmap of this texture.
-    /// @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
-    /// @param internalFormat - Specifies the internal format of the texture.
-    /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
-    /// @param width - Specifies the number of texels to copy.
-    /// @see glCopyTexImage1D
+    /** @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
+      * @param internalFormat - Specifies the internal format of the texture.
+      * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
+      * @param width - Specifies the number of texels to copy.
+      * @see glCopyTexImage1D */
     void copy_mipmap(
         GLint level,
         PixelDataInternalFormat internalFormat,
@@ -153,10 +153,10 @@ public:
     }
 
     /// Copies pixels from the current GL_READ_BUFFER and updates part of the base mipmap of this texture with them.
-    /// @param xOffset - Specifies the texel offset within the destination texture array.
-    /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
-    /// @param width - Specifies the number of texels to copy.
-    /// @see glCopyTexSubImage1D
+    /** @param xOffset - Specifies the texel offset within the destination texture array.
+      * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
+      * @param width - Specifies the number of texels to copy.
+      * @see glCopyTexSubImage1D */
     void copySub(
         GLint xOffset,
         GLint x,
@@ -171,11 +171,11 @@ public:
     }
 
     /// Copies pixels from the current GL_READ_BUFFER and updates part of a mipmap of this texture with them.
-    /// @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
-    /// @param xOffset - Specifies the texel offset within the destination texture array.
-    /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
-    /// @param width - Specifies the number of texels to copy.
-    /// @see glCopyTexSubImage1D
+    /** @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
+      * @param xOffset - Specifies the texel offset within the destination texture array.
+      * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
+      * @param width - Specifies the number of texels to copy.
+      * @see glCopyTexSubImage1D */
     void copySub_mipmap(
         GLint level,
         GLint xOffset,
@@ -191,8 +191,8 @@ public:
     }
 
     /// Returns the width of a mipmap of the currently bound texture of this class.
-    /// @param level - Specifies the mipmap whose size should be queried.
-    /// @see glGetTexLevelParameteriv, GL_TEXTURE_WIDTH
+    /** @param level - Specifies the mipmap whose size should be queried.
+      * @see glGetTexLevelParameteriv, GL_TEXTURE_WIDTH */
     GLsizei width(GLint level = 0) {
         CHECK_BINDING();
 
@@ -203,9 +203,9 @@ public:
 
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetCompressedTexImage)
     /// Return a compressed texture image
-    /// @param level - Specifies the level-of-detail number of the desired image. Level 0 is the base image level. Level n is the nth mipmap reduction image.
-    /// @param img - Returns the compressed texture image.
-    /// @see glGetCompressedTexImage
+    /** @param level - Specifies the level-of-detail number of the desired image. Level 0 is the base image level. Level n is the nth mipmap reduction image.
+      * @param img - Returns the compressed texture image.
+      * @see glGetCompressedTexImage */
     void getCompressedImage(GLint level, GLvoid* img) {
         CHECK_BINDING();
         gl( GetCompressedTexImage(TexType::Tex1D, level, img) );
