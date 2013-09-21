@@ -237,7 +237,7 @@ public:
     /// @brief Is used to set an element of a uniform array.
     /** For example if you have a mat4 myMatrix[10]; and you created a lazyUniform
       * myMatUnif(prog, "myMatrix), you can call myMatUnif[5].set() to set myMatrix[5]. */
-    IndexedUniform<GLtype> operator[](size_t idx) {
+    IndexedUniform<GLtype> operator[](size_t idx) const {
         return IndexedUniform<GLtype>(program, identifier, idx);
     }
 };

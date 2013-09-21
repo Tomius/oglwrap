@@ -6,7 +6,7 @@
 
 namespace oglwrap {
 
-// -------======{[ Shader ]}======-------
+// -------======{[ ShaderStorage ]}======-------
 
 /// A class that can load shader sources in from files, and do some preprocessing on them
 class ShaderSource {
@@ -80,6 +80,8 @@ public:
     }
 };
 
+// -------======{[ ShaderObject ]}======-------
+
 #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glCreateShader) && defined(glDeleteShader))
 /// A specialization of the ObjectExt class for Shaders (they aren't created with glGen*)
 template<ShaderType shader_t>
@@ -136,6 +138,8 @@ public:
         return *handle;
     }
 };
+
+// -------======{[ Shader ]}======-------
 
 template<ShaderType shader_t>
 /// A GLSL shader object used to control the drawing process.
@@ -501,8 +505,16 @@ public:
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUseProgram)
     /// Installs the default OpenGL shading program to the current rendering state.
     /** @see glUseProgram */
-    static void unuse() {
+    static void Unuse() {
         gl( UseProgram(0) );
+    }
+    #endif
+
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUseProgram)
+    /// Installs the default OpenGL shading program to the current rendering state.
+    /** @see glUseProgram */
+    void unuse() const {
+        Unuse();
     }
     #endif
 

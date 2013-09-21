@@ -403,8 +403,8 @@ private:
         }
 
         // Unbind our things, so they won't be modified from outside
-        VertexArray::unbind();
-        ArrayBuffer::unbind();
+        VertexArray::Unbind();
+        ArrayBuffer::Unbind();
     }
 
     /// @brief Creates the bone attributes data (the skinning.)
@@ -457,8 +457,8 @@ private:
         }
 
         // Unbind our things, so they won't be modified from outside
-        VertexArray::unbind();
-        ArrayBuffer::unbind();
+        VertexArray::Unbind();
+        ArrayBuffer::Unbind();
     }
 
 public:

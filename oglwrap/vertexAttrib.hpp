@@ -29,8 +29,16 @@ public:
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindVertexArray)
     /// @brief Unbinds the currently active VAO.
     /// @see glBindVertexArray
-    static void unbind() {
+    static void Unbind() {
         gl( BindVertexArray(0) );
+    }
+    #endif
+
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindVertexArray)
+    /// @brief Unbinds the currently active VAO.
+    /// @see glBindVertexArray
+    void unbind() const {
+        Unbind();
     }
     #endif
 

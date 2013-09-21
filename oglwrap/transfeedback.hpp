@@ -51,8 +51,16 @@ public:
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindTransformFeedback)
     /// Unbinds the currently bound transform feedback.
     /** @see glBindTransformFeedback */
-    void unbind() const {
+    static void Unbind() {
         gl( BindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0) );
+    }
+    #endif // glBindTransformFeedback
+
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindTransformFeedback)
+    /// Unbinds the currently bound transform feedback.
+    /** @see glBindTransformFeedback */
+    void unbind() const {
+        Unbind();
     }
     #endif // glBindTransformFeedback
 
@@ -69,12 +77,29 @@ public:
     /// Begins the transform feedback mode.
     /** @param mode - The primitive type the TFB should use.
       * @see glBeginTransformFeedback */
-    void begin(TFB_PrimType mode) {
-        CHECK_BINDING();
-        state = working;
+    static void Begin(TFB_PrimType mode) {
         gl( BeginTransformFeedback(mode) );
     }
     #endif // glBeginTransformFeedback
+
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBeginTransformFeedback)
+    /// Begins the transform feedback mode.
+    /** @param mode - The primitive type the TFB should use.
+      * @see glBeginTransformFeedback */
+    void begin(TFB_PrimType mode) {
+        CHECK_BINDING();
+        state = working;
+        Begin(mode);
+    }
+    #endif // glBeginTransformFeedback
+
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glEndTransformFeedback)
+    /// Ends the transform feedback mode.
+    /** @see glEndTransformFeedback */
+    static void End() {
+        gl( EndTransformFeedback() );
+    }
+    #endif // glEndTransformFeedback
 
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glEndTransformFeedback)
     /// Ends the transform feedback mode.
@@ -82,9 +107,17 @@ public:
     void end() {
         CHECK_BINDING();
         state = none;
-        gl( EndTransformFeedback() );
+        End();
     }
     #endif // glEndTransformFeedback
+
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glPauseTransformFeedback)
+    /// Pauses transform feedback operations on the currently active transform feedback object.
+    /** @see glPauseTransformFeedback */
+    static void Pause() {
+        gl( PauseTransformFeedback() );
+    }
+    #endif // glPauseTransformFeedback
 
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glPauseTransformFeedback)
     /// Pauses transform feedback operations on the currently active transform feedback object.
@@ -92,9 +125,17 @@ public:
     void pause() {
         CHECK_BINDING();
         state = paused;
-        gl( PauseTransformFeedback() );
+        Pause();
     }
     #endif // glPauseTransformFeedback
+
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glResumeTransformFeedback)
+    /// Resumes transform feedback operations on the currently active transform feedback object.
+    /** @see glResumeTransformFeedback */
+    static void Resume() {
+        gl( ResumeTransformFeedback() );
+    }
+    #endif // glResumeTransformFeedback
 
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glResumeTransformFeedback)
     /// Resumes transform feedback operations on the currently active transform feedback object.
@@ -102,7 +143,7 @@ public:
     void resume() {
         CHECK_BINDING();
         state = working;
-        gl( ResumeTransformFeedback() );
+        Resume();
     }
     #endif // glResumeTransformFeedback
 };

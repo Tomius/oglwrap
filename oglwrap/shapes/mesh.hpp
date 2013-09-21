@@ -157,8 +157,8 @@ public:
             }
         }
 
-        VertexArray::unbind();
-        ArrayBuffer::unbind();
+        VertexArray::Unbind();
+        ArrayBuffer::Unbind();
     }
 
     /// @brief Loads in vertex normals, and uploads it to an attribute array.
@@ -192,8 +192,8 @@ public:
             attrib.setup<float>(3).enable();
         }
 
-        VertexArray::unbind();
-        ArrayBuffer::unbind();
+        VertexArray::Unbind();
+        ArrayBuffer::Unbind();
     }
 
     /// Checks if every mesh in the scene has texcoords
@@ -250,8 +250,8 @@ public:
             attrib.setup<float>(2).enable();
         }
 
-        VertexArray::unbind();
-        ArrayBuffer::unbind();
+        VertexArray::Unbind();
+        ArrayBuffer::Unbind();
     }
 
     template<aiTextureType tex_type>
@@ -259,7 +259,7 @@ public:
     /** Changes the currently active texture unit and Texture2D binding.
       * @param texture_unit - Specifies the texture unit to use for the textures. */
     void setup_textures(unsigned short texture_unit) {
-        Texture2D::active(texture_unit);
+        Texture2D::Active(texture_unit);
 
         materials[tex_type].active = true;
         materials[tex_type].texUnit = texture_unit;
@@ -293,7 +293,7 @@ public:
             }
         }
 
-        Texture2D::unbind();
+        Texture2D::Unbind();
     }
 
     /// Sets the diffuse textures up to a specified texture unit.
@@ -335,8 +335,8 @@ public:
            ));
         }
 
-        VertexArray::unbind();
-        Texture2D::unbind();
+        VertexArray::Unbind();
+        Texture2D::Unbind();
     }
 
     /// Gives information about the mesh's bounding cuboid.

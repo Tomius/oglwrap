@@ -41,7 +41,7 @@ public:
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
     /// @see glTexImage1D
-    void upload_Mipmap(
+    void upload_mipmap(
         GLint level,
         PixelDataInternalFormat internalFormat,
         GLsizei width,
@@ -85,7 +85,7 @@ public:
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
     /// @see glTexSubImage1D
-    void subUpload_Mipmap(
+    void subUpload_mipmap(
         GLint level,
         GLint xOffset,
         GLsizei width,
@@ -105,7 +105,7 @@ public:
     /** @param levels - Specify the number of texture levels.
       * @param internalFormat - Specifies the sized internal format to be used to store texture image data.
       * @param width - Specifies the width of the texture, in texels. */
-    void Storage(GLsizei levels,
+    void storage(GLsizei levels,
                  GLenum internalFormat,
                  GLsizei width) {
         CHECK_BINDING();
@@ -138,7 +138,7 @@ public:
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width - Specifies the number of texels to copy.
     /// @see glCopyTexImage1D
-    void copy_Mipmap(
+    void copy_mipmap(
         GLint level,
         PixelDataInternalFormat internalFormat,
         GLint x,
@@ -176,7 +176,7 @@ public:
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width - Specifies the number of texels to copy.
     /// @see glCopyTexSubImage1D
-    void copySub_Mipmap(
+    void copySub_mipmap(
         GLint level,
         GLint xOffset,
         GLint x,

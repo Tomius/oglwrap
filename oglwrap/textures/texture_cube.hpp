@@ -58,7 +58,7 @@ public:
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
     /// @see glTexImage2D
-    void upload_Mipmap(
+    void upload_mipmap(
         CubeTarget target,
         GLint level,
         PixelDataInternalFormat internalFormat,
@@ -110,7 +110,7 @@ public:
     /// @param type - Specifies the data type of the pixel data.
     /// @param data - Specifies a pointer to the image data in memory.
     /// @see glTexSubImage2D
-    void subUpload_Mipmap(
+    void subUpload_mipmap(
         CubeTarget target,
         GLint level,
         GLint xOffset,
@@ -135,7 +135,7 @@ public:
       * @param internalFormat - Specifies the sized internal format to be used to store texture image data.
       * @param width - Specifies the width of the texture, in texels.
       * @param height - Specifies the height of the texture, in texels. */
-    void Storage(CubeTarget target,
+    void storage(CubeTarget target,
                  GLsizei levels,
                  GLenum internalFormat,
                  GLsizei width,
@@ -172,7 +172,7 @@ public:
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width/height - Specifies the width/height of the texture to copy.
     /// @see glCopyTexImage2D
-    void copy_Mipmap(
+    void copy_mipmap(
         CubeTarget target,
         GLint level,
         PixelDataInternalFormat internalFormat,
@@ -213,7 +213,7 @@ public:
     /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     /// @param width/height - Specifies the width/height of the texture to copy.
     /// @see glCopyTexSubImage2D
-    void copySub_Mipmap(
+    void copySub_mipmap(
         CubeTarget target,
         GLint level,
         GLint xOffset,
