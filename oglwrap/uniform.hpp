@@ -251,154 +251,154 @@ typedef LazyUniform<GLint> LazyUniformSampler;
 template<>
 inline void UniformObject<GLfloat>::set(const GLfloat& value) {
     glUniform1f(location, value);
-};
+}
 #endif // glUniform1f
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUniform1d)
 template<>
 inline void UniformObject<GLdouble>::set(const GLdouble& value) {
     glUniform1d(location, value);
-};
+}
 #endif // glUniform1d
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUniform1i)
 template<>
 inline void UniformObject<GLint>::set(const GLint& value) {
     glUniform1i(location, value);
-};
+}
 #endif // glUniform1i
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUniform1ui)
 template<>
 inline void UniformObject<GLuint>::set(const GLuint& value) {
     glUniform1ui(location, value);
-};
+}
 #endif // glUniform1ui
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUniform2fv)
 template<>
 inline void UniformObject<glm::vec2>::set(const glm::vec2& vec) {
     glUniform2fv(location, 1, glm::value_ptr(vec));
-};
+}
 #endif // glUniform2fv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUniform2dv)
 template<>
 inline void UniformObject<glm::dvec2>::set(const glm::dvec2& vec) {
     glUniform2dv(location, 1, glm::value_ptr(vec));
-};
+}
 #endif // glUniform2dv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUniform2iv)
 template<>
 inline void UniformObject<glm::ivec2>::set(const glm::ivec2& vec) {
     glUniform2iv(location, 1, glm::value_ptr(vec));
-};
+}
 #endif // glUniform2iv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUniform2uiv)
 template<>
 inline void UniformObject<glm::uvec2>::set(const glm::uvec2& vec) {
     glUniform2uiv(location, 1, glm::value_ptr(vec));
-};
+}
 #endif // glUniform2uiv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUniform3fv)
 template<>
 inline void UniformObject<glm::vec3>::set(const glm::vec3& vec) {
     glUniform3fv(location, 1, glm::value_ptr(vec));
-};
+}
 #endif // glUniform3fv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUniform3dv)
 template<>
 inline void UniformObject<glm::dvec3>::set(const glm::dvec3& vec) {
     glUniform3dv(location, 1, glm::value_ptr(vec));
-};
+}
 #endif // glUniform3dv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUniform3iv)
 template<>
 inline void UniformObject<glm::ivec3>::set(const glm::ivec3& vec) {
     glUniform3iv(location, 1, glm::value_ptr(vec));
-};
+}
 #endif // glUniform3iv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUniform3uiv)
 template<>
 inline void UniformObject<glm::uvec3>::set(const glm::uvec3& vec) {
     glUniform3uiv(location, 1, glm::value_ptr(vec));
-};
+}
 #endif // glUniform3uiv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUniform4fv)
 template<>
 inline void UniformObject<glm::vec4>::set(const glm::vec4& vec) {
     glUniform4fv(location, 1, glm::value_ptr(vec));
-};
+}
 #endif // glUniform4fv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUniform4dv)
 template<>
 inline void UniformObject<glm::dvec4>::set(const glm::dvec4& vec) {
     glUniform4dv(location, 1, glm::value_ptr(vec));
-};
+}
 #endif // glUniform4dv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUniform4iv)
 template<>
 inline void UniformObject<glm::ivec4>::set(const glm::ivec4& vec) {
     glUniform4iv(location, 1, glm::value_ptr(vec));
-};
+}
 #endif // glUniform4iv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUniform4uiv)
 template<>
 inline void UniformObject<glm::uvec4>::set(const glm::uvec4& vec) {
     glUniform4uiv(location, 1, glm::value_ptr(vec));
-};
+}
 #endif // glUniform4uiv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUniformMatrix2fv)
 template<>
 inline void UniformObject<glm::mat2>::set(const glm::mat2& mat) {
     glUniformMatrix2fv(location, 1, GL_FALSE, glm::value_ptr(mat));
-};
+}
 #endif // glUniformMatrix2fv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUniformMatrix2dv)
 template<>
 inline void UniformObject<glm::dmat2>::set(const glm::dmat2& mat) {
     glUniformMatrix2dv(location, 1, GL_FALSE, glm::value_ptr(mat));
-};
+}
 #endif // glUniformMatrix2dv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUniformMatrix3fv)
 template<>
 inline void UniformObject<glm::mat3>::set(const glm::mat3& mat) {
     glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(mat));
-};
+}
 #endif // glUniformMatrix3fv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUniformMatrix3dv)
 template<>
 inline void UniformObject<glm::dmat3>::set(const glm::dmat3& mat) {
     glUniformMatrix3dv(location, 1, GL_FALSE, glm::value_ptr(mat));
-};
+}
 #endif // glUniformMatrix3dv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUniformMatrix4fv)
 template<>
 inline void UniformObject<glm::mat4>::set(const glm::mat4& mat) {
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat));
-};
+}
 #endif // glUniformMatrix4fv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUniformMatrix4dv)
 template<>
 inline void UniformObject<glm::dmat4>::set(const glm::dmat4& mat) {
     glUniformMatrix4dv(location, 1, GL_FALSE, glm::value_ptr(mat));
-};
+}
 #endif // glUniformMatrix4dv
 
 #endif // glGetUniformLocation

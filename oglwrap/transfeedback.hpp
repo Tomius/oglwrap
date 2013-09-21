@@ -149,5 +149,5 @@ public:
 };
 #endif // glGenTransformFeedbacks && glDeleteTransformFeedbacks
 
-};
+} // namespace oglwrap
 

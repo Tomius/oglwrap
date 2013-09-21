@@ -874,7 +874,7 @@ enum PixelDataFormat {
     BGRA_Integer = GL_BGRA_INTEGER
 #endif
 };
-};
+}
 typedef _PixelDataFormat::PixelDataFormat PixelDataFormat;
 typedef _PixelDataFormat::PixelDataFormat PxDForm;
 
@@ -953,7 +953,7 @@ enum PixelDataType {
     Float_32UnsignedInt_24_8_Rev = GL_FLOAT_32_UNSIGNED_INT_24_8_REV
 #endif
 };
-};
+}
 typedef _PixelDataType::PixelDataType PixelDataType;
 typedef _PixelDataType::PixelDataType PxDType;
 
