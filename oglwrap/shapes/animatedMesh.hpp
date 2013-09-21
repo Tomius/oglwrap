@@ -703,7 +703,7 @@ private:
                     current_offset *= -1;
                 }
 
-                translationM = glm::translate(glm::mat4(), glm::vec3(0, translation.y, 0)); // FIXME!!
+                translationM = glm::translate(glm::mat4(), glm::vec3(0, translation.y, 0));
             } else {
                 translationM = glm::translate(glm::mat4(), glm::vec3(translation.x, translation.y, translation.z));
             }
@@ -798,7 +798,7 @@ private:
                 }
 
                 last_transition_offset = transitionOffset;
-                translationM = glm::translate(glm::mat4(), glm::vec3(0, translation.y, 0)); // FIXME!!
+                translationM = glm::translate(glm::mat4(), glm::vec3(0, translation.y, 0));
             } else {
                 translationM = glm::translate(glm::mat4(), glm::vec3(translation.x, translation.y, translation.z));
             }
@@ -1208,7 +1208,7 @@ public:
     glm::vec3 offset_since_last_frame() {
         auto ret = current_offset - last_offset;
         last_offset = current_offset;
-        ret.y = 0; // FIXME
+        ret.y = 0;
         return ret;
     }
 
