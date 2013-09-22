@@ -8,9 +8,12 @@
 
 namespace oglwrap {
 
-#if OGLWRAP_DEBUG
-
+/// A global debug output variable.
+/** It is always defined, but is only functional, if
+  * OGLWRAP_DEBUG is true, and OGLWRAP_DISABLE_DEBUG_OUTPUT is false */
 static DebugOutput debug_output;
+
+#if OGLWRAP_DEBUG
 
 #if OGLWRAP_USE_ARB_DEBUG_OUTPUT
     #define glfunc(func) func;

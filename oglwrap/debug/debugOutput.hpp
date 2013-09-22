@@ -1,5 +1,5 @@
 /** @file debugOutput.hpp
-    @brief Implements ARB_Debug_Output
+    @brief Implements the oglwrap debug output.
 */
 
 #pragma once
@@ -8,12 +8,12 @@
 
 namespace oglwrap {
 
-#if OGLWRAP_DEBUG
-
 /// The default callback function for errors. It prints the error to stderr.
 inline void default_callback(std::string error_message) {
     std::cerr << error_message << std::endl;
 }
+
+#if OGLWRAP_DEBUG
 
 /// A global variable storing the last OpenGL error.
 /** An instance of this is defined per file. */
@@ -195,6 +195,24 @@ public:
 
 #endif // !OGLWRAP_DISABLE_DEBUG_OUTPUT
 #endif // OGLWRAP_DEBUG
+
+#if !OGLWRAP_DEBUG || OGLWRAP_DISABLE_DEBUG_OUTPUT
+struct DebugOutput {
+    /// A pointer to the callback function that will be called everytime an oglwrap error happens.
+    /** By default it prints to stderr, but you can assign any void(*)(std::string) type function to it.
+      * Note: you can find out where the error happened inside your code, by setting a
+      * breakpoint into this function, and repeatedly stepping out until you get out
+      * into your code. It's INCREDIBLY useful! */
+    void (*callback)(std::string);
+
+    /// Loads in the list of OpenGL errors.
+    DebugOutput() : callback(default_callback) {}
+
+    /// If there was an error, notifies you about it through the callback function.
+    /** The default callback function prints the error to the stdout */
+    void print_error(const std::string&, std::stringstream&) {}
+};
+#endif
 
 } // namespace oglwrap
 

@@ -80,8 +80,9 @@ public:
     BIND_CHECKED void data(GLsizei size, const GLtype* data,
               BufferUsage usage = BufferUsage::StaticDraw) const {
         CHECK_BINDING();
-        if(buffer_t == BufferType::Array)
+        if(buffer_t == BufferType::Array) {
             CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+        }
 
         Data(size, data, usage);
     }
@@ -105,8 +106,9 @@ public:
     BIND_CHECKED void data(const std::vector<GLtype>& data,
                      BufferUsage usage = BufferUsage::StaticDraw) const {
         CHECK_BINDING();
-        if(buffer_t == BufferType::Array)
+        if(buffer_t == BufferType::Array) {
             CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+        }
 
         Data(data, usage);
     }
@@ -130,8 +132,9 @@ public:
       * @see glBufferSubData */
     BIND_CHECKED void subData(GLintptr offset, GLsizei size, const GLtype* data) const {
         CHECK_BINDING();
-        if(buffer_t == BufferType::Array)
+        if(buffer_t == BufferType::Array) {
             CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+        }
 
         SubData(offset, size, data);
     }
@@ -154,8 +157,9 @@ public:
       * @see glBufferSubData */
     BIND_CHECKED void subData(GLintptr offset, const std::vector<GLtype>& data) const {
         CHECK_BINDING();
-        if(buffer_t == BufferType::Array)
+        if(buffer_t == BufferType::Array) {
             CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+        }
 
         SubData(offset, data);
     }
