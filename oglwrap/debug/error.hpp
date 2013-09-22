@@ -27,12 +27,12 @@ namespace oglwrap {
 /** An error checking macro used for debugging purposes. If OGLWRAP_DEBUG
   * is defined to be a number different than 0, than it oglwrap will
   * check for OpenGL related errors after every gl* function call, and
-  * prints out where did the error happen to stderr. */
-/// @see glGetError
+  * prints out where did the error happen to stderr.
+  * @see glGetError */
 #define OGLWRAP_CHECK_ERROR() oglwrap::__CheckError(__FILE__, __PRETTY_FUNCTION__, __LINE__)
 
-/// @brief Same as OGLWRAP_CHECK_ERROR, but you can specify the called functions's name.
-/// @see OGLWRAP_CHECK_ERROR
+/// Same as OGLWRAP_CHECK_ERROR, but you can specify the called functions's name.
+/** @see OGLWRAP_CHECK_ERROR */
 #define OGLWRAP_CHECK_ERROR_NAMED(glfunc) oglwrap::__CheckError(__FILE__, __PRETTY_FUNCTION__, __LINE__, glfunc)
 
 /// Cuts the [with: ... part of the pretty func (not quite useful with oglwrap, but looks ugly).
@@ -41,7 +41,7 @@ inline std::string cut_end_of_pretty_func(const std::string& func) {
 }
 
 /// Use this via the OGLWRAP_CHECK_ERROR or OGLWRAP_CHECK_ERROR_NAMED macros.
-/// @see glGetError
+/** @see glGetError */
 inline void __CheckError(const char *file, const char *func, int line, const char* glfunc = nullptr) {
     OGLWRAP_LAST_ERROR = glGetError();
     if (OGLWRAP_LAST_ERROR != GL_NO_ERROR) {

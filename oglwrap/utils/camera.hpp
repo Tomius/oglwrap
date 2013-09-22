@@ -59,11 +59,11 @@ class FreeFlyCamera : public Camera {
     /// Private constant numbers
     const float speedPerSec, maxPitchAngle, mouseSensitivity;
 public:
-    /// @brief Creates the free-fly camera.
-    /// @param pos - The position of the camera.
-    /// @param target - The position of the camera's target (what it is looking at).
-    /// @param speedPerSec - Move speed in OpenGL units per second
-    /// @param mouseSensitivity - The relative sensitivity to mouse movement.
+    /// Creates the free-fly camera.
+    /** @param pos - The position of the camera.
+      * @param target - The position of the camera's target (what it is looking at).
+      * @param speedPerSec - Move speed in OpenGL units per second
+      * @param mouseSensitivity - The relative sensitivity to mouse movement. */
     FreeFlyCamera(const glm::vec3& pos,
                   const glm::vec3& target = glm::vec3(),
                   float speedPerSec = 5.0f,
@@ -80,8 +80,8 @@ public:
     }
 
     /// Updates the camera's position and rotation.
-    /// @param window - The currently active SFML window.
-    /// @param fixMouse - Specifies if the mouse should be locked into the middle of the screen.
+    /** @param window - The currently active SFML window.
+      * @param fixMouse - Specifies if the mouse should be locked into the middle of the screen. */
     void update(const sf::Window& window, bool fixMouse = false) {
         using namespace glm;
         static sf::Clock clock;
@@ -183,11 +183,11 @@ class ThirdPersonalCamera : public Camera {
     // Private constant number
     const float initialDistance, maxPitchAngle, mouseSensitivity, mouseScrollSensitivity;
 public:
-    /// @brief Creates the third-personal camera.
-    /// @param pos - The position of the camera.
-    /// @param target - The position of the camera's target (what it is looking at).
-    /// @param mouseSensitivity - The relative sensitivity to mouse movement.
-    /// @param mouseScrollSensitivity - The relative sensitivity to mouse scrolling.
+    /// Creates the third-personal camera.
+    /** @param pos - The position of the camera.
+      * @param target - The position of the camera's target (what it is looking at).
+      * @param mouseSensitivity - The relative sensitivity to mouse movement.
+      * @param mouseScrollSensitivity - The relative sensitivity to mouse scrolling. */
     ThirdPersonalCamera(const glm::vec3& pos,
                         const glm::vec3& target = glm::vec3(),
                         float mouseSensitivity = 1.0f,
@@ -208,8 +208,8 @@ public:
     }
 
     /// Updates the camera's position and rotation.
-    /// @param window - The currently active SFML window.
-    /// @param fixMouse - Specifies if the mouse should be locked into the middle of the screen.
+    /** @param window - The currently active SFML window.
+      * @param fixMouse - Specifies if the mouse should be locked into the middle of the screen. */
     void updateRotation(const sf::Window& window, bool fixMouse = false) {
         using namespace glm;
 
@@ -265,7 +265,7 @@ public:
     }
 
     /// Changes the distance in which the camera should follow the target.
-    /// @param mouseWheelTicks - The number of ticks, the mouse wheel was scrolled. Expect positive on up scroll.
+    /** @param mouseWheelTicks - The number of ticks, the mouse wheel was scrolled. Expect positive on up scroll. */
     void scrolling(int mouseWheelTicks) {
         destDistMod -= mouseWheelTicks / 10.0f * mouseScrollSensitivity;
         if(destDistMod < 0.5f)
@@ -275,7 +275,7 @@ public:
     }
 
     /// Updates the target of the camera. Is expected to be called every frame.
-    /// @param _target - the position of the object the camera should follow.
+    /** @param _target - the position of the object the camera should follow. */
     void updateTarget(const glm::vec3& _target) {
         static sf::Clock clock;
         static float prevTime = 0;

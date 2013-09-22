@@ -107,7 +107,7 @@ public:
         *inited = false;
     }
 
-    /// @brief Deletes the object.
+    /// Deletes the object.
     /** Deletes the resource if only one instance of
       * this object exists, and it is initialized. */
     ~ObjectExt() {
@@ -176,7 +176,7 @@ public:
         *inited = false;
     }
 
-    /// @brief Deletes the object.
+    /// Deletes the object.
     /** Deletes the resource if only one instance of
       * this object exists, and it is initialized. */
     ~Object() {

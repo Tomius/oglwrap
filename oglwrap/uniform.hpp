@@ -9,7 +9,7 @@ namespace oglwrap {
 // -------======{[ UniformObject ]}======-------
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetUniformLocation)
 template<class GLtype>
-/// @brief An object implementing the base features Uniforms.
+/// An object implementing the base features Uniforms.
 /** You shouldn't use this class directly. Rather use Uniform or LazyUniform. */
 class UniformObject {
 protected:
@@ -23,16 +23,20 @@ protected:
     UniformObject(GLuint location)
         : location(location) { }
 
-    /// @brief Sets the uniform to a GLtype variable's value. It finds the appropriate glUniform*
-    /// @brief using template specialization. If it is called with not an OpenGL type, it throws
-    /// @brief std::invalid argument.
-    /// @see glUniform*
+    /// Sets the uniform to a GLtype variable's value.
+    /** It finds the appropriate glUniform* using template specialization.
+      * If it is called with not an OpenGL type, it throws std::invalid argument.
+      * @param value - The value to set the uniform.
+      * @see glUniform* */
     void set(const GLtype& value) { // See the specializations at the end of this file.
         throw std::invalid_argument("Trying to set a uniform to a value that is not an OpenGL type.");
     }
 
-    /// @brief Sets the uniform to 'value', via the set() function.
-    /// @see set
+    /// Sets the uniform to a GLtype variable's value.
+    /** It finds the appropriate glUniform* using template specialization.
+      * If it is called with not an OpenGL type, it throws std::invalid argument.
+      * @param value - The value to set the uniform.
+      * @see glUniform* */
     void operator=(const GLtype& value) {
         set(value);
     }
@@ -47,17 +51,17 @@ public:
 // -------======{[ Uniform ]}======-------
 
 template<typename GLtype>
-/// @brief Uniform is used to set a uniform variable's value in a specified program.
+/// Uniform is used to set a uniform variable's value in a specified program.
 /** It queries the location of the uniform in the constructor and also notifies on the
   * stderr, if getting the location of the variable, or setting it didn't work. */
 class Uniform : public UniformObject<GLtype> {
     const std::string identifier;
 public:
-    /// @brief Queries a variable named 'identifier' in the 'program', and stores it's location.
-    /** It writes to stderr if the query didn't work. */
-    /// @param program - The program to seek the uniform in. Will call program.use().
-    /// @param identifier - The name of the uniform that is to be set.
-    /// @see glGetUniformLocation
+    /// Queries a variable named 'identifier' in the 'program', and stores it's location.
+    /** It writes to stderr if the query didn't work.
+      * @param program - The program to seek the uniform in. Will call program.use().
+      * @param identifier - The name of the uniform that is to be set.
+      * @see glGetUniformLocation */
     Uniform(Program& program, const std::string& identifier)
         :identifier(identifier)
     {
@@ -70,10 +74,10 @@ public:
         }
     }
 
-    /// @brief Sets the uniform to value if it is an OpenGL type or a glm vector or matrix.
-    /** It throws std::invalid_argument if it is an unrecognized type. */
-    /// @param value - Specifies the new value to be used for the uniform variable.
-    /// @see glUniform*
+    /// Sets the uniform to value if it is an OpenGL type or a glm vector or matrix.
+    /** It throws std::invalid_argument if it is an unrecognized type.
+      * @param value - Specifies the new value to be used for the uniform variable.
+      * @see glUniform* */
     void set(const GLtype& value) {
         glfunc( UniformObject<GLtype>::set(value) );
 
@@ -85,33 +89,33 @@ public:
         )
     }
 
-    /// @brief Sets the uniform to value if it is an OpenGL type or a glm vector or matrix.
-    /** It throws std::invalid_argument if it is an unrecognized type. */
-    /// @param value - Specifies the new value to be used for the uniform variable.
-    /// @see glUniform*
+    /// Sets the uniform to value if it is an OpenGL type or a glm vector or matrix.
+    /** It throws std::invalid_argument if it is an unrecognized type.
+      * @param value - Specifies the new value to be used for the uniform variable.
+      * @see glUniform* */
     void operator=(const GLtype& value) {
         set(value);
     }
 };
 
-/// @brief A Uniform that sets a sampler.
+/// A Uniform that sets a sampler.
 typedef Uniform<GLint> UniformSampler;
 
 // -------======{[ IndexedUniform ]}======-------
 
 template<typename GLtype>
-/// @brief IndexedUniform is used to set an element of a uniform array in a specified program.
+/// IndexedUniform is used to set an element of a uniform array in a specified program.
 /** It queries the location of the uniform in the constructor and also notifies on the
     stderr, if getting the location of the variable, or setting it didn't work. */
 class IndexedUniform : public UniformObject<GLtype> {
     std::string identifier;
 public:
-    /// @brief Queries a variable named 'identifier' in the 'program', and stores it's location.
-    /** It writes to stderr if the query didn't work. */
-    /// @param program - The program to seek the uniform in. Will call program.use().
-    /// @param _identifier - The name of the uniform that is to be set.
-    /// @param idx - The index of the element in the uniform array.
-    /// @see glGetUniformLocation
+    /// Queries a variable named 'identifier' in the 'program', and stores it's location.
+    /** It writes to stderr if the query didn't work.
+      * @param program - The program to seek the uniform in. Will call program.use().
+      * @param _identifier - The name of the uniform that is to be set.
+      * @param idx - The index of the element in the uniform array.
+      * @see glGetUniformLocation */
     IndexedUniform(Program& program, const std::string& _identifier, size_t idx)
     {
         std::stringstream id;
@@ -127,10 +131,10 @@ public:
         }
     }
 
-    /// @brief Sets the uniform to value if it is an OpenGL type or a glm vector or matrix.
-    /** It throws std::invalid_argument if it is an unrecognized type. */
-    /// @param value - Specifies the new value to be used for the uniform variable.
-    /// @see glUniform*
+    /// Sets the uniform to value if it is an OpenGL type or a glm vector or matrix.
+    /** It throws std::invalid_argument if it is an unrecognized type.
+      * @param value - Specifies the new value to be used for the uniform variable.
+      * @see glUniform* */
     void set(const GLtype& value) {
         glfunc( UniformObject<GLtype>::set(value) );
 
@@ -142,16 +146,16 @@ public:
         )
     }
 
-    /// @brief Sets the uniform to value if it is an OpenGL type or a glm vector or matrix.
-    /** It throws std::invalid_argument if it is an unrecognized type. */
-    /// @param value - Specifies the new value to be used for the uniform variable.
-    /// @see glUniform*
+    /// Sets the uniform to value if it is an OpenGL type or a glm vector or matrix.
+    /** It throws std::invalid_argument if it is an unrecognized type.
+      * @param value - Specifies the new value to be used for the uniform variable.
+      * @see glUniform* */
     void operator=(const GLtype& value) {
         set(value);
     }
 };
 
-/// @brief An IndexedUniform that sets a value of an element of a sampler array.
+/// An IndexedUniform that sets a value of an element of a sampler array.
 typedef IndexedUniform<GLint> IndexedUniformSampler;
 
 // -------======{[ LazyUniform ]}======-------
@@ -170,11 +174,11 @@ class LazyUniform : public UniformObject<GLtype> {
     const std::string identifier; ///< The uniform's name.
     bool firstCall;
 public:
-    /// @brief Stores the uniform's information.
+    /// Stores the uniform's information.
     /** It will only be used at the first set() or op=() call, so the program
-      * doesn't have to be valid at the time this constructor is called. */
-    /// @param program - The program in which the uniform is to be set.
-    /// @param identifier - The uniform's name.
+      * doesn't have to be valid at the time this constructor is called.
+      * @param program - The program in which the uniform is to be set.
+      * @param identifier - The uniform's name. */
     LazyUniform(Program& program, const std::string& identifier)
         : UniformObject<GLtype>(INVALID_LOCATION)
         , program(program)
@@ -182,10 +186,10 @@ public:
         , firstCall(true) {
     }
 
-    /// @brief Sets the uniforms value.
+    /// Sets the uniforms value.
     /** At the first call, queries the uniform's location. It writes to stderr if it was unable to get it.
-      * At every call it sets the uniform to the specified value. */
-    /// @param value - Specifies the new value to be used for the uniform variable.
+      * At every call it sets the uniform to the specified value.
+      * @param value - Specifies the new value to be used for the uniform variable. */
     void set(const GLtype& value) {
         CHECK_ACTIVE_PROGRAM(program);
 
@@ -211,16 +215,16 @@ public:
         )
     }
 
-    /// @brief Sets the uniforms value.
+    /// Sets the uniforms value.
     /** At the first call, queries the uniform's location. It writes to stderr if it was unable to get it.
       * At every call it sets the uniform to the specified value. It also changes the active program
-      * to the one specified in the constructor. */
-    /// @param value - Specifies the new value to be used for the uniform variable.
+      * to the one specified in the constructor.
+      * @param value - Specifies the new value to be used for the uniform variable. */
     void operator=(const GLtype& value) {
         set(value);
     }
 
-    /// @brief Is used to set an element of a uniform array.
+    /// Is used to set an element of a uniform array.
     /** For example if you have a mat4 myMatrix[10]; and you created a lazyUniform
       * myMatUnif(prog, "myMatrix), you can call myMatUnif[5].set() to set myMatrix[5]. */
     IndexedUniform<GLtype> operator[](size_t idx) const {
@@ -228,7 +232,7 @@ public:
     }
 };
 
-/// @brief A LazyUniform that sets a sampler.
+/// A LazyUniform that sets a sampler.
 typedef LazyUniform<GLint> LazyUniformSampler;
 
 

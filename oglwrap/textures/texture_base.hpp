@@ -103,14 +103,14 @@ public:
     /// Sets the minification filter for this texture class.
     /** @param filtermode - The desired minification filter mode.
       * @see glTexParameteri, GL_TEXTURE_MIN_FILTER */
-    static void MinFilter(MinF filtermode) {
+    static void MinFilter(Enums::MinFilter filtermode) {
         gl( TexParameteri(texture_t, GL_TEXTURE_MIN_FILTER, filtermode) );
     }
 
     /// Sets the minification filter for this texture class.
     /** @param filtermode - The desired minification filter mode.
       * @see glTexParameteri, GL_TEXTURE_MIN_FILTER */
-    void minFilter(MinF filtermode) const {
+    void minFilter(Enums::MinFilter filtermode) const {
         CHECK_BINDING();
         MinFilter(filtermode);
     }
@@ -118,14 +118,14 @@ public:
     /// Sets the magnification filter for this texture class.
     /** @param filtermode - The desired magnification filter mode.
       * @see glTexParameteri, GL_TEXTURE_MAG_FILTER */
-    static void MagFilter(MagF filtermode) {
+    static void MagFilter(Enums::MagFilter filtermode) {
         gl( TexParameteri(texture_t, GL_TEXTURE_MAG_FILTER, filtermode) );
     }
 
     /// Sets the magnification filter for this texture class.
     /** @param filtermode - The desired magnification filter mode.
       * @see glTexParameteri, GL_TEXTURE_MAG_FILTER */
-    void magFilter(MagF filtermode) const {
+    void magFilter(Enums::MagFilter filtermode) const {
         CHECK_BINDING();
         MagFilter(filtermode);
     }

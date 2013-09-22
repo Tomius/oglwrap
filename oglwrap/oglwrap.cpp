@@ -1,3 +1,8 @@
+/** @file oglwrap.cpp
+    @brief A test file.
+*/
+
+
 #include <SFML/Window.hpp>
 #include <GL/glew.h>
 #include "oglwrap.hpp"

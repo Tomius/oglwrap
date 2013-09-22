@@ -9,29 +9,29 @@ namespace oglwrap {
 // -------======{[ TextureCube declaration ]}======-------
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_CUBE_MAP)
-/// @brief A set of 6 2D textures, that is used to be sampled with 3D direction vectors.
-/// @see GL_TEXTURE_CUBE_MAP
+/// A set of 6 2D textures, that is used to be sampled with 3D direction vectors.
+/** @see GL_TEXTURE_CUBE_MAP */
 class TextureCube : public TextureBase<TexType::TexCubeMap> {
 public:
     /// Generates an empty texture.
-    /// @see glGenTextures
+    /** @see glGenTextures */
     TextureCube() {}
 
     template <Tex2DType another_texture_t>
     /// Copies a 2D texture or casts a two-dimensional texture to another 2d texture type.
-    /// @param src - The texture to copy or cast.
+    /** @param src - The texture to copy or cast. */
     TextureCube(const TextureBase<another_texture_t>& src)
         : TextureBase<another_texture_t>(src) {}
 
     /// Uploads one a base image for one side of the cube.
-    /// @param target - Specifies which one of the six sides of the cube to use as target.
-    /// @param internalFormat - Specifies the number, order, and size of the color components in the texture.
-    /// @param width - Specifies the width of the texture image. All implementations support texture images that are at least 1024 texels wide.
-    /// @param height - Specifies the height of the texture image, or the number of layers in a texture array. All implementations support 2D texture images that are at least 1024 texels high, and texture arrays that are at least 256 layers deep.
-    /// @param format - Specifies the format of the pixel data.
-    /// @param type - Specifies the data type of the pixel data.
-    /// @param data - Specifies a pointer to the image data in memory.
-    /// @see glTexImage2D
+    /** @param target - Specifies which one of the six sides of the cube to use as target.
+      * @param internalFormat - Specifies the number, order, and size of the color components in the texture.
+      * @param width - Specifies the width of the texture image. All implementations support texture images that are at least 1024 texels wide.
+      * @param height - Specifies the height of the texture image, or the number of layers in a texture array. All implementations support 2D texture images that are at least 1024 texels high, and texture arrays that are at least 256 layers deep.
+      * @param format - Specifies the format of the pixel data.
+      * @param type - Specifies the data type of the pixel data.
+      * @param data - Specifies a pointer to the image data in memory.
+      * @see glTexImage2D */
     void upload(
         CubeTarget target,
         PixelDataInternalFormat internalFormat,
@@ -49,15 +49,15 @@ public:
     }
 
     /// Uploads a mipmap for one side of the cube.
-    /// @param target - Specifies which one of the six sides of the cube to use as target.
-    /// @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
-    /// @param internalFormat - Specifies the number, order, and size of the color components in the texture.
-    /// @param width - Specifies the width of the texture image. All implementations support texture images that are at least 1024 texels wide.
-    /// @param height - Specifies the height of the texture image, or the number of layers in a texture array. All implementations support 2D texture images that are at least 1024 texels high, and texture arrays that are at least 256 layers deep.
-    /// @param format - Specifies the format of the pixel data.
-    /// @param type - Specifies the data type of the pixel data.
-    /// @param data - Specifies a pointer to the image data in memory.
-    /// @see glTexImage2D
+    /** @param target - Specifies which one of the six sides of the cube to use as target.
+      * @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
+      * @param internalFormat - Specifies the number, order, and size of the color components in the texture.
+      * @param width - Specifies the width of the texture image. All implementations support texture images that are at least 1024 texels wide.
+      * @param height - Specifies the height of the texture image, or the number of layers in a texture array. All implementations support 2D texture images that are at least 1024 texels high, and texture arrays that are at least 256 layers deep.
+      * @param format - Specifies the format of the pixel data.
+      * @param type - Specifies the data type of the pixel data.
+      * @param data - Specifies a pointer to the image data in memory.
+      * @see glTexImage2D */
     void upload_mipmap(
         CubeTarget target,
         GLint level,
@@ -77,13 +77,13 @@ public:
 
 
     /// Updates a part of the base image for one side of the cube.
-    /// @param target - Specifies which one of the six sides of the cube to use as target.
-    /// @param xOffset/yOffset - Specifies a texel offset in the x/y direction within the texture array.
-    /// @param width/height - Specifies the width/height of the texture subimage.
-    /// @param format - Specifies the format of the pixel data.
-    /// @param type - Specifies the data type of the pixel data.
-    /// @param data - Specifies a pointer to the image data in memory.
-    /// @see glTexSubImage2D
+    /** @param target - Specifies which one of the six sides of the cube to use as target.
+      * @param xOffset/yOffset - Specifies a texel offset in the x/y direction within the texture array.
+      * @param width/height - Specifies the width/height of the texture subimage.
+      * @param format - Specifies the format of the pixel data.
+      * @param type - Specifies the data type of the pixel data.
+      * @param data - Specifies a pointer to the image data in memory.
+      * @see glTexSubImage2D */
     void subUpload(
         CubeTarget target,
         GLint xOffset,
@@ -102,14 +102,14 @@ public:
     }
 
     /// Updates a part of a mipmap image for one side of the cube.
-    /// @param target - Specifies which one of the six sides of the cube to use as target.
-    /// @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
-    /// @param xOffset/yOffset - Specifies a texel offset in the x/y direction within the texture array.
-    /// @param width/height - Specifies the width/height of the texture subimage.
-    /// @param format - Specifies the format of the pixel data.
-    /// @param type - Specifies the data type of the pixel data.
-    /// @param data - Specifies a pointer to the image data in memory.
-    /// @see glTexSubImage2D
+    /** @param target - Specifies which one of the six sides of the cube to use as target.
+      * @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
+      * @param xOffset/yOffset - Specifies a texel offset in the x/y direction within the texture array.
+      * @param width/height - Specifies the width/height of the texture subimage.
+      * @param format - Specifies the format of the pixel data.
+      * @param type - Specifies the data type of the pixel data.
+      * @param data - Specifies a pointer to the image data in memory.
+      * @see glTexSubImage2D */
     void subUpload_mipmap(
         CubeTarget target,
         GLint level,
@@ -147,11 +147,11 @@ public:
     #endif // glTexStorage2D
 
     /// Copies pixels from the current GL_READ_BUFFER into the base mipmap of one side of the cube.
-    /// @param target - Specifies which one of the six sides of the cube to use as target.
-    /// @param internalFormat - Specifies the internal format of the texture.
-    /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
-    /// @param width/height - Specifies the width/height of the texture to copy.
-    /// @see glCopyTexImage2D
+    /** @param target - Specifies which one of the six sides of the cube to use as target.
+      * @param internalFormat - Specifies the internal format of the texture.
+      * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
+      * @param width/height - Specifies the width/height of the texture to copy.
+      * @see glCopyTexImage2D */
     void copy(
         CubeTarget target,
         PixelDataInternalFormat internalFormat,
@@ -166,12 +166,12 @@ public:
     }
 
     /// Copies pixels from the current GL_READ_BUFFER into a mipmap of one side of the cube.
-    /// @param target - Specifies which one of the six sides of the cube to use as target.
-    /// @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
-    /// @param internalFormat - Specifies the internal format of the texture.
-    /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
-    /// @param width/height - Specifies the width/height of the texture to copy.
-    /// @see glCopyTexImage2D
+    /** @param target - Specifies which one of the six sides of the cube to use as target.
+      * @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
+      * @param internalFormat - Specifies the internal format of the texture.
+      * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
+      * @param width/height - Specifies the width/height of the texture to copy.
+      * @see glCopyTexImage2D */
     void copy_mipmap(
         CubeTarget target,
         GLint level,
@@ -187,11 +187,11 @@ public:
     }
 
     /// Copies pixels from the current GL_READ_BUFFER and updates part of the base mipmap of one side with them.
-    /// @param target - Specifies which one of the six sides of the cube to use as target.
-    /// @param xOffset/yOffset - Specifies the texel offset in the x/y direction within the destination texture array.
-    /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
-    /// @param width/height - Specifies the width/height of the texture to copy.
-    /// @see glCopyTexSubImage2D
+    /** @param target - Specifies which one of the six sides of the cube to use as target.
+      * @param xOffset/yOffset - Specifies the texel offset in the x/y direction within the destination texture array.
+      * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
+      * @param width/height - Specifies the width/height of the texture to copy.
+      * @see glCopyTexSubImage2D */
     void copySub(
         CubeTarget target,
         GLint xOffset,
@@ -207,12 +207,12 @@ public:
     }
 
     /// Copies pixels from the current GL_READ_BUFFER and updates part of a mipmap of one side.
-    /// @param target - Specifies which one of the six sides of the cube to use as target.
-    /// @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
-    /// @param xOffset/yOffset - Specifies the texel offset in the x/y direction within the destination texture array.
-    /// @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
-    /// @param width/height - Specifies the width/height of the texture to copy.
-    /// @see glCopyTexSubImage2D
+    /** @param target - Specifies which one of the six sides of the cube to use as target.
+      * @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
+      * @param xOffset/yOffset - Specifies the texel offset in the x/y direction within the destination texture array.
+      * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
+      * @param width/height - Specifies the width/height of the texture to copy.
+      * @see glCopyTexSubImage2D */
     void copySub_mipmap(
         CubeTarget target,
         GLint level,
@@ -229,9 +229,9 @@ public:
     }
 
     /// Returns the width of a mipmap of one side.
-    /// @param target - Specifies which one of the six sides of the cube to use as target.
-    /// @param level - Specifies the mipmap whose size should be queried.
-    /// @see glGetTexLevelParameteriv, GL_TEXTURE_WIDTH
+    /** @param target - Specifies which one of the six sides of the cube to use as target.
+      * @param level - Specifies the mipmap whose size should be queried.
+      * @see glGetTexLevelParameteriv, GL_TEXTURE_WIDTH */
     GLsizei width(CubeTarget target, GLint level = 0) {
         CHECK_BINDING();
 
@@ -241,9 +241,9 @@ public:
     }
 
     /// Returns the height of a mipmap of one side.
-    /// @param target - Specifies which one of the six sides of the cube to use as target.
-    /// @param level - Specifies the mipmap whose size should be queried.
-    /// @see glGetTexLevelParameteriv, GL_TEXTURE_HEIGHT
+    /** @param target - Specifies which one of the six sides of the cube to use as target.
+      * @param level - Specifies the mipmap whose size should be queried.
+      * @see glGetTexLevelParameteriv, GL_TEXTURE_HEIGHT */
     GLsizei height(CubeTarget target, GLint level = 0) {
         CHECK_BINDING();
 
@@ -253,7 +253,7 @@ public:
     }
 
     /// Returns the i-th element of the cube sides in alphabetic order.
-    /// @param i - The index of the CubeTarget to return
+    /** @param i - The index of the CubeTarget to return */
     static CubeTarget cubeFace(int i) {
         switch(i) {
             case 0:
@@ -275,10 +275,10 @@ public:
 
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetCompressedTexImage)
     /// Return the compressed texture image of one side
-    /// @param target - Specifies which one of the six sides of the cube to use as target.
-    /// @param level - Specifies the level-of-detail number of the desired image. Level 0 is the base image level. Level n is the nth mipmap reduction image.
-    /// @param img - Returns the compressed texture image.
-    /// @see glGetCompressedTexImage
+    /** @param target - Specifies which one of the six sides of the cube to use as target.
+      * @param level - Specifies the level-of-detail number of the desired image. Level 0 is the base image level. Level n is the nth mipmap reduction image.
+      * @param img - Returns the compressed texture image.
+      * @see glGetCompressedTexImage */
     void getCompressedImage(CubeTarget target, GLint level, GLvoid* img) {
         CHECK_BINDING();
 
@@ -288,13 +288,13 @@ public:
 
 #if OGLWRAP_IMAGEMAGICK
     /// Loads in, and uploads an image for one side of the cube from a file using Magick++.
-    /// @param target - Specifies which one of the six sides of the cube to use as target.
-    /// @param file - Path to the image file.
-    /// @param formatString - Specifies the number and order of components to be read.
-    /// @see glTexImage2D
+    /** @param target - Specifies which one of the six sides of the cube to use as target.
+      * @param file - Path to the image file.
+      * @param formatString - Specifies the number and order of components to be read.
+      * @see glTexImage2D */
     void loadTexture(CubeTarget target,
-                            const std::string& file,
-                            const std::string& formatString = "RGBA") {
+                     const std::string& file,
+                     const std::string& formatString = "RGBA") {
         try {
             Magick::Image image = Magick::Image(file);
             Magick::Blob blob;
@@ -315,13 +315,13 @@ public:
     }
 
     /// Loads in, and uploads an image for one side of the cube from a file using Magick++.
-    /// @param faceID - Specifies the index of the side to upload. It is usefully to upload all six sides in a for loop.
-    /// @param file - Path to the image file.
-    /// @param formatString - Specifies the number and order of components to be read.
-    /// @see glTexImage2D
+    /** @param faceID - Specifies the index of the side to upload. It is usefully to upload all six sides in a for loop.
+      * @param file - Path to the image file.
+      * @param formatString - Specifies the number and order of components to be read.
+      * @see glTexImage2D */
     void loadTexture(GLuint faceID,
-                            const std::string& file,
-                            const std::string& formatString = "RGBA") {
+                     const std::string& file,
+                     const std::string& formatString = "RGBA") {
         try {
             Magick::Image image = Magick::Image(file);
             Magick::Blob blob;

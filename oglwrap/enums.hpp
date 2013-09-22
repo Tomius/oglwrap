@@ -6,6 +6,8 @@
 
 namespace oglwrap {
 
+namespace Enums { // just to make doxygen list enum namespaces nicely
+
 // -------======{[ Shaders ]}======-------
 
 namespace _ShaderType {
@@ -811,7 +813,6 @@ enum PixelDataInternalFormat {
 };
 }
 typedef _PixelDataInternalFormat::PixelDataInternalFormat PixelDataInternalFormat;
-typedef _PixelDataInternalFormat::PixelDataInternalFormat PxDIntForm;
 
 
 namespace _PixelDataFormat {
@@ -876,7 +877,6 @@ enum PixelDataFormat {
 };
 }
 typedef _PixelDataFormat::PixelDataFormat PixelDataFormat;
-typedef _PixelDataFormat::PixelDataFormat PxDForm;
 
 namespace _PixelDataType {
 enum PixelDataType {
@@ -955,7 +955,6 @@ enum PixelDataType {
 };
 }
 typedef _PixelDataType::PixelDataType PixelDataType;
-typedef _PixelDataType::PixelDataType PxDType;
 
 namespace _Wrap {
 enum Wrap {
@@ -998,7 +997,6 @@ enum MinFilter {
 };
 }
 typedef _MinFilter::MinFilter MinFilter;
-typedef _MinFilter::MinFilter MinF;
 
 namespace _MagFilter {
 enum MagFilter {
@@ -1011,7 +1009,6 @@ enum MagFilter {
 };
 }
 typedef _MagFilter::MagFilter MagFilter;
-typedef _MagFilter::MagFilter MagF;
 
 namespace _Swizzle {
 enum Swizzle {
@@ -1095,6 +1092,10 @@ enum TransformFeedbackPrimitiveType {
 
 typedef _TransformFeedbackPrimitiveType::TransformFeedbackPrimitiveType TransformFeedbackPrimitiveType;
 typedef _TransformFeedbackPrimitiveType::TransformFeedbackPrimitiveType TFB_PrimType;
+
+} // Namespace Enums
+
+using namespace oglwrap::Enums;
 
 } // Namespace oglwrap
 

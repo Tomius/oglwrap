@@ -101,7 +101,7 @@ public:
         *inited = false;
     }
 
-    /// @brief Deletes the object.
+    /// Deletes the object.
     /** Deletes the resource if only one instance of
       * this object exists, and it is initialized. */
     ~ShaderObject() {
@@ -378,7 +378,7 @@ public:
         *inited = false;
     }
 
-    /// @brief Deletes the object.
+    /// Deletes the object.
     /** Deletes the resource if only one instance of
       * this object exists, and it is initialized. */
     ~ProgramObject() {

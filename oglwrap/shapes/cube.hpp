@@ -16,8 +16,8 @@ class Cube {
 
 public:
 
-    /// @brief Constructs a cube centered at the origin with the given width, height, depth.
-    /// @param w,h,d - The width, height, depth of the cube, respectively.
+    /// Constructs a cube centered at the origin with the given width, height, depth.
+    /** @param w,h,d - The width, height, depth of the cube, respectively. */
     Cube(float w = 1.0f, float h = 1.0f, float d = 1.0f)
         : w(w), h(h), d(d)
         , is_setup_positions(false)
@@ -33,10 +33,10 @@ private:
     };
 
 public:
-    /// @brief Creates vertex positions, and uploads it to an attribute array.
+    /// Creates vertex positions, and uploads it to an attribute array.
     /** Uploads the vertex positions data to an attribute array, and sets it up for use.
-      * Calling this function changes the currently active VAO and ArrayBuffer. */
-    /// @param attrib - The attribute array to use as destination.
+      * Calling this function changes the currently active VAO and ArrayBuffer.
+      * @param attrib - The attribute array to use as destination. */
     void setup_positions(VertexAttribArray attrib) {
 
         if(is_setup_positions) {
@@ -87,10 +87,10 @@ public:
         vao.unbind();
     }
 
-    /// @brief Creates vertex normals, and uploads it to an attribute array.
+    /// Creates vertex normals, and uploads it to an attribute array.
     /** Uploads the vertex normals data to an attribute array, and sets it up for use.
-      * Calling this function changes the currently active VAO and ArrayBuffer. */
-    /// @param attrib - The attribute array to use as destination.
+      * Calling this function changes the currently active VAO and ArrayBuffer.
+      * @param attrib - The attribute array to use as destination. */
     void setup_normals(VertexAttribArray attrib) {
 
         if(is_setup_normals) {
@@ -125,10 +125,10 @@ public:
         vao.unbind();
     };
 
-    /// @brief Creates vertex texture coordinates, and uploads it to an attribute array.
+    /// Creates vertex texture coordinates, and uploads it to an attribute array.
     /** Uploads the vertex normals data to an attribute array, and sets it up for use.
-      * Calling this function changes the currently active VAO and ArrayBuffer. */
-    /// @param attrib - The attribute array to use as destination.
+      * Calling this function changes the currently active VAO and ArrayBuffer.
+      * @param attrib - The attribute array to use as destination. */
     void setup_texCoords(VertexAttribArray attrib) {
 
         if(is_setup_texcoords) {
@@ -164,7 +164,7 @@ public:
         vao.unbind();
     }
 
-    /// @brief Creates vertex tangents, and uploads it to an attribute array.
+    /// Creates vertex tangents, and uploads it to an attribute array.
     /** Uploads the tangents normals data to an attribute array, and sets it up for use.
       * Calling this function changes the currently active VAO and ArrayBuffer.
       * @param attrib - The attribute array to use as destination. */
@@ -201,7 +201,7 @@ public:
         vao.unbind();
     }
 
-    /// @brief Draws the cube.
+    /// Draws the cube.
     /** This call changes the currently active VAO. */
     void draw() {
         if(is_setup_positions) {

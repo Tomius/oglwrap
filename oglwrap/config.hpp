@@ -4,6 +4,9 @@
 
 #pragma once
 
+#define STATIC static
+#define BIND_CHECKED
+
 #ifdef GL_LINE
     #define OGLWRAP_OPENGL_INCLUDED 1
 #else
@@ -45,12 +48,4 @@
 /// If true, uses Magick++ API to load images.
 #ifndef OGLWRAP_IMAGEMAGICK
     #define OGLWRAP_IMAGEMAGICK 1
-#endif
-
-/// A Code-completion tricker, for internal use only.
-#undef OGLWRAP_NOT_ONLY_BINDCHECKED_FUNCTIONS
-#if OGLWRAP_OPENGL_INCLUDED
-    #define OGLWRAP_NOT_ONLY_BINDCHECKED_FUNCTIONS 1
-#else
-    #define OGLWRAP_NOT_ONLY_BINDCHECKED_FUNCTIONS 0
 #endif

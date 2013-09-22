@@ -52,4 +52,7 @@
 #include "framebuffer.hpp"
 #include "transfeedback.hpp"
 
+#undef STATIC
+#undef BIND_CHECKED
+
 

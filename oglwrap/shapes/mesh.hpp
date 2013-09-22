@@ -67,9 +67,9 @@ protected:
     void operator=(const Mesh& rhs);
 
 public:
-    /// @brief Loads in the mesh from a file, and does some post-processing on it.
-    /// @param filename - The name of the file to load in.
-    /// @param flags - The assimp post-process flags.
+    /// Loads in the mesh from a file, and does some post-processing on it.
+    /** @param filename - The name of the file to load in.
+      * @param flags - The assimp post-process flags. */
     Mesh(const std::string& filename, unsigned int flags)
         : scene(importer.ReadFile(
               filename.c_str(),
@@ -88,9 +88,9 @@ public:
 
 private:
     template <class IdxType>
-    /// @brief A template for setting different types (byte/short/int) of indices.
-    /** This expect the correct vao to be already bound!! */
-    /// @param index - The index of the entry
+    /// A template for setting different types (byte/short/int) of indices.
+    /** This expect the correct vao to be already bound!
+      * @param index - The index of the entry */
     void setIndices(size_t index) {
         const aiMesh* paiMesh = scene->mMeshes[index];
 
@@ -112,11 +112,11 @@ private:
     }
 
 public:
-    /// @brief Loads in vertex positions and indices, and uploads the former into an attribute array.
+    /// Loads in vertex positions and indices, and uploads the former into an attribute array.
     /** Uploads the vertex positions data to an attribute array, and sets it up for use.
       * Calling this function changes the currently active VAO, ArrayBuffer and IndexBuffer.
-      * The mesh cannot be drawn without calling this function. */
-    /// @param attrib - The attribute array to use as destination.
+      * The mesh cannot be drawn without calling this function.
+      * @param attrib - The attribute array to use as destination. */
     void setup_positions(VertexAttribArray attrib) {
         if(is_setup_positions) {
             throw std::logic_error("Mesh::setup_position is called multiply times on the same object");
@@ -161,10 +161,10 @@ public:
         ArrayBuffer::Unbind();
     }
 
-    /// @brief Loads in vertex normals, and uploads it to an attribute array.
+    /// Loads in vertex normals, and uploads it to an attribute array.
     /** Uploads the vertex normals data to an attribute array, and sets it up for use.
-      * Calling this function changes the currently active VAO and ArrayBuffer. */
-    /// @param attrib - The attribute array to use as destination.
+      * Calling this function changes the currently active VAO and ArrayBuffer.
+      * @param attrib - The attribute array to use as destination. */
     void setup_normals(VertexAttribArray attrib) {
 
         if(is_setup_normals) {
@@ -198,8 +198,8 @@ public:
 
     /// Checks if every mesh in the scene has texcoords
     /** Returns true if all of the meshes in the scene have texture
-      * coordinates in the specified texture coordinate set. */
-    /// @param texCoordSet - Specifies the index of the texture coordinate set that should be inspected
+      * coordinates in the specified texture coordinate set.
+      * @param texCoordSet - Specifies the index of the texture coordinate set that should be inspected */
     bool hasTexCoords(unsigned char texCoordSet = 0) {
         for(size_t i = 0; i < entries.size(); i++) {
             if(!scene->mMeshes[i]->HasTextureCoords(texCoordSet)) {
@@ -287,8 +287,8 @@ public:
                 if(pMaterial->GetTexture(tex_type, 0, &filepath) == AI_SUCCESS) {
                     materials[tex_type].textures[i].bind();
                     materials[tex_type].textures[i].loadTexture(dir + filepath.data);
-                    materials[tex_type].textures[i].minFilter(MinF::Linear);
-                    materials[tex_type].textures[i].magFilter(MagF::Linear);
+                    materials[tex_type].textures[i].minFilter(MinFilter::Linear);
+                    materials[tex_type].textures[i].magFilter(MagFilter::Linear);
                 }
             }
         }

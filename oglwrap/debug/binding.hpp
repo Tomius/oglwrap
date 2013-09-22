@@ -9,7 +9,7 @@ namespace oglwrap {
 static std::string OGLWRAP_LAST_BIND_TARGET;
 
 #if OGLWRAP_BINDCHECK
-    /// @brief Calls the isBound() member function, and prints an error and calls bind() if it returns false.
+    /// Calls the isBound() member function, and prints an error and calls bind() if it returns false.
     /** Only if OGLWRAP_BINDCHECK is defined true */
     #define CHECK_BINDING() \
         if(!isBound()) { \
@@ -17,7 +17,7 @@ static std::string OGLWRAP_LAST_BIND_TARGET;
             bind(); \
         }
 
-    /// @brief Calls the isBoundFunc function, and prints an error and calls bindFunc if it returns false.
+    /// Calls the isBoundFunc function, and prints an error and calls bindFunc if it returns false.
     /** Only if OGLWRAP_BINDCHECK is defined true */
     #define CHECK_BINDING_EXPLICIT(isBoundFunc, bindFunc) \
         if(!isBoundFunc()) { \
@@ -26,17 +26,17 @@ static std::string OGLWRAP_LAST_BIND_TARGET;
         }
 
     /// Checks if the object name '0' is bound to the given target, and prints error if it is.
-    /** Only if OGLWRAP_BINDCHECK is defined true */
-    /// @param bindTarget - The target to check. Expected to be a value returned by getBindingTarget();
+    /** Only if OGLWRAP_BINDCHECK is defined true
+      * @param bindTarget - The target to check. Expected to be a value returned by getBindingTarget(); */
     #define CHECK_FOR_DEFAULT_BINDING(bindTarget) \
         GLint __currently_bound_target; \
         glGetIntegerv(bindTarget, &__currently_bound_target); \
         if(__currently_bound_target == 0) \
             __print_default_object_is_bound_error(__FILE__, __PRETTY_FUNCTION__, __LINE__);
 
-    /// @brief Checks if the object name '0' is bound to the target explicitly given by its name, and prints error if it is.
-    /** Only if OGLWRAP_BINDCHECK is defined true */
-    /// @param bindTarget - The target to check. Expected to be an explicit OpenGL macro name.
+    /// Checks if the object name '0' is bound to the target explicitly given by its name, and prints error if it is.
+    /** Only if OGLWRAP_BINDCHECK is defined true
+      * @param bindTarget - The target to check. Expected to be an explicit OpenGL macro name. */
     #define CHECK_FOR_DEFAULT_BINDING_EXPLICIT(bindTarget) \
         OGLWRAP_LAST_BIND_TARGET = #bindTarget; \
         GLint __currently_bound_target_for_##bindTarget; \
@@ -76,7 +76,7 @@ static std::string OGLWRAP_LAST_BIND_TARGET;
     }
 
     /// Checks if the program is the currently active one, and if not, it returns prints out an error, and calls use on that program.
-    /// @param program - The shader program to check if is active.
+    /** @param program - The shader program to check if is active. */
     #define CHECK_ACTIVE_PROGRAM(program) \
         if(!program.isActive()) { \
             __print_another_program_is_active_error(__FILE__, __PRETTY_FUNCTION__, __LINE__); \
@@ -99,32 +99,32 @@ static std::string OGLWRAP_LAST_BIND_TARGET;
         error_callback(sstream.str());
     }
 #else
-    /// @brief Calls the isBound() member function, and prints an error, and binds it, if it returns false.
+    /// Calls the isBound() member function, and prints an error, and binds it, if it returns false.
     /** Only if OGLWRAP_BINDCHECK is defined true */
     #define CHECK_BINDING()
 
-    /// @brief Calls the isBoundFunc function, and prints an error, and calls bindFunc, if it returns false.
+    /// Calls the isBoundFunc function, and prints an error, and calls bindFunc, if it returns false.
     /** Only if OGLWRAP_BINDCHECK is defined true */
     #define CHECK_BINDING_EXPLICIT(isBoundFunc, bindFunc)
 
     /// Checks if the object name '0' is bound to the given target, and prints error if it is.
-    /** Only if OGLWRAP_BINDCHECK is defined true */
-    /// @param bindTarget - The target to check. Expected to be a value returned by getBindingTarget();
+    /** Only if OGLWRAP_BINDCHECK is defined true
+      * @param bindTarget - The target to check. Expected to be a value returned by getBindingTarget(); */
     #define CHECK_FOR_DEFAULT_BINDING(bindTarget)
 
-    /// @brief Checks if the object name '0' is bound to the target explicitly given by its name, and prints error if it is.
-    /** Only if OGLWRAP_BINDCHECK is defined true */
-    /// @param bindTarget - The target to check. Expected to be an explicit OpenGL macro name.
+    /// Checks if the object name '0' is bound to the target explicitly given by its name, and prints error if it is.
+    /** Only if OGLWRAP_BINDCHECK is defined true
+      * @param bindTarget - The target to check. Expected to be an explicit OpenGL macro name. */
     #define CHECK_FOR_DEFAULT_BINDING_EXPLICIT(bindTarget)
 
-    /// @brief Checks if the program is the currently active one, and if not, it prints out an error, and calls use() on that program.
-    /** Only if OGLWRAP_BINDCHECK is defined true */
-    /// @param program - The shader program to check if is active.
+    /// Checks if the program is the currently active one, and if not, it prints out an error, and calls use() on that program.
+    /** Only if OGLWRAP_BINDCHECK is defined true
+      * @param program - The shader program to check if is active. */
     #define CHECK_ACTIVE_PROGRAM(program)
 #endif
 
 /// Returns the buffer binding point's GLenum for the given buffer target.
-/// @param buffer_t - The buffer target.
+/** @param buffer_t - The buffer target. */
 inline BufferBinding getBindingTarget(BufferType buffer_t) {
     BufferBinding target;
 
@@ -219,7 +219,7 @@ inline BufferBinding getBindingTarget(BufferType buffer_t) {
 }
 
 /// Returns the framebuffer binding point's GLenum for the given framebuffer target.
-/// @param buffer_t - The buffer target.
+/** @param fbo_t - The framebuffer target. */
 inline FramebufferBinding getBindingTarget(FramebufferType fbo_t) {
     FramebufferBinding target;
 
@@ -251,11 +251,11 @@ inline FramebufferBinding getBindingTarget(FramebufferType fbo_t) {
 
 
 /// Returns the texture binding point's GLenum for the given texture target.
-/// @param buffer_t - The buffer target.
-inline TexBinding getBindingTarget(TexType fbo_t) {
+/** @param tex_t - The texture target.*/
+inline TexBinding getBindingTarget(TexType tex_t) {
     TexBinding target;
 
-    switch(fbo_t) {
+    switch(tex_t) {
         #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_BINDING_1D)
         case TexType::Tex1D:
             target = TexBinding::Tex1D;
