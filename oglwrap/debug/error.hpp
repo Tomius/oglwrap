@@ -10,6 +10,8 @@ namespace oglwrap {
 
 #if OGLWRAP_DEBUG
 
+static DebugOutput debug_output;
+
 #if OGLWRAP_USE_ARB_DEBUG_OUTPUT
     #define glfunc(func) func;
 #else
@@ -81,10 +83,9 @@ inline void __CheckError(const char *file, const char *func, int line, const cha
         sstream << "In function: " << cut_end_of_pretty_func(func) << std::endl;
         sstream << "In '" << file << "' at line " << line << std::endl << std::endl;
 
-        static DebugOutput dbg_output;
-        dbg_output.print_error(glfunc, sstream);
+        debug_output.print_error(glfunc, sstream);
 
-        error_callback(sstream.str());
+        debug_output.callback(sstream.str());
     }
 }
 #else

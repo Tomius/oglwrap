@@ -31,7 +31,6 @@
 
 // basic headers, required by all others below
 #include "config.hpp"
-#include "debug/callback.hpp"
 #include "debug/error.hpp"
 #include "enums.hpp"
 #include "debug/binding.hpp"
@@ -52,7 +51,4 @@
 #include "framebuffer.hpp"
 #include "transfeedback.hpp"
 
-#undef STATIC
 #undef BIND_CHECKED
-
-

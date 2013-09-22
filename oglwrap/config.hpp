@@ -4,7 +4,6 @@
 
 #pragma once
 
-#define STATIC static
 #define BIND_CHECKED
 
 #ifdef GL_LINE
@@ -28,21 +27,17 @@
     #define OGLWRAP_DEBUG 1
 #endif
 
-/// If true, warns you if call a function that requires binding through an object that isn't the currently bound one.
+/// If true, warns you if you call a function that requires binding, through an object that isn't the currently bound one.
 #if OGLWRAP_DEBUG
     #ifndef OGLWRAP_BINDCHECK
         #define OGLWRAP_BINDCHECK 1
     #endif
 #endif
 
-/// If true, uses the ARB_DebugOutput. If it's false, it will use the own debug output instead.
-/** DebugOutputs only work if OGLWRAP_DEBUG is true */
-#ifndef GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB
-    #define OGLWRAP_USE_ARB_DEBUG_OUTPUT 0
-#else
-    #ifndef OGLWRAP_USE_ARB_DEBUG_OUTPUT
-        #define OGLWRAP_USE_ARB_DEBUG_OUTPUT 0
-    #endif
+/// If set to true, disable the oglwrap debug output.
+/** Setting OGLWRAP_DEBUG flag to true will override this flag, and will turn the debug output off */
+#ifndef OGLWRAP_DISABLE_DEBUG_OUTPUT
+    #define OGLWRAP_DISABLE_DEBUG_OUTPUT 0
 #endif
 
 /// If true, uses Magick++ API to load images.

@@ -506,7 +506,7 @@ public:
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUseProgram)
     /// Installs the default OpenGL shading program to the current rendering state.
     /** @see glUseProgram */
-    STATIC void Unuse() {
+    static void Unuse() {
         gl( UseProgram(0) );
     }
     /// Installs the default OpenGL shading program to the current rendering state.

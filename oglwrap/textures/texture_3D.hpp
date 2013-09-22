@@ -37,7 +37,7 @@ public:
       * @param type - Specifies the data type of the pixel data.
       * @param data - Specifies a pointer to the image data in memory.
       * @see glTexImage3D */
-    STATIC void Upload(
+    static void Upload(
         PixelDataInternalFormat internalFormat,
         GLsizei width,
         GLsizei height,
@@ -67,7 +67,7 @@ public:
         PixelDataFormat format,
         PixelDataType type,
         const void *data
-    ) {
+    ) const {
         CHECK_BINDING();
         Upload(internalFormat, width, height, depth, format, type, data);
     }
@@ -84,7 +84,7 @@ public:
       * @param type - Specifies the data type of the pixel data.
       * @param data - Specifies a pointer to the image data in memory.
       * @see glTexImage3D */
-    STATIC void Upload_mipmap(
+    static void Upload_mipmap(
         GLint level,
         PixelDataInternalFormat internalFormat,
         GLsizei width,
@@ -117,7 +117,7 @@ public:
         PixelDataFormat format,
         PixelDataType type,
         const void *data
-    ) {
+    ) const {
         CHECK_BINDING();
         Upload_mipmap(level, internalFormat, width, height, depth, format, type, data);
     }
@@ -131,7 +131,7 @@ public:
       * @param type - Specifies the data type of the pixel data.
       * @param data - Specifies a pointer to the image data in memory.
       * @see glTexSubImage3D */
-    STATIC void SubUpload(
+    static void SubUpload(
         GLint xOffset,
         GLint yOffset,
         GLint zOffset,
@@ -178,7 +178,7 @@ public:
       * @param type - Specifies the data type of the pixel data.
       * @param data - Specifies a pointer to the image data in memory.
       * @see glTexSubImage3D */
-    STATIC void SubUpload_mipmap(
+    static void SubUpload_mipmap(
         GLint level,
         GLint xOffset,
         GLint yOffset,
@@ -213,7 +213,7 @@ public:
         PixelDataFormat format,
         PixelDataType type,
         const void *data
-    ) {
+    ) const {
         CHECK_BINDING();
         SubUpload_mipmap(level, xOffset, yOffset, zOffset, width, height, depth, format, type, data);
     }
@@ -225,7 +225,7 @@ public:
       * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
       * @param width/height - Specifies the width/height of the texture to copy.
       * @see glCopyTexSubImage3D */
-    STATIC void CopySub(
+    static void CopySub(
         GLint xOffset,
         GLint yOffset,
         GLint zOffset,
@@ -249,7 +249,7 @@ public:
         GLint y,
         GLsizei width,
         GLsizei height
-    ) {
+    ) const {
         CHECK_BINDING();
         CopySub(xOffset, yOffset, zOffset, x, y, width, height);
     }
@@ -262,7 +262,7 @@ public:
       * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
       * @param width/height - Specifies the width/height of the texture to copy.
       * @see glCopyTexSubImage3D */
-    STATIC void CopySub_mipmap(
+    static void CopySub_mipmap(
         GLint level,
         GLint xOffset,
         GLint yOffset,
@@ -289,7 +289,7 @@ public:
         GLint y,
         GLsizei width,
         GLsizei height
-    ) {
+    ) const {
         CHECK_BINDING();
         CopySub_mipmap(level, xOffset, yOffset, zOffset, x, y, width, height);
     }
@@ -302,7 +302,7 @@ public:
       * @param width - Specifies the width of the texture, in texels.
       * @param height - Specifies the height of the texture, in texels.
       * @param depth - Specifies the depth of the texture, in texels. */
-    STATIC void Storage(GLsizei levels,
+    static void Storage(GLsizei levels,
                  GLenum internalFormat,
                  GLsizei width,
                  GLsizei height,
@@ -315,11 +315,13 @@ public:
       * @param width - Specifies the width of the texture, in texels.
       * @param height - Specifies the height of the texture, in texels.
       * @param depth - Specifies the depth of the texture, in texels. */
-    BIND_CHECKED void storage(GLsizei levels,
-                 GLenum internalFormat,
-                 GLsizei width,
-                 GLsizei height,
-                 GLsizei depth) {
+    BIND_CHECKED void storage(
+        GLsizei levels,
+        GLenum internalFormat,
+        GLsizei width,
+        GLsizei height,
+        GLsizei depth
+    ) const {
         CHECK_BINDING();
         Storage(levels, internalFormat, width, height, depth);
     }
@@ -328,7 +330,7 @@ public:
     /// Returns the width of a mipmap of the currently bound texture of this class.
     /** @param level - Specifies the mipmap whose size should be queried.
       * @see glGetTexLevelParameteriv, GL_TEXTURE_WIDTH */
-    STATIC GLsizei Width(GLint level = 0) {
+    static GLsizei Width(GLint level = 0) {
         GLsizei data;
         gl( GetTexLevelParameteriv(texture_t, level, GL_TEXTURE_WIDTH, &data) );
         return data;
@@ -336,7 +338,7 @@ public:
     /// Returns the width of a mipmap of the currently bound texture of this class.
     /** @param level - Specifies the mipmap whose size should be queried.
       * @see glGetTexLevelParameteriv, GL_TEXTURE_WIDTH */
-    BIND_CHECKED GLsizei width(GLint level = 0) {
+    BIND_CHECKED GLsizei width(GLint level = 0) const {
         CHECK_BINDING();
         return Width(level);
     }
@@ -344,7 +346,7 @@ public:
     /// Returns the height of a mipmap of the currently bound texture of this class.
     /** @param level - Specifies the mipmap whose size should be queried.
       * @see glGetTexLevelParameteriv, GL_TEXTURE_HEIGHT */
-    STATIC GLsizei Height(GLint level = 0) {
+    static GLsizei Height(GLint level = 0) {
         GLsizei data;
         gl( GetTexLevelParameteriv(texture_t, level, GL_TEXTURE_HEIGHT, &data) );
         return data;
@@ -352,7 +354,7 @@ public:
     /// Returns the height of a mipmap of the currently bound texture of this class.
     /** @param level - Specifies the mipmap whose size should be queried.
       * @see glGetTexLevelParameteriv, GL_TEXTURE_HEIGHT */
-    BIND_CHECKED GLsizei height(GLint level = 0) {
+    BIND_CHECKED GLsizei height(GLint level = 0) const {
         CHECK_BINDING();
         return Height(level);
     }
@@ -360,7 +362,7 @@ public:
     /// Returns the depth of a mipmap of the currently bound texture of this class.
     /** @param level - Specifies the mipmap whose size should be queried.
       * @see glGetTexLevelParameteriv, GL_TEXTURE_DEPTH */
-    STATIC GLsizei Depth(GLint level = 0) {
+    static GLsizei Depth(GLint level = 0) {
         GLsizei data;
         gl( GetTexLevelParameteriv(texture_t, level, GL_TEXTURE_DEPTH, &data) );
         return data;
@@ -368,7 +370,7 @@ public:
     /// Returns the depth of a mipmap of the currently bound texture of this class.
     /** @param level - Specifies the mipmap whose size should be queried.
       * @see glGetTexLevelParameteriv, GL_TEXTURE_DEPTH */
-    BIND_CHECKED GLsizei depth(GLint level = 0) {
+    BIND_CHECKED GLsizei depth(GLint level = 0) const {
         CHECK_BINDING();
         return Depth(level);
     }
@@ -378,14 +380,14 @@ public:
     /** @param level - Specifies the level-of-detail number of the desired image. Level 0 is the base image level. Level n is the nth mipmap reduction image.
       * @param img - Returns the compressed texture image.
       * @see glGetCompressedTexImage */
-    STATIC void GetCompressedImage(GLint level, GLvoid* img) {
+    static void GetCompressedImage(GLint level, GLvoid* img) {
         gl( GetCompressedTexImage(TexType::Tex3D, level, img) );
     }
     /// Return a compressed texture image
     /** @param level - Specifies the level-of-detail number of the desired image. Level 0 is the base image level. Level n is the nth mipmap reduction image.
       * @param img - Returns the compressed texture image.
       * @see glGetCompressedTexImage */
-    BIND_CHECKED void getCompressedImage(GLint level, GLvoid* img) {
+    BIND_CHECKED void getCompressedImage(GLint level, GLvoid* img) const {
         CHECK_BINDING();
         GetCompressedImage(level, img);
     }

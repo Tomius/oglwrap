@@ -448,7 +448,7 @@ private:
                 boneWeights[boneAttribSet].setup(4, DataType::Float, stride, (const void*)weightOffset).enable();
             }
 
-            // Static setup the VertexArrays that aren't enabled, to all zero.
+            // static setup the VertexArrays that aren't enabled, to all zero.
             // Remember (0, 0, 0, 1) is the default, which isn't what we want.
             for(int i = current_attrib_max; i < max_bone_attrib_num; i++) {
                 boneIDs[i].static_setup(glm::ivec4(0, 0, 0, 0));

@@ -2,124 +2,28 @@
     @brief Implements ARB_Debug_Output
 */
 
-#ifndef DEBUGOUTPUT_HPP
-#define DEBUGOUTPUT_HPP
+#pragma once
+
+#include "../config.hpp"
 
 namespace oglwrap {
 
-// Logically these should go into error.hpp, but this file
-// needs this declarations, and error.hpp includes this file.
 #if OGLWRAP_DEBUG
-/// A conditional assert that only does anything if OGLWRAP_DEBUG is defined.
-#define oglwrap_Assert(x) assert(x)
+
+/// The default callback function for errors. It prints the error to stderr.
+void default_callback(std::string error_message) {
+    std::cerr << error_message << std::endl;
+}
+
 /// A global variable storing the last OpenGL error.
 /** An instance of this is defined per file. */
 static GLenum OGLWRAP_LAST_ERROR = GL_NO_ERROR;
-#else
-/// A conditional assert that only does anything if OGLWRAP_DEBUG is defined
-#define oglwrap_Assert(x)
-#endif
 
-// Actual start of this file
-#if OGLWRAP_DEBUG
-#if OGLWRAP_USE_ARB_DEBUG_OUTPUT
-/// A server side debug utility that helps letting you know what went wrong.
-/** It requires a debug context, which for example SFML can't create. But
-    if your window loader supports it, you should definitely use this
-    when you are debugging, it is really useful. */
+#if !OGLWRAP_DISABLE_DEBUG_OUTPUT
+#define OGLWRAP_GET_FILENAME() __FILE__
+
+/// A configurable debug output that warns you if an OpenGL or a binding error happens.
 class DebugOutput {
-private:
-    /// The debug callback function
-    static void DebugFunc(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
-                          const GLchar* message, GLvoid* userParam) {
-        std::string srcName;
-        switch(source) {
-            case GL_DEBUG_SOURCE_API_ARB:
-                srcName = "API";
-                break;
-            case GL_DEBUG_SOURCE_WINDOW_SYSTEM_ARB:
-                srcName = "Window System";
-                break;
-            case GL_DEBUG_SOURCE_SHADER_COMPILER_ARB:
-                srcName = "Shader Compiler";
-                break;
-            case GL_DEBUG_SOURCE_THIRD_PARTY_ARB:
-                srcName = "Third Party";
-                break;
-            case GL_DEBUG_SOURCE_APPLICATION_ARB:
-                srcName = "Application";
-                break;
-            case GL_DEBUG_SOURCE_OTHER_ARB:
-                srcName = "Other";
-                break;
-        }
-
-        std::string errorType;
-        switch(type) {
-            case GL_DEBUG_TYPE_ERROR_ARB:
-                errorType = "Error";
-                break;
-            case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB:
-                errorType = "Deprecated Functionality";
-                break;
-            case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB:
-                errorType = "Undefined Behavior";
-                break;
-            case GL_DEBUG_TYPE_PORTABILITY_ARB:
-                errorType = "Portability";
-                break;
-            case GL_DEBUG_TYPE_PERFORMANCE_ARB:
-                errorType = "Performance";
-                break;
-            case GL_DEBUG_TYPE_OTHER_ARB:
-                errorType = "Other";
-                break;
-        }
-
-        std::string typeSeverity;
-        switch(severity) {
-            case GL_DEBUG_SEVERITY_HIGH_ARB:
-                typeSeverity = "High";
-                break;
-            case GL_DEBUG_SEVERITY_MEDIUM_ARB:
-                typeSeverity = "Medium";
-                break;
-            case GL_DEBUG_SEVERITY_LOW_ARB:
-                typeSeverity = "Low";
-                break;
-        }
-
-        std::cerr << errorType << " from " << srcName <<
-                  ",\t" << typeSeverity << " priority" << std::endl;
-        std::cerr << "Message: " << message << std::endl;
-    }
-public:
-
-    /// Activates the debug output
-    /// @see glEnable, GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB, glDebugMessageCallbackARB
-    static void Activate() {
-        if(GLEW_ARB_debug_output) {
-            glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
-            glDebugMessageCallbackARB(DebugFunc, nullptr);
-        }
-    }
-
-    /// Deactivates the debug output
-    /// @see glDisable, GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB, glDebugMessageCallbackARB
-    static void Deactivate() {
-        if(GLEW_ARB_debug_output) {
-            glDisable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
-            glDebugMessageCallbackARB(nullptr, nullptr);
-        }
-    }
-};
-#else // OGLWRAP_USE_ARB_DEBUG_OUTPUT
-
-#define oglwrap_getFileName() __FILE__
-
-/// The own debug output.
-class DebugOutput {
-
     enum glError_t {
         INVALID_ENUM,
         INVALID_VALUE,
@@ -177,13 +81,21 @@ class DebugOutput {
     }
 
 public:
-    DebugOutput() {
+    /// A pointer to the callback function that will be called everytime an oglwrap error happens.
+    /** By default it prints to stderr, but you can assign any void(*)(std::string) type function to it.
+      * Note: you can find out where the error happened inside your code, by setting a
+      * breakpoint into this function, and repeatedly stepping out until you get out
+      * into your code. It's INCREDIBLY useful! */
+    void (*callback)(std::string);
+
+    /// Loads in the list of OpenGL errors.
+    DebugOutput() : callback(default_callback) {
         using namespace std;
 
         // The GLerrors.txt should be in the same folder as this file.
         // So we can use the __FILE__ macro to get the path to this file,
         // and replaces the "debugOutput.hpp" to "GLerrors.txt"
-        std::string filename(oglwrap_getFileName());
+        std::string filename(OGLWRAP_GET_FILENAME());
         auto directoryPath = filename.find("debugOutput.hpp");
         assert(directoryPath != string::npos); // Maybe it got renamed?
         filename.erase(directoryPath, string::npos);
@@ -250,6 +162,10 @@ public:
         }
     }
 
+    /// If there was an error, notifies you about it through the callback function.
+    /** The default callback function prints the error to the stdout
+      * @param functionCall - The name of the GL function that was called.
+      * @param sstream - The stream to write the error */
     void print_error(const std::string& functionCall, std::stringstream& sstream) {
         using namespace std;
 
@@ -277,20 +193,8 @@ public:
     }
 };
 
-#endif
-
-#else // !OGLWRAP_DEBUG
-
-class DebugOutput {
-public:
-    static void Activate() {}
-    static void Deactivate() {}
-    void PrintError(const std::string&) {}
-};
-
+#endif // !OGLWRAP_DISABLE_DEBUG_OUTPUT
 #endif // OGLWRAP_DEBUG
 
 } // namespace oglwrap
-
-#endif
 

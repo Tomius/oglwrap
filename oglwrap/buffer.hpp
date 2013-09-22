@@ -49,7 +49,7 @@ public:
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindBuffer)
     /// Unbinds a buffer object from its default target.
     /** @see glBindBuffer */
-    STATIC void Unbind() {
+    static void Unbind() {
         gl( BindBuffer(buffer_t, 0) );
     }
     /// Unbinds a buffer object from its default target.
@@ -67,7 +67,7 @@ public:
       * @param data - Specifies a pointer to data that will be copied into the data store for initialization, or NULL if no data is to be copied.
       * @param usage - Specifies the expected usage pattern of the data store.
       * @see glBufferData */
-    STATIC void Data(GLsizei size, const GLtype* data,
+    static void Data(GLsizei size, const GLtype* data,
               BufferUsage usage = BufferUsage::StaticDraw) {
         gl( BufferData(buffer_t, size, data, usage) );
     }
@@ -93,7 +93,7 @@ public:
     /** @param data - Specifies a vector of data to upload.
       * @param usage - Specifies the expected usage pattern of the data store.
       * @see glBufferData */
-    STATIC void Data(const std::vector<GLtype>& data,
+    static void Data(const std::vector<GLtype>& data,
               BufferUsage usage = BufferUsage::StaticDraw) {
         gl( BufferData(buffer_t, data.size() * sizeof(GLtype), data.data(), usage) );
     }
@@ -119,7 +119,7 @@ public:
       * @param size - Specifies the size in bytes of the data store region being replaced.
       * @param data - Specifies a pointer to the new data that will be copied into the data store.
       * @see glBufferSubData */
-    STATIC void SubData(GLintptr offset, GLsizei size, const GLtype* data) {
+    static void SubData(GLintptr offset, GLsizei size, const GLtype* data) {
         gl( BufferSubData(buffer_t, offset, size, data) );
     }
     template<typename GLtype>
@@ -144,7 +144,7 @@ public:
     /** @param offset - Specifies the offset into the buffer object's data store where data replacement will begin, measured in bytes.
       * @param data - Specifies a vector containing the new data that will be copied into the data store.
       * @see glBufferSubData */
-    STATIC void SubData(GLintptr offset, const std::vector<GLtype>& data) {
+    static void SubData(GLintptr offset, const std::vector<GLtype>& data) {
         gl( BufferSubData(buffer_t, offset, data.size() * sizeof(GLtype), data.data()) );
     }
     template<typename GLtype>
@@ -165,7 +165,7 @@ public:
     /// A getter for the buffer's size.
     /** @return The size of the buffer currently bound to the buffer objects default target in bytes.
       * @see glGetBufferParameteriv, GL_BUFFER_SIZE */
-    STATIC size_t Size() {
+    static size_t Size() {
         GLint data;
         gl( GetBufferParameteriv(buffer_t, GL_BUFFER_SIZE, &data) );
         return data;
@@ -306,7 +306,7 @@ public:
     /// Unbind a buffer object from an index.
     /** @param index - Specify the index of the binding point within the array.
       * @see glBindBufferBase */
-    STATIC void UnbindBase(GLuint index) {
+    static void UnbindBase(GLuint index) {
         gl( BindBufferBase(buffer_t, index, 0) );
     }
     /// Unbind a buffer object from an index.

@@ -32,7 +32,7 @@ public:
       * @param type - Specifies the data type of the pixel data.
       * @param data - Specifies a pointer to the image data in memory.
       * @see glTexImage2D */
-    STATIC void Upload(
+    static void Upload(
         CubeTarget target,
         PixelDataInternalFormat internalFormat,
         GLsizei width,
@@ -62,7 +62,7 @@ public:
         PixelDataFormat format,
         PixelDataType type,
         const void *data
-    ) {
+    ) const {
         CHECK_BINDING();
         Upload(target, internalFormat, width, height, format, type, data);
     }
@@ -77,7 +77,7 @@ public:
       * @param type - Specifies the data type of the pixel data.
       * @param data - Specifies a pointer to the image data in memory.
       * @see glTexImage2D */
-    STATIC void Upload_mipmap(
+    static void Upload_mipmap(
         CubeTarget target,
         GLint level,
         PixelDataInternalFormat internalFormat,
@@ -110,7 +110,7 @@ public:
         PixelDataFormat format,
         PixelDataType type,
         const void *data
-    ) {
+    ) const {
         CHECK_BINDING();
         Upload_mipmap(target, level, internalFormat, width, height, format, type, data);
     }
@@ -124,7 +124,7 @@ public:
       * @param type - Specifies the data type of the pixel data.
       * @param data - Specifies a pointer to the image data in memory.
       * @see glTexSubImage2D */
-    STATIC void SubUpload(
+    static void SubUpload(
         CubeTarget target,
         GLint xOffset,
         GLint yOffset,
@@ -155,7 +155,7 @@ public:
         PixelDataFormat format,
         PixelDataType type,
         const void *data
-    ) {
+    ) const {
         CHECK_BINDING();
         SubUpload(target, xOffset, yOffset, width, height, format, type, data);
     }
@@ -169,7 +169,7 @@ public:
       * @param type - Specifies the data type of the pixel data.
       * @param data - Specifies a pointer to the image data in memory.
       * @see glTexSubImage2D */
-    STATIC void SubUpload_mipmap(
+    static void SubUpload_mipmap(
         CubeTarget target,
         GLint level,
         GLint xOffset,
@@ -203,7 +203,7 @@ public:
         PixelDataFormat format,
         PixelDataType type,
         const void *data
-    ) {
+    ) const {
         CHECK_BINDING();
         SubUpload_mipmap(target, level, xOffset, yOffset, width, height, format, type, data);
     }
@@ -215,11 +215,13 @@ public:
       * @param internalFormat - Specifies the sized internal format to be used to store texture image data.
       * @param width - Specifies the width of the texture, in texels.
       * @param height - Specifies the height of the texture, in texels. */
-    STATIC void Storage(CubeTarget target,
-                 GLsizei levels,
-                 GLenum internalFormat,
-                 GLsizei width,
-                 GLsizei height) {
+    static void Storage(
+        CubeTarget target,
+        GLsizei levels,
+        GLenum internalFormat,
+        GLsizei width,
+        GLsizei height
+    ) {
         gl( TexStorage2D(target, levels, internalFormat, width, height) );
     }
     /// Simultaneously specify storage for all levels of a two-dimensional or one-dimensional array texture
@@ -228,11 +230,13 @@ public:
       * @param internalFormat - Specifies the sized internal format to be used to store texture image data.
       * @param width - Specifies the width of the texture, in texels.
       * @param height - Specifies the height of the texture, in texels. */
-    BIND_CHECKED void storage(CubeTarget target,
-                 GLsizei levels,
-                 GLenum internalFormat,
-                 GLsizei width,
-                 GLsizei height) {
+    BIND_CHECKED void storage(
+        CubeTarget target,
+        GLsizei levels,
+        GLenum internalFormat,
+        GLsizei width,
+        GLsizei height
+    ) const {
         CHECK_BINDING();
         Storage(target, levels, internalFormat, width, height);
     }
@@ -244,7 +248,7 @@ public:
       * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
       * @param width/height - Specifies the width/height of the texture to copy.
       * @see glCopyTexImage2D */
-    STATIC void Copy(
+    static void Copy(
         CubeTarget target,
         PixelDataInternalFormat internalFormat,
         GLint x,
@@ -267,7 +271,7 @@ public:
         GLint y,
         GLsizei width,
         GLsizei height
-    ) {
+    ) const {
         CHECK_BINDING();
         Copy(target, internalFormat, x, y, width, height);
     }
@@ -279,7 +283,7 @@ public:
       * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
       * @param width/height - Specifies the width/height of the texture to copy.
       * @see glCopyTexImage2D */
-    STATIC void Copy_mipmap(
+    static void Copy_mipmap(
         CubeTarget target,
         GLint level,
         PixelDataInternalFormat internalFormat,
@@ -305,7 +309,7 @@ public:
         GLint y,
         GLsizei width,
         GLsizei height
-    ) {
+    ) const {
         CHECK_BINDING();
         Copy_mipmap(target, level, internalFormat, x, y, width, height);
     }
@@ -316,7 +320,7 @@ public:
       * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
       * @param width/height - Specifies the width/height of the texture to copy.
       * @see glCopyTexSubImage2D */
-    STATIC void CopySub(
+    static void CopySub(
         CubeTarget target,
         GLint xOffset,
         GLint yOffset,
@@ -341,7 +345,7 @@ public:
         GLint y,
         GLsizei width,
         GLsizei height
-    ) {
+    ) const {
         CHECK_BINDING();
         CopySub(target, xOffset, yOffset, x, y, width, height);
     }
@@ -353,7 +357,7 @@ public:
       * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
       * @param width/height - Specifies the width/height of the texture to copy.
       * @see glCopyTexSubImage2D */
-    STATIC void CopySub_mipmap(
+    static void CopySub_mipmap(
         CubeTarget target,
         GLint level,
         GLint xOffset,
@@ -381,7 +385,7 @@ public:
         GLint y,
         GLsizei width,
         GLsizei height
-    ) {
+    ) const {
         CHECK_BINDING();
         CopySub_mipmap(target, level, xOffset, yOffset, x, y, width, height);
     }
@@ -390,7 +394,7 @@ public:
     /** @param target - Specifies which one of the six sides of the cube to use as target.
       * @param level - Specifies the mipmap whose size should be queried.
       * @see glGetTexLevelParameteriv, GL_TEXTURE_WIDTH */
-    STATIC GLsizei Width(CubeTarget target, GLint level = 0) {
+    static GLsizei Width(CubeTarget target, GLint level = 0) {
         GLsizei data;
         gl( GetTexLevelParameteriv(target, level, GL_TEXTURE_WIDTH, &data) );
         return data;
@@ -399,7 +403,7 @@ public:
     /** @param target - Specifies which one of the six sides of the cube to use as target.
       * @param level - Specifies the mipmap whose size should be queried.
       * @see glGetTexLevelParameteriv, GL_TEXTURE_WIDTH */
-    BIND_CHECKED GLsizei width(CubeTarget target, GLint level = 0) {
+    BIND_CHECKED GLsizei width(CubeTarget target, GLint level = 0) const {
         CHECK_BINDING();
         return Width(target, level);
     }
@@ -408,7 +412,7 @@ public:
     /** @param target - Specifies which one of the six sides of the cube to use as target.
       * @param level - Specifies the mipmap whose size should be queried.
       * @see glGetTexLevelParameteriv, GL_TEXTURE_HEIGHT */
-    STATIC GLsizei Height(CubeTarget target, GLint level = 0) {
+    static GLsizei Height(CubeTarget target, GLint level = 0) {
         GLsizei data;
         gl( GetTexLevelParameteriv(target, level, GL_TEXTURE_HEIGHT, &data) );
         return data;
@@ -417,7 +421,7 @@ public:
     /** @param target - Specifies which one of the six sides of the cube to use as target.
       * @param level - Specifies the mipmap whose size should be queried.
       * @see glGetTexLevelParameteriv, GL_TEXTURE_HEIGHT */
-    BIND_CHECKED GLsizei height(CubeTarget target, GLint level = 0) {
+    BIND_CHECKED GLsizei height(CubeTarget target, GLint level = 0) const {
         CHECK_BINDING();
         return Height(target, level);
     }
@@ -449,7 +453,7 @@ public:
       * @param level - Specifies the level-of-detail number of the desired image. Level 0 is the base image level. Level n is the nth mipmap reduction image.
       * @param img - Returns the compressed texture image.
       * @see glGetCompressedTexImage */
-    STATIC void GetCompressedImage(CubeTarget target, GLint level, GLvoid* img) {
+    static void GetCompressedImage(CubeTarget target, GLint level, GLvoid* img) {
         gl( GetCompressedTexImage(target, level, img) );
     }
     /// Return the compressed texture image of one side
@@ -457,7 +461,7 @@ public:
       * @param level - Specifies the level-of-detail number of the desired image. Level 0 is the base image level. Level n is the nth mipmap reduction image.
       * @param img - Returns the compressed texture image.
       * @see glGetCompressedTexImage */
-    BIND_CHECKED void getCompressedImage(CubeTarget target, GLint level, GLvoid* img) {
+    BIND_CHECKED void getCompressedImage(CubeTarget target, GLint level, GLvoid* img) const {
         CHECK_BINDING();
         GetCompressedImage(target, level, img);
     }
@@ -469,7 +473,7 @@ public:
       * @param file - Path to the image file.
       * @param formatString - Specifies the number and order of components to be read.
       * @see glTexImage2D */
-    STATIC void LoadTexture(
+    static void LoadTexture(
         CubeTarget target,
         const std::string& file,
         const std::string& formatString = "RGBA"
@@ -501,7 +505,7 @@ public:
         CubeTarget target,
         const std::string& file,
         const std::string& formatString = "RGBA"
-    ) {
+    ) const {
         CHECK_BINDING();
         LoadTexture(target, file, formatString);
     }
@@ -511,7 +515,7 @@ public:
       * @param file - Path to the image file.
       * @param formatString - Specifies the number and order of components to be read.
       * @see glTexImage2D */
-    STATIC void LoadTexture(
+    static void LoadTexture(
         GLuint faceID,
         const std::string& file,
         const std::string& formatString = "RGBA"
@@ -543,7 +547,7 @@ public:
         GLuint faceID,
         const std::string& file,
         const std::string& formatString = "RGBA"
-    ) {
+    ) const {
         CHECK_BINDING();
         LoadTexture(faceID, file, formatString);
     }

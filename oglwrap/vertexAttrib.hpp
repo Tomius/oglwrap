@@ -38,7 +38,7 @@ public:
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindVertexArray)
     /// Unbinds the currently active VAO.
     /** @see glBindVertexArray */
-    STATIC void Unbind() {
+    static void Unbind() {
         gl( BindVertexArray(0) );
     }
     #endif
@@ -95,7 +95,7 @@ private:
 
 public:
     template <class GLtype>
-    /// Static setup of the Vertex Array (all of the values will be the same).
+    /// static setup of the Vertex Array (all of the values will be the same).
     /** Ints and doubles won't be converted to floats.
       * If you need a GLfixed value, use glVertexAttrib directly
       * @param value - The default value to be used for this attribute.
@@ -109,7 +109,7 @@ public:
     }
 
     template <class GLtype>
-    /// Static setup of the Vertex Array (all of the values will be the same).
+    /// static setup of the Vertex Array (all of the values will be the same).
     /** Ints and doubles won't be converted to floats.
       * If you need a GLfixed value, use glVertexAttrib directly
       * @param value - The default value to be used for this attribute.
@@ -556,7 +556,7 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::uvec4>(GLuin
 #endif // glVertexAttribIPointer
 
 
-// -------======{[ Static setups ]}======-------
+// -------======{[ static setups ]}======-------
 
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttrib1f)

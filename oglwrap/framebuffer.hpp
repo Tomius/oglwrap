@@ -27,7 +27,7 @@ public:
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindRenderbuffer)
     /// Unbinds this renderbuffer.
     /** @see glBindRenderbuffer */
-    STATIC void Unbind() {
+    static void Unbind() {
         gl( BindRenderbuffer(GL_RENDERBUFFER, 0) );
     }
     #endif // glBindRenderbuffer
@@ -53,7 +53,7 @@ public:
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glRenderbufferStorage)
     /// Establish data storage, format and dimensions of a renderbuffer object's image.
     /** @see glRenderbufferStorage */
-    STATIC void Storage(PixelDataInternalFormat internalFormat, GLsizei width, GLsizei height) {
+    static void Storage(PixelDataInternalFormat internalFormat, GLsizei width, GLsizei height) {
         gl( RenderbufferStorage(GL_RENDERBUFFER, internalFormat, width, height) );
     }
     #endif // glRenderbufferStorage
@@ -70,7 +70,7 @@ public:
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glRenderbufferStorageMultisample)
     /// Establish data storage, format, dimensions and sample count of a renderbuffer object's image.
     /** @see glRenderbufferStorageMultisample */
-    STATIC void StorageMultisample(
+    static void StorageMultisample(
         GLsizei samples, PixelDataInternalFormat internalFormat, GLsizei width, GLsizei height
     ) {
         gl( RenderbufferStorageMultisample(GL_RENDERBUFFER, samples, internalFormat, width, height) );
@@ -132,7 +132,7 @@ public:
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindFramebuffer)
     /// Unbinds the buffer from the target it is currently bound to.
     /** @see glBindFramebuffer */
-    STATIC void Unbind() {
+    static void Unbind() {
         gl( BindFramebuffer(fbo_t, 0) );
     }
     /// Unbinds the buffer from the target it is currently bound to.
@@ -146,7 +146,7 @@ public:
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glCheckFramebufferStatus)
     /// Returns the status of a bound framebuffer.
     /** @see glCheckFramebufferStatus */
-    STATIC FramebufferStatus Status() {
+    static FramebufferStatus Status() {
         GLenum status = gl( CheckFramebufferStatus(fbo_t) );
         return status;
     }
@@ -161,7 +161,7 @@ public:
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glCheckFramebufferStatus)
     /// Throws a logic error exception if the framebuffer isn't complete.
     /** @see glCheckFramebufferStatus */
-    STATIC void Validate() {
+    static void Validate() {
         std::string errStr;
         GLenum status = gl( CheckFramebufferStatus(fbo_t) );
         switch (FramebufferStatus(status)) {
@@ -225,7 +225,7 @@ public:
     /** @param attachment - Specifies the attachment point to which renderbuffer should be attached.
       * @param renderBuffer - Specifies the renderbuffer object that is to be attached.
       * @see glFramebufferRenderbuffer */
-    STATIC void AttachBuffer(FramebufferAttachment attachment, RenderBuffer renderBuffer) {
+    static void AttachBuffer(FramebufferAttachment attachment, RenderBuffer renderBuffer) {
         gl( FramebufferRenderbuffer(fbo_t, attachment, GL_RENDERBUFFER, renderBuffer.expose()) );
     }
     /// Attach a renderbuffer as a logical buffer to the currently bound framebuffer object
@@ -245,7 +245,7 @@ public:
       * @param texture - Specifies the texture object to attach to the framebuffer attachment point named by \a attachment.
       * @param level - Specifies the mipmap level of \a texture to attach.
       * @see glFramebufferTexture */
-    STATIC void AttachTexture(FramebufferAttachment attachment, const TextureBase<texture_t>& texture, GLuint level) {
+    static void AttachTexture(FramebufferAttachment attachment, const TextureBase<texture_t>& texture, GLuint level) {
         gl( FramebufferTexture(fbo_t, attachment, texture.expose(), level) );
     }
     template <TexType texture_t>
@@ -267,7 +267,7 @@ public:
       * @param texture - Specifies the texture object to attach to the framebuffer attachment point named by \a attachment.
       * @param level - Specifies the mipmap level of \a texture to attach.
       * @see glFramebufferTexture2D */
-    STATIC void AttachTexture(
+    static void AttachTexture(
         FramebufferAttachment attachment, CubeTarget target, const TextureCube& texture, GLuint level
     ) {
         gl( FramebufferTexture2D(fbo_t, attachment, target, texture.expose(), level) );

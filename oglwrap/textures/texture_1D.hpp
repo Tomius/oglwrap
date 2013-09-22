@@ -19,7 +19,7 @@ public:
       * @param type - Specifies the data type of the pixel data.
       * @param data - Specifies a pointer to the image data in memory.
       * @see glTexImage1D */
-    STATIC void Upload(
+    static void Upload(
         PixelDataInternalFormat internalFormat,
         GLsizei width,
         PixelDataFormat format,
@@ -56,7 +56,7 @@ public:
       * @param type - Specifies the data type of the pixel data.
       * @param data - Specifies a pointer to the image data in memory.
       * @see glTexImage1D */
-    STATIC void Upload_mipmap(
+    static void Upload_mipmap(
         GLint level,
         PixelDataInternalFormat internalFormat,
         GLsizei width,
@@ -95,7 +95,7 @@ public:
       * @param type - Specifies the data type of the pixel data.
       * @param data - Specifies a pointer to the image data in memory.
       * @see glTexSubImage1D */
-    STATIC void SubUpload(
+    static void SubUpload(
         GLint xOffset,
         GLsizei width,
         PixelDataFormat format,
@@ -132,7 +132,7 @@ public:
       * @param type - Specifies the data type of the pixel data.
       * @param data - Specifies a pointer to the image data in memory.
       * @see glTexSubImage1D */
-    STATIC void SubUpload_mipmap(
+    static void SubUpload_mipmap(
         GLint level,
         GLint xOffset,
         GLsizei width,
@@ -169,7 +169,7 @@ public:
     /** @param levels - Specify the number of texture levels.
       * @param internalFormat - Specifies the sized internal format to be used to store texture image data.
       * @param width - Specifies the width of the texture, in texels. */
-    STATIC void Storage(GLsizei levels,
+    static void Storage(GLsizei levels,
                  GLenum internalFormat,
                  GLsizei width) {
         gl( TexStorage1D(TexType::Tex1D, levels, internalFormat, width) );
@@ -191,7 +191,7 @@ public:
       * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
       * @param width - Specifies the number of texels to copy.
       * @see glCopyTexImage1D */
-    STATIC void Copy(
+    static void Copy(
         PixelDataInternalFormat internalFormat,
         GLint x,
         GLint y,
@@ -221,7 +221,7 @@ public:
       * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
       * @param width - Specifies the number of texels to copy.
       * @see glCopyTexImage1D */
-    STATIC void Copy_mipmap(
+    static void Copy_mipmap(
         GLint level,
         PixelDataInternalFormat internalFormat,
         GLint x,
@@ -254,7 +254,7 @@ public:
       * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
       * @param width - Specifies the number of texels to copy.
       * @see glCopyTexSubImage1D */
-    STATIC void CopySub(
+    static void CopySub(
         GLint xOffset,
         GLint x,
         GLint y,
@@ -285,7 +285,7 @@ public:
       * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
       * @param width - Specifies the number of texels to copy.
       * @see glCopyTexSubImage1D */
-    STATIC void CopySub_mipmap(
+    static void CopySub_mipmap(
         GLint level,
         GLint xOffset,
         GLint x,
@@ -316,7 +316,7 @@ public:
     /// Returns the width of a mipmap of the currently bound texture of this class.
     /** @param level - Specifies the mipmap whose size should be queried.
       * @see glGetTexLevelParameteriv, GL_TEXTURE_WIDTH */
-    STATIC GLsizei Width(GLint level = 0) {
+    static GLsizei Width(GLint level = 0) {
         GLsizei w;
         gl( GetTexLevelParameteriv(TexType::Tex1D, level, GL_TEXTURE_WIDTH, &w) );
         return w;
@@ -334,7 +334,7 @@ public:
     /** @param level - Specifies the level-of-detail number of the desired image. Level 0 is the base image level. Level n is the nth mipmap reduction image.
       * @param img - Returns the compressed texture image.
       * @see glGetCompressedTexImage */
-    STATIC void GetCompressedImage(GLint level, GLvoid* img) {
+    static void GetCompressedImage(GLint level, GLvoid* img) {
         gl( GetCompressedTexImage(TexType::Tex1D, level, img) );
     }
     /// Return a compressed texture image
