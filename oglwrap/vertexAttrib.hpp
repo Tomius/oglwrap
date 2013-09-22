@@ -26,10 +26,19 @@ public:
     }
     #endif
 
+    /// Returns if this is the currently VAO
+    /** @see glGetIntegerv */
+    bool isBound() const {
+        GLint currentlyBoundVAO;
+        gl( GetIntegerv(GL_VERTEX_ARRAY_BINDING, &currentlyBoundVAO) );
+        OGLWRAP_LAST_BIND_TARGET = "GL_VERTEX_ARRAY_BINDING";
+        return vao == GLuint(currentlyBoundVAO);
+    }
+
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindVertexArray)
     /// Unbinds the currently active VAO.
     /** @see glBindVertexArray */
-    static void Unbind() {
+    STATIC void Unbind() {
         gl( BindVertexArray(0) );
     }
     #endif
@@ -37,7 +46,8 @@ public:
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindVertexArray)
     /// Unbinds the currently active VAO.
     /** @see glBindVertexArray */
-    void unbind() const {
+    BIND_CHECKED void unbind() const {
+        CHECK_BINDING2();
         Unbind();
     }
     #endif

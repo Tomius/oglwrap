@@ -4,9 +4,6 @@
 
 #pragma once
 
-#define CHECK_BINDING_TEXTURE3D() \
-    CHECK_BINDING_EXPLICIT(Texture3D_Base<texture_t>::isBound, Texture3D_Base<texture_t>::bind);
-
 namespace oglwrap {
 
 // -------======{[ 3D Textures' declaration ]}======-------
@@ -16,6 +13,10 @@ template<Tex3DType texture_t>
 /** You should rather use the typedefed versions than this template. */
 class Texture3D_Base : public TextureBase<TexType(texture_t)> {
 public:
+
+    using TextureBase<TexType(texture_t)>::isBound;
+    using TextureBase<TexType(texture_t)>::bind;
+
     /// Generates an empty texture.
     /** @see glGenTextures */
     Texture3D_Base() {}
@@ -45,7 +46,7 @@ public:
         PixelDataType type,
         const void *data
     ) {
-        CHECK_BINDING_TEXTURE3D();
+        CHECK_BINDING();
 
         gl( TexImage3D(
             texture_t, 0, internalFormat, width, height, depth, 0, format, type, data
@@ -74,7 +75,7 @@ public:
         PixelDataType type,
         const void *data
     ) {
-        CHECK_BINDING_TEXTURE3D();
+        CHECK_BINDING();
 
         gl( TexImage3D(
             texture_t, level, internalFormat, width, height, depth, 0, format, type, data
@@ -101,7 +102,7 @@ public:
         PixelDataType type,
         const void *data
     ) {
-        CHECK_BINDING_TEXTURE3D();
+        CHECK_BINDING();
 
         gl( TexSubImage3D(
             texture_t, 0, xOffset, yOffset, zOffset, width, height, depth, format, type, data
@@ -130,7 +131,7 @@ public:
         PixelDataType type,
         const void *data
     ) {
-        CHECK_BINDING_TEXTURE3D();
+        CHECK_BINDING();
 
         gl( TexSubImage3D(
             texture_t, level, xOffset, yOffset, zOffset, width, height, depth, format, type, data
@@ -153,7 +154,7 @@ public:
         GLsizei width,
         GLsizei height
     ) {
-        CHECK_BINDING_TEXTURE3D();
+        CHECK_BINDING();
 
         gl( CopyTexSubImage3D(texture_t, 0, xOffset, yOffset, zOffset, x, y, width, height) );
     }
@@ -176,7 +177,7 @@ public:
         GLsizei width,
         GLsizei height
     ) {
-        CHECK_BINDING_TEXTURE3D();
+        CHECK_BINDING();
 
         gl( CopyTexSubImage3D(texture_t, level, xOffset, yOffset, zOffset, x, y, width, height) );
     }
@@ -194,7 +195,7 @@ public:
                  GLsizei width,
                  GLsizei height,
                  GLsizei depth) {
-        CHECK_BINDING_TEXTURE3D();
+        CHECK_BINDING();
 
         gl( TexStorage3D(texture_t, levels, internalFormat, width, height, depth) );
     }
@@ -204,7 +205,7 @@ public:
     /** @param level - Specifies the mipmap whose size should be queried.
       * @see glGetTexLevelParameteriv, GL_TEXTURE_WIDTH */
     GLsizei width(GLint level = 0) {
-        CHECK_BINDING_TEXTURE3D();
+        CHECK_BINDING();
 
         GLsizei data;
         gl( GetTexLevelParameteriv(texture_t, level, GL_TEXTURE_WIDTH, &data) );
@@ -215,7 +216,7 @@ public:
     /** @param level - Specifies the mipmap whose size should be queried.
       * @see glGetTexLevelParameteriv, GL_TEXTURE_HEIGHT */
     GLsizei height(GLint level = 0) {
-        CHECK_BINDING_TEXTURE3D();
+        CHECK_BINDING();
 
         GLsizei data;
         gl( GetTexLevelParameteriv(texture_t, level, GL_TEXTURE_HEIGHT, &data) );
@@ -226,7 +227,7 @@ public:
     /** @param level - Specifies the mipmap whose size should be queried.
       * @see glGetTexLevelParameteriv, GL_TEXTURE_DEPTH */
     GLsizei depth(GLint level = 0) {
-        CHECK_BINDING_TEXTURE3D();
+        CHECK_BINDING();
 
         GLsizei data;
         gl( GetTexLevelParameteriv(texture_t, level, GL_TEXTURE_DEPTH, &data) );
@@ -239,7 +240,7 @@ public:
       * @param img - Returns the compressed texture image.
       * @see glGetCompressedTexImage */
     void getCompressedImage(GLint level, GLvoid* img) {
-        CHECK_BINDING_TEXTURE3D();
+        CHECK_BINDING();
         gl( GetCompressedTexImage(TexType::Tex3D, level, img) );
     }
     #endif

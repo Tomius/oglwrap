@@ -164,24 +164,6 @@ enum BufferType {
 }
 typedef _BufferType::BufferType BufferType;
 
-namespace _IndexedBufferType {
-enum IndexedBufferType {
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_ATOMIC_COUNTER_BUFFER)
-    AtomicCounter = GL_ATOMIC_COUNTER_BUFFER,
-#endif
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_SHADER_STORAGE_BUFFER)
-    ShaderStorage = GL_SHADER_STORAGE_BUFFER,
-#endif
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TRANSFORM_FEEDBACK_BUFFER)
-    TransformFeedback = GL_TRANSFORM_FEEDBACK_BUFFER,
-#endif
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNIFORM_BUFFER)
-    Uniform = GL_UNIFORM_BUFFER
-#endif
-};
-}
-typedef _IndexedBufferType::IndexedBufferType IndexedBufferType;
-
 namespace _BufferBinding {
 enum BufferBinding {
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_ARRAY_BUFFER_BINDING)
@@ -229,6 +211,41 @@ enum BufferBinding {
 }
 typedef _BufferBinding::BufferBinding BufferBinding;
 
+namespace _IndexedBufferType {
+enum IndexedBufferType {
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_ATOMIC_COUNTER_BUFFER)
+    AtomicCounter = GL_ATOMIC_COUNTER_BUFFER,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_SHADER_STORAGE_BUFFER)
+    ShaderStorage = GL_SHADER_STORAGE_BUFFER,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TRANSFORM_FEEDBACK_BUFFER)
+    TransformFeedback = GL_TRANSFORM_FEEDBACK_BUFFER,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNIFORM_BUFFER)
+    Uniform = GL_UNIFORM_BUFFER
+#endif
+};
+}
+typedef _IndexedBufferType::IndexedBufferType IndexedBufferType;
+
+namespace _IndexedBufferBinding {
+enum IndexedBufferBinding {
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_ATOMIC_COUNTER_BUFFER_BINDING)
+    AtomicCounter = GL_ATOMIC_COUNTER_BUFFER_BINDING,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_SHADER_STORAGE_BUFFER_BINDING)
+    ShaderStorage = GL_SHADER_STORAGE_BUFFER_BINDING,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TRANSFORM_FEEDBACK_BUFFER_BINDING)
+    TransformFeedback = GL_TRANSFORM_FEEDBACK_BUFFER_BINDING,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNIFORM_BUFFER_BINDING)
+    Uniform = GL_UNIFORM_BUFFER_BINDING,
+#endif
+};
+}
+typedef _IndexedBufferBinding::IndexedBufferBinding IndexedBufferBinding;
 
 namespace _BufferUsage {
 enum BufferUsage {

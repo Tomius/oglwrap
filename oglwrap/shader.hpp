@@ -502,18 +502,17 @@ public:
     }
     #endif
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUseProgram)
-    /// Installs the default OpenGL shading program to the current rendering state.
-    /** @see glUseProgram */
-    static void Unuse() {
-        gl( UseProgram(0) );
-    }
-    #endif
 
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUseProgram)
     /// Installs the default OpenGL shading program to the current rendering state.
     /** @see glUseProgram */
-    void unuse() const {
+    STATIC void Unuse() {
+        gl( UseProgram(0) );
+    }
+    /// Installs the default OpenGL shading program to the current rendering state.
+    /** @see glUseProgram */
+    BIND_CHECKED void unuse() const {
+        CHECK_BINDING2_EXPLICIT(isActive());
         Unuse();
     }
     #endif
@@ -523,6 +522,7 @@ public:
     bool isActive() const {
         GLint currentProgram;
         gl( GetIntegerv(GL_CURRENT_PROGRAM, &currentProgram) );
+        OGLWRAP_LAST_BIND_TARGET = "GL_CURRENT_PROGRAM";
         return program == GLuint(currentProgram);
     }
 

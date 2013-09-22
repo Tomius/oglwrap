@@ -17,12 +17,26 @@ static std::string OGLWRAP_LAST_BIND_TARGET;
             bind(); \
         }
 
+    /// Calls the isBound() member function, and prints an error if it returns false.
+    /** Only if OGLWRAP_BINDCHECK is defined true */
+    #define CHECK_BINDING2() \
+        if(!isBound()) { \
+            __print_another_object_is_bound_error(__FILE__, __PRETTY_FUNCTION__, __LINE__); \
+        }
+
     /// Calls the isBoundFunc function, and prints an error and calls bindFunc if it returns false.
     /** Only if OGLWRAP_BINDCHECK is defined true */
     #define CHECK_BINDING_EXPLICIT(isBoundFunc, bindFunc) \
-        if(!isBoundFunc()) { \
+        if(!isBoundFunc) { \
             __print_another_object_is_bound_error(__FILE__, __PRETTY_FUNCTION__, __LINE__); \
-            bindFunc(); \
+            bindFunc; \
+        }
+
+    /// Calls the isBoundFunc function, and prints an error if it returns false.
+    /** Only if OGLWRAP_BINDCHECK is defined true */
+    #define CHECK_BINDING2_EXPLICIT(isBoundFunc) \
+        if(!isBoundFunc) { \
+            __print_another_object_is_bound_error(__FILE__, __PRETTY_FUNCTION__, __LINE__); \
         }
 
     /// Checks if the object name '0' is bound to the given target, and prints error if it is.
@@ -208,6 +222,43 @@ inline BufferBinding getBindingTarget(BufferType buffer_t) {
         #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNIFORM_BUFFER_BINDING)
         case BufferType::Uniform:
             target = BufferBinding::Uniform;
+            OGLWRAP_LAST_BIND_TARGET = "GL_UNIFORM_BUFFER_BINDING";
+            break;
+        #endif
+        default:
+            abort();
+    }
+
+    return target;
+}
+
+/// Returns the indexed buffer binding point's GLenum for the given buffer target.
+/** @param buffer_t - The buffer target. */
+inline IndexedBufferBinding getBindingTarget(IndexedBufferType buffer_t) {
+    IndexedBufferBinding target;
+
+    switch(buffer_t) {
+        #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_ATOMIC_COUNTER_BUFFER_BINDING)
+        case IndexedBufferType::AtomicCounter:
+            target = IndexedBufferBinding::AtomicCounter;
+            OGLWRAP_LAST_BIND_TARGET = "GL_ATOMIC_COUNTER_BUFFER_BINDING";
+            break;
+        #endif
+        #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_SHADER_STORAGE_BUFFER_BINDING)
+        case IndexedBufferType::ShaderStorage:
+            target = IndexedBufferBinding::ShaderStorage;
+            OGLWRAP_LAST_BIND_TARGET = "GL_SHADER_STORAGE_BUFFER_BINDING";
+            break;
+        #endif
+        #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TRANSFORM_FEEDBACK_BUFFER_BINDING)
+        case IndexedBufferType::TransformFeedback:
+            target = IndexedBufferBinding::TransformFeedback;
+            OGLWRAP_LAST_BIND_TARGET = "GL_TRANSFORM_FEEDBACK_BUFFER_BINDING";
+            break;
+        #endif
+        #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNIFORM_BUFFER_BINDING)
+        case IndexedBufferType::Uniform:
+            target = IndexedBufferBinding::Uniform;
             OGLWRAP_LAST_BIND_TARGET = "GL_UNIFORM_BUFFER_BINDING";
             break;
         #endif
