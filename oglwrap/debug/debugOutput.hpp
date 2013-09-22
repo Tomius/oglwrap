@@ -11,7 +11,7 @@ namespace oglwrap {
 #if OGLWRAP_DEBUG
 
 /// The default callback function for errors. It prints the error to stderr.
-void default_callback(std::string error_message) {
+inline void default_callback(std::string error_message) {
     std::cerr << error_message << std::endl;
 }
 

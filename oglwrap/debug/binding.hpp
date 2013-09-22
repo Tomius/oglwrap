@@ -71,7 +71,7 @@ static std::string OGLWRAP_LAST_BIND_TARGET;
             sstream << '-';
         sstream << std::endl;
 
-        error_callback(sstream.str());
+        debug_output.callback(sstream.str());
     }
 
     /// A function used by CHECK_FOR_DEFAULT_BINDING_EXPLICIT() macro
@@ -86,7 +86,7 @@ static std::string OGLWRAP_LAST_BIND_TARGET;
             sstream << '-';
         sstream << std::endl;
 
-        error_callback(sstream.str());
+        debug_output.callback(sstream.str());
     }
 
     /// Checks if the program is the currently active one, and if not, it returns prints out an error, and calls use on that program.
@@ -110,7 +110,7 @@ static std::string OGLWRAP_LAST_BIND_TARGET;
             sstream << '-';
         sstream << std::endl;
 
-        error_callback(sstream.str());
+        debug_output.callback(sstream.str());
     }
 #else
     /// Calls the isBound() member function, and prints an error, and binds it, if it returns false.
