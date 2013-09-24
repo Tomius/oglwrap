@@ -221,6 +221,9 @@ class AnimatedMesh : public Mesh {
     /// Speed modifier
     float current_speed;
 
+    /// Last speed modifier
+    float last_speed;
+
     /// Default speed modifiers
     std::vector<float> speed_modifiers;
 
@@ -242,7 +245,9 @@ public:
         , last_period_time(0)
         , last_loop_count(0)
         , last_flags(0)
-        , current_flags(0) {
+        , current_flags(0)
+        , current_speed(1.0f)
+        , last_speed(1.0f) {
 
         glm::mat4 matrix = convertMatrix(scene->mRootNode->mTransformation);
         global_inverse_transform = glm::inverse(matrix);
@@ -757,6 +762,8 @@ private:
                 factor = transition_time > 1e-10 ? (nextAnimationTime / transition_time) : 0.0f;
             }
 
+            factor = fmod(factor, 1.0f);
+
             // Interpolate the transformations and get the matrices
             aiVector3D prevScaling, nextScaling;
             calcInterpolatedScaling(prevScaling, prevAnimationTime, prevNodeAnim);
@@ -837,7 +844,7 @@ private:
         float last_ticks_per_second = last_anim->mAnimations[0]->mTicksPerSecond > 1e-10 ? // != 0
                                       last_anim->mAnimations[0]->mTicksPerSecond : 24.0f;
 
-        float last_time_in_ticks = last_period_time * last_ticks_per_second;
+        float last_time_in_ticks = last_period_time * (last_speed * last_ticks_per_second);
         float last_animation_time;
         if(last_flags & AnimFlag::Repeat) {
             last_animation_time = fmod(last_time_in_ticks, (float)last_anim->mAnimations[0]->mDuration);
@@ -854,7 +861,7 @@ private:
                                          current_anim->mAnimations[0]->mTicksPerSecond : 24.0f;
 
         float current_time_in_ticks =
-            (time_in_seconds - end_of_last_anim) * current_speed * current_ticks_per_second;
+            (time_in_seconds - end_of_last_anim) * (current_speed * current_ticks_per_second);
         float current_animation_time;
         if(current_flags & AnimFlag::Repeat) {
             current_animation_time = fmod(current_time_in_ticks, (float)current_anim->mAnimations[0]->mDuration);
@@ -1040,6 +1047,7 @@ private:
             current_flags = flags ^ AnimFlag::Backwards;
         }
 
+        last_speed = current_speed;
         current_speed = speed;
     }
 

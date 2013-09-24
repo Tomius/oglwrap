@@ -43,7 +43,7 @@ template <typename T>
 /// Prints a glm matrix to a given ostream.
 /** @param os - The ostream.
   * @param mat - The matrix. */
-static std::ostream& operator<<(std::ostream& os, const glm::detail::tmat2x2<T>& mat) {
+static inline std::ostream& operator<<(std::ostream& os, const glm::detail::tmat2x2<T>& mat) {
     for(int i = 0; i < 2; i++) {
         for(int j = 0; j < 2; j++) {
             std::cout << mat[j][i];
@@ -59,7 +59,7 @@ template <typename T>
 /// Prints a glm matrix to a given ostream.
 /** @param os - The ostream.
   * @param mat - The matrix. */
-static std::ostream& operator<<(std::ostream& os, const glm::detail::tmat3x3<T>& mat) {
+static inline std::ostream& operator<<(std::ostream& os, const glm::detail::tmat3x3<T>& mat) {
     for(int i = 0; i < 3; i++) {
         for(int j = 0; j < 3; j++) {
             std::cout << mat[j][i];
@@ -75,7 +75,7 @@ template <typename T>
 /// Prints a glm matrix to a given ostream.
 /** @param os - The ostream.
   * @param mat - The matrix. */
-static std::ostream& operator<<(std::ostream& os, const glm::detail::tmat4x4<T>& mat) {
+static inline std::ostream& operator<<(std::ostream& os, const glm::detail::tmat4x4<T>& mat) {
     for(int i = 0; i < 4; i++) {
         for(int j = 0; j < 4; j++) {
             std::cout << mat[j][i];
@@ -87,4 +87,13 @@ static std::ostream& operator<<(std::ostream& os, const glm::detail::tmat4x4<T>&
     return os;
 }
 
+template <typename T>
+inline T clamp(const T& val, const T& min, const T& max) {
+    if(val < min)
+        return min;
+    else if(val > max)
+        return max;
+    else
+        return val;
+}
 

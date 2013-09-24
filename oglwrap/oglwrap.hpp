@@ -13,6 +13,7 @@
         - separable shader stages.
         - some 4.0+ features are still missing.
     - Animation:
+        - an entire rewrite...
         - animation stack.
 */
 
