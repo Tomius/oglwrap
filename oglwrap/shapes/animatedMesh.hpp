@@ -6,9 +6,6 @@
 
 #include "mesh.hpp"
 
-#define MOVE_SPEED_HACK 1.0f // for debugging only!
-#define ANIM_SPEED_HACK 1.0f // for debugging only!
-
 namespace oglwrap {
 
 // Conversion between oglplus and glm matrices
@@ -715,7 +712,7 @@ private:
       glm::mat4 translationM;
 
       if(nodeName == root_bone) {
-        current_offset = glm::vec3(translation.x, 0, translation.z) * MOVE_SPEED_HACK;
+        current_offset = glm::vec3(translation.x, 0, translation.z);
 
         if(current_flags & AnimFlag::Mirrored) {
           current_offset *= -1;
@@ -811,7 +808,7 @@ private:
         }
         current_offset =
           (glm::vec3(nextTranslation.x, 0, nextTranslation.z) +
-           transitionOffset - last_transition_offset) * MOVE_SPEED_HACK;
+           transitionOffset - last_transition_offset);
 
         if(current_flags & AnimFlag::Mirrored) {
           current_offset *= -1;
@@ -845,8 +842,6 @@ private:
   /// Does what it's name says, updates the bones transformations.
   /** @param time_in_seconds - Expected to be a time value in seconds. It doesn't matter, since when does it count the time, just it should be counting up. */
   void updateBoneInfo(float time_in_seconds) {
-
-    time_in_seconds *= ANIM_SPEED_HACK; // for debugging
 
     if(!current_anim || current_anim->mAnimations == 0 ||
         !last_anim || last_anim->mAnimations == 0) {
