@@ -16,238 +16,238 @@ template<BufferType buffer_t>
   * @see glGenBuffers, glDeleteBuffers */
 class BufferObject {
 protected:
-    /// The handle for the buffer.
-    ObjectExt<glGenBuffers, glDeleteBuffers> buffer;
+  /// The handle for the buffer.
+  ObjectExt<glGenBuffers, glDeleteBuffers> buffer;
 public:
-    /// Default constructor.
-    BufferObject() {}
+  /// Default constructor.
+  BufferObject() {}
 
-    template<BufferType another_buffer_t>
-    /// Creates a copy of the buffer, or casts it to another type.
-    /** Important: if you use this to change the type of the active buffer,
-      * don't forget to unbind the old one, and bind the new one */
-    BufferObject(const BufferObject<another_buffer_t> src)
-        : buffer(src.Expose())
-    { }
+  template<BufferType another_buffer_t>
+  /// Creates a copy of the buffer, or casts it to another type.
+  /** Important: if you use this to change the type of the active buffer,
+    * don't forget to unbind the old one, and bind the new one */
+  BufferObject(const BufferObject<another_buffer_t> src)
+    : buffer(src.Expose())
+  { }
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindBuffer)
-    /// Binds a buffer object to its default target.
-    /** @see glBindBuffer */
-    void bind() const {
-        gl( BindBuffer(buffer_t, buffer) );
-    }
-    #endif // glBindBuffer
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindBuffer)
+  /// Binds a buffer object to its default target.
+  /** @see glBindBuffer */
+  void bind() const {
+    gl(BindBuffer(buffer_t, buffer));
+  }
+#endif // glBindBuffer
 
-    /// Returns if this is the currently bound buffer for its target.
-    /** @see glGetIntegerv */
-    bool isBound() const {
-        GLint currentlyBoundBuffer;
-        gl( GetIntegerv(getBindingTarget(buffer_t), &currentlyBoundBuffer) );
-        return buffer == GLuint(currentlyBoundBuffer);
-    }
+  /// Returns if this is the currently bound buffer for its target.
+  /** @see glGetIntegerv */
+  bool isBound() const {
+    GLint currentlyBoundBuffer;
+    gl(GetIntegerv(getBindingTarget(buffer_t), &currentlyBoundBuffer));
+    return buffer == GLuint(currentlyBoundBuffer);
+  }
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindBuffer)
-    /// Unbinds a buffer object from its default target.
-    /** @see glBindBuffer */
-    static void Unbind() {
-        gl( BindBuffer(buffer_t, 0) );
-    }
-    /// Unbinds a buffer object from its default target.
-    /** @see glBindBuffer */
-    BIND_CHECKED void unbind() const {
-        CHECK_BINDING2();
-        Unbind();
-    }
-    #endif // glBindBuffer
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindBuffer)
+  /// Unbinds a buffer object from its default target.
+  /** @see glBindBuffer */
+  static void Unbind() {
+    gl(BindBuffer(buffer_t, 0));
+  }
+  /// Unbinds a buffer object from its default target.
+  /** @see glBindBuffer */
+  BIND_CHECKED void unbind() const {
+    CHECK_BINDING2();
+    Unbind();
+  }
+#endif // glBindBuffer
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBufferData)
-    template<typename GLtype>
-    /// Creates and initializes a buffer object's data store.
-    /** @param size - Specifies the size in bytes of the buffer object's new data store.
-      * @param data - Specifies a pointer to data that will be copied into the data store for initialization, or NULL if no data is to be copied.
-      * @param usage - Specifies the expected usage pattern of the data store.
-      * @see glBufferData */
-    static void Data(GLsizei size, const GLtype* data,
-              BufferUsage usage = BufferUsage::StaticDraw) {
-        gl( BufferData(buffer_t, size, data, usage) );
-    }
-    template<typename GLtype>
-    /// Creates and initializes a buffer object's data store.
-    /** @param size - Specifies the size in bytes of the buffer object's new data store.
-      * @param data - Specifies a pointer to data that will be copied into the data store for initialization, or NULL if no data is to be copied.
-      * @param usage - Specifies the expected usage pattern of the data store.
-      * @see glBufferData */
-    BIND_CHECKED void data(GLsizei size, const GLtype* data,
-              BufferUsage usage = BufferUsage::StaticDraw) const {
-        CHECK_BINDING();
-        if(buffer_t == BufferType::Array) {
-            CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
-        }
-
-        Data(size, data, usage);
-    }
-    #endif // glBufferData
-
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBufferData)
-    template<typename GLtype>
-    /// Creates and initializes a buffer object's data store.
-    /** @param data - Specifies a vector of data to upload.
-      * @param usage - Specifies the expected usage pattern of the data store.
-      * @see glBufferData */
-    static void Data(const std::vector<GLtype>& data,
-              BufferUsage usage = BufferUsage::StaticDraw) {
-        gl( BufferData(buffer_t, data.size() * sizeof(GLtype), data.data(), usage) );
-    }
-    template<typename GLtype>
-    /// Creates and initializes a buffer object's data store.
-    /** @param data - Specifies a vector of data to upload.
-      * @param usage - Specifies the expected usage pattern of the data store.
-      * @see glBufferData */
-    BIND_CHECKED void data(const std::vector<GLtype>& data,
-                     BufferUsage usage = BufferUsage::StaticDraw) const {
-        CHECK_BINDING();
-        if(buffer_t == BufferType::Array) {
-            CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
-        }
-
-        Data(data, usage);
-    }
-    #endif // glBufferData
-
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBufferSubData)
-    template<typename GLtype>
-    /// Updates a subset of a buffer object's data store.
-    /** @param offset - Specifies the offset into the buffer object's data store where data replacement will begin, measured in bytes.
-      * @param size - Specifies the size in bytes of the data store region being replaced.
-      * @param data - Specifies a pointer to the new data that will be copied into the data store.
-      * @see glBufferSubData */
-    static void SubData(GLintptr offset, GLsizei size, const GLtype* data) {
-        gl( BufferSubData(buffer_t, offset, size, data) );
-    }
-    template<typename GLtype>
-    /// Updates a subset of a buffer object's data store.
-    /** @param offset - Specifies the offset into the buffer object's data store where data replacement will begin, measured in bytes.
-      * @param size - Specifies the size in bytes of the data store region being replaced.
-      * @param data - Specifies a pointer to the new data that will be copied into the data store.
-      * @see glBufferSubData */
-    BIND_CHECKED void subData(GLintptr offset, GLsizei size, const GLtype* data) const {
-        CHECK_BINDING();
-        if(buffer_t == BufferType::Array) {
-            CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
-        }
-
-        SubData(offset, size, data);
-    }
-    #endif // glBufferSubData
-
-
-    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBufferSubData)
-    template<typename GLtype>
-    /// Updates a subset of a buffer object's data store.
-    /** @param offset - Specifies the offset into the buffer object's data store where data replacement will begin, measured in bytes.
-      * @param data - Specifies a vector containing the new data that will be copied into the data store.
-      * @see glBufferSubData */
-    static void SubData(GLintptr offset, const std::vector<GLtype>& data) {
-        gl( BufferSubData(buffer_t, offset, data.size() * sizeof(GLtype), data.data()) );
-    }
-    template<typename GLtype>
-    /// Updates a subset of a buffer object's data store.
-    /** @param offset - Specifies the offset into the buffer object's data store where data replacement will begin, measured in bytes.
-      * @param data - Specifies a vector containing the new data that will be copied into the data store.
-      * @see glBufferSubData */
-    BIND_CHECKED void subData(GLintptr offset, const std::vector<GLtype>& data) const {
-        CHECK_BINDING();
-        if(buffer_t == BufferType::Array) {
-            CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
-        }
-
-        SubData(offset, data);
-    }
-    #endif // glBufferSubData
-
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGetBufferParameteriv) && defined(GL_BUFFER_SIZE))
-    /// A getter for the buffer's size.
-    /** @return The size of the buffer currently bound to the buffer objects default target in bytes.
-      * @see glGetBufferParameteriv, GL_BUFFER_SIZE */
-    static size_t Size() {
-        GLint data;
-        gl( GetBufferParameteriv(buffer_t, GL_BUFFER_SIZE, &data) );
-        return data;
-    }
-    /// A getter for the buffer's size.
-    /** @return The size of the buffer currently bound to the buffer objects default target in bytes.
-      * @see glGetBufferParameteriv, GL_BUFFER_SIZE */
-    BIND_CHECKED size_t size() const {
-        CHECK_BINDING();
-        return Size();
-    }
-    #endif // glGetBufferParameteriv && GL_BUFFER_SIZE
-
-    /// Returns the handle for the buffer.
-    const ObjectExt<glGenBuffers, glDeleteBuffers>& expose() const {
-        return buffer;
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBufferData)
+  template<typename GLtype>
+  /// Creates and initializes a buffer object's data store.
+  /** @param size - Specifies the size in bytes of the buffer object's new data store.
+    * @param data - Specifies a pointer to data that will be copied into the data store for initialization, or NULL if no data is to be copied.
+    * @param usage - Specifies the expected usage pattern of the data store.
+    * @see glBufferData */
+  static void Data(GLsizei size, const GLtype* data,
+                   BufferUsage usage = BufferUsage::StaticDraw) {
+    gl(BufferData(buffer_t, size, data, usage));
+  }
+  template<typename GLtype>
+  /// Creates and initializes a buffer object's data store.
+  /** @param size - Specifies the size in bytes of the buffer object's new data store.
+    * @param data - Specifies a pointer to data that will be copied into the data store for initialization, or NULL if no data is to be copied.
+    * @param usage - Specifies the expected usage pattern of the data store.
+    * @see glBufferData */
+  BIND_CHECKED void data(GLsizei size, const GLtype* data,
+                         BufferUsage usage = BufferUsage::StaticDraw) const {
+    CHECK_BINDING();
+    if(buffer_t == BufferType::Array) {
+      CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     }
 
-    #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glMapBuffer) && defined(glUnmapBuffer) && defined(glMapBufferRange))
-    template <class T>
-    /// Mapping moves the data of the buffer to the client address space.
-    class TypedMap {
-        void *m_data; ///< The pointer to the data fetched from the buffer.
-        size_t m_size; ///< The size of the data fetched from the buffer.
-    public:
-        /// Maps the whole buffer.
-        /** @param access - Specifies the access policy (R, W, R/W).
-          * @see glMapBuffer */
-        TypedMap(BufferMapAccess access = BufferMapAccess::ReadWrite) {
-            CHECK_FOR_DEFAULT_BINDING(getBindingTarget(buffer_t));
+    Data(size, data, usage);
+  }
+#endif // glBufferData
 
-            m_data = gl( MapBuffer(buffer_t, access) );
-            m_size = BufferObject<buffer_t>::Size();
-        }
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBufferData)
+  template<typename GLtype>
+  /// Creates and initializes a buffer object's data store.
+  /** @param data - Specifies a vector of data to upload.
+    * @param usage - Specifies the expected usage pattern of the data store.
+    * @see glBufferData */
+  static void Data(const std::vector<GLtype>& data,
+                   BufferUsage usage = BufferUsage::StaticDraw) {
+    gl(BufferData(buffer_t, data.size() * sizeof(GLtype), data.data(), usage));
+  }
+  template<typename GLtype>
+  /// Creates and initializes a buffer object's data store.
+  /** @param data - Specifies a vector of data to upload.
+    * @param usage - Specifies the expected usage pattern of the data store.
+    * @see glBufferData */
+  BIND_CHECKED void data(const std::vector<GLtype>& data,
+                         BufferUsage usage = BufferUsage::StaticDraw) const {
+    CHECK_BINDING();
+    if(buffer_t == BufferType::Array) {
+      CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+    }
 
-        /// Maps a range of the buffer.
-        /** @param length - Specifies a length of the range to be mapped (in bytes).
-          * @param offset - Specifies a the starting offset within the buffer of the range to be mapped (in bytes).
-          * @param access - Specifies a combination of access flags indicating the desired access to the range.
-          * @see glMapBufferRange */
-        TypedMap(GLintptr offset,
-                 GLsizeiptr length,
-                 GLbitfield access = BufferMapAccessFlags::Read_Bit | BufferMapAccessFlags::Write_Bit) {
+    Data(data, usage);
+  }
+#endif // glBufferData
 
-            CHECK_FOR_DEFAULT_BINDING(getBindingTarget(buffer_t));
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBufferSubData)
+  template<typename GLtype>
+  /// Updates a subset of a buffer object's data store.
+  /** @param offset - Specifies the offset into the buffer object's data store where data replacement will begin, measured in bytes.
+    * @param size - Specifies the size in bytes of the data store region being replaced.
+    * @param data - Specifies a pointer to the new data that will be copied into the data store.
+    * @see glBufferSubData */
+  static void SubData(GLintptr offset, GLsizei size, const GLtype* data) {
+    gl(BufferSubData(buffer_t, offset, size, data));
+  }
+  template<typename GLtype>
+  /// Updates a subset of a buffer object's data store.
+  /** @param offset - Specifies the offset into the buffer object's data store where data replacement will begin, measured in bytes.
+    * @param size - Specifies the size in bytes of the data store region being replaced.
+    * @param data - Specifies a pointer to the new data that will be copied into the data store.
+    * @see glBufferSubData */
+  BIND_CHECKED void subData(GLintptr offset, GLsizei size, const GLtype* data) const {
+    CHECK_BINDING();
+    if(buffer_t == BufferType::Array) {
+      CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+    }
 
-            m_data = gl( MapBufferRange(buffer_t, offset, length, access) );
-            m_size = BufferObject<buffer_t>::Size();
-        }
+    SubData(offset, size, data);
+  }
+#endif // glBufferSubData
 
-        /// Unmaps the buffer.
-        /** @see glUnmapBuffer */
-        ~TypedMap() {
-            CHECK_FOR_DEFAULT_BINDING(getBindingTarget(buffer_t));
 
-            gl( UnmapBuffer(buffer_t) );
-        }
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBufferSubData)
+  template<typename GLtype>
+  /// Updates a subset of a buffer object's data store.
+  /** @param offset - Specifies the offset into the buffer object's data store where data replacement will begin, measured in bytes.
+    * @param data - Specifies a vector containing the new data that will be copied into the data store.
+    * @see glBufferSubData */
+  static void SubData(GLintptr offset, const std::vector<GLtype>& data) {
+    gl(BufferSubData(buffer_t, offset, data.size() * sizeof(GLtype), data.data()));
+  }
+  template<typename GLtype>
+  /// Updates a subset of a buffer object's data store.
+  /** @param offset - Specifies the offset into the buffer object's data store where data replacement will begin, measured in bytes.
+    * @param data - Specifies a vector containing the new data that will be copied into the data store.
+    * @see glBufferSubData */
+  BIND_CHECKED void subData(GLintptr offset, const std::vector<GLtype>& data) const {
+    CHECK_BINDING();
+    if(buffer_t == BufferType::Array) {
+      CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+    }
 
-        /// Returns the size of the mapped buffer in bytes
-        size_t size() const {
-            return m_size;
-        }
+    SubData(offset, data);
+  }
+#endif // glBufferSubData
 
-        /// Returns the size of the mapped buffer in elements
-        size_t count() const {
-            return m_size / sizeof(T);
-        }
+#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGetBufferParameteriv) && defined(GL_BUFFER_SIZE))
+  /// A getter for the buffer's size.
+  /** @return The size of the buffer currently bound to the buffer objects default target in bytes.
+    * @see glGetBufferParameteriv, GL_BUFFER_SIZE */
+  static size_t Size() {
+    GLint data;
+    gl(GetBufferParameteriv(buffer_t, GL_BUFFER_SIZE, &data));
+    return data;
+  }
+  /// A getter for the buffer's size.
+  /** @return The size of the buffer currently bound to the buffer objects default target in bytes.
+    * @see glGetBufferParameteriv, GL_BUFFER_SIZE */
+  BIND_CHECKED size_t size() const {
+    CHECK_BINDING();
+    return Size();
+  }
+#endif // glGetBufferParameteriv && GL_BUFFER_SIZE
 
-        /// Returns a pointer to the data
-        T* data() const {
-            return static_cast<T*>(m_data);
-        }
+  /// Returns the handle for the buffer.
+  const ObjectExt<glGenBuffers, glDeleteBuffers>& expose() const {
+    return buffer;
+  }
 
-    }; // class Map
+#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glMapBuffer) && defined(glUnmapBuffer) && defined(glMapBufferRange))
+  template <class T>
+  /// Mapping moves the data of the buffer to the client address space.
+  class TypedMap {
+    void *m_data; ///< The pointer to the data fetched from the buffer.
+    size_t m_size; ///< The size of the data fetched from the buffer.
+  public:
+    /// Maps the whole buffer.
+    /** @param access - Specifies the access policy (R, W, R/W).
+      * @see glMapBuffer */
+    TypedMap(BufferMapAccess access = BufferMapAccess::ReadWrite) {
+      CHECK_FOR_DEFAULT_BINDING(getBindingTarget(buffer_t));
 
-    typedef TypedMap<GLbyte> Map;
+      m_data = gl(MapBuffer(buffer_t, access));
+      m_size = BufferObject<buffer_t>::Size();
+    }
 
-    #endif // glMapBuffer && glUnmapBuffer && glMapBufferRange
+    /// Maps a range of the buffer.
+    /** @param length - Specifies a length of the range to be mapped (in bytes).
+      * @param offset - Specifies a the starting offset within the buffer of the range to be mapped (in bytes).
+      * @param access - Specifies a combination of access flags indicating the desired access to the range.
+      * @see glMapBufferRange */
+    TypedMap(GLintptr offset,
+             GLsizeiptr length,
+             GLbitfield access = BufferMapAccessFlags::Read_Bit | BufferMapAccessFlags::Write_Bit) {
+
+      CHECK_FOR_DEFAULT_BINDING(getBindingTarget(buffer_t));
+
+      m_data = gl(MapBufferRange(buffer_t, offset, length, access));
+      m_size = BufferObject<buffer_t>::Size();
+    }
+
+    /// Unmaps the buffer.
+    /** @see glUnmapBuffer */
+    ~TypedMap() {
+      CHECK_FOR_DEFAULT_BINDING(getBindingTarget(buffer_t));
+
+      gl(UnmapBuffer(buffer_t));
+    }
+
+    /// Returns the size of the mapped buffer in bytes
+    size_t size() const {
+      return m_size;
+    }
+
+    /// Returns the size of the mapped buffer in elements
+    size_t count() const {
+      return m_size / sizeof(T);
+    }
+
+    /// Returns a pointer to the data
+    T* data() const {
+      return static_cast<T*>(m_data);
+    }
+
+  }; // class Map
+
+  typedef TypedMap<GLbyte> Map;
+
+#endif // glMapBuffer && glUnmapBuffer && glMapBufferRange
 };
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_ARRAY_BUFFER)
@@ -283,43 +283,43 @@ template<IndexedBufferType buffer_t>
   * IndexBufferObject is a buffer that is bound to an indexed target. */
 class IndexedBufferObject : public BufferObject<BufferType(buffer_t)> {
 public:
-    /// Bind a buffer object to an index.
-    /** @param index - Specify the index of the binding point within the array.
-      * @see glBindBufferBase */
-    void bindBase(GLuint index) const {
-        gl( BindBufferBase(buffer_t, index, BufferObject<buffer_t>::buffer) );
-    }
+  /// Bind a buffer object to an index.
+  /** @param index - Specify the index of the binding point within the array.
+    * @see glBindBufferBase */
+  void bindBase(GLuint index) const {
+    gl(BindBufferBase(buffer_t, index, BufferObject<buffer_t>::buffer));
+  }
 
-    /// Bind a range within a buffer object to an index.
-    /** @param index - Specify the index of the binding point within the array.
-      * @param offset - The starting offset in basic machine units into the buffer object.
-      * @param size - The amount of data in machine units that can be read from the buffet object while used as an indexed target.
-      * @see glBindBufferRange */
-    void bindRange(GLuint index, GLintptr offset, GLsizeiptr size) const {
-        gl( BindBufferRange(buffer_t, index, offset, size, BufferObject<buffer_t>::buffer) );
-    }
+  /// Bind a range within a buffer object to an index.
+  /** @param index - Specify the index of the binding point within the array.
+    * @param offset - The starting offset in basic machine units into the buffer object.
+    * @param size - The amount of data in machine units that can be read from the buffet object while used as an indexed target.
+    * @see glBindBufferRange */
+  void bindRange(GLuint index, GLintptr offset, GLsizeiptr size) const {
+    gl(BindBufferRange(buffer_t, index, offset, size, BufferObject<buffer_t>::buffer));
+  }
 
-    /// Returns if this is the currently bound buffer for an indexed target.
-    /** @see glGetIntegeri_v */
-    bool isBound(GLuint index) const {
-        GLint currentlyBoundBuffer;
-        gl( GetIntegeri_v(getBindingTarget(buffer_t), index, &currentlyBoundBuffer) );
-        return BufferObject<buffer_t>::buffer == GLuint(currentlyBoundBuffer);
-    }
+  /// Returns if this is the currently bound buffer for an indexed target.
+  /** @see glGetIntegeri_v */
+  bool isBound(GLuint index) const {
+    GLint currentlyBoundBuffer;
+    gl(GetIntegeri_v(getBindingTarget(buffer_t), index, &currentlyBoundBuffer));
+    return BufferObject<buffer_t>::buffer == GLuint(currentlyBoundBuffer);
+  }
 
-    /// Unbind a buffer object from an index.
-    /** @param index - Specify the index of the binding point within the array.
-      * @see glBindBufferBase */
-    static void UnbindBase(GLuint index) {
-        gl( BindBufferBase(buffer_t, index, 0) );
-    }
-    /// Unbind a buffer object from an index.
-    /** @param index - Specify the index of the binding point within the array.
-      * @see glBindBufferBase */
-    BIND_CHECKED void unbindBase(GLuint index) const {
-        CHECK_BINDING2_EXPLICIT(isBound(index));
-        UnbindBase(index);
-    }
+  /// Unbind a buffer object from an index.
+  /** @param index - Specify the index of the binding point within the array.
+    * @see glBindBufferBase */
+  static void UnbindBase(GLuint index) {
+    gl(BindBufferBase(buffer_t, index, 0));
+  }
+  /// Unbind a buffer object from an index.
+  /** @param index - Specify the index of the binding point within the array.
+    * @see glBindBufferBase */
+  BIND_CHECKED void unbindBase(GLuint index) const {
+    CHECK_BINDING2_EXPLICIT(isBound(index));
+    UnbindBase(index);
+  }
 };
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNIFORM_BUFFER)
