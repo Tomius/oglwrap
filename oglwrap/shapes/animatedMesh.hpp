@@ -194,11 +194,6 @@ class AnimatedMesh : public Mesh {
   /// The current offset of the root bone of the animated object inside the animation, on the XZ plain.
   glm::vec3 current_offset;
 
-  /// The transition offset in the last frame.
-  /** transition offset difference is used to move the character
-    * from the origin to the starting position of the animation linearly */
-  glm::vec3 last_transition_offset;
-
   /// It is used to detect when did the animation start a new cycle.
   /** For animations that have AnimFlag::Repeat flag specified only, of course. */
   unsigned last_loop_count;
@@ -747,13 +742,12 @@ private:
     * @param parentTransform - The transformation of the parent node. You should call it with an identity matrix. */
   void transitionReadNodeHeirarchy(float prevAnimationTime,
                                    float nextAnimationTime,
+                                   float factor,
                                    const aiNode* node,
                                    const glm::mat4& parentTransform  = glm::mat4()) {
 
     std::string nodeName(node->mName.data);
 
-    // You probably want to be able to select different than animations than the 0th.
-    // But with Maya's DAE_FBX exporter, it is not possible.
     const aiAnimation* prevAnimation = last_anim->mAnimations[0];
     const aiAnimation* nextAnimation = current_anim->mAnimations[0];
     const aiNodeAnim* prevNodeAnim = findNodeAnim(prevAnimation, nodeName);
@@ -762,18 +756,6 @@ private:
     glm::mat4 nodeTransform = convertMatrix(node->mTransformation);
 
     if(prevNodeAnim && nextNodeAnim) {
-      float factor;
-      if(current_flags & AnimFlag::Backwards) {
-        factor = transition_time > 1e-10 ?
-                 (((float)current_anim->mAnimations[0]->mDuration - nextAnimationTime)
-                  / transition_time)
-                 : 0.0f;
-      } else {
-        factor = transition_time > 1e-10 ? (nextAnimationTime / transition_time) : 0.0f;
-      }
-
-      factor = fmod(factor, 1.0f);
-
       // Interpolate the transformations and get the matrices
       aiVector3D prevScaling, nextScaling;
       calcInterpolatedScaling(prevScaling, prevAnimationTime, prevNodeAnim);
@@ -795,26 +777,10 @@ private:
       glm::mat4 translationM;
 
       if(nodeName == root_bone) {
-        // Transition Offset is a utility that helps you in creating better transitions between
-        // animations. For example, if you want one of the character's leg to stay in it's place,
-        // throughout the transition, it might only be possible if the character's center of mass
-        // doesn't start from the origin on the XZ axis in the new animation. This utility is about
-        // to interpolate the position of the center of mass from the origin to the place, where
-        // it starts in the new animation. It isn't necessary, just makes the transition more
-        // realistic. But it definitely has no use, when the animation is played backwards.
-        glm::vec3 transitionOffset;
-        if(!(current_flags & AnimFlag::Backwards)) {
-          transitionOffset = (start_offsets[curr_idx] - start_offsets[last_idx]) * factor;
-        }
-        current_offset =
-          (glm::vec3(nextTranslation.x, 0, nextTranslation.z) +
-           transitionOffset - last_transition_offset);
-
+        current_offset = glm::vec3(nextTranslation.x, 0, nextTranslation.z);
         if(current_flags & AnimFlag::Mirrored) {
           current_offset *= -1;
         }
-
-        last_transition_offset = transitionOffset;
         translationM = glm::translate(glm::mat4(), glm::vec3(0, translation.y, 0));
       } else {
         translationM = glm::translate(glm::mat4(), glm::vec3(translation.x, translation.y, translation.z));
@@ -834,7 +800,7 @@ private:
 
     for(unsigned i = 0; i < node->mNumChildren; i++) {
       transitionReadNodeHeirarchy(
-        prevAnimationTime, nextAnimationTime, node->mChildren[i], globalTransformation
+        prevAnimationTime, nextAnimationTime, factor, node->mChildren[i], globalTransformation
       );
     }
   }
@@ -847,7 +813,6 @@ private:
         !last_anim || last_anim->mAnimations == 0) {
       throw std::runtime_error("Tried to run an invalid animation.");
     }
-
 
     float last_ticks_per_second = last_anim->mAnimations[0]->mTicksPerSecond > 1e-10 ? // != 0
                                   last_anim->mAnimations[0]->mTicksPerSecond : 24.0f;
@@ -887,12 +852,16 @@ private:
       current_animation_time = (float)current_anim->mAnimations[0]->mDuration - current_animation_time;
     }
 
-    if(transition_time < current_speed * (time_in_seconds - end_of_last_anim)) {
+    bool in_transition = transition_time < time_in_seconds - end_of_last_anim;
+    float transition_factor = (time_in_seconds - end_of_last_anim) / transition_time;
+
+    if(in_transition) {
       // Normal animation
       readNodeHeirarchy(current_animation_time, scene->mRootNode);
     } else {
       // Transition between two animations.
-      transitionReadNodeHeirarchy(last_animation_time, current_animation_time, scene->mRootNode);
+      transitionReadNodeHeirarchy(last_animation_time, current_animation_time,
+                                  transition_factor, scene->mRootNode);
     }
 
     // Start a new loop if necessary
@@ -1028,7 +997,6 @@ private:
     current_anim = animations[animIndex];
     this->transition_time = transition_time;
     last_period_time = currentTime - end_of_last_anim;
-    last_transition_offset = glm::vec3();
     end_of_last_anim = currentTime;
 
     if(flags & AnimFlag::Backwards) {
