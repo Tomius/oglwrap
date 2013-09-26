@@ -2,7 +2,8 @@
     @brief Global operator overloads.
 */
 
-#pragma once
+#ifndef OGLWRAP_GLOBAL_HPP_
+#define OGLWRAP_GLOBAL_HPP_
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetAttribLocation)
 /// A global operator that is a VertexArray constructor with nicer syntax.
@@ -101,3 +102,4 @@ inline T clamp(const T& val, const T& min, const T& max) {
   }
 }
 
+#endif // OGLWRAP_GLOBAL_HPP_

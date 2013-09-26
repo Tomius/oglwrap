@@ -2,7 +2,8 @@
     @brief Implements a wrapper for Framebuffer objects
 */
 
-#pragma once
+#ifndef OGLWRAP_FRAMEBUFFER_HPP_
+#define OGLWRAP_FRAMEBUFFER_HPP_
 
 #include "textures/texture_base.hpp"
 #include "textures/texture_cube.hpp"
@@ -14,13 +15,13 @@ namespace oglwrap {
 /** @see glGenRenderbuffers, glDeleteRenderbuffers */
 class RenderBuffer {
   /// The handle for the render buffer.
-  ObjectExt<glGenRenderbuffers, glDeleteRenderbuffers> renderbuffer;
+  ObjectExt<glGenRenderbuffers, glDeleteRenderbuffers> renderbuffer_;
 public:
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindRenderbuffer)
   /// Binds this renderbuffer.
   /** @see glBindRenderbuffer */
   void bind() const {
-    gl(BindRenderbuffer(GL_RENDERBUFFER, renderbuffer));
+    gl(BindRenderbuffer(GL_RENDERBUFFER, renderbuffer_));
   }
 #endif // glBindRenderbuffer
 
@@ -47,7 +48,7 @@ public:
     GLint currentlyBoundBuffer;
     gl(GetIntegerv(GL_RENDERBUFFER_BINDING, &currentlyBoundBuffer));
     OGLWRAP_LAST_BIND_TARGET = "GL_RENDERBUFFER_BINDING";
-    return renderbuffer == GLuint(currentlyBoundBuffer);
+    return renderbuffer_ == GLuint(currentlyBoundBuffer);
   }
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glRenderbufferStorage)
@@ -70,9 +71,8 @@ public:
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glRenderbufferStorageMultisample)
   /// Establish data storage, format, dimensions and sample count of a renderbuffer object's image.
   /** @see glRenderbufferStorageMultisample */
-  static void StorageMultisample(
-    GLsizei samples, PixelDataInternalFormat internalFormat, GLsizei width, GLsizei height
-  ) {
+  static void StorageMultisample(GLsizei samples, PixelDataInternalFormat internalFormat,
+                                 GLsizei width, GLsizei height) {
     gl(RenderbufferStorageMultisample(GL_RENDERBUFFER, samples, internalFormat, width, height));
   }
 #endif // glRenderbufferStorageMultisample
@@ -80,9 +80,8 @@ public:
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glRenderbufferStorageMultisample)
   /// Establish data storage, format, dimensions and sample count of a renderbuffer object's image.
   /** @see glRenderbufferStorageMultisample */
-  BIND_CHECKED void storageMultisample(
-    GLsizei samples, PixelDataInternalFormat internalFormat, GLsizei width, GLsizei height
-  ) const {
+  BIND_CHECKED void storageMultisample(GLsizei samples, PixelDataInternalFormat internalFormat,
+                                       GLsizei width, GLsizei height) const {
     CHECK_BINDING();
     StorageMultisample(samples, internalFormat, width, height);
   }
@@ -90,16 +89,16 @@ public:
 
   /// Returns the handle for this object.
   const ObjectExt<glGenRenderbuffers, glDeleteRenderbuffers>& expose() const {
-    return renderbuffer;
+    return renderbuffer_;
   }
 };
 #endif // glGenRenderbuffers && glDeleteRenderbuffers
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGenFramebuffers) && defined(glDeleteFramebuffers))
 /// A buffer that you can draw to.
-template<FramebufferType fbo_t>
+template<FramebufferType FBO_TYPE>
 class FramebufferObject {
-  ObjectExt<glGenFramebuffers, glDeleteFramebuffers> framebuffer; ///< The handle for the framebuffer
+  ObjectExt<glGenFramebuffers, glDeleteFramebuffers> framebuffer_; ///< The handle for the framebuffer
 public:
 
   /// Default constructor
@@ -110,14 +109,14 @@ public:
   /** Important: if you use this to change the type of the active framebuffer,
     * don't forget to unbind the old one, and bind the new one */
   FramebufferObject(const BufferObject<another_fbo_t> src)
-    : framebuffer(src.Expose())
+    : framebuffer_(src.Expose())
   { }
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindFramebuffer)
   /// Binds the framebuffer for reading and/or drawing.
   /** @see glBindFramebuffer */
   void bind() const {
-    gl(BindFramebuffer(fbo_t, framebuffer));
+    gl(BindFramebuffer(FBO_TYPE, framebuffer_));
   }
 #endif // glBindFramebuffer
 
@@ -125,15 +124,15 @@ public:
   /** @see glGetIntegerv */
   bool isBound() const {
     GLint currentlyBoundBuffer;
-    gl(GetIntegerv(getBindingTarget(fbo_t), &currentlyBoundBuffer));
-    return framebuffer == GLuint(currentlyBoundBuffer);
+    gl(GetIntegerv(getBindingTarget(FBO_TYPE), &currentlyBoundBuffer));
+    return framebuffer_ == GLuint(currentlyBoundBuffer);
   }
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindFramebuffer)
   /// Unbinds the buffer from the target it is currently bound to.
   /** @see glBindFramebuffer */
   static void Unbind() {
-    gl(BindFramebuffer(fbo_t, 0));
+    gl(BindFramebuffer(FBO_TYPE, 0));
   }
   /// Unbinds the buffer from the target it is currently bound to.
   /** @see glBindFramebuffer */
@@ -147,7 +146,7 @@ public:
   /// Returns the status of a bound framebuffer.
   /** @see glCheckFramebufferStatus */
   static FramebufferStatus Status() {
-    GLenum status = gl(CheckFramebufferStatus(fbo_t));
+    GLenum status = gl(CheckFramebufferStatus(FBO_TYPE));
     return status;
   }
   /// Returns the status of a bound framebuffer.
@@ -163,7 +162,7 @@ public:
   /** @see glCheckFramebufferStatus */
   static void Validate() {
     std::string errStr;
-    GLenum status = gl(CheckFramebufferStatus(fbo_t));
+    GLenum status = gl(CheckFramebufferStatus(FBO_TYPE));
     switch(FramebufferStatus(status)) {
       case FramebufferStatus::Complete:
         return;
@@ -226,7 +225,7 @@ public:
     * @param renderBuffer - Specifies the renderbuffer object that is to be attached.
     * @see glFramebufferRenderbuffer */
   static void AttachBuffer(FramebufferAttachment attachment, RenderBuffer renderBuffer) {
-    gl(FramebufferRenderbuffer(fbo_t, attachment, GL_RENDERBUFFER, renderBuffer.expose()));
+    gl(FramebufferRenderbuffer(FBO_TYPE, attachment, GL_RENDERBUFFER, renderBuffer.expose()));
   }
   /// Attach a renderbuffer as a logical buffer to the currently bound framebuffer object
   /** @param attachment - Specifies the attachment point to which renderbuffer should be attached.
@@ -246,7 +245,7 @@ public:
     * @param level - Specifies the mipmap level of \a texture to attach.
     * @see glFramebufferTexture */
   static void AttachTexture(FramebufferAttachment attachment, const TextureBase<texture_t>& texture, GLuint level) {
-    gl(FramebufferTexture(fbo_t, attachment, texture.expose(), level));
+    gl(FramebufferTexture(FBO_TYPE, attachment, texture.expose(), level));
   }
   template <TexType texture_t>
   /// Attach a level of a texture object as a logical buffer to the currently bound framebuffer object
@@ -270,7 +269,7 @@ public:
   static void AttachTexture(
     FramebufferAttachment attachment, CubeTarget target, const TextureCube& texture, GLuint level
   ) {
-    gl(FramebufferTexture2D(fbo_t, attachment, target, texture.expose(), level));
+    gl(FramebufferTexture2D(FBO_TYPE, attachment, target, texture.expose(), level));
   }
   /// Attach a level of a cube map as a logical buffer to the currently bound framebuffer object.
   /** @param attachment - Specifies the attachment point of the framebuffer.
@@ -288,7 +287,7 @@ public:
 
   /// Returns the handle for the framebuffer object.
   const ObjectExt<glGenFramebuffers, glDeleteFramebuffers>& expose() const {
-    return framebuffer;
+    return framebuffer_;
   }
 }; // class Framebuffer
 
@@ -299,4 +298,6 @@ typedef FramebufferObject<FramebufferType::Draw> Draw_Framebuffer;
 #endif // glGenFramebuffers && glDeleteFramebuffers
 
 } // namespace oglwrap
+
+#endif // OGLWRAP_FRAMEBUFFER_HPP_
 

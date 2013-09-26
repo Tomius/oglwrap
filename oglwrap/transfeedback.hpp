@@ -2,7 +2,8 @@
     @brief Implements transform feedback functionality.
 */
 
-#pragma once
+#ifndef OGLWRAP_TRANSFORMFEEDBACK_HPP_
+#define OGLWRAP_TRANSFORMFEEDBACK_HPP_
 
 namespace oglwrap {
 
@@ -15,15 +16,15 @@ namespace oglwrap {
   * @see glGenTransformFeedbacks, glDeleteTransformFeedbacks */
 class TransformFeedback : protected RefCounted {
   /// The handle for the TransformFeedback
-  ObjectExt<glGenTransformFeedbacks, glDeleteTransformFeedbacks> handle;
-  enum TFBstate {none, working, paused} state;
+  ObjectExt<glGenTransformFeedbacks, glDeleteTransformFeedbacks> handle_;
+  enum TFBstate {TFB_STATE_NONE, TFB_STATE_WORKING, TFB_STATE_PAUSED} state_;
 public:
   /// Generates a transform feedback.
-  TransformFeedback() : state(none) {}
+  TransformFeedback() : state_(TFB_STATE_NONE) {}
 
   /// Creates a transform feedback and activates it. It will work till the variable's lifetime.
   /** @param mode - The primitive type the TFB should use. */
-  TransformFeedback(TFB_PrimType mode) : state(working) {
+  TransformFeedback(TFB_PrimType mode) : state_(TFB_STATE_WORKING) {
     bind();
     begin(mode);
   }
@@ -32,10 +33,10 @@ public:
   /** Also ends it if it's active. In this case it will change the currently active TFB.
     * @see glDeleteTransformFeedbacks */
   ~TransformFeedback() {
-    if(!handle.isDeletable()) {
+    if(!handle_.isDeletable()) {
       return;
     }
-    if(state != none) {
+    if(state_ != TFB_STATE_NONE) {
       bind();
       end();
     }
@@ -45,7 +46,7 @@ public:
   /// Binds the transform feedback.
   /** @see glBindTransformFeedback */
   void bind() const {
-    gl(BindTransformFeedback(GL_TRANSFORM_FEEDBACK, handle));
+    gl(BindTransformFeedback(GL_TRANSFORM_FEEDBACK, handle_));
   }
 #endif // glBindTransformFeedback
 
@@ -69,7 +70,7 @@ public:
     GLint currentlyBoundTFB;
     gl(GetIntegerv(GL_TRANSFORM_FEEDBACK, &currentlyBoundTFB));
     OGLWRAP_LAST_BIND_TARGET = "GL_TRANSFORM_FEEDBACK";
-    return handle == GLuint(currentlyBoundTFB);
+    return handle_ == GLuint(currentlyBoundTFB);
   }
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBeginTransformFeedback)
@@ -84,7 +85,7 @@ public:
     * @see glBeginTransformFeedback */
   BIND_CHECKED void begin(TFB_PrimType mode) {
     CHECK_BINDING();
-    state = working;
+    state_ = TFB_STATE_WORKING;
     Begin(mode);
   }
 #endif // glBeginTransformFeedback
@@ -99,7 +100,7 @@ public:
   /** @see glEndTransformFeedback */
   BIND_CHECKED void end() {
     CHECK_BINDING();
-    state = none;
+    state_ = TFB_STATE_NONE;
     End();
   }
 #endif // glEndTransformFeedback
@@ -114,7 +115,7 @@ public:
   /** @see glPauseTransformFeedback */
   BIND_CHECKED void pause() {
     CHECK_BINDING();
-    state = paused;
+    state_ = TFB_STATE_PAUSED;
     Pause();
   }
 #endif // glPauseTransformFeedback
@@ -129,7 +130,7 @@ public:
   /** @see glResumeTransformFeedback */
   BIND_CHECKED void resume() {
     CHECK_BINDING();
-    state = working;
+    state_ = TFB_STATE_WORKING;
     Resume();
   }
 #endif // glResumeTransformFeedback
@@ -137,4 +138,6 @@ public:
 #endif // glGenTransformFeedbacks && glDeleteTransformFeedbacks
 
 } // namespace oglwrap
+
+#endif // OGLWRAP_TRANSFORMFEEDBACK_HPP_
 

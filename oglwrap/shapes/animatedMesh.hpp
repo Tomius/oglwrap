@@ -2,7 +2,8 @@
     @brief An animation loader using assimp
 */
 
-#pragma once
+#ifndef OGLWRAP_SHAPES_ANIMATEDMESH_HPP_
+#define OGLWRAP_SHAPES_ANIMATEDMESH_HPP_
 
 #include "mesh.hpp"
 
@@ -1201,3 +1202,4 @@ public:
 
 } // namespace oglwrap
 
+#endif // OGLWRAP_SHAPES_ANIMATEDMESH_HPP_

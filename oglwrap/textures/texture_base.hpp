@@ -2,7 +2,8 @@
     @brief Implements the base functionality for textures.
 */
 
-#pragma once
+#ifndef OGLWRAP_TEXTURES_TEXUTRE_BASE_HPP_
+#define OGLWRAP_TEXTURES_TEXUTRE_BASE_HPP_
 
 namespace oglwrap {
 
@@ -325,4 +326,4 @@ public:
 
 } // namespace oglwrap
 
-
+#endif // OGLWRAP_TEXTURES_TEXUTRE_BASE_HPP_

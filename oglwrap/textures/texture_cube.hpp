@@ -2,7 +2,8 @@
     @brief Implements two-dimensional cubeMap textures.
 */
 
-#pragma once
+#ifndef OGLWRAP_TEXTURES_TEXTURE_CUBE_HPP_
+#define OGLWRAP_TEXTURES_TEXTURE_CUBE_HPP_
 
 namespace oglwrap {
 
@@ -558,4 +559,4 @@ public:
 
 } // namespace oglwrap
 
-
+#endif // OGLWRAP_TEXTURES_TEXTURE_CUBE_HPP_

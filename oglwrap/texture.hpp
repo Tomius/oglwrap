@@ -2,10 +2,11 @@
     @brief The main header for textures, including the texture related headers of the library.
 */
 
-#pragma once
+#ifndef OGLWRAP_TEXTURE_HPP_
+#define OGLWRAP_TEXTURE_HPP_
 
 #if OGLWRAP_IMAGEMAGICK
-#include <Magick++.h>
+  #include <Magick++.h>
 #endif
 
 #include "textures/texture_base.hpp"
@@ -14,3 +15,4 @@
 #include "textures/texture_cube.hpp"
 #include "textures/texture_3D.hpp"
 
+#endif // OGLWRAP_TEXTURE_HPP_

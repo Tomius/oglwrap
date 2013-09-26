@@ -2,11 +2,12 @@
     @brief Contains enumeration wrappers for GLenums.
 */
 
-#pragma once
+#ifndef OGLWRAP_ENUMS_HPP_
+#define OGLWRAP_ENUMS_HPP_
 
 namespace oglwrap {
 
-namespace Enums { // just to make doxygen list enum namespaces nicely
+inline namespace Enums { // just to make doxygen list enum namespaces nicely
 
 // -------======{[ Shaders ]}======-------
 
@@ -1112,7 +1113,6 @@ typedef _TransformFeedbackPrimitiveType::TransformFeedbackPrimitiveType TFB_Prim
 
 } // Namespace Enums
 
-using namespace oglwrap::Enums;
-
 } // Namespace oglwrap
 
+#endif // OGLWRAP_ENUMS_HPP_

@@ -2,7 +2,8 @@
     @brief Implements the oglwrap debug output.
 */
 
-#pragma once
+#ifndef OGLWRAP_DEBUG_DEBUGOUTPUT_HPP_
+#define OGLWRAP_DEBUG_DEBUGOUTPUT_HPP_
 
 #include "../config.hpp"
 
@@ -90,18 +91,16 @@ public:
 
   /// Loads in the list of OpenGL errors.
   DebugOutput() : callback(default_callback) {
-    using namespace std;
-
     // The GLerrors.txt should be in the same folder as this file.
     // So we can use the __FILE__ macro to get the path to this file,
     // and replaces the "debugOutput.hpp" to "GLerrors.txt"
     std::string filename(OGLWRAP_GET_FILENAME());
     auto directoryPath = filename.find("debugOutput.hpp");
-    assert(directoryPath != string::npos); // Maybe it got renamed?
-    filename.erase(directoryPath, string::npos);
+    assert(directoryPath != std::string::npos); // Maybe it got renamed?
+    filename.erase(directoryPath, std::string::npos);
     filename.append("GLerrors.txt");
 
-    ifstream is(filename);
+    std::ifstream is(filename);
     if(!is.good()) {
       std::cerr <<
                 "Couldn't initialize DebugOutput because GLerrors.txt is missing or corrupted." << std::endl;
@@ -109,8 +108,8 @@ public:
 
     // Read until EOF, or until an error occurs.
     while(is.good()) {
-      string func, funcSignature, errors[NUM_ERRORS];
-      string buffer, buffer2;
+      std::string func, funcSignature, errors[NUM_ERRORS];
+      std::string buffer, buffer2;
 
       // Get the first not empty row, containing the function's name
       while(getline(is, func) && func.empty());
@@ -129,17 +128,17 @@ public:
       // Get the error messages
       while(getline(is, buffer) && !buffer.empty()) {
 
-        stringstream strstream(buffer);
+        std::stringstream strstream(buffer);
         strstream >> buffer2;
         for(int i = 0; i < NUM_ERRORS; i++) {
           if(buffer2 == glErrorNames[i]) {
 
             // Make the error string a bit nicer
-            string errIsGendIf(buffer2 + " is generated if ");
+            std::string errIsGendIf(buffer2 + " is generated if ");
             if(buffer.find(errIsGendIf) == 0) {
               buffer.erase(0, errIsGendIf.size() - 2);
             } else {
-              string errMayBeGendIf(buffer2 + " may be generated if ");
+              std::string errMayBeGendIf(buffer2 + " may be generated if ");
               if(buffer.find(errMayBeGendIf) == 0) {
                 buffer.erase(0, errMayBeGendIf.size() - 2);
               }
@@ -156,8 +155,8 @@ public:
 
       if(errorMap.find(func) == errorMap.end()) {
         errorMap.insert(std::pair<std::string, ErrorInfo>(
-                          func, ErrorInfo(funcSignature, errors)
-                        ));
+            func, ErrorInfo(funcSignature, errors)
+        ));
       }
     }
   }
@@ -167,31 +166,29 @@ public:
     * @param functionCall - The name of the GL function that was called.
     * @param sstream - The stream to write the error */
   void print_error(const std::string& functionCall, std::stringstream& sstream) {
-    using namespace std;
-
     size_t errIdx = getErrorIndex();
     if(errIdx == NUM_ERRORS) {
       return;
     }
 
     size_t funcNameLen = functionCall.find_first_of('(');
-    string funcName = string(functionCall.begin(), functionCall.begin() + funcNameLen);
+    std::string funcName = std::string(functionCall.begin(), functionCall.begin() + funcNameLen);
 
     if(errorMap.find(funcName) != errorMap.end() && !errorMap[funcName].errors[errIdx].empty()) {
       ErrorInfo errinfo = errorMap[funcName];
-      sstream << "The following OpenGL function: " << endl << endl;
-      sstream << errinfo.funcSignature << endl;
-      sstream << "Has generated the error because one of the following(s) were true:" << endl;
+      sstream << "The following OpenGL function: " << std::endl << std::endl;
+      sstream << errinfo.funcSignature << std::endl;
+      sstream << "Has generated the error because one of the following(s) were true:" << std::endl;
       sstream << errinfo.errors[errIdx];
     }
 
-    sstream << endl;
+    sstream << std::endl;
     size_t lineSize = strlen("---------========={[  ]}=========---------") +
                       strlen(glErrorNames[errIdx]);
     for(size_t i = 0; i < lineSize; i++) {
       sstream << '-';
     }
-    sstream << endl;
+    sstream << std::endl;
   }
 };
 
@@ -217,4 +214,6 @@ struct DebugOutput {
 #endif
 
 } // namespace oglwrap
+
+#endif // OGLWRAP_DEBUG_DEBUGOUTPUT_HPP_
 

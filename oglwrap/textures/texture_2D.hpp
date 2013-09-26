@@ -2,7 +2,8 @@
     @brief Implements two-dimensional, non-cubeMap textures.
 */
 
-#pragma once
+#ifndef OGLWRAP_TEXTURES_TEXTURE_2D_HPP_
+#define OGLWRAP_TEXTURES_TEXTURE_2D_HPP_
 
 namespace oglwrap {
 
@@ -462,3 +463,4 @@ typedef Texture2D_Base<Tex2DType::Tex1DArray> Texture1D_Array;
 
 } // namespace oglwrap
 
+#endif // OGLWRAP_TEXTURES_TEXTURE_2D_HPP_

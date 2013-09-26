@@ -2,7 +2,8 @@
     @brief Implements three-dimensional textures.
 */
 
-#pragma once
+#ifndef OGLWRAP_TEXTURES_TEXTURE_3D_HPP_
+#define OGLWRAP_TEXTURES_TEXTURE_3D_HPP_
 
 namespace oglwrap {
 
@@ -410,3 +411,4 @@ typedef Texture3D_Base<Tex3DType::Tex2DArray> Texture2D_Array;
 
 } // namespace oglwrap
 
+#endif // OGLWRAP_TEXTURES_TEXTURE_3D_HPP_

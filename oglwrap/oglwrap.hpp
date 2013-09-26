@@ -3,7 +3,8 @@
     It doesn't include everything, just the main features.
 */
 
-#pragma once
+#ifndef OGLWRAP_OGLWRAP_HPP_
+#define OGLWRAP_OGLWRAP_HPP_
 
 /* TODO:
     - General:
@@ -12,9 +13,6 @@
         - uniform blocks / shader storage
         - separable shader stages.
         - some 4.0+ features are still missing.
-    - Animation:
-        - an entire rewrite...
-        - animation stack.
 */
 
 // standard headers
@@ -53,3 +51,5 @@
 #include "transfeedback.hpp"
 
 #undef BIND_CHECKED
+
+#endif // OGLWRAP_OGLWRAP_HPP_

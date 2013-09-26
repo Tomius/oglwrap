@@ -2,7 +2,8 @@
     @brief Implements the VAO and the VertexAttributeArray.
 */
 
-#pragma once
+#ifndef OGLWRAP_VERTEXATTRIB_HPP_
+#define OGLWRAP_VERTEXATTRIB_HPP_
 
 namespace oglwrap {
 
@@ -16,13 +17,13 @@ namespace oglwrap {
   * The VAOs simply reference already existing buffer objects.
   * @see glGenVertexArrays, glDeleteVertexArrays */
 class VertexArray {
-  ObjectExt<glGenVertexArrays, glDeleteVertexArrays> vao; ///< The handle for the VAO
+  ObjectExt<glGenVertexArrays, glDeleteVertexArrays> vao_; ///< The handle for the VAO
 public:
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindVertexArray)
   /// Binds the Vertex Array object, so that it will be used for the further draw calls.
   /** @see glBindVertexArray */
   void bind() {
-    gl(BindVertexArray(vao));
+    gl(BindVertexArray(vao_));
   }
 #endif
 
@@ -32,7 +33,7 @@ public:
     GLint currentlyBoundVAO;
     gl(GetIntegerv(GL_VERTEX_ARRAY_BINDING, &currentlyBoundVAO));
     OGLWRAP_LAST_BIND_TARGET = "GL_VERTEX_ARRAY_BINDING";
-    return vao == GLuint(currentlyBoundVAO);
+    return vao_ == GLuint(currentlyBoundVAO);
   }
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindVertexArray)
@@ -54,7 +55,7 @@ public:
 
   /// Returns the handle for the VertexArray.
   const ObjectExt<glGenVertexArrays, glDeleteVertexArrays>& expose() const {
-    return vao;
+    return vao_;
   }
 };
 #endif // glGenVertexArrays && glDeleteVertexArrays
@@ -69,19 +70,19 @@ public:
   * active ArrayBuffer and will use that for the draw calls */
 class VertexAttribArrayObject {
 protected:
-  GLuint location; /// < The vertexAttribSlot
-  bool inited; /// < For the LazyVertexAttribArray
+  GLuint location_; /// < The vertexAttribSlot
+  bool inited_; /// < For the LazyVertexAttribArray
 
   /// Init function for the for the LazyVertexAttribArray
   virtual void Init() {
-    inited = true;
+    inited_ = true;
   }
 public:
   /// Default constructor, sets the location to invalid.
-  VertexAttribArrayObject() : location(INVALID_LOCATION) ,inited(false) {}
+  VertexAttribArrayObject() : location_(INVALID_LOCATION), inited_(false) {}
 
   /// You can specify the attribute slot you use for the attribute.
-  VertexAttribArrayObject(GLuint vertexAttribSlot) : location(vertexAttribSlot) ,inited(false) {}
+  VertexAttribArrayObject(GLuint vertexAttribSlot) : location_(vertexAttribSlot), inited_(false) {}
 
 private:
   template <class GLtype>
@@ -101,7 +102,7 @@ public:
     * @param value - The default value to be used for this attribute.
     * @see glVertexAttrib* */
   void static_setup(const GLtype value) {
-    if(!inited) {
+    if(!inited_) {
       Init();
     }
 
@@ -182,14 +183,14 @@ public:
                                    bool normalized = false,
                                    GLsizei stride = 0,
                                    const void *offset_pointer = nullptr) {
-    if(!inited) {
+    if(!inited_) {
       Init();
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_ARRAY_BUFFER_BINDING);
 
-    gl(VertexAttribPointer(location, values_per_vertex, type, normalized, stride, offset_pointer));
+    gl(VertexAttribPointer(location_, values_per_vertex, type, normalized, stride, offset_pointer));
     return *this;
   }
 #endif // glVertexAttribPointer
@@ -205,13 +206,13 @@ public:
                                     WholeDataType type = WholeDataType::Int,
                                     GLsizei stride = 0,
                                     const void *offset_pointer = nullptr) {
-    if(!inited) {
+    if(!inited_) {
       Init();
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_ARRAY_BUFFER_BINDING);
-    gl(VertexAttribIPointer(location, values_per_vertex, type, stride, offset_pointer));
+    gl(VertexAttribIPointer(location_, values_per_vertex, type, stride, offset_pointer));
     return *this;
   }
 #endif // glVertexAttribIPointer
@@ -225,13 +226,13 @@ public:
   VertexAttribArrayObject& lpointer(GLuint values_per_vertex = 4,
                                     GLsizei stride = 0,
                                     const void *offset_pointer = nullptr) {
-    if(!inited) {
+    if(!inited_) {
       Init();
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_ARRAY_BUFFER_BINDING);
-    gl(VertexAttribLPointer(location, values_per_vertex, DataType::Double, stride, offset_pointer));
+    gl(VertexAttribLPointer(location_, values_per_vertex, DataType::Double, stride, offset_pointer));
     return *this;
   }
 #endif // glVertexAttribLPointer
@@ -247,12 +248,12 @@ public:
                                   DataType type = DataType::Float,
                                   GLboolean normalized = false,
                                   GLsizei stride = 0) {
-    if(!inited) {
+    if(!inited_) {
       Init();
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
-    gl(VertexAttribFormat(location, values_per_vertex, type, normalized, stride));
+    gl(VertexAttribFormat(location_, values_per_vertex, type, normalized, stride));
     return *this;
   }
 #endif // glVertexAttribFormat
@@ -266,12 +267,12 @@ public:
   VertexAttribArrayObject& iformat(GLuint values_per_vertex = 4,
                                    WholeDataType type = WholeDataType::Int,
                                    GLsizei stride = 0) {
-    if(!inited) {
+    if(!inited_) {
       Init();
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
-    gl(VertexAttribIFormat(location, values_per_vertex, type, stride));
+    gl(VertexAttribIFormat(location_, values_per_vertex, type, stride));
     return *this;
   }
 #endif // glVertexAttribIFormat
@@ -283,12 +284,12 @@ public:
     * @see glVertexAttribLFormat */
   VertexAttribArrayObject& lformat(GLuint values_per_vertex = 4,
                                    GLsizei stride = 0) {
-    if(!inited) {
+    if(!inited_) {
       Init();
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
-    gl(VertexAttribLFormat(location, values_per_vertex, DataType::Double, stride));
+    gl(VertexAttribLFormat(location_, values_per_vertex, DataType::Double, stride));
     return *this;
   }
 #endif // glVertexAttribLFormat
@@ -297,12 +298,12 @@ public:
   /// Enables the attribute array slot
   /** @see glEnableVertexAttribArray */
   VertexAttribArrayObject& enable() {
-    if(!inited) {
+    if(!inited_) {
       Init();
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
-    gl(EnableVertexAttribArray(location));
+    gl(EnableVertexAttribArray(location_));
     return *this;
   }
 #endif // glEnableVertexAttribArray
@@ -311,12 +312,12 @@ public:
   /// Disables the attribute array slot
   /** @see glDisableVertexAttribArray */
   VertexAttribArrayObject& disable() {
-    if(!inited) {
+    if(!inited_) {
       Init();
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
-    gl(DisableVertexAttribArray(location));
+    gl(DisableVertexAttribArray(location_));
     return *this;
   }
 #endif // glDisableVertexAttribArray
@@ -326,12 +327,12 @@ public:
   /** @param divisor - Specify the number of instances that will pass between updates of the attribute.
     * @see glVertexAttribDivisor */
   VertexAttribArrayObject& divisor(GLuint divisor) {
-    if(!inited) {
+    if(!inited_) {
       Init();
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
-    gl(VertexAttribDivisor(location, divisor));
+    gl(VertexAttribDivisor(location_, divisor));
     return *this;
   }
 #endif // glVertexAttribDivisor
@@ -342,13 +343,13 @@ public:
     * @param identifier - Specifies a null terminated string containing the name of the vertex shader attribute variable to which index is to be bound.
     * @see glBindAttribLocation */
   void bindLocation(const Program& prog, const std::string& identifier) const {
-    gl(BindAttribLocation(prog.expose(), location, identifier.c_str()));
+    gl(BindAttribLocation(prog.expose(), location_, identifier.c_str()));
   }
 #endif
 
   /// Returns the locations of the VertexAttribArray
   GLuint expose() const {
-    return location;
+    return location_;
   }
 };
 
@@ -362,27 +363,27 @@ public:
     * @param identifier - Specifies the attribute's name you want to setup.
     * @see glGetAttribLocation */
   VertexAttribArray(const Program& program, const std::string& identifier) {
-    location = gl(GetAttribLocation(program.expose(), identifier.c_str()));
-    if(location == INVALID_LOCATION) {
+    location_ = gl(GetAttribLocation(program.expose(), identifier.c_str()));
+    if(location_ == INVALID_LOCATION) {
       std::cerr << "Unable to get location of attribute '" << identifier << "'" << std::endl;
     }
   }
 };
 
 class LazyVertexAttribArray : public VertexAttribArrayObject {
-  const Program& program;
-  const std::string identifier;
+  const Program& program_;
+  const std::string identifier_;
   /// Queries the location of the attribute using the attribute's name
   /** @see glGetAttribLocation */
   void Init() {
-    CHECK_ACTIVE_PROGRAM(program);
+    CHECK_ACTIVE_PROGRAM(program_);
 
-    location = gl(GetAttribLocation(program.expose(), identifier.c_str()));
-    if(location == INVALID_LOCATION) {
-      std::cerr << "Unable to get location of attribute '" << identifier << "'" << std::endl;
+    location_ = gl(GetAttribLocation(program_.expose(), identifier_.c_str()));
+    if(location_ == INVALID_LOCATION) {
+      std::cerr << "Unable to get location of attribute '" << identifier_ << "'" << std::endl;
     }
 
-    inited = true;
+    inited_ = true;
   }
 public:
   /// Saves the details of the vertex attribute, but will only query the location at the first use.
@@ -390,23 +391,23 @@ public:
     * @param identifier - Specifies the attribute's name you want to setup.
     * @see glGetAttribLocation */
   LazyVertexAttribArray(const Program& program, const std::string& identifier)
-    : program(program)
-    , identifier(identifier)
+    : program_(program)
+    , identifier_(identifier)
   {}
 
   LazyVertexAttribArray operator[](unsigned char idx) {
-    return LazyVertexAttribArray(program, identifier + '[' + (const char)(idx + '0') + ']');
+    return LazyVertexAttribArray(program_, identifier_ + '[' + (const char)(idx + '0') + ']');
   }
 
   operator VertexAttribArray() {
-    return VertexAttribArray(program, identifier);
+    return VertexAttribArray(program_, identifier_);
   }
 
   /// Associates a generic vertex attribute index with a named attribute variable
   /** @param index - Specifies the index of the generic vertex attribute to be bound.
     * @see glBindAttribLocation */
   void bindLocation(GLuint index) const {
-    gl(BindAttribLocation(program.expose(), index, identifier.c_str()));
+    gl(BindAttribLocation(program_.expose(), index, identifier_.c_str()));
   }
 };
 
@@ -572,35 +573,35 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::uvec4>(GLuin
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttrib1f)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const GLfloat value) {
-  gl(VertexAttrib1f(location, value));
+  gl(VertexAttrib1f(location_, value));
 }
 #endif // glVertexAttrib1f
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttrib1s)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const GLshort value) {
-  gl(VertexAttrib1s(location, value));
+  gl(VertexAttrib1s(location_, value));
 }
 #endif // glVertexAttrib1s
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribL1d)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const GLdouble value) {
-  gl(VertexAttribL1d(location, value));
+  gl(VertexAttribL1d(location_, value));
 }
 #endif // glVertexAttribL1d
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribI1i)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const GLint value) {
-  gl(VertexAttribI1i(location, value));
+  gl(VertexAttribI1i(location_, value));
 }
 #endif // glVertexAttribI1i
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribI1ui)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const GLuint value) {
-  gl(VertexAttribI1ui(location, value));
+  gl(VertexAttribI1ui(location_, value));
 }
 #endif // glVertexAttribI1ui
 
@@ -608,28 +609,28 @@ inline void VertexAttribArrayObject::static_setup_helper(const GLuint value) {
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttrib2fv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::vec2 value) {
-  gl(VertexAttrib2fv(location, glm::value_ptr(value)));
+  gl(VertexAttrib2fv(location_, glm::value_ptr(value)));
 }
 #endif // glVertexAttrib2fv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribL2dv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::dvec2 value) {
-  gl(VertexAttribL2dv(location, glm::value_ptr(value)));
+  gl(VertexAttribL2dv(location_, glm::value_ptr(value)));
 }
 #endif // glVertexAttribL2dv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribI2iv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::ivec2 value) {
-  gl(VertexAttribI2iv(location, glm::value_ptr(value)));
+  gl(VertexAttribI2iv(location_, glm::value_ptr(value)));
 }
 #endif // glVertexAttribI2iv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribI2uiv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::uvec2 value) {
-  gl(VertexAttribI2uiv(location, glm::value_ptr(value)));
+  gl(VertexAttribI2uiv(location_, glm::value_ptr(value)));
 }
 #endif // glVertexAttribI2uiv
 
@@ -637,28 +638,28 @@ inline void VertexAttribArrayObject::static_setup_helper(const glm::uvec2 value)
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttrib3fv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::vec3 value) {
-  gl(VertexAttrib3fv(location, glm::value_ptr(value)));
+  gl(VertexAttrib3fv(location_, glm::value_ptr(value)));
 }
 #endif // glVertexAttrib3fv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribL3dv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::dvec3 value) {
-  gl(VertexAttribL3dv(location, glm::value_ptr(value)));
+  gl(VertexAttribL3dv(location_, glm::value_ptr(value)));
 }
 #endif // glVertexAttribL3dv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribI3iv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::ivec3 value) {
-  gl(VertexAttribI3iv(location, glm::value_ptr(value)));
+  gl(VertexAttribI3iv(location_, glm::value_ptr(value)));
 }
 #endif // glVertexAttribI3iv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribI3uiv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::uvec3 value) {
-  gl(VertexAttribI3uiv(location, glm::value_ptr(value)));
+  gl(VertexAttribI3uiv(location_, glm::value_ptr(value)));
 }
 #endif // glVertexAttribI3uiv
 
@@ -666,28 +667,28 @@ inline void VertexAttribArrayObject::static_setup_helper(const glm::uvec3 value)
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttrib4fv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::vec4 value) {
-  gl(VertexAttrib4fv(location, glm::value_ptr(value)));
+  gl(VertexAttrib4fv(location_, glm::value_ptr(value)));
 }
 #endif // glVertexAttrib4fv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribL4dv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::dvec4 value) {
-  gl(VertexAttribL4dv(location, glm::value_ptr(value)));
+  gl(VertexAttribL4dv(location_, glm::value_ptr(value)));
 }
 #endif // glVertexAttribL4dv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribI4iv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::ivec4 value) {
-  gl(VertexAttribI4iv(location, glm::value_ptr(value)));
+  gl(VertexAttribI4iv(location_, glm::value_ptr(value)));
 }
 #endif // glVertexAttribI4iv
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribI4uiv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::uvec4 value) {
-  gl(VertexAttribI4uiv(location, glm::value_ptr(value)));
+  gl(VertexAttribI4uiv(location_, glm::value_ptr(value)));
 }
 #endif // glVertexAttribI4uiv
 
@@ -695,3 +696,4 @@ inline void VertexAttribArrayObject::static_setup_helper(const glm::uvec4 value)
 
 } // namespace oglwrap
 
+#endif // OGLWRAP_VERTEXATTRIB_HPP_

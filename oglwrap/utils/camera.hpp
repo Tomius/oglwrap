@@ -2,8 +2,8 @@
     @brief Implements a basic free-fly camera to help testing. Uses SFML.
 */
 
-#ifndef CAMERA_HPP
-#define CAMERA_HPP
+#ifndef OGLWRAP_UTILS_CAMERA_HPP_
+#define OGLWRAP_UTILS_CAMERA_HPP_
 
 #include <cmath>
 #include <SFML/Window.hpp>
@@ -334,5 +334,5 @@ public:
 
 } // namespace oglwrap
 
-#endif // header guard
+#endif // OGLWRAP_UTILS_CAMERA_HPP_
 

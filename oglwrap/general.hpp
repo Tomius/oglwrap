@@ -2,7 +2,8 @@
     @brief Contains codes that are (mostly) not related to OpenGL
 */
 
-#pragma once
+#ifndef OGLWRAP_GENERAL_HPP_
+#define OGLWRAP_GENERAL_HPP_
 
 /// A template to convert an angle value from degrees to radians
 template<class T>
@@ -24,40 +25,40 @@ namespace oglwrap {
   * if exactly one instance of that object exists. Note that OpenGL RAII needs
   * to be reference counted! */
 class RefCounted {
-  int *numInstances; ///< A dynamically allocated int that stores the number of currently active instances.
+  int *numInstances_; ///< A dynamically allocated int that stores the number of currently active instances.
 
 protected:
   /// Allocates the counter.
   RefCounted() {
-    numInstances = new int;
-    *numInstances = 1;
+    numInstances_ = new int;
+    *numInstances_ = 1;
   }
 
 public:
   /// Creates a copy (copy ctor), and increases counter.
   RefCounted(const RefCounted& rhs) {
-    numInstances = rhs.numInstances;
-    (*numInstances)++;
+    numInstances_ = rhs.numInstances_;
+    (*numInstances_)++;
   }
 
   /// Creates a copy (assign op), and increases counter.
   RefCounted& operator=(const RefCounted& rhs) {
-    numInstances = rhs.numInstances;
-    (*numInstances)++;
+    numInstances_ = rhs.numInstances_;
+    (*numInstances_)++;
     return *this;
   }
 
   /// Returns if only one instance of this object exists.
   bool isDeletable() {
-    return *numInstances == 1;
+    return *numInstances_ == 1;
   }
 
   /// Decreases counter, or deletes the counter.
   ~RefCounted() {
     if(isDeletable()) {
-      delete numInstances;
+      delete numInstances_;
     } else {
-      (*numInstances)--;
+      (*numInstances_)--;
     }
   }
 };
@@ -94,18 +95,18 @@ template <const glGenFunc& constructor, const glDeleteFunc& destructor>
     without having to worry that the deletion of one will effect the other. */
 class ObjectExt : public RefCounted {
   /// The C handle for the object.
-  GLuint *handle;
+  GLuint *handle_;
   /// The boolean for the object being initialized.
   /** It is a pointer because it is shared between the copies. If one inits
     * the handle, then all instances will have the inited handle */
-  bool *inited;
+  bool *inited_;
 public:
   /// Creates the object, but does not allocate any resource yet.
   ObjectExt()
-    : handle(new GLuint)
-    , inited(new bool) {
+    : handle_(new GLuint)
+    , inited_(new bool) {
 
-    *inited = false;
+    *inited_ = false;
   }
 
   /// Deletes the object.
@@ -113,23 +114,23 @@ public:
     * this object exists, and it is initialized. */
   ~ObjectExt() {
     if(isDeletable()) {
-      if(*inited) {
-        glfunc(destructor(1, handle));
+      if(*inited_) {
+        glfunc(destructor(1, handle_));
       }
-      delete inited;
-      delete handle;
+      delete inited_;
+      delete handle_;
     }
   }
 
   /// Allocates the resource. It only happens upon the first use.
   void init() const {
-    *inited = true;
-    glfunc(constructor(1, handle));
+    *inited_ = true;
+    glfunc(constructor(1, handle_));
   }
 
   /// Returns if there's allocated memory for this class.
   bool isInited() const {
-    return *inited;
+    return *inited_;
   }
 
   /// Returns a self-pointer, useful for inheritance
@@ -139,11 +140,11 @@ public:
 
   /// Returns the C handle for the object. Inits it, if this is the first call for it.
   operator GLuint() const {
-    if(!*inited) {
+    if(!*inited_) {
       init();
     }
 
-    return *handle;
+    return *handle_;
   }
 };
 
@@ -164,18 +165,18 @@ template <const glGenFunc constructor, const glDeleteFunc destructor>
     without having to worry that the deletion of one will effect the other. */
 class Object : public RefCounted {
   /// The C handle for the object.
-  GLuint *handle;
+  GLuint *handle_;
   /// The boolean for the object being initialized.
   /** It is a pointer because it is shared between the copies. If one inits
     * the handle, then all instances will have the inited handle */
-  bool *inited;
+  bool *inited_;
 public:
   /// Creates the object, but does not allocate any resource yet.
   Object()
-    : handle(new GLuint)
-    , inited(new bool) {
+    : handle_(new GLuint)
+    , inited_(new bool) {
 
-    *inited = false;
+    *inited_ = false;
   }
 
   /// Deletes the object.
@@ -183,23 +184,23 @@ public:
     * this object exists, and it is initialized. */
   ~Object() {
     if(isDeletable()) {
-      if(*inited) {
-        glfunc(destructor(1, handle));
+      if(*inited_) {
+        glfunc(destructor(1, handle_));
       }
-      delete inited;
-      delete handle;
+      delete inited_;
+      delete handle_;
     }
   }
 
   /// Allocates the resource. It only happens upon the first use.
   void Init() const {
-    *inited = true;
-    glfunc(constructor(1, handle));
+    *inited_ = true;
+    glfunc(constructor(1, handle_));
   }
 
   /// Returns if there's allocated memory for this class.
   bool isInited() const {
-    return *inited;
+    return *inited_;
   }
 
   /// Returns a self-pointer, useful for inheritance
@@ -209,13 +210,14 @@ public:
 
   /// Returns the C handle for the object. Inits it, if this is the first call for it.
   operator GLuint() const {
-    if(!*inited) {
+    if(!*inited_) {
       Init();
     }
 
-    return *handle;
+    return *handle_;
   }
 };
 
 } // namespace oglwrap
 
+#endif // OGLWRAP_GENERAL_HPP_

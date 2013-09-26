@@ -2,7 +2,8 @@
     @brief Implements GLSL shaders related classes.
 */
 
-#pragma once
+#ifndef OGLWRAP_SHADER_HPP_
+#define OGLWRAP_SHADER_HPP_
 
 namespace oglwrap {
 
@@ -540,3 +541,4 @@ public:
 
 } // namespace oglwrap
 
+#endif // OGLWRAP_SHADER_HPP_

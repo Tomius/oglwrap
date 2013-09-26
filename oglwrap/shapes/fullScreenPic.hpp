@@ -2,7 +2,8 @@
     @brief Implements a rectangle that covers the entire screen.
 */
 
-#pragma once
+#ifndef OGLWRAP_SHAPES_FULLSCREENPIC_HPP_
+#define OGLWRAP_SHAPES_FULLSCREENPIC_HPP_
 
 namespace oglwrap {
 
@@ -90,3 +91,4 @@ public:
 
 } // Namespace oglwrap
 
+#endif // OGLWRAP_SHAPES_FULLSCREENPIC_HPP_

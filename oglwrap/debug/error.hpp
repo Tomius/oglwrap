@@ -2,7 +2,8 @@
     @brief Contains error handling macros
 */
 
-#pragma once
+#ifndef OGLWRAP_DEBUG_ERROR_HPP_
+#define OGLWRAP_DEBUG_ERROR_HPP_
 
 #include "debugOutput.hpp"
 
@@ -101,4 +102,6 @@ inline void __CheckError(const char *file, const char *func, int line, const cha
 #define gl(func) glfunc(gl##func)
 
 } // namespace oglwrap
+
+#endif // OGLWRAP_DEBUG_ERROR_HPP_
 

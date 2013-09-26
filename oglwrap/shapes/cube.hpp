@@ -2,7 +2,8 @@
     @brief Implements a cube shape wrapper.
 */
 
-#pragma once
+#ifndef OGLWRAP_SHAPES_CUBE_HPP_
+#define OGLWRAP_SHAPES_CUBE_HPP_
 
 namespace oglwrap {
 
@@ -228,4 +229,6 @@ public:
 };
 
 } // Namespace oglwrap
+
+#endif // OGLWRAP_SHAPES_CUBE_HPP_
 

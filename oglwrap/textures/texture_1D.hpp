@@ -2,7 +2,8 @@
     @brief Implements one-dimensional textures.
 */
 
-#pragma once
+#ifndef OGLWRAP_TEXTURES_TEXTURE_1D_HPP_
+#define OGLWRAP_TEXTURES_TEXTURE_1D_HPP_
 
 namespace oglwrap {
 
@@ -350,3 +351,4 @@ public:
 
 } // namespace oglwrap
 
+#endif // OGLWRAP_TEXTURES_TEXTURE_1D_HPP_

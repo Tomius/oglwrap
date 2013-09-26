@@ -2,7 +2,8 @@
     @brief Implements enums casts to help binding checks.
 */
 
-#pragma once
+#ifndef OGLWRAP_DEBUG_BINDING_HPP_
+#define OGLWRAP_DEBUG_BINDING_HPP_
 
 namespace oglwrap {
 
@@ -369,3 +370,4 @@ inline TexBinding getBindingTarget(TexType tex_t) {
 
 } // namespace oglwarp
 
+#endif // OGLWRAP_DEBUG_BINDING_HPP_
