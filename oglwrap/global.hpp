@@ -13,6 +13,15 @@ inline oglwrap::LazyVertexAttribArray operator|(oglwrap::Program& prog, const st
 }
 #endif
 
+template<class T>
+/// Interpolates two things.
+/// @param a - the first thing.
+/// @param b - the second thing.
+/// @param alpha - Specifies how 'b' will the result be.
+T interpolate(const T& a, const T& b, float alpha) {
+  return a + alpha * (b - a);
+}
+
 template <typename T>
 /// Prints a glm vector to a given ostream.
 /** @param os - The ostream.
@@ -92,6 +101,10 @@ static inline std::ostream& operator<<(std::ostream& os, const glm::detail::tmat
 }
 
 template <typename T>
+/// Clamps a value to a given range.
+/** @param val - The value to clamp.
+  * @param min - The lower bound of the range.
+  * @param max - The upper bound of the range. */
 inline T clamp(const T& val, const T& min, const T& max) {
   if(val < min) {
     return min;

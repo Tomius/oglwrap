@@ -6,10 +6,7 @@
 #define OGLWRAP_SHAPES_MESH_HPP_
 
 #include <climits>
-
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+#include "../assimp.hpp"
 
 namespace oglwrap {
 
