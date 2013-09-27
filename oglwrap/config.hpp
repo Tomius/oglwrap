@@ -5,8 +5,10 @@
 #ifndef OGLWRAP_CONFIG_HPP_
 #define OGLWRAP_CONFIG_HPP_
 
+/// A macro to sign functions that are bind-checked in their signature.
 #define BIND_CHECKED
 
+/// A macro for internal use only
 #ifdef GL_LINE
   #define OGLWRAP_OPENGL_INCLUDED 1
 #else
@@ -44,6 +46,13 @@
 /// If true, uses Magick++ API to load images.
 #ifndef OGLWRAP_IMAGEMAGICK
   #define OGLWRAP_IMAGEMAGICK 1
+#endif
+
+/// If true, sacrifices a bit of performance, to increase portability.
+/** For example, excludes codes that do not work well with dual-gpu
+  * systems, but are definitely faster on most configurations. */
+#ifndef OGLWRAP_PORTABILITY_MODE
+  #define OGLWRAP_PORTABILITY_MODE 1
 #endif
 
 #endif // OGLWRAP_CONFIG_HPP_

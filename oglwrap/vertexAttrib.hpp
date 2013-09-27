@@ -396,7 +396,7 @@ public:
   {}
 
   LazyVertexAttribArray operator[](unsigned char idx) {
-    return LazyVertexAttribArray(program_, identifier_ + '[' + (const char)(idx + '0') + ']');
+    return LazyVertexAttribArray(program_, identifier_ + '[' + static_cast<const char>(idx + '0') + ']');
   }
 
   operator VertexAttribArray() {

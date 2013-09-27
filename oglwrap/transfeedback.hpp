@@ -46,7 +46,7 @@ public:
   /// Binds the transform feedback.
   /** @see glBindTransformFeedback */
   void bind() const {
-    gl(BindTransformFeedback(GL_TRANSFORM_FEEDBACK, handle_));
+    gl( BindTransformFeedback(GL_TRANSFORM_FEEDBACK, handle_) );
   }
 #endif // glBindTransformFeedback
 
@@ -54,7 +54,7 @@ public:
   /// Unbinds the currently bound transform feedback.
   /** @see glBindTransformFeedback */
   static void Unbind() {
-    gl(BindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0));
+    gl( BindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0) );
   }
   /// Unbinds the currently bound transform feedback.
   /** @see glBindTransformFeedback */
@@ -68,7 +68,7 @@ public:
   /** @see glGetIntegerv */
   bool isBound() const {
     GLint currentlyBoundTFB;
-    gl(GetIntegerv(GL_TRANSFORM_FEEDBACK, &currentlyBoundTFB));
+    gl( GetIntegerv(GL_TRANSFORM_FEEDBACK, &currentlyBoundTFB) );
     OGLWRAP_LAST_BIND_TARGET = "GL_TRANSFORM_FEEDBACK";
     return handle_ == GLuint(currentlyBoundTFB);
   }
@@ -78,7 +78,7 @@ public:
   /** @param mode - The primitive type the TFB should use.
     * @see glBeginTransformFeedback */
   static void Begin(TFB_PrimType mode) {
-    gl(BeginTransformFeedback(mode));
+    gl( BeginTransformFeedback(mode) );
   }
   /// Begins the transform feedback mode.
   /** @param mode - The primitive type the TFB should use.
@@ -94,7 +94,7 @@ public:
   /// Ends the transform feedback mode.
   /** @see glEndTransformFeedback */
   static void End() {
-    gl(EndTransformFeedback());
+    gl( EndTransformFeedback() );
   }
   /// Ends the transform feedback mode.
   /** @see glEndTransformFeedback */
@@ -109,7 +109,7 @@ public:
   /// Pauses transform feedback operations on the currently active transform feedback object.
   /** @see glPauseTransformFeedback */
   static void Pause() {
-    gl(PauseTransformFeedback());
+    gl( PauseTransformFeedback() );
   }
   /// Pauses transform feedback operations on the currently active transform feedback object.
   /** @see glPauseTransformFeedback */
@@ -124,7 +124,7 @@ public:
   /// Resumes transform feedback operations on the currently active transform feedback object.
   /** @see glResumeTransformFeedback */
   static void Resume() {
-    gl(ResumeTransformFeedback());
+    gl( ResumeTransformFeedback() );
   }
   /// Resumes transform feedback operations on the currently active transform feedback object.
   /** @see glResumeTransformFeedback */

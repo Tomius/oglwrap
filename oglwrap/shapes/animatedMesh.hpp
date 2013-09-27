@@ -6,6 +6,7 @@
 #define OGLWRAP_SHAPES_ANIMATEDMESH_HPP_
 
 #include "mesh.hpp"
+#include "../config.hpp"
 
 namespace oglwrap {
 
@@ -366,16 +367,47 @@ private:
       }
 
       size_t per_vertex_size = current_attrib_max * per_attrib_size;
+      size_t buffer_size = vertices.size() * per_vertex_size;
+
+#if OGLWRAP_PORTABILITY_MODE // Don't use mapping in portability mode
+
+      // Upload the bones data into a continuous buffer then upload that to OpenGL.
+      GLbyte* data = new GLbyte[buffer_size];
+      GLintptr offset = 0;
+      for(size_t i = 0; i < vertices.size(); i++) {
+        size_t curr_size = vertices[i].data.size() * per_attrib_size;
+
+        // Copy the bone data
+        memcpy(
+          data + offset, // destination
+          vertices[i].data.data(),  // source
+          curr_size // length
+        );
+
+        // Zero out all the remaining memory. Remember a
+        // bone with a 0.0f weight doesn't have any influence
+        if(per_vertex_size > curr_size) {
+          memset(
+            data + offset + curr_size, // memory place
+            0, // value
+            per_vertex_size - curr_size // length
+          );
+        }
+
+        offset += per_vertex_size;
+      }
+
+      // upload
+      vertex_bone_data_buffers[entry].data(buffer_size, data);
+      delete[] data;
+
+#else // Upload the bones data in continuous, fix-sized parts using mapping.
 
       // First we have to allocate the buffer's storage.
-      vertex_bone_data_buffers[entry].data(
-        vertices.size() * per_vertex_size,
-        (void*)0
-      );
+      vertex_bone_data_buffers[entry].data(buffer_size, (void*)0);
 
-      // Then upload the bones data in continuous, fix-sized parts.
       {
-        // The map gets unmapped when it's lifetime ends
+        // The buffer gets unmapped when it's lifetime ends
         ArrayBuffer::Map bones_buffer_map(BufferMapAccess::Write);
         GLintptr offset = 0;
         for(size_t i = 0; i < vertices.size(); i++) {
@@ -401,6 +433,9 @@ private:
           offset += per_vertex_size;
         }
       }
+
+#endif // OGLWRAP_PORTABILITY_MODE
+
     }
 
     // Unbind our things, so they won't be modified from outside
