@@ -2,8 +2,8 @@
     @brief A Mesh loader using assimp
 */
 
-#ifndef OGLWRAP_SHAPES_MESH_HPP_
-#define OGLWRAP_SHAPES_MESH_HPP_
+#ifndef OGLWRAP_MESH_MESH_HPP_
+#define OGLWRAP_MESH_MESH_HPP_
 
 #include <climits>
 #include "../assimp.hpp"
@@ -400,4 +400,4 @@ public:
 
 } // namespace oglwrap
 
-#endif // OGLWRAP_SHAPES_MESH_HPP_
+#endif // OGLWRAP_MESH_MESH_HPP_

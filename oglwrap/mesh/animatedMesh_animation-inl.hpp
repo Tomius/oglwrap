@@ -1,5 +1,5 @@
-#ifndef OGLWRAP_SHAPES_ANIMATED_MESH_ANIMATION_INL_HPP_
-#define OGLWRAP_SHAPES_ANIMATED_MESH_ANIMATION_INL_HPP_
+#ifndef OGLWRAP_MESH_ANIMATED_MESH_ANIMATION_INL_HPP_
+#define OGLWRAP_MESH_ANIMATED_MESH_ANIMATION_INL_HPP_
 
 #include "animatedMesh.hpp"
 
@@ -128,7 +128,7 @@ void AnimatedMesh::updateBoneTree(float animationTime,
       calcInterpolatedPosition(translation, animationTime, node_anim);
       glm::mat4 translationM;
 
-      if(node_name == root_bone) {
+      if(node_name == skinning_data.root_bone) {
          current_anim.offset = glm::vec3(translation.x, 0, translation.z);
          if(current_anim.flags & AnimFlag::Mirrored) {
             current_anim.offset *= -1;
@@ -142,10 +142,12 @@ void AnimatedMesh::updateBoneTree(float animationTime,
    }
 
    glm::mat4 globalTransformation = parent_transform * nodeTransform;
-   if(bone_mapping.find(node_name) != bone_mapping.end()) {
-      unsigned bone_idx = bone_mapping[node_name];
-      bone_info[bone_idx].final_transform =
-         global_inverse_transform * globalTransformation * bone_info[bone_idx].bone_offset;
+   if(skinning_data.bone_mapping.find(node_name) != skinning_data.bone_mapping.end()) {
+      unsigned bone_idx = skinning_data.bone_mapping[node_name];
+      skinning_data.bone_info[bone_idx].final_transform =
+         skinning_data.global_inverse_transform *
+         globalTransformation *
+         skinning_data.bone_info[bone_idx].bone_offset;
    }
    for(unsigned i = 0; i < node->mNumChildren; i++) {
       updateBoneTree(animationTime, node->mChildren[i], globalTransformation);
@@ -184,7 +186,7 @@ void AnimatedMesh::updateBoneTree_inTransition(float prevAnimationTime,
       calcInterpolatedPosition(nextTranslation, nextAnimationTime, nextNodeAnim);
       aiVector3D translation = interpolate(prevTranslation, nextTranslation, factor);
       glm::mat4 translationM;
-      if(node_name == root_bone) {
+      if(node_name == skinning_data.root_bone) {
          current_anim.offset = glm::vec3(nextTranslation.x, 0, nextTranslation.z);
          if(current_anim.flags & AnimFlag::Mirrored) {
             current_anim.offset *= -1;
@@ -197,10 +199,12 @@ void AnimatedMesh::updateBoneTree_inTransition(float prevAnimationTime,
       node_transform = translationM * rotationM * scalingM;
    }
    glm::mat4 global_transformation = parent_transform * node_transform;
-   if(bone_mapping.find(node_name) != bone_mapping.end()) {
-      unsigned bone_idx = bone_mapping[node_name];
-      bone_info[bone_idx].final_transform =
-         global_inverse_transform * global_transformation * bone_info[bone_idx].bone_offset;
+   if(skinning_data.bone_mapping.find(node_name) != skinning_data.bone_mapping.end()) {
+      unsigned bone_idx = skinning_data.bone_mapping[node_name];
+      skinning_data.bone_info[bone_idx].final_transform =
+           skinning_data.global_inverse_transform *
+           global_transformation *
+           skinning_data.bone_info[bone_idx].bone_offset;
    }
    for(unsigned i = 0; i < node->mNumChildren; i++) {
       updateBoneTree_inTransition(
@@ -217,7 +221,7 @@ void AnimatedMesh::updateBoneInfo(float time) {
 
    float last_ticks_per_second = last_anim.handle->mAnimations[0]->mTicksPerSecond > 1e-10 ? // != 0
                                  last_anim.handle->mAnimations[0]->mTicksPerSecond : 24.0f;
-   float last_time_in_ticks = last_period_time * (last_anim.speed * last_ticks_per_second);
+   float last_time_in_ticks = meta_info.last_period_time * (last_anim.speed * last_ticks_per_second);
    float last_animation_time;
    if(last_anim.flags & AnimFlag::Repeat) {
       last_animation_time = fmod(last_time_in_ticks, (float)last_anim.handle->mAnimations[0]->mDuration);
@@ -231,7 +235,7 @@ void AnimatedMesh::updateBoneInfo(float time) {
    float current_ticks_per_second = current_anim.handle->mAnimations[0]->mTicksPerSecond > 1e-10 ? // != 0
                                     current_anim.handle->mAnimations[0]->mTicksPerSecond : 24.0f;
    float current_time_in_ticks =
-      (time - end_of_last_anim) * (current_anim.speed * current_ticks_per_second);
+      (time - meta_info.end_of_last_anim) * (current_anim.speed * current_ticks_per_second);
    float current_animation_time;
    if(current_anim.flags & AnimFlag::Repeat) {
       current_animation_time = fmod(current_time_in_ticks, (float)current_anim.handle->mAnimations[0]->mDuration);
@@ -249,8 +253,8 @@ void AnimatedMesh::updateBoneInfo(float time) {
       current_animation_time = (float)current_anim.handle->mAnimations[0]->mDuration - current_animation_time;
    }
 
-   bool in_transition = transition_time < time - end_of_last_anim;
-   float transition_factor = (time - end_of_last_anim) / transition_time;
+   bool in_transition = meta_info.transition_time < time - meta_info.end_of_last_anim;
+   float transition_factor = (time - meta_info.end_of_last_anim) / meta_info.transition_time;
 
    if(in_transition) {
       // Normal animation
@@ -264,33 +268,33 @@ void AnimatedMesh::updateBoneInfo(float time) {
    // Start a new loop if necessary
    if(current_anim.flags & AnimFlag::Repeat) {
       unsigned loop_count = current_time_in_ticks / (float)current_anim.handle->mAnimations[0]->mDuration;
-      if(loop_count > last_loop_count) {
+      if(loop_count > meta_info.last_loop_count) {
          if((current_anim.flags & AnimFlag::MirroredRepeat) == AnimFlag::MirroredRepeat) {
             current_anim.flags ^= AnimFlag::Mirrored;
             current_anim.flags ^= AnimFlag::Backwards;
          }
          if(current_anim.flags & AnimFlag::Backwards) {
-            last_anim.offset = current_anim.offset = end_offsets[current_anim.idx];
+            last_anim.offset = current_anim.offset = anims[current_anim.idx].end_offset;
          } else {
-            last_anim.offset = current_anim.offset = start_offsets[current_anim.idx];
+            last_anim.offset = current_anim.offset = anims[current_anim.idx].start_offset;
          }
          if(current_anim.flags & AnimFlag::Mirrored) {
             last_anim.offset *= -1;
             current_anim.offset *= -1;
          }
       }
-      last_loop_count = loop_count;
+      meta_info.last_loop_count = loop_count;
    }
 }
 
 void AnimatedMesh::boneTransform(float time,
                                  LazyUniform<glm::mat4>& bones) {
    updateBoneInfo(time);
-   for(unsigned i = 0; i < num_bones; i++) {
-      bones[i] = bone_info[i].final_transform;
+   for(unsigned i = 0; i < skinning_data.num_bones; i++) {
+      bones[i] = skinning_data.bone_info[i].final_transform;
    }
 }
 
 } // namespace oglwrap
 
-#endif // OGLWRAP_SHAPES_ANIMATED_MESH_ANIMATION_INL_HPP_
+#endif // OGLWRAP_MESH_ANIMATED_MESH_ANIMATION_INL_HPP_
