@@ -42,51 +42,47 @@ enum AnimFlag {
 }
 typedef _AnimFlag::AnimFlag AnimFlag;
 
+/// A class storing an animation's state.
+struct AnimationState {
+  /// The handle to the animation.
+  const aiScene* handle;
+
+  /// The index of the animation in the anim vector.
+  size_t idx;
+
+  /// The offset of the root bone of the animated object inside the animation, on the XZ plain.
+  glm::vec3 offset;
+
+  /// The current animation modifier flags.
+  unsigned flags;
+
+  /// The speed modifier
+  float speed;
+
+  /// Default constructor
+  AnimationState()
+      : handle(nullptr)
+      , idx(0)
+      , flags(0)
+      , speed(1.0f)
+  { }
+};
+
 class AnimatedMesh : public Mesh {
 
   template<class Index_t>
   /// A struct containing an "ivec4" for the boneIDs, and a vec4 for bone weights.
   /** The boneIDs part is not fixed to be int (unsigned), it becomes the smallest type
     * that possible to store the all the ids of the bones. */
-  struct VertexBoneData_PerAttribute {
-    Index_t ids[4];
-    float weights[4];
-
-    VertexBoneData_PerAttribute() {
-      memset(ids, 0, sizeof(ids));
-      memset(weights, 0, sizeof(weights));
-    };
-  };
+  struct VertexBoneData_PerAttribute;
 
   template<class Index_t>
-  /// Contains an array of VertexBoneData_PerAttribute. The size ma
-  struct VertexBoneData {
-    std::vector<VertexBoneData_PerAttribute<Index_t>> data;
-
-    void AddBoneData(Index_t boneID, float weight) {
-      do {
-        for(size_t i = 0; i < data.size(); i++) {
-          for(int j = 0; j < 4; j++) {
-            if(data[i].weights[j] < 1e-10) { // if equals 0
-              data[i].ids[j] = boneID;
-              data[i].weights[j] = weight;
-              return;
-            }
-          }
-        }
-
-        // If there isn't enough space yet, then make some new
-        data.push_back(VertexBoneData_PerAttribute<Index_t>());
-
-      } while(data.size() < 8); // Bone attributes shouldn't use up all the 16 attribute slots.
-    }
-  };
+  /// Contains an array of VertexBoneData_PerAttribute.
+  /** The size of that vector varies per vertex. */
+  struct VertexBoneData;
 
   /// A structure for storing the default, relative-to-parent, and current transformations.
-  struct BoneInfo {
-    glm::mat4 bone_offset;
-    glm::mat4 final_transform;
-  };
+  struct BoneInfo;
 
   /// The OpenGL buffers for the vertex bone data.
   std::vector<ArrayBuffer> vertex_bone_data_buffers;
@@ -126,22 +122,8 @@ class AnimatedMesh : public Mesh {
   /// maps user defined animation names to indexes.
   std::map<std::string, size_t> anim_names;
 
-  /// The handle for the previous animation.
-  /** It is stored for transitions between animations. */
-  const aiScene *last_anim;
-
-  /// The handle to the currently running animation.
-  const aiScene *current_anim;
-
   /// The index of the default animation.
   size_t default_idx;
-
-  /// The index of the previous animation.
-  /** It is stored for transitions between animations. */
-  size_t last_idx;
-
-  /// The index of the currently running animation.
-  size_t curr_idx;
 
   /// The fading time that is used when changing the animation back to the default one.
   float default_transition_time;
@@ -163,14 +145,6 @@ class AnimatedMesh : public Mesh {
   /// The offset values at the ends of the animations
   std::vector<glm::vec3> end_offsets;
 
-  /// The offset value in the last frame.
-  /** It is needed to know how much did the offset change,
-    * and that value is used to move the character. */
-  glm::vec3 last_offset;
-
-  /// The current offset of the root bone of the animated object inside the animation, on the XZ plain.
-  glm::vec3 current_offset;
-
   /// It is used to detect when did the animation start a new cycle.
   /** For animations that have AnimFlag::Repeat flag specified only, of course. */
   unsigned last_loop_count;
@@ -181,20 +155,14 @@ class AnimatedMesh : public Mesh {
   /// Default animation flags specified in the addAnimation function.
   std::vector<unsigned> default_flags;
 
-  /// The flags of the last animation. Some flags might modify how transitions should be made.
-  unsigned last_flags;
-
-  /// The current animation modifier flags.
-  unsigned current_flags;
-
-  /// Speed modifier
-  float current_speed;
-
-  /// Last speed modifier
-  float last_speed;
-
   /// Default speed modifiers
   std::vector<float> speed_modifiers;
+
+  /// The current animation.
+  AnimationState current_anim;
+
+  /// The last animation.
+  AnimationState last_anim;
 
 public:
   AnimatedMesh(const std::string& filename, unsigned int flags)
@@ -203,20 +171,12 @@ public:
     , num_bones(0)
     , max_bone_attrib_num(0)
     , is_setup_bones(false)
-    , last_anim(nullptr)
-    , current_anim(nullptr)
     , default_idx(0)
-    , last_idx(0)
-    , curr_idx(0)
     , default_transition_time(0)
     , transition_time(0)
     , end_of_last_anim(0)
     , last_period_time(0)
-    , last_loop_count(0)
-    , last_flags(0)
-    , current_flags(0)
-    , current_speed(1.0f)
-    , last_speed(1.0f) {
+    , last_loop_count(0) {
 
     glm::mat4 matrix = convertMatrix(scene->mRootNode->mTransformation);
     global_inverse_transform = glm::inverse(matrix);
@@ -296,43 +256,43 @@ private:
 
   /// Returns the index of the currently active translation keyframe for the given animation and time.
   /// @param animationTime - The time elapsed since the start of this animation.
-  /// @param nodeAnim - The animation node, in which the function should search for a keyframe.
-  unsigned findPosition(float animationTime, const aiNodeAnim* nodeAnim);
+  /// @param node_anim - The animation node, in which the function should search for a keyframe.
+  unsigned findPosition(float animationTime, const aiNodeAnim* node_anim);
 
   /// Returns the index of the currently active rotation keyframe for the given animation and time.
   /// @param animationTime - The time elapsed since the start of this animation.
-  /// @param nodeAnim - The animation node, in which the function should search for a keyframe.
-  unsigned findRotation(float animationTime, const aiNodeAnim* nodeAnim);
+  /// @param node_anim - The animation node, in which the function should search for a keyframe.
+  unsigned findRotation(float animationTime, const aiNodeAnim* node_anim);
 
   /// Returns the index of the currently active scaling keyframe for the given animation and time.
   /// @param animationTime - The time elapsed since the start of this animation.
-  /// @param nodeAnim - The animation node, in which the function should search for a keyframe.
-  unsigned findScaling(float animationTime, const aiNodeAnim* nodeAnim);
+  /// @param node_anim - The animation node, in which the function should search for a keyframe.
+  unsigned findScaling(float animationTime, const aiNodeAnim* node_anim);
 
   /// Returns a linearly interpolated value between the previous and next translation keyframes.
   /// @param out - Returns the result here.
   /// @param animationTime - The time elapsed since the start of this animation.
-  /// @param nodeAnim - The animation node, in which the function should search for the keyframes.
-  void calcInterpolatedPosition(aiVector3D& out, float animTime, const aiNodeAnim* nodeAnim);
+  /// @param node_anim - The animation node, in which the function should search for the keyframes.
+  void calcInterpolatedPosition(aiVector3D& out, float animTime, const aiNodeAnim* node_anim);
 
   /// Returns a spherically interpolated value (always choosing the short path) between the previous and next rotation keyframes.
   /// @param out - Returns the result here.
   /// @param animationTime - The time elapsed since the start of this animation.
-  /// @param nodeAnim - The animation node, in which the function should search for the keyframes.
-  void calcInterpolatedRotation(aiQuaternion& out, float animTime, const aiNodeAnim* nodeAnim);
+  /// @param node_anim - The animation node, in which the function should search for the keyframes.
+  void calcInterpolatedRotation(aiQuaternion& out, float animTime, const aiNodeAnim* node_anim);
 
   /// Returns a linearly interpolated value between the previous and next scaling keyframes.
   /** @param out - Returns the result here.
     * @param animationTime - The time elapsed since the start of this animation.
-    * @param nodeAnim - The animation node, in which the function should search for the keyframes. */
-  void calcInterpolatedScaling(aiVector3D& out, float animTime, const aiNodeAnim* nodeAnim);
+    * @param node_anim - The animation node, in which the function should search for the keyframes. */
+  void calcInterpolatedScaling(aiVector3D& out, float animTime, const aiNodeAnim* node_anim);
 
   /// Returns the animation node in the given animation, referenced by its name.
   /** Returns nullptr if it doesn't find a node with that name,
     * which usually means that it's not a bone.
     * @param animation - The animation, this function should search in.
-    * @param nodeName - The name of the bone to search. */
-  const aiNodeAnim* findNodeAnim(const aiAnimation* animation, const std::string nodeName);
+    * @param node_name - The name of the bone to search. */
+  const aiNodeAnim* findNodeAnim(const aiAnimation* animation, const std::string node_name);
 
   /// Recursive function that travels through the entire node hierarchy, and creates transformation values in world space.
   /** Bone transformations are stored relative to their parents. That's why it is needed.
@@ -341,21 +301,21 @@ private:
     * externally do the object's movement, as normally it will stay right where it was at the start of the animation.
     * @param animationTime - The current animation time.
     * @param node - The node (bone) whose, and whose child's transformation should be updated. You should call this function with the root node.
-    * @param parentTransform - The transformation of the parent node. You should call it with an identity matrix. */
+    * @param parent_transform - The transformation of the parent node. You should call it with an identity matrix. */
   void updateBoneTree(float animationTime,
                          const aiNode* node,
-                         const glm::mat4& parentTransform = glm::mat4());
+                         const glm::mat4& parent_transform = glm::mat4());
 
   /// Does the same thing as readNodeHierarchy, but it is used to create transitions between animations, so it interpolates between four keyframes not two.
   /** @param prevAnimationTime - The animation time of when, the last animation was interrupted.
     * @param nextAnimationTime - The current animation time.
     * @param node - The node (bone) whose, and whose child's transformation should be updated. You should call this function with the root node.
-    * @param parentTransform - The transformation of the parent node. You should call it with an identity matrix. */
+    * @param parent_transform - The transformation of the parent node. You should call it with an identity matrix. */
   void updateBoneTree_inTransition(float prevAnimationTime,
                                    float nextAnimationTime,
                                    float factor,
                                    const aiNode* node,
-                                   const glm::mat4& parentTransform  = glm::mat4());
+                                   const glm::mat4& parent_transform  = glm::mat4());
 
   /// Does what it's name says, updates the bones transformations.
   /** @param time_in_seconds - Expected to be a time value in seconds. It doesn't matter, since when does it count the time, just it should be counting up. */
@@ -396,12 +356,12 @@ public:
 
 private:
   /// Changes the current animation to a specified one.
-  /** @param animIndex - The index of the new animation.
+  /** @param anim_idx - The index of the new animation.
     * @param currentTime - The current time in seconds, optimally since the start of the program.
     * @param transition_time - The fading time to be used for the transition.
     * @param flags - A bitfield containing the animation specifier flags.
     * @param speed - Sets the speed of the animation. If it's 0, will play with the speed specified at the addAnim. If it's negative, it will be played backwards. */
-  void change_animation(size_t animIndex,
+  void change_animation(size_t anim_idx,
                         float currentTime,
                         float transition_time,
                         unsigned flags,
@@ -484,6 +444,7 @@ public:
 
 } // namespace oglwrap
 
+#include "animatedMesh_general-inl.hpp"
 #include "animatedMesh_skinning-inl.hpp"
 #include "animatedMesh_animation-inl.hpp"
 #include "animatedMesh_animation-control-inl.hpp"
