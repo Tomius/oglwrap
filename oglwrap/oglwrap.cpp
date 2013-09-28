@@ -8,7 +8,7 @@
 #include "oglwrap.hpp"
 #include "shapes/cube.hpp"
 #include "shapes/fullScreenPic.hpp"
-#include "shapes/mesh.hpp"
+#include "mesh/mesh.hpp"
 
 using namespace oglwrap;
 
