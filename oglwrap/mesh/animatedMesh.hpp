@@ -18,11 +18,11 @@ class AnimatedMesh : public Mesh {
   /// Stores data related to skin definition.
   SkinningData skinning_data;
 
-  /// The animations
+  /// The animations.
   AnimData anims;
 
   /// Stores data to handle animation transitions.
-  AnimMetaInfo meta_info;
+  AnimMetaInfo anim_meta_info;
 
   /// The current animation.
   AnimationState current_anim;

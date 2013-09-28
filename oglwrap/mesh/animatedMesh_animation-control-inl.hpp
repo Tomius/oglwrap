@@ -49,9 +49,9 @@ void AnimatedMesh::set_default_animation(const std::string& anim_name,
          "but the AnimatedMesh doesn't have an animation with that name"
       );
    }
-   meta_info.default_idx = anims.names[anim_name];
-   meta_info.default_transition_time = default_transition_time;
-   if(!(anims[meta_info.default_idx].flags & AnimFlag::Repeat)) {
+   anim_meta_info.default_idx = anims.names[anim_name];
+   anim_meta_info.default_transition_time = default_transition_time;
+   if(!(anims[anim_meta_info.default_idx].flags & AnimFlag::Repeat)) {
       throw std::invalid_argument(
          "Tried to set a default animation that didn't have the "
          "repeat flag, but the default animation must be a cycle."
@@ -96,9 +96,9 @@ void AnimatedMesh::change_animation(size_t anim_idx,
    }
 
    // Meta animation data
-   meta_info.transition_time = transition_time;
-   meta_info.last_period_time = current_time - meta_info.end_of_last_anim;
-   meta_info.end_of_last_anim = current_time;
+   anim_meta_info.transition_time = transition_time;
+   anim_meta_info.last_period_time = current_time - anim_meta_info.end_of_last_anim;
+   anim_meta_info.end_of_last_anim = current_time;
 }
 
 void AnimatedMesh::set_current_animation(const std::string& anim_name,
@@ -106,7 +106,7 @@ void AnimatedMesh::set_current_animation(const std::string& anim_name,
                                          float transition_time,
                                          unsigned flags,
                                          float speed) {
-   if((meta_info.end_of_last_anim + meta_info.transition_time) <= current_time
+   if((anim_meta_info.end_of_last_anim + anim_meta_info.transition_time) <= current_time
          && (current_anim.flags & AnimFlag::Interruptable)) {
       force_current_animation(anim_name, current_time, transition_time, flags, speed);
    }
@@ -150,7 +150,7 @@ void AnimatedMesh::set_current_animation(const std::string& anim_name,
                                          float current_time,
                                          float transition_time,
                                          float speed) {
-   if((meta_info.end_of_last_anim + meta_info.transition_time) <= current_time
+   if((anim_meta_info.end_of_last_anim + anim_meta_info.transition_time) <= current_time
          && (current_anim.flags & AnimFlag::Interruptable)
      ) {
       force_current_animation(anim_name, current_time, transition_time, speed);
@@ -198,14 +198,14 @@ void AnimatedMesh::set_anim_to_default(float current_time) {
 }
 
 void AnimatedMesh::force_anim_to_default(float current_time) {
-   assert(anims[meta_info.default_idx].flags & AnimFlag::Repeat);
-   if(current_anim.handle != anims[meta_info.default_idx].handle)
+   assert(anims[anim_meta_info.default_idx].flags & AnimFlag::Repeat);
+   if(current_anim.handle != anims[anim_meta_info.default_idx].handle)
       change_animation(
-         meta_info.default_idx,
+         anim_meta_info.default_idx,
          current_time,
-         meta_info.default_transition_time,
-         anims[meta_info.default_idx].flags,
-         anims[meta_info.default_idx].speed
+         anim_meta_info.default_transition_time,
+         anims[anim_meta_info.default_idx].flags,
+         anims[anim_meta_info.default_idx].speed
       );
 }
 

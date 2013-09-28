@@ -17,7 +17,7 @@ struct AnimInfo {
   /// Default animation flag for this animation.
   unsigned flags;
 
-  /// Default speed modifiers.
+  /// Default speed modifier.
   float speed;
 
   /// The offset value at the starts of the animation.

@@ -147,7 +147,7 @@ public:
   /** @see glCheckFramebufferStatus */
   static FramebufferStatus Status() {
     GLenum status = gl(CheckFramebufferStatus(FBO_TYPE));
-    return status;
+    return FramebufferStatus(status);
   }
   /// Returns the status of a bound framebuffer.
   /** @see glCheckFramebufferStatus */

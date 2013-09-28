@@ -221,7 +221,7 @@ void AnimatedMesh::updateBoneInfo(float time) {
 
    float last_ticks_per_second = last_anim.handle->mAnimations[0]->mTicksPerSecond > 1e-10 ? // != 0
                                  last_anim.handle->mAnimations[0]->mTicksPerSecond : 24.0f;
-   float last_time_in_ticks = meta_info.last_period_time * (last_anim.speed * last_ticks_per_second);
+   float last_time_in_ticks = anim_meta_info.last_period_time * (last_anim.speed * last_ticks_per_second);
    float last_animation_time;
    if(last_anim.flags & AnimFlag::Repeat) {
       last_animation_time = fmod(last_time_in_ticks, (float)last_anim.handle->mAnimations[0]->mDuration);
@@ -235,7 +235,7 @@ void AnimatedMesh::updateBoneInfo(float time) {
    float current_ticks_per_second = current_anim.handle->mAnimations[0]->mTicksPerSecond > 1e-10 ? // != 0
                                     current_anim.handle->mAnimations[0]->mTicksPerSecond : 24.0f;
    float current_time_in_ticks =
-      (time - meta_info.end_of_last_anim) * (current_anim.speed * current_ticks_per_second);
+      (time - anim_meta_info.end_of_last_anim) * (current_anim.speed * current_ticks_per_second);
    float current_animation_time;
    if(current_anim.flags & AnimFlag::Repeat) {
       current_animation_time = fmod(current_time_in_ticks, (float)current_anim.handle->mAnimations[0]->mDuration);
@@ -253,8 +253,8 @@ void AnimatedMesh::updateBoneInfo(float time) {
       current_animation_time = (float)current_anim.handle->mAnimations[0]->mDuration - current_animation_time;
    }
 
-   bool in_transition = meta_info.transition_time < time - meta_info.end_of_last_anim;
-   float transition_factor = (time - meta_info.end_of_last_anim) / meta_info.transition_time;
+   bool in_transition = anim_meta_info.transition_time < time - anim_meta_info.end_of_last_anim;
+   float transition_factor = (time - anim_meta_info.end_of_last_anim) / anim_meta_info.transition_time;
 
    if(in_transition) {
       // Normal animation
@@ -268,7 +268,7 @@ void AnimatedMesh::updateBoneInfo(float time) {
    // Start a new loop if necessary
    if(current_anim.flags & AnimFlag::Repeat) {
       unsigned loop_count = current_time_in_ticks / (float)current_anim.handle->mAnimations[0]->mDuration;
-      if(loop_count > meta_info.last_loop_count) {
+      if(loop_count > anim_meta_info.last_loop_count) {
          if((current_anim.flags & AnimFlag::MirroredRepeat) == AnimFlag::MirroredRepeat) {
             current_anim.flags ^= AnimFlag::Mirrored;
             current_anim.flags ^= AnimFlag::Backwards;
@@ -283,7 +283,7 @@ void AnimatedMesh::updateBoneInfo(float time) {
             current_anim.offset *= -1;
          }
       }
-      meta_info.last_loop_count = loop_count;
+      anim_meta_info.last_loop_count = loop_count;
    }
 }
 
