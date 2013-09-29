@@ -22,6 +22,7 @@ int main() {
     assert(glewInit() == GLEW_OK);
 
     buf.bind();
+    buf.data(-1, (void*)0);
 
     Texture2D tex;
     tex.bind();

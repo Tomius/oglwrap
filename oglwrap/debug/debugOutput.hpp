@@ -33,7 +33,8 @@ class DebugOutput {
     STACK_UNDERFLOW,
     OUT_OF_MEMORY,
     INVALID_FRAMEBUFFER_OPERATION,
-    NUM_ERRORS
+    NUM_ERRORS,
+    ADDITIONAL_NOTES = NUM_ERRORS
   };
 
   const char* glErrorNames[NUM_ERRORS] = {
@@ -48,11 +49,11 @@ class DebugOutput {
 
   struct ErrorInfo {
     std::string funcSignature;
-    std::string errors[NUM_ERRORS];
+    std::string errors[NUM_ERRORS + 1];
 
     ErrorInfo() {}
     ErrorInfo(const std::string& funcS, const std::string errs[]) : funcSignature(funcS) {
-      for(int i = 0; i < NUM_ERRORS; i++) {
+      for(int i = 0; i < NUM_ERRORS + 1; i++) {
         errors[i] = errs[i];
       }
     }
@@ -108,21 +109,15 @@ public:
 
     // Read until EOF, or until an error occurs.
     while(is.good()) {
-      std::string func, funcSignature, errors[NUM_ERRORS];
+      std::string func, funcSignature, errors[NUM_ERRORS + 1];
       std::string buffer, buffer2;
 
-      // Get the first not empty row, containing the function's name
-      while(getline(is, func) && func.empty());
-
-      // Get lines until we find we ending with );
-      while(getline(is, buffer)) {
-        while(isspace(buffer[buffer.size() - 1])) {
-          buffer.pop_back();
-        }
-        funcSignature += "    " + buffer + '\n';
-        if(buffer[buffer.size() - 1] == ';' && buffer[buffer.size() - 2] == ')') {
-          break;
-        }
+      // Get lines until we find ending with );
+      while(getline(is, funcSignature) && funcSignature.empty());
+      {
+        size_t end_pos = funcSignature.find('(');
+        size_t start_pos = funcSignature.rfind(' ', end_pos) + 1;
+        func = funcSignature.substr(start_pos, end_pos - start_pos);
       }
 
       // Get the error messages
@@ -130,17 +125,21 @@ public:
 
         std::stringstream strstream(buffer);
         strstream >> buffer2;
+        bool found_error = false;
+
         for(int i = 0; i < NUM_ERRORS; i++) {
           if(buffer2 == glErrorNames[i]) {
-
             // Make the error string a bit nicer
-            std::string errIsGendIf(buffer2 + " is generated if ");
-            if(buffer.find(errIsGendIf) == 0) {
-              buffer.erase(0, errIsGendIf.size() - 2);
-            } else {
-              std::string errMayBeGendIf(buffer2 + " may be generated if ");
-              if(buffer.find(errMayBeGendIf) == 0) {
-                buffer.erase(0, errMayBeGendIf.size() - 2);
+            const char * possible_starts[3] = {
+              " is generated if ",
+              " error is generated if ",
+              " may be generated if ",
+            };
+            for(int i = 0; i < 3; i++) {
+              std::string errIsGendIf(buffer2 + possible_starts[i]);
+              if(buffer.find(errIsGendIf) == 0) {
+                buffer.erase(0, errIsGendIf.size() - 2);
+                break;
               }
             }
             buffer[0] = '-';
@@ -148,8 +147,14 @@ public:
             buffer[2] = toupper(buffer[2]);
 
             errors[i] += buffer + '\n';
+            found_error = true;
             break;
           }
+        }
+
+        // If it wasn't an error, than it was a general note
+        if(!found_error) {
+          errors[ADDITIONAL_NOTES] += buffer + '\n';
         }
       }
 
@@ -177,9 +182,11 @@ public:
     if(errorMap.find(funcName) != errorMap.end() && !errorMap[funcName].errors[errIdx].empty()) {
       ErrorInfo errinfo = errorMap[funcName];
       sstream << "The following OpenGL function: " << std::endl << std::endl;
-      sstream << errinfo.funcSignature << std::endl;
+      sstream << errinfo.funcSignature << std::endl << std::endl;
       sstream << "Has generated the error because one of the following(s) were true:" << std::endl;
       sstream << errinfo.errors[errIdx];
+      if(!errinfo.errors[ADDITIONAL_NOTES].empty())
+        sstream << errinfo.errors[ADDITIONAL_NOTES];
     }
 
     sstream << std::endl;

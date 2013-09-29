@@ -75,12 +75,6 @@ public class Generate_GLerrors {
     	}
 	}
 	
-	public static String GetFuncName(String signature) {
-		int end_pos = signature.indexOf('(');
-		int start_pos = signature.lastIndexOf(' ', end_pos) + 1;
-		return signature.substring(start_pos, end_pos);
-	}
-	
 	public static void ParsePage(PrintWriter writer, String glfunc) {
 	    try {
 	    	URL url = new URL("http://www.opengl.org/sdk/docs/man/xhtml/" + glfunc);
@@ -101,9 +95,6 @@ public class Generate_GLerrors {
 	        if(functions != null && errors != null) {
         		for(int i = 0; i != functions.size(); ++i) {
         			if(!functions.get(i).isEmpty()) {
-        				// Print function name
-            			writer.println(GetFuncName(functions.get(i)));
-            			
             			// Print function signature
             			writer.println(functions.get(i));
     	        		
@@ -124,7 +115,9 @@ public class Generate_GLerrors {
 	
 	public static void main(String[] args) {
 	    try {
-	    	URL url = new URL("http://www.opengl.org/sdk/docs/man/xhtml/index.html");
+	    	String documentation_page = "http://www.opengl.org/sdk/docs/man/xhtml/index.html";
+	    	System.out.println("Connecting to: " + documentation_page);
+	    	URL url = new URL(documentation_page);
 	    	BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
 	    	PrintWriter writer = new PrintWriter("GLerrors.txt", "UTF-8");
 	    	String line = null;
