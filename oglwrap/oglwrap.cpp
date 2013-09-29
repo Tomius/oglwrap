@@ -12,7 +12,7 @@
 
 using namespace oglwrap;
 
-ArrayBuffer buf;
+UniformBuffer buf;
 
 int main() {
     sf::Window window(
@@ -21,7 +21,7 @@ int main() {
     );
     assert(glewInit() == GLEW_OK);
 
-    buf.bind();
+    buf.bindRange(2, -1, -1);
     buf.data(-1, (void*)0);
 
     Texture2D tex;

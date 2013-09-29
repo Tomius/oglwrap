@@ -8,7 +8,7 @@ public class Generate_GLerrors {
 			int div_depth = 1;
 			
 			while(div_depth > 0) {
-				if(pos + 6 > line.length() - 1) {
+				if(pos + 6 > line.length()) {
 					line.append(br.readLine());
 				}
 				String str = line.substring(pos, pos + 6);
@@ -22,10 +22,13 @@ public class Generate_GLerrors {
 			return pos;
 	    } catch (IOException ioe) {
 	         ioe.printStackTrace();
-	    } finally { }
+	    } 
 		return -1;
 	}
-	public static void ParseParagraph(ArrayList<String> strings, BufferedReader br, String line, String id) {
+	public static void ParseParagraph(ArrayList<String> strings, 
+									  BufferedReader br, 
+									  String line, 
+									  String id) {
 		String current_string = new String();
 		int start_pos = -1;
     	while((start_pos = line.indexOf(id, start_pos + 1)) > 0) {
@@ -38,7 +41,7 @@ public class Generate_GLerrors {
     		line = sb.toString();
     		boolean in_tag = false;
     		// The documentation's source has a lot of 
-    		// consecutive spaces, which do nothing in HTML...
+    		// consecutive spaces in it, which do nothing in HTML...
     		boolean was_last_space = false; 
     		for(int i = start_pos; i < end_pos; ++i) {
     			char chr = line.charAt(i);
@@ -47,26 +50,47 @@ public class Generate_GLerrors {
     			else if(chr == '>')
     				in_tag = false;
     			else {
-    				if(!in_tag && chr != '\t'){
-						if(Character.isSpaceChar(chr)) {
+    				if(!in_tag) {
+						if(Character.isSpaceChar(chr) || chr == '\t') {
     						if(!was_last_space && !current_string.isEmpty()) {
-    							current_string = current_string + chr;
+    							current_string = current_string + ' ';
     						} 
     						was_last_space = true;
     					} else {
-    						if(chr == ';') {
-    							strings.add(current_string + chr);
+    						if(chr == '&') {
+    							if(i+4 > line.length()) {
+    								try{    									
+    									line += br.readLine();
+    								} catch (IOException ioe) {
+    								    ioe.printStackTrace();
+    							    }
+    							}
+    							String next4 = line.substring(i, i + 4);
+    							if(next4.startsWith("&gt;")) {
+    								current_string = current_string + "> ";
+    								was_last_space = true;
+    								i += 3; // The for cycle will increment it too
+    							} else if(next4.startsWith("&lt;")) {
+    								current_string = current_string + "< ";
+    								was_last_space = true;
+    								i += 3; // The for cycle will increment it too
+    							} else {
+    								current_string = current_string + chr;
+    								was_last_space = false;
+    							}
+    						} else if(chr == ';') {
+								strings.add(current_string + chr);
     	    					current_string = new String();
+    	    					was_last_space = false;
     						} else {
     							current_string = current_string + chr;
     							was_last_space = false;
     						}
     					}	
-    				} else if(line.charAt(i - 1) == '<' && 
-    						chr == 'p' &&
-    						line.charAt(i + 1) == '>') {
+    				} else if(line.substring(i - 1, i + 2).contains("<p>")) {
     					strings.add(current_string);
     					current_string = new String();
+    					was_last_space = false;
     				}
     			}	
     		}
@@ -100,7 +124,9 @@ public class Generate_GLerrors {
     	        		
     	        		// Print possible errors
     	        		for(int j = 0; j != errors.size(); ++j) {
-    	        			writer.println(errors.get(j));
+    	        			if(!errors.get(j).isEmpty()) {
+    	        				writer.println(errors.get(j));
+    	        			}
     	        		}
     	        		writer.print('\n');
         			}
@@ -110,7 +136,7 @@ public class Generate_GLerrors {
 	         mue.printStackTrace();
 	    } catch (IOException ioe) {
 	         ioe.printStackTrace();
-	    } finally { }
+	    }
 	}
 	
 	public static void main(String[] args) {

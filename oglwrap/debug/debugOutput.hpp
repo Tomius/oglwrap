@@ -49,10 +49,10 @@ class DebugOutput {
 
   struct ErrorInfo {
     std::string funcSignature;
-    std::string errors[NUM_ERRORS + 1];
+    std::vector<std::string> errors[NUM_ERRORS + 1];
 
     ErrorInfo() {}
-    ErrorInfo(const std::string& funcS, const std::string errs[]) : funcSignature(funcS) {
+    ErrorInfo(const std::string& funcS, const std::vector<std::string> errs[]) : funcSignature(funcS) {
       for(int i = 0; i < NUM_ERRORS + 1; i++) {
         errors[i] = errs[i];
       }
@@ -109,7 +109,8 @@ public:
 
     // Read until EOF, or until an error occurs.
     while(is.good()) {
-      std::string func, funcSignature, errors[NUM_ERRORS + 1];
+      std::string func, funcSignature;
+      std::vector<std::string> errors[NUM_ERRORS + 1];
       std::string buffer, buffer2;
 
       // Get lines until we find ending with );
@@ -126,6 +127,8 @@ public:
         std::stringstream strstream(buffer);
         strstream >> buffer2;
         bool found_error = false;
+        bool in_a_list = false;
+        int last_err_type = NUM_ERRORS;
 
         for(int i = 0; i < NUM_ERRORS; i++) {
           if(buffer2 == glErrorNames[i]) {
@@ -145,16 +148,28 @@ public:
             buffer[0] = '-';
             buffer[1] = ' ';
             buffer[2] = toupper(buffer[2]);
+            if(buffer[buffer.find_last_not_of(' ')] == ':') {
+              in_a_list = true;
+              last_err_type = i;
+            } else {
+              in_a_list = false;
+            }
 
-            errors[i] += buffer + '\n';
+            errors[i].push_back(buffer);
             found_error = true;
             break;
           }
         }
 
-        // If it wasn't an error, than it was a general note
+        // If it wasn't an error, than it was a
+        // - either a general note.
+        // - or an element inside a list.
         if(!found_error) {
-          errors[ADDITIONAL_NOTES] += buffer + '\n';
+          if(in_a_list) {
+            errors[last_err_type].back() += std::string("\n") + buffer;
+          } else {
+            errors[ADDITIONAL_NOTES].push_back(buffer);
+          }
         }
       }
 
@@ -166,6 +181,24 @@ public:
     }
   }
 
+private:
+  std::string formated_func_signature(std::string func_signature) {
+    // Ident the function a little.
+    func_signature.insert(0, "  ");
+    size_t parameters_start = func_signature.find('(');
+
+    std::string endl_plus_tabulation = std::string(parameters_start + 1, ' ');
+    endl_plus_tabulation[0] = '\n';
+
+    size_t param_pos = parameters_start;
+    while((param_pos = func_signature.find(',', param_pos + 1)) != std::string::npos) {
+      func_signature.insert(param_pos + 1, endl_plus_tabulation);
+    }
+
+    return func_signature;
+  }
+
+public:
   /// If there was an error, notifies you about it through the callback function.
   /** The default callback function prints the error to the stdout
     * @param functionCall - The name of the GL function that was called.
@@ -182,11 +215,17 @@ public:
     if(errorMap.find(funcName) != errorMap.end() && !errorMap[funcName].errors[errIdx].empty()) {
       ErrorInfo errinfo = errorMap[funcName];
       sstream << "The following OpenGL function: " << std::endl << std::endl;
-      sstream << errinfo.funcSignature << std::endl << std::endl;
+      sstream << formated_func_signature(errinfo.funcSignature) << std::endl << std::endl;
       sstream << "Has generated the error because one of the following(s) were true:" << std::endl;
-      sstream << errinfo.errors[errIdx];
-      if(!errinfo.errors[ADDITIONAL_NOTES].empty())
-        sstream << errinfo.errors[ADDITIONAL_NOTES];
+      for(size_t i = 0; i != errinfo.errors[errIdx].size(); ++i) {
+        sstream << errinfo.errors[errIdx][i] << std::endl;
+      }
+      if(errinfo.errors[ADDITIONAL_NOTES].size() != 0) {
+        sstream << std::endl << "Note that: " << std::endl;
+        for(size_t i = 0; i != errinfo.errors[ADDITIONAL_NOTES].size(); ++i) {
+          sstream << "- " << errinfo.errors[ADDITIONAL_NOTES][i] << std::endl;
+        }
+      }
     }
 
     sstream << std::endl;

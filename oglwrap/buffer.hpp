@@ -288,7 +288,7 @@ public:
   /** @param index - Specify the index of the binding point within the array.
     * @see glBindBufferBase */
   void bindBase(GLuint index) const {
-    gl(BindBufferBase(BUFFER_TYPE, index, BufferObject<BUFFER_TYPE>::buffer_));
+    gl(BindBufferBase(BUFFER_TYPE, index, BufferObject<BufferType(BUFFER_TYPE)>::buffer_));
   }
 
   /// Bind a range within a buffer object to an index.
@@ -297,7 +297,7 @@ public:
     * @param size - The amount of data in machine units that can be read from the buffet object while used as an indexed target.
     * @see glBindBufferRange */
   void bindRange(GLuint index, GLintptr offset, GLsizeiptr size) const {
-    gl(BindBufferRange(BUFFER_TYPE, index, offset, size, BufferObject<BUFFER_TYPE>::buffer_));
+    gl(BindBufferRange(BUFFER_TYPE, index, offset, size, BufferObject<BufferType(BUFFER_TYPE)>::buffer_));
   }
 
   /// Returns if this is the currently bound buffer for an indexed target.
@@ -305,7 +305,7 @@ public:
   bool isBound(GLuint index) const {
     GLint currentlyBoundBuffer;
     gl(GetIntegeri_v(getBindingTarget(BUFFER_TYPE), index, &currentlyBoundBuffer));
-    return BufferObject<BUFFER_TYPE>::buffer_ == GLuint(currentlyBoundBuffer);
+    return BufferObject<BufferType(BUFFER_TYPE)>::buffer_ == GLuint(currentlyBoundBuffer);
   }
 
   /// Unbind a buffer object from an index.
