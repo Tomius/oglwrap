@@ -16,19 +16,19 @@ namespace oglwrap {
 class AnimatedMesh : public Mesh {
 
   /// Stores data related to skin definition.
-  SkinningData skinning_data;
+  SkinningData skinning_data_;
 
   /// The animations.
-  AnimData anims;
+  AnimData anims_;
 
   /// Stores data to handle animation transitions.
-  AnimMetaInfo anim_meta_info;
+  AnimMetaInfo anim_meta_info_;
 
   /// The current animation.
-  AnimationState current_anim;
+  AnimationState current_anim_;
 
   /// The last animation.
-  AnimationState last_anim;
+  AnimationState last_anim_;
 
 public:
   /// Loads in the mesh and the skeleton for an asset, and prepares it for animation.
@@ -68,7 +68,7 @@ private:
 
   /// Creates the bone attributes data (the skinning.)
   /** It actually just calls the loadBones function with the appropriate template parameter */
-  void create_bones_data();
+  void createBonesData();
 
   template <class Index_t>
   /// Shader plumbs the bone data.
@@ -79,16 +79,16 @@ private:
     * @param idx_t - The oglwrap enum, naming the data type that should be used.
     * @param boneIDs - Should be an array of attributes, that will be shader plumbed for the boneIDs data.
     * @param boneWeights - Should be an array of attributes, that will be shader plumbed for the boneWeights data. */
-  void shader_plumb_bones(DataType idx_t, LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights);
+  void shaderPlumbBones(DataType idx_t, LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights);
 
 public:
   /// Returns the number of bones this scene has.
   /** May change the currently active VAO and ArrayBuffer at the first call. */
-  size_t get_num_bones();
+  size_t getNumBones();
 
   /// Returns the size that boneIds and BoneWeights attribute arrays should be.
   /** May change the currently active VAO and ArrayBuffer at the first call. */
-  size_t get_bone_attrib_num();
+  size_t getBoneAttribNum();
 
   /// Loads in bone weight and id information to the given array of attribute arrays.
   /** Uploads the bone weight and id to an array of attribute arrays, and sets it up for use.
@@ -96,7 +96,7 @@ public:
     * Calling this function changes the currently active VAO and ArrayBuffer.
     * @param boneIDs - The array of attributes array to use as destination for bone IDs.
     * @param boneWeights - The array of attributes array to use as destination for bone weights. */
-  void setup_bones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights);
+  void setupBones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights);
 
   /*         //=====:==-==-==:=====\\                           //=====:==-==-==:=====\\
       <---<}>==~=~=~==--==--==~=~=~==<{>----- Animation -----<}>==~=~=~==--==--==~=~=~==<{>--->
@@ -147,25 +147,25 @@ private:
   /// Recursive function that travels through the entire node hierarchy, and creates transformation values in world space.
   /** Bone transformations are stored relative to their parents. That's why it is needed.
     * Also note, that the translation of the root node on the XZ plane is treated differently, that offset isn't
-    * baked into the animation, you can get the offset with the offset_since_last_frame() function, and you have to
+    * baked into the animation, you can get the offset with the offsetSinceLastFrame() function, and you have to
     * externally do the object's movement, as normally it will stay right where it was at the start of the animation.
     * @param animationTime - The current animation time.
     * @param node - The node (bone) whose, and whose child's transformation should be updated. You should call this function with the root node.
     * @param parent_transform - The transformation of the parent node. You should call it with an identity matrix. */
   void updateBoneTree(float animationTime,
-                         const aiNode* node,
-                         const glm::mat4& parent_transform = glm::mat4());
+                      const aiNode* node,
+                      const glm::mat4& parent_transform = glm::mat4());
 
   /// Does the same thing as readNodeHierarchy, but it is used to create transitions between animations, so it interpolates between four keyframes not two.
   /** @param prevAnimationTime - The animation time of when, the last animation was interrupted.
     * @param nextAnimationTime - The current animation time.
     * @param node - The node (bone) whose, and whose child's transformation should be updated. You should call this function with the root node.
     * @param parent_transform - The transformation of the parent node. You should call it with an identity matrix. */
-  void updateBoneTree_inTransition(float prevAnimationTime,
-                                   float nextAnimationTime,
-                                   float factor,
-                                   const aiNode* node,
-                                   const glm::mat4& parent_transform  = glm::mat4());
+  void updateBoneTreeInTransition(float prevAnimationTime,
+                                  float nextAnimationTime,
+                                  float factor,
+                                  const aiNode* node,
+                                  const glm::mat4& parent_transform  = glm::mat4());
 
   /// Does what it's name says, updates the bones transformations.
   /** @param time_in_seconds - Expected to be a time value in seconds. It doesn't matter, since when does it count the time, just it should be counting up. */
@@ -193,16 +193,16 @@ public:
     * @param anim_name - The name with you wanna reference this animation.
     * @param flags - You can specify animation modifiers, like repeat the animation after it ends, play it backwards, etc...
     * @param speed - Sets the default speed of the animation. If it's 1, it will be played with the its default speed. If it's negative, it will be played backwards. */
-  void add_animation(const std::string& filename,
-                     const std::string& anim_name,
-                     unsigned flags = AnimFlag::None,
-                     float speed = 1.0f);
+  void addAnimation(const std::string& filename,
+                    const std::string& anim_name,
+                    unsigned flags = AnimFlag::None,
+                    float speed = 1.0f);
 
   /// Sets the default animation, that will be played if you don't set to play another one.
   /** @param anim_name - The user-defined name of the animation that should be set to be default.
     * @param default_transition_time - The fading time that should be used when changing to the default animation. */
-  void set_default_animation(const std::string& anim_name,
-                             float default_transition_time = 0.0f);
+  void setDefaultAnimation(const std::string& anim_name,
+                           float default_transition_time = 0.0f);
 
 private:
   /// Changes the current animation to a specified one.
@@ -211,11 +211,11 @@ private:
     * @param transition_time - The fading time to be used for the transition.
     * @param flags - A bitfield containing the animation specifier flags.
     * @param speed - Sets the speed of the animation. If it's 0, will play with the speed specified at the addAnim. If it's negative, it will be played backwards. */
-  void change_animation(size_t anim_idx,
-                        float current_time,
-                        float transition_time,
-                        unsigned flags,
-                        float speed = 1.0f);
+  void changeAnimation(size_t anim_idx,
+                       float current_time,
+                       float transition_time,
+                       unsigned flags,
+                       float speed = 1.0f);
 
 public:
   /// Tries to change the current animation to a specified one.
@@ -227,11 +227,11 @@ public:
     * @param transition_time - The fading time to be used for the transition.
     * @param flags - A bitfield containing the animation specifier flags.
     * @param speed - Sets the speed of the animation. If it's 0, will play with the speed specified at the addAnim. If it's negative, it will be played backwards. */
-  void set_current_animation(const std::string& anim_name,
-                             float current_time,
-                             float transition_time,
-                             unsigned flags,
-                             float speed = 0.0f);
+  void setCurrentAnimation(const std::string& anim_name,
+                           float current_time,
+                           float transition_time,
+                           unsigned flags,
+                           float speed = 0.0f);
 
   /// Forces the current animation to a specified one.
   /** Only changes it if the new animation is not the same as the one currently playing.
@@ -240,11 +240,11 @@ public:
     * @param transition_time - The fading time to be used for the transition.
     * @param flags - A bitfield containing the animation specifier flags.
     * @param speed - Sets the speed of the animation. If it's 0, will play with the speed specified at the addAnim. If it's negative, it will be played backwards. */
-  void force_current_animation(const std::string& anim_name,
-                               float current_time,
-                               float transition_time,
-                               unsigned flags,
-                               float speed = 0.0f);
+  void forceCurrentAnimation(const std::string& anim_name,
+                             float current_time,
+                             float transition_time,
+                             unsigned flags,
+                             float speed = 0.0f);
 
   /// Tries to change the current animation to a specified one, using the default anim modifier flags specified for this anim.
   /** Only changes it if the current animation is interruptable,
@@ -254,10 +254,10 @@ public:
     * @param current_time - The current time in seconds, optimally since the start of the program.
     * @param transition_time - The fading time to be used for the transition.
     * @param speed - Sets the speed of the animation. If it's 0, will play with the speed specified at the addAnim. If it's negative, it will be played backwards. */
-  void set_current_animation(const std::string& anim_name,
-                             float current_time,
-                             float transition_time = 0.0f,
-                             float speed = 0.0f);
+  void setCurrentAnimation(const std::string& anim_name,
+                           float current_time,
+                           float transition_time = 0.0f,
+                           float speed = 0.0f);
 
   /// Forces the current animation to a specified one, using the default anim modifier flags specified for this anim.
   /** Only changes it if the new animation is not the same as the one currently playing.
@@ -265,10 +265,10 @@ public:
     * @param current_time - The current time in seconds, optimally since the start of the program.
     * @param transition_time - The fading time to be used for the transition.
     * @param speed - Sets the speed of the animation. If it's 0, will play with the speed specified at the addAnim. If it's negative, it will be played backwards. */
-  void force_current_animation(const std::string& anim_name,
-                               float current_time,
-                               float transition_time = 0.0f,
-                               float speed = 0.0f);
+  void forceCurrentAnimation(const std::string& anim_name,
+                             float current_time,
+                             float transition_time = 0.0f,
+                             float speed = 0.0f);
 
   /// Tries to change the current animation to the default one.
   /** Only changes it if the current animation is interruptable,
@@ -276,19 +276,19 @@ public:
     * not the same as the one currently playing. Will use the default
     * anim modifier flags for the default anim.
     * @param current_time - The current time in seconds, optimally since the start of the program. */
-  void set_anim_to_default(float current_time);
+  void setAnimToDefault(float current_time);
 
   /// Forces the current animation to the default one.
   /** Only changes it if the new animation is not the same as the one currently
     * playing. Will use the default anim modifier flags for the default anim.
     * @param current_time - The current time in seconds, optimally since the start of the program. */
-  void force_anim_to_default(float current_time);
+  void forceAnimToDefault(float current_time);
 
   /// Returns the offset of the root bone, since it was last queried.
   /** It should be queried every frame (hence the name),
     * but it works even if you only query every 10th frame,
     * just the animation will "lag", and will look bad. */
-  glm::vec2 offset_since_last_frame();
+  glm::vec2 offsetSinceLastFrame();
 
 }; // AnimatedMesh
 

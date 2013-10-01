@@ -87,7 +87,7 @@ inline void __CheckError(const char *file, const char *func, int line, const cha
     sstream << "In function: " << cut_end_of_pretty_func(func) << std::endl;
     sstream << "In '" << file << "' at line " << line << std::endl << std::endl;
 
-    debug_output.print_error(glfunc, sstream);
+    debug_output.printError(glfunc, sstream);
 
     debug_output.callback(sstream.str());
   }

@@ -10,7 +10,7 @@
 namespace oglwrap {
 
 /// The default callback function for errors. It prints the error to stderr.
-inline void default_callback(std::string error_message) {
+inline void defaultCallback(std::string error_message) {
   std::cerr << error_message << std::endl;
 }
 
@@ -91,7 +91,7 @@ public:
   void (*callback)(std::string);
 
   /// Loads in the list of OpenGL errors.
-  DebugOutput() : callback(default_callback) {
+  DebugOutput() : callback(defaultCallback) {
     // The GLerrors.txt should be in the same folder as this file.
     // So we can use the __FILE__ macro to get the path to this file,
     // and replaces the "debugOutput.hpp" to "GLerrors.txt"
@@ -113,13 +113,13 @@ public:
       std::vector<std::string> errors[NUM_ERRORS + 1];
       std::string buffer, buffer2;
 
-      // Get lines until we find ending with );
+      // Get lines until the first one that's not empty.
       while(getline(is, funcSignature) && funcSignature.empty());
-      {
-        size_t end_pos = funcSignature.find('(');
-        size_t start_pos = funcSignature.rfind(' ', end_pos) + 1;
-        func = funcSignature.substr(start_pos, end_pos - start_pos);
-      }
+
+      size_t end_pos = funcSignature.find('(');
+      size_t start_pos = funcSignature.rfind(' ', end_pos) + 1;
+      func = funcSignature.substr(start_pos, end_pos - start_pos);
+
 
       // Get the error messages
       while(getline(is, buffer) && !buffer.empty()) {
@@ -182,7 +182,7 @@ public:
   }
 
 private:
-  std::string formated_func_signature(std::string func_signature) {
+  std::string formatedFuncSignature(std::string func_signature) {
     // Ident the function a little.
     func_signature.insert(0, "  ");
     size_t parameters_start = func_signature.find('(');
@@ -203,7 +203,7 @@ public:
   /** The default callback function prints the error to the stdout
     * @param functionCall - The name of the GL function that was called.
     * @param sstream - The stream to write the error */
-  void print_error(const std::string& functionCall, std::stringstream& sstream) {
+  void printError(const std::string& functionCall, std::stringstream& sstream) {
     size_t errIdx = getErrorIndex();
     if(errIdx == NUM_ERRORS) {
       return;
@@ -215,7 +215,7 @@ public:
     if(errorMap.find(funcName) != errorMap.end() && !errorMap[funcName].errors[errIdx].empty()) {
       ErrorInfo errinfo = errorMap[funcName];
       sstream << "The following OpenGL function: " << std::endl << std::endl;
-      sstream << formated_func_signature(errinfo.funcSignature) << std::endl << std::endl;
+      sstream << formatedFuncSignature(errinfo.funcSignature) << std::endl << std::endl;
       sstream << "Has generated the error because one of the following(s) were true:" << std::endl;
       for(size_t i = 0; i != errinfo.errors[errIdx].size(); ++i) {
         sstream << errinfo.errors[errIdx][i] << std::endl;
@@ -251,11 +251,11 @@ struct DebugOutput {
   void (*callback)(std::string);
 
   /// Loads in the list of OpenGL errors.
-  DebugOutput() : callback(default_callback) {}
+  DebugOutput() : callback(defaultCallback) {}
 
   /// If there was an error, notifies you about it through the callback function.
   /** The default callback function prints the error to the stdout */
-  void print_error(const std::string&, std::stringstream&) {}
+  void printError(const std::string&, std::stringstream&) {}
 };
 #endif
 

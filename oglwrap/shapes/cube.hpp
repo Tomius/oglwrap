@@ -1,5 +1,7 @@
 /** @file cube.hpp
     @brief Implements a cube shape wrapper.
+    Note: Several algorithms in this file were borrowed from oglplus.
+    See https://github.com/matus-chochlik/oglplus
 */
 
 #ifndef OGLWRAP_SHAPES_CUBE_HPP_
@@ -13,7 +15,7 @@ class Cube {
 
   VertexArray vao;
   ArrayBuffer positions, normals, texcoords, tangents;
-  bool is_setup_positions, is_setup_normals, is_setup_texcoords, is_setup_tangents;
+  bool is_setup_positions_, is_setup_normals_, is_setup_texcoords_, is_setup_tangents;
 
 public:
 
@@ -21,9 +23,9 @@ public:
   /** @param w,h,d - The width, height, depth of the cube, respectively. */
   Cube(float w = 1.0f, float h = 1.0f, float d = 1.0f)
     : w(w), h(h), d(d)
-    , is_setup_positions(false)
-    , is_setup_normals(false)
-    , is_setup_texcoords(false)
+    , is_setup_positions_(false)
+    , is_setup_normals_(false)
+    , is_setup_texcoords_(false)
     , is_setup_tangents(false)
   {}
 
@@ -38,12 +40,12 @@ public:
   /** Uploads the vertex positions data to an attribute array, and sets it up for use.
     * Calling this function changes the currently active VAO and ArrayBuffer.
     * @param attrib - The attribute array to use as destination. */
-  void setup_positions(VertexAttribArray attrib) {
+  void setupPositions(VertexAttribArray attrib) {
 
-    if(is_setup_positions) {
+    if(is_setup_positions_) {
       throw std::logic_error("Cube::setup_position is called multiply times on the same object");
     } else {
-      is_setup_positions = true;
+      is_setup_positions_ = true;
     }
 
     /*       (E)-----(A)
@@ -92,12 +94,12 @@ public:
   /** Uploads the vertex normals data to an attribute array, and sets it up for use.
     * Calling this function changes the currently active VAO and ArrayBuffer.
     * @param attrib - The attribute array to use as destination. */
-  void setup_normals(VertexAttribArray attrib) {
+  void setupNormals(VertexAttribArray attrib) {
 
-    if(is_setup_normals) {
-      std::logic_error("Cube::setup_normals is called multiply times on the same object");
+    if(is_setup_normals_) {
+      std::logic_error("Cube::setupNormals is called multiply times on the same object");
     } else {
-      is_setup_normals = true;
+      is_setup_normals_ = true;
     }
 
     const float n[6][3] = {
@@ -130,12 +132,12 @@ public:
   /** Uploads the vertex normals data to an attribute array, and sets it up for use.
     * Calling this function changes the currently active VAO and ArrayBuffer.
     * @param attrib - The attribute array to use as destination. */
-  void setup_texCoords(VertexAttribArray attrib) {
+  void setupTexCoords(VertexAttribArray attrib) {
 
-    if(is_setup_texcoords) {
-      std::logic_error("Cube::setup_texCoords is called multiply times on the same object");
+    if(is_setup_texcoords_) {
+      std::logic_error("Cube::setupTexCoords is called multiply times on the same object");
     } else {
-      is_setup_texcoords = true;
+      is_setup_texcoords_ = true;
     }
 
     const float n[6][2] = {
@@ -169,9 +171,9 @@ public:
   /** Uploads the tangents normals data to an attribute array, and sets it up for use.
     * Calling this function changes the currently active VAO and ArrayBuffer.
     * @param attrib - The attribute array to use as destination. */
-  void setup_tangents(VertexAttribArray attrib) {
+  void setupTangents(VertexAttribArray attrib) {
     if(is_setup_tangents) {
-      std::logic_error("Cube::setup_tangents is called multiply times on the same object");
+      std::logic_error("Cube::setupTangents is called multiply times on the same object");
     } else {
       is_setup_tangents = true;
     }
@@ -204,8 +206,8 @@ public:
 
   /// Draws the cube.
   /** This call changes the currently active VAO. */
-  void draw() {
-    if(is_setup_positions) {
+  void render() {
+    if(is_setup_positions_) {
       vao.bind();
       gl(DrawArrays(GL_TRIANGLES, 0, 108 * sizeof(float)));
       vao.unbind();
@@ -218,12 +220,12 @@ public:
   }
 
   /// Returns the center of the cube's bounding sphere
-  glm::vec3 boundingSphere_Center() const {
+  glm::vec3 bSphereCenter() const {
     return glm::vec3(0.0f);
   }
 
   /// Returns the radius of the cube's bounding sphere
-  float boundingSphere_Radius() const {
+  float bSphereRadius() const {
     return sqrt(w*w + h*h + d*d);
   }
 };

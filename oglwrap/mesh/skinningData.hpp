@@ -72,7 +72,7 @@ struct SkinningData {
   /// The maximum of per mesh bone attribute number's maximum per mesh.
   std::vector<unsigned char> per_mesh_attrib_max;
 
-  /// Stores if setup_bones is called. It shouldn't be called more than once.
+  /// Stores if setupBones is called. It shouldn't be called more than once.
   bool is_setup_bones;
 
   /// The name of the root bone. It's usually not equal to the root node. It is need to get the offsets.

@@ -74,7 +74,7 @@ protected:
   bool inited_; /// < For the LazyVertexAttribArray
 
   /// Init function for the for the LazyVertexAttribArray
-  virtual void Init() {
+  virtual void init() {
     inited_ = true;
   }
 public:
@@ -103,7 +103,7 @@ public:
     * @see glVertexAttrib* */
   void static_setup(const GLtype value) {
     if(!inited_) {
-      Init();
+      init();
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
@@ -184,7 +184,7 @@ public:
                                    GLsizei stride = 0,
                                    const void *offset_pointer = nullptr) {
     if(!inited_) {
-      Init();
+      init();
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
@@ -207,7 +207,7 @@ public:
                                     GLsizei stride = 0,
                                     const void *offset_pointer = nullptr) {
     if(!inited_) {
-      Init();
+      init();
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
@@ -227,7 +227,7 @@ public:
                                     GLsizei stride = 0,
                                     const void *offset_pointer = nullptr) {
     if(!inited_) {
-      Init();
+      init();
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
@@ -249,7 +249,7 @@ public:
                                   GLboolean normalized = false,
                                   GLsizei stride = 0) {
     if(!inited_) {
-      Init();
+      init();
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
@@ -268,7 +268,7 @@ public:
                                    WholeDataType type = WholeDataType::Int,
                                    GLsizei stride = 0) {
     if(!inited_) {
-      Init();
+      init();
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
@@ -285,7 +285,7 @@ public:
   VertexAttribArrayObject& lformat(GLuint values_per_vertex = 4,
                                    GLsizei stride = 0) {
     if(!inited_) {
-      Init();
+      init();
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
@@ -299,7 +299,7 @@ public:
   /** @see glEnableVertexAttribArray */
   VertexAttribArrayObject& enable() {
     if(!inited_) {
-      Init();
+      init();
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
@@ -313,7 +313,7 @@ public:
   /** @see glDisableVertexAttribArray */
   VertexAttribArrayObject& disable() {
     if(!inited_) {
-      Init();
+      init();
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
@@ -328,7 +328,7 @@ public:
     * @see glVertexAttribDivisor */
   VertexAttribArrayObject& divisor(GLuint divisor) {
     if(!inited_) {
-      Init();
+      init();
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
@@ -375,7 +375,7 @@ class LazyVertexAttribArray : public VertexAttribArrayObject {
   const std::string identifier_;
   /// Queries the location of the attribute using the attribute's name
   /** @see glGetAttribLocation */
-  void Init() {
+  void init() {
     CHECK_ACTIVE_PROGRAM(program_);
 
     location_ = gl(GetAttribLocation(program_.expose(), identifier_.c_str()));
