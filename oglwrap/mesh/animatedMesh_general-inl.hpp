@@ -3,7 +3,7 @@
 
 namespace oglwrap {
 
-AnimatedMesh::AnimatedMesh(const std::string& filename, unsigned int flags)
+inline AnimatedMesh::AnimatedMesh(const std::string& filename, unsigned int flags)
   : Mesh(filename, flags)
   , skinning_data_(scene_->mNumMeshes) {
 
@@ -11,7 +11,7 @@ AnimatedMesh::AnimatedMesh(const std::string& filename, unsigned int flags)
   skinning_data_.global_inverse_transform = glm::inverse(matrix);
 }
 
-AnimatedMesh::~AnimatedMesh() {
+inline AnimatedMesh::~AnimatedMesh() {
   for(auto i = anims_.data.begin(); i != anims_.data.end(); i++) {
     delete i->importer;
   }

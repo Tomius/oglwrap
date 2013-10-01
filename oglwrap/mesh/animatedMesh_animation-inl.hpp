@@ -5,7 +5,7 @@
 
 namespace oglwrap {
 
-unsigned AnimatedMesh::findPosition(float animationTime, const aiNodeAnim* node_anim) {
+inline unsigned AnimatedMesh::findPosition(float animationTime, const aiNodeAnim* node_anim) {
    // Find the first one that is bigger or equals
    for(unsigned i = 0; i < node_anim->mNumPositionKeys - 1; i++) {
       if(animationTime <= (float)node_anim->mPositionKeys[i + 1].mTime) {
@@ -16,7 +16,7 @@ unsigned AnimatedMesh::findPosition(float animationTime, const aiNodeAnim* node_
    throw std::runtime_error("Animation Error - Position keyframe not found");
 }
 
-unsigned AnimatedMesh::findRotation(float animationTime, const aiNodeAnim* node_anim) {
+inline unsigned AnimatedMesh::findRotation(float animationTime, const aiNodeAnim* node_anim) {
    for(unsigned i = 0; i < node_anim->mNumRotationKeys - 1; i++) {
       if(animationTime <= (float)node_anim->mRotationKeys[i + 1].mTime) {
          return i;
@@ -25,7 +25,7 @@ unsigned AnimatedMesh::findRotation(float animationTime, const aiNodeAnim* node_
    throw std::runtime_error("Animation Error - Rotation keyframe not found");
 }
 
-unsigned AnimatedMesh::findScaling(float animationTime, const aiNodeAnim* node_anim) {
+inline unsigned AnimatedMesh::findScaling(float animationTime, const aiNodeAnim* node_anim) {
    for(unsigned i = 0; i < node_anim->mNumScalingKeys - 1; i++) {
       if(animationTime <= (float)node_anim->mScalingKeys[i + 1].mTime) {
          return i;
@@ -34,7 +34,8 @@ unsigned AnimatedMesh::findScaling(float animationTime, const aiNodeAnim* node_a
    throw std::runtime_error("Animation Error - Scaling keyframe not found");
 }
 
-void AnimatedMesh::calcInterpolatedPosition(aiVector3D& out, float animTime, const aiNodeAnim* node_anim) {
+inline void AnimatedMesh::calcInterpolatedPosition(aiVector3D& out, float animTime,
+                                                   const aiNodeAnim* node_anim) {
    const auto& keys = node_anim->mPositionKeys;
    const auto& numKeys = node_anim->mNumPositionKeys;
    if(numKeys == 1) {
@@ -51,7 +52,8 @@ void AnimatedMesh::calcInterpolatedPosition(aiVector3D& out, float animTime, con
    out = interpolate(start, end, factor);
 }
 
-void AnimatedMesh::calcInterpolatedRotation(aiQuaternion& out, float animTime, const aiNodeAnim* node_anim) {
+inline void AnimatedMesh::calcInterpolatedRotation(aiQuaternion& out, float animTime,
+                                                   const aiNodeAnim* node_anim) {
    const auto& keys = node_anim->mRotationKeys;
    const auto& numKeys = node_anim->mNumRotationKeys;
    if(numKeys == 1) {
@@ -69,7 +71,8 @@ void AnimatedMesh::calcInterpolatedRotation(aiQuaternion& out, float animTime, c
    out = out.Normalize();
 }
 
-void AnimatedMesh::calcInterpolatedScaling(aiVector3D& out, float animTime, const aiNodeAnim* node_anim) {
+inline void AnimatedMesh::calcInterpolatedScaling(aiVector3D& out, float animTime,
+                                                  const aiNodeAnim* node_anim) {
    const auto& keys = node_anim->mScalingKeys;
    const auto& numKeys = node_anim->mNumScalingKeys;
    if(numKeys == 1) {
@@ -86,7 +89,8 @@ void AnimatedMesh::calcInterpolatedScaling(aiVector3D& out, float animTime, cons
    out = interpolate(start, end, factor);
 }
 
-const aiNodeAnim* AnimatedMesh::findNodeAnim(const aiAnimation* animation, const std::string node_name) {
+inline const aiNodeAnim* AnimatedMesh::findNodeAnim(const aiAnimation* animation,
+                                                    const std::string node_name) {
    for(unsigned i = 0; i < animation->mNumChannels; i++) {
       const aiNodeAnim* node_anim = animation->mChannels[i];
       if(std::string(node_anim->mNodeName.data) == node_name) {
@@ -96,9 +100,9 @@ const aiNodeAnim* AnimatedMesh::findNodeAnim(const aiAnimation* animation, const
    return nullptr;
 }
 
-void AnimatedMesh::updateBoneTree(float animationTime,
-                                  const aiNode* node,
-                                  const glm::mat4& parent_transform) {
+inline void AnimatedMesh::updateBoneTree(float animationTime,
+                                         const aiNode* node,
+                                         const glm::mat4& parent_transform) {
    std::string node_name(node->mName.data);
    const aiAnimation* animation = current_anim_.handle->mAnimations[0];
    const aiNodeAnim* node_anim = findNodeAnim(animation, node_name);
@@ -145,11 +149,11 @@ void AnimatedMesh::updateBoneTree(float animationTime,
    }
 }
 
-void AnimatedMesh::updateBoneTreeInTransition(float prevAnimationTime,
-                                              float nextAnimationTime,
-                                              float factor,
-                                              const aiNode* node,
-                                              const glm::mat4& parent_transform) {
+inline void AnimatedMesh::updateBoneTreeInTransition(float prevAnimationTime,
+                                                     float nextAnimationTime,
+                                                     float factor,
+                                                     const aiNode* node,
+                                                     const glm::mat4& parent_transform) {
    std::string node_name(node->mName.data);
    const aiAnimation* prevAnimation = last_anim_.handle->mAnimations[0];
    const aiAnimation* nextAnimation = current_anim_.handle->mAnimations[0];
@@ -204,7 +208,7 @@ void AnimatedMesh::updateBoneTreeInTransition(float prevAnimationTime,
    }
 }
 
-void AnimatedMesh::updateBoneInfo(float time) {
+inline void AnimatedMesh::updateBoneInfo(float time) {
    if(!current_anim_.handle || current_anim_.handle->mAnimations == 0 ||
         !last_anim_.handle || last_anim_.handle->mAnimations == 0) {
       throw std::runtime_error("Tried to run an invalid animation.");
@@ -278,8 +282,8 @@ void AnimatedMesh::updateBoneInfo(float time) {
    }
 }
 
-void AnimatedMesh::boneTransform(float time,
-                                 LazyUniform<glm::mat4>& bones) {
+inline void AnimatedMesh::boneTransform(float time,
+                                        LazyUniform<glm::mat4>& bones) {
    updateBoneInfo(time);
    for(unsigned i = 0; i < skinning_data_.num_bones; i++) {
       bones[i] = skinning_data_.bone_info[i].final_transform;

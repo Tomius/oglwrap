@@ -6,10 +6,10 @@
 
 namespace oglwrap {
 
-void AnimatedMesh::addAnimation(const std::string& filename,
-                                const std::string& anim_name,
-                                unsigned flags,
-                                float speed) {
+inline void AnimatedMesh::addAnimation(const std::string& filename,
+                                       const std::string& anim_name,
+                                       unsigned flags,
+                                       float speed) {
    if(anims_.canFind(anim_name)) {
       std::string err = "Animation name '" + anim_name + "' isn't unique for '" + filename + "'";
       throw std::runtime_error(err);
@@ -41,8 +41,8 @@ void AnimatedMesh::addAnimation(const std::string& filename,
    anims_[idx].speed = speed;
 }
 
-void AnimatedMesh::setDefaultAnimation(const std::string& anim_name,
-                                       float default_transition_time) {
+inline void AnimatedMesh::setDefaultAnimation(const std::string& anim_name,
+                                              float default_transition_time) {
    if(!anims_.canFind(anim_name)) {
       throw std::invalid_argument(
          "Tried to set default animation to '" + anim_name + "', "
@@ -59,11 +59,11 @@ void AnimatedMesh::setDefaultAnimation(const std::string& anim_name,
    }
 }
 
-void AnimatedMesh::changeAnimation(size_t anim_idx,
-                                   float current_time,
-                                   float transition_time,
-                                   unsigned flags,
-                                   float speed) {
+inline void AnimatedMesh::changeAnimation(size_t anim_idx,
+                                          float current_time,
+                                          float transition_time,
+                                          unsigned flags,
+                                          float speed) {
    bool was_last_invalid = (last_anim_.handle == nullptr);
 
    last_anim_ = current_anim_;
@@ -101,22 +101,22 @@ void AnimatedMesh::changeAnimation(size_t anim_idx,
    anim_meta_info_.end_of_last_anim = current_time;
 }
 
-void AnimatedMesh::setCurrentAnimation(const std::string& anim_name,
-                                       float current_time,
-                                       float transition_time,
-                                       unsigned flags,
-                                       float speed) {
+inline void AnimatedMesh::setCurrentAnimation(const std::string& anim_name,
+                                              float current_time,
+                                              float transition_time,
+                                              unsigned flags,
+                                              float speed) {
    if((anim_meta_info_.end_of_last_anim + anim_meta_info_.transition_time) <= current_time
          && (current_anim_.flags & AnimFlag::Interruptable)) {
       forceCurrentAnimation(anim_name, current_time, transition_time, flags, speed);
    }
 }
 
-void AnimatedMesh::forceCurrentAnimation(const std::string& anim_name,
-                                         float current_time,
-                                         float transition_time,
-                                         unsigned flags,
-                                         float speed) {
+inline void AnimatedMesh::forceCurrentAnimation(const std::string& anim_name,
+                                                float current_time,
+                                                float transition_time,
+                                                unsigned flags,
+                                                float speed) {
    if(!anims_.canFind(anim_name)) {
       throw std::invalid_argument(
          "Tried to set current animation to '" + anim_name + "', "
@@ -146,10 +146,10 @@ void AnimatedMesh::forceCurrentAnimation(const std::string& anim_name,
    }
 }
 
-void AnimatedMesh::setCurrentAnimation(const std::string& anim_name,
-                                       float current_time,
-                                       float transition_time,
-                                       float speed) {
+inline void AnimatedMesh::setCurrentAnimation(const std::string& anim_name,
+                                              float current_time,
+                                              float transition_time,
+                                              float speed) {
    if((anim_meta_info_.end_of_last_anim + anim_meta_info_.transition_time) <= current_time
          && (current_anim_.flags & AnimFlag::Interruptable)
      ) {
@@ -157,10 +157,10 @@ void AnimatedMesh::setCurrentAnimation(const std::string& anim_name,
    }
 }
 
-void AnimatedMesh::forceCurrentAnimation(const std::string& anim_name,
-                                         float current_time,
-                                         float transition_time,
-                                         float speed) {
+inline void AnimatedMesh::forceCurrentAnimation(const std::string& anim_name,
+                                                float current_time,
+                                                float transition_time,
+                                                float speed) {
    if(!anims_.canFind(anim_name)) {
       throw std::invalid_argument(
          "Tried to set current animation to '" + anim_name + "', "
@@ -191,13 +191,13 @@ void AnimatedMesh::forceCurrentAnimation(const std::string& anim_name,
    }
 }
 
-void AnimatedMesh::setAnimToDefault(float current_time) {
+inline void AnimatedMesh::setAnimToDefault(float current_time) {
    if(current_anim_.flags & AnimFlag::Interruptable) {
       forceAnimToDefault(current_time);
    }
 }
 
-void AnimatedMesh::forceAnimToDefault(float current_time) {
+inline void AnimatedMesh::forceAnimToDefault(float current_time) {
    assert(anims_[anim_meta_info_.default_idx].flags & AnimFlag::Repeat);
    if(current_anim_.handle != anims_[anim_meta_info_.default_idx].handle)
       changeAnimation(
@@ -209,7 +209,7 @@ void AnimatedMesh::forceAnimToDefault(float current_time) {
       );
 }
 
-glm::vec2 AnimatedMesh::offsetSinceLastFrame() {
+inline glm::vec2 AnimatedMesh::offsetSinceLastFrame() {
    auto ret = current_anim_.offset - last_anim_.offset;
    last_anim_.offset = current_anim_.offset;
    return glm::vec2(ret.x, ret.z);

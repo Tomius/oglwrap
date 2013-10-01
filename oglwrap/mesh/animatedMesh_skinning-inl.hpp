@@ -5,7 +5,7 @@
 
 namespace oglwrap {
 
-void AnimatedMesh::mapBones() {
+inline void AnimatedMesh::mapBones() {
   for(size_t entry = 0; entry < entries_.size(); entry++) {
     const aiMesh* pMesh = scene_->mMeshes[entry];
 
@@ -25,7 +25,7 @@ void AnimatedMesh::mapBones() {
   }
 }
 
-const aiNodeAnim* AnimatedMesh::getRootBone(const aiNode* node, const aiScene* anim) {
+inline const aiNodeAnim* AnimatedMesh::getRootBone(const aiNode* node, const aiScene* anim) {
   std::string nodeName(node->mName.data);
 
   const aiAnimation* animation = anim->mAnimations[0];
@@ -176,7 +176,7 @@ void AnimatedMesh::loadBones() {
   ArrayBuffer::Unbind();
 }
 
-void AnimatedMesh::createBonesData() {
+inline void AnimatedMesh::createBonesData() {
   mapBones();
 
   if(skinning_data_.num_bones < UCHAR_MAX) {
@@ -189,7 +189,8 @@ void AnimatedMesh::createBonesData() {
 }
 
 template <class Index_t>
-void AnimatedMesh::shaderPlumbBones(DataType idx_t, LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights) {
+void AnimatedMesh::shaderPlumbBones(DataType idx_t, LazyVertexAttribArray boneIDs,
+                                    LazyVertexAttribArray boneWeights) {
   const size_t per_attrib_size = sizeof(SkinningData::VertexBoneData_PerAttribute<Index_t>);
 
   for(size_t entry = 0; entry < entries_.size(); entry++) {
@@ -221,7 +222,7 @@ void AnimatedMesh::shaderPlumbBones(DataType idx_t, LazyVertexAttribArray boneID
   ArrayBuffer::Unbind();
 }
 
-size_t AnimatedMesh::getNumBones() {
+inline size_t AnimatedMesh::getNumBones() {
 
   // If loadBones hasn't been called yet, than have to create
   // the bones data first to know the number of bones.
@@ -232,7 +233,7 @@ size_t AnimatedMesh::getNumBones() {
   return skinning_data_.num_bones;
 }
 
-size_t AnimatedMesh::getBoneAttribNum() {
+inline size_t AnimatedMesh::getBoneAttribNum() {
 
   // If loadBones hasn't been called yet, than have to create
   // the bones data first to know max_bone_attrib_num.
@@ -243,7 +244,7 @@ size_t AnimatedMesh::getBoneAttribNum() {
   return skinning_data_.max_bone_attrib_num;
 }
 
-void AnimatedMesh::setupBones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights) {
+inline void AnimatedMesh::setupBones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights) {
 
   if(skinning_data_.is_setup_bones) {
     throw std::logic_error("AnimatedMesh::setupBones is called multiply times on the same object");

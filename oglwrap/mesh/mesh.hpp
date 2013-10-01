@@ -255,7 +255,7 @@ public:
   /// Sets arbitary type of textures to a specified texture unit.
   /** Changes the currently active texture unit and Texture2D binding.
     * @param texture_unit - Specifies the texture unit to use for the textures. */
-  void setup_textures(unsigned short texture_unit) {
+  void setupTextures(unsigned short texture_unit) {
     Texture2D::Active(texture_unit);
 
     materials_[tex_type].active = true;
@@ -296,15 +296,15 @@ public:
   /// Sets the diffuse textures up to a specified texture unit.
   /** Changes the currently active texture unit and Texture2D binding.
     * @param texture_unit - Specifies the texture unit to use for the diffuse textures. */
-  void setup_diffuse_textures(unsigned short texture_unit) {
-    setup_textures<aiTextureType_DIFFUSE>(texture_unit);
+  void setupDiffuseTextures(unsigned short texture_unit) {
+    setupTextures<aiTextureType_DIFFUSE>(texture_unit);
   }
 
   /// Sets the specular textures up to a specified texture unit.
   /** Changes the currently active texture unit and Texture2D binding.
     * @param texture_unit - Specifies the texture unit to use for the specular textures. */
-  void setup_specular_textures(unsigned short texture_unit) {
-    setup_textures<aiTextureType_SPECULAR>(texture_unit);
+  void setupSpecularTextures(unsigned short texture_unit) {
+    setupTextures<aiTextureType_SPECULAR>(texture_unit);
   }
 
   /// Renders the mesh.
@@ -340,7 +340,7 @@ public:
   /// Gives information about the mesh's bounding cuboid.
   /** @param center - The vec3 where bounding cuboid's center is to be returned.
     * @param edges - The vec3 where bounding cuboid's edge lengths are to be returned. */
-  void bCuboid(glm::vec3& center, glm::vec3& edges) {
+  void bCuboid(glm::vec3& center, glm::vec3& edges) const {
     // Idea: get the minimums and maximums of the vertex positions
     // in each coordinate. Then the average of the mins and maxes
     // will be the center of the cuboid
@@ -376,21 +376,21 @@ public:
   }
 
   /// Returns the center (as xyz) and radius (as w) of the bounding sphere.
-  glm::vec4 bSphere() {
+  glm::vec4 bSphere() const {
     glm::vec3 center, edges;
     bCuboid(center, edges);
     return glm::vec4(center, std::max(edges.x, std::max(edges.y, edges.z)) / 2);
   }
 
   /// Returns the center of the bounding sphere.
-  glm::vec3 bSphereCenter() {
+  glm::vec3 bSphereCenter() const {
     glm::vec3 center, edges;
     bCuboid(center, edges);
     return center;
   }
 
   /// Returns the radius of the bounding sphere.
-  float bSphereRadius() {
+  float bSphereRadius() const {
     glm::vec3 center, edges;
     bCuboid(center, edges);
     return std::max(edges.x, std::max(edges.y, edges.z)) / 2;

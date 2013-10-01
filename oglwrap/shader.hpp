@@ -20,7 +20,7 @@ public:
   /// Loads in the shader from a file.
   /** @param file - The path to the file. */
   ShaderSource(const std::string& file) {
-    source_file(file);
+    sourceFile(file);
   }
 
   /// Adds a string as the shader source.
@@ -31,7 +31,7 @@ public:
 
   /// Loads in the shader from a file.
   /** @param file - The path to the file. */
-  void source_file(const std::string& file) {
+  void sourceFile(const std::string& file) {
     filename = file;
     std::ifstream shaderFile(file.c_str());
     if(!shaderFile.is_open()) {
@@ -54,7 +54,7 @@ public:
   /// Inserts a value for a defined preprocessor in the shader.
   /** @param macro_name - The name of the macro.
     * @param value - The value to insert. */
-  void insert_macro_value(const std::string& macro_name, const T& value) {
+  void insertMacroValue(const std::string& macro_name, const T& value) {
     size_t macro_pos = src.find("#define " + macro_name);
     if(macro_pos == std::string::npos) {
       throw std::invalid_argument(
@@ -72,12 +72,12 @@ public:
   }
 
   /// Returns the file's name that was loaded in.
-  std::string const& get_file_name() const {
+  std::string const& getFileName() const {
     return filename;
   }
 
   /// Returns the source.
-  std::string const& get_source() const {
+  std::string const& getSource() const {
     return src;
   }
 };
@@ -180,8 +180,8 @@ public:
   /** @param source - string containing the shader code.
     * @see glShaderSource */
   void source(const ShaderSource& source)  {
-    const char *str = source.get_source().c_str();
-    filename = source.get_file_name();
+    const char *str = source.getSource().c_str();
+    filename = source.getFileName();
     gl(ShaderSource(shader, 1, &str, nullptr));
   }
 #endif // glShaderSource
