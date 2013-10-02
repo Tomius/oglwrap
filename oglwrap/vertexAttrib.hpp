@@ -365,7 +365,7 @@ public:
   VertexAttribArray(const Program& program, const std::string& identifier) {
     location_ = gl(GetAttribLocation(program.expose(), identifier.c_str()));
     if(location_ == INVALID_LOCATION) {
-      std::cerr << "Unable to get location of attribute '" << identifier << "'" << std::endl;
+      debug_output.callback("Unable to get location of attribute '" + identifier + "'");
     }
   }
 };
@@ -380,7 +380,7 @@ class LazyVertexAttribArray : public VertexAttribArrayObject {
 
     location_ = gl(GetAttribLocation(program_.expose(), identifier_.c_str()));
     if(location_ == INVALID_LOCATION) {
-      std::cerr << "Unable to get location of attribute '" << identifier_ << "'" << std::endl;
+      debug_output.callback("Unable to get location of attribute '" + identifier_ + "'");
     }
 
     inited_ = true;

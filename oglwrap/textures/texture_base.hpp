@@ -41,7 +41,7 @@ public:
   }
   /// Unbinds the texture from this texture class's target.
   /** @see glBindTexture */
-  BIND_CHECKED void unbind() {
+  BIND_CHECKED void unbind() const {
     CHECK_BINDING2();
     Unbind();
   }

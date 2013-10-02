@@ -70,7 +70,7 @@ public:
     UniformObject<GLtype>::location_ = gl(GetUniformLocation(program.expose(), identifier_.c_str()));
 
     if(UniformObject<GLtype>::location_ == INVALID_LOCATION) {
-      std::cerr << "Error getting the location of uniform '" << identifier_ << "'" << std::endl;
+      debug_output.callback("Error getting the location of uniform '" + identifier_ + "'");
     }
   }
 
@@ -126,7 +126,7 @@ public:
     UniformObject<GLtype>::location_ = gl(GetUniformLocation(program.expose(), id.str().c_str()));
 
     if(UniformObject<GLtype>::location_ == INVALID_LOCATION) {
-      std::cerr << "Error getting the location of uniform '" << id.str() << "'" << std::endl;
+      debug_output.callback("Error getting the location of uniform '" + id.str() + "'");
     }
   }
 
@@ -198,7 +198,7 @@ public:
 
       // Check if it worked.
       if(UniformObject<GLtype>::location_ == INVALID_LOCATION) {
-        std::cerr << "Error getting the location of uniform '" << identifier_ << "'" << std::endl;
+        debug_output.callback("Error getting the location of uniform '" + identifier_ + "'");
       }
 
       firstCall_ = false;

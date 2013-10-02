@@ -439,7 +439,7 @@ public:
   ~Program() {
     if(program.isDeletable()) {
       for(size_t i = 0; i < shaders.size(); i++) {
-        gl(DetachShader(program, shaders[i]));
+        gl( DetachShader(program, shaders[i]) );
       }
       delete linked;
     }
@@ -447,15 +447,29 @@ public:
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glAttachShader)
   template<ShaderType shader_t>
-  /// Attaches a shader to this program object.
+  /// Attaches a shader to this program object, and compiles it, if needed.
   /** @param shader Specifies the shader object that is to be attached.
     * @see glAttachShader */
   void attachShader(Shader<shader_t>& shader) {
     shader.compile();
     shaders.push_back(shader.expose());
-    gl(AttachShader(program, shader.expose()));
+    gl( AttachShader(program, shader.expose()) );
   }
 #endif // glAttachShader
+
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glAttachShader)
+  template<ShaderType shader_t>
+  /// Attaches a shader to this program object.
+  /** @param shader Specifies the shader object that is to be attached.
+    * @see glAttachShader */
+  void attachShader(const Shader<shader_t>& shader) {
+    shaders.push_back(shader.expose());
+    gl( AttachShader(program, shader.expose()) );
+  }
+#endif // glAttachShader
+
+  template<ShaderType shader_t>
+  void attachShader(Shader<shader_t> &&) = delete;
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glAttachShader)
   template<ShaderType shader_t>
@@ -467,6 +481,20 @@ public:
     return *this;
   }
 #endif // glAttachShader
+
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glAttachShader)
+  template<ShaderType shader_t>
+  /// Attaches a shader object to the program, and compiles it, if needed.
+  /** @param shader Specifies the shader object that is to be attached.
+    * @see glAttachShader */
+  Program& operator<<(const Shader<shader_t>& shader) {
+    attachShader(shader);
+    return *this;
+  }
+#endif // glAttachShader
+
+  template<ShaderType shader_t>
+  Program& operator<<(Shader<shader_t> &&) = delete;
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glLinkProgram) && defined(glGetProgramiv) && defined(glGetProgramInfoLog))
   /// Links the program.

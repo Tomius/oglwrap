@@ -27,7 +27,7 @@ static DebugOutput debug_output;
 /// Prints additional info in case of a specific OpenGL error.
 /** Conditionally prints more information about an error if the
   * condition equals with the last error catched by OGLWRAP_CHECK_ERROR() */
-#define OGLWRAP_PRINT_ERROR(cond, text) if(OGLWRAP_LAST_ERROR == cond) {std::cout << text << std::endl;}
+#define OGLWRAP_PRINT_ERROR(cond, text) if(OGLWRAP_LAST_ERROR == cond) {debug_output.callback(text);}
 
 /// A wrapper around glGetError, that prints file, function, line, and the error in human-readable format.
 /** An error checking macro used for debugging purposes. If OGLWRAP_DEBUG
