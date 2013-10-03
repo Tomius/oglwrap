@@ -106,7 +106,7 @@ inline void AnimatedMesh::updateBoneTree(float animationTime,
    std::string node_name(node->mName.data);
    const aiAnimation* animation = current_anim_.handle->mAnimations[0];
    const aiNodeAnim* node_anim = findNodeAnim(animation, node_name);
-   glm::mat4 nodeTransform = convertMatrix(node->mTransformation);
+   glm::mat4 node_transform = convertMatrix(node->mTransformation);
 
    if(node_anim) {
       // Interpolate the transformations and get the matrices
@@ -132,20 +132,22 @@ inline void AnimatedMesh::updateBoneTree(float animationTime,
          translationM = glm::translate(glm::mat4(), glm::vec3(translation.x, translation.y, translation.z));
       }
       // Combine the transformations
-      nodeTransform = translationM * rotationM * scalingM;
+      node_transform = translationM * rotationM * scalingM;
    }
 
-   glm::mat4 globalTransformation = parent_transform * nodeTransform;
+   glm::mat4 global_transformation = parent_transform * node_transform;
 
    if(skinning_data_.bone_mapping.find(node_name) != skinning_data_.bone_mapping.end()) {
       unsigned bone_idx = skinning_data_.bone_mapping[node_name];
-      skinning_data_.bone_info[bone_idx].final_transform =
-         skinning_data_.global_inverse_transform *
-         globalTransformation *
-         skinning_data_.bone_info[bone_idx].bone_offset;
+      if(skinning_data_.bone_info[bone_idx].external == false) {
+        skinning_data_.bone_info[bone_idx].final_transform =
+           skinning_data_.global_inverse_transform *
+           global_transformation *
+           skinning_data_.bone_info[bone_idx].bone_offset;
+      }
    }
    for(unsigned i = 0; i < node->mNumChildren; i++) {
-      updateBoneTree(animationTime, node->mChildren[i], globalTransformation);
+      updateBoneTree(animationTime, node->mChildren[i], global_transformation);
    }
 }
 
@@ -196,10 +198,12 @@ inline void AnimatedMesh::updateBoneTreeInTransition(float prevAnimationTime,
    glm::mat4 global_transformation = parent_transform * node_transform;
    if(skinning_data_.bone_mapping.find(node_name) != skinning_data_.bone_mapping.end()) {
       unsigned bone_idx = skinning_data_.bone_mapping[node_name];
-      skinning_data_.bone_info[bone_idx].final_transform =
+      if(skinning_data_.bone_info[bone_idx].external == false) {
+        skinning_data_.bone_info[bone_idx].final_transform =
            skinning_data_.global_inverse_transform *
            global_transformation *
            skinning_data_.bone_info[bone_idx].bone_offset;
+      }
    }
    for(unsigned i = 0; i < node->mNumChildren; i++) {
       updateBoneTreeInTransition(

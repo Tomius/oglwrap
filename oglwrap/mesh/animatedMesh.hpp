@@ -81,7 +81,53 @@ private:
     * @param boneWeights - Should be an array of attributes, that will be shader plumbed for the boneWeights data. */
   void shaderPlumbBones(DataType idx_t, LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights);
 
+private:
+
+  aiNode* findNode(aiNode* currentRoot, const std::string& name) {
+    if(currentRoot->mName.data == name)
+      return currentRoot;
+
+    for(int i = 0; i != currentRoot->mNumChildren; ++i) {
+        aiNode* children_return = findNode(currentRoot->mChildren[i], name);
+        if(children_return)
+          return children_return;
+    }
+
+    return nullptr;
+  }
+
+  ExternalBone markChildsExternal(ExternalBone* parent, aiNode* root) {
+    size_t bidx = skinning_data_.bone_mapping[root->mName.data];
+    SkinningData::BoneInfo& binfo = skinning_data_.bone_info[bidx];
+    binfo.external = true;
+    ExternalBone ebone = {
+      binfo.bone_offset,
+      binfo.final_transform,
+      nullptr
+    };
+
+    for(int i = 0; i < root->mNumChildren; ++i) {
+        ebone.child.push_back(markChildsExternal(&ebone, root->mChildren[i]));
+    }
+
+    return ebone;
+  }
+
 public:
+
+  /// Marks a bone to be modified from outside.
+  /** @return A structure, which through the bone, and all of its child can be moved.
+    * @param boneName - The name of the bone. */
+  ExternalBone markBoneExternal(const std::string& boneName) {
+    if(skinning_data_.bone_mapping.find(boneName) == skinning_data_.bone_mapping.end()) {
+      throw std::runtime_error(
+          "AnimatedMesh '" + filename_ + "' doesn't have any bone named '" + boneName + "'."
+      );
+    }
+
+    return markChildsExternal(nullptr, findNode(scene_->mRootNode, boneName));
+  }
+
   /// Returns the number of bones this scene has.
   /** May change the currently active VAO and ArrayBuffer at the first call. */
   size_t getNumBones();

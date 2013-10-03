@@ -49,6 +49,7 @@ struct SkinningData {
   struct BoneInfo {
     glm::mat4 bone_offset;
     glm::mat4 final_transform;
+    bool external = false;
   };
 
   /// The OpenGL buffers for the vertex bone data.
@@ -87,6 +88,14 @@ struct SkinningData {
     , max_bone_attrib_num(0)
     , is_setup_bones(false)
   { }
+};
+
+struct ExternalBone {
+  const glm::mat4& bone_offset;
+  glm::mat4& final_transform;
+
+  ExternalBone* parent;
+  std::vector<ExternalBone> child;
 };
 
 } // namespace oglwrap
