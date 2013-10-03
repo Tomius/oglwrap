@@ -91,11 +91,21 @@ struct SkinningData {
 };
 
 struct ExternalBone {
-  const glm::mat4& bone_offset;
-  glm::mat4& final_transform;
+  const glm::mat4& offset;
+  glm::mat4& transform;
 
   ExternalBone* parent;
   std::vector<ExternalBone> child;
+};
+
+struct ExternalBoneTree {
+  const glm::mat4& transform;
+
+  std::vector<ExternalBone> child;
+
+  ExternalBoneTree(const ExternalBone& root_ebone)
+    : transform(root_ebone.transform), child(root_ebone.child)
+  { }
 };
 
 } // namespace oglwrap

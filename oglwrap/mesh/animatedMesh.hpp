@@ -96,18 +96,18 @@ private:
     return nullptr;
   }
 
-  ExternalBone markChildsExternal(ExternalBone* parent, aiNode* root) {
+  ExternalBone markChildsExternal(ExternalBone* parent, aiNode* root, bool shouldBeExternal = false) {
     size_t bidx = skinning_data_.bone_mapping[root->mName.data];
     SkinningData::BoneInfo& binfo = skinning_data_.bone_info[bidx];
-    binfo.external = true;
+    binfo.external = shouldBeExternal;
     ExternalBone ebone = {
       binfo.bone_offset,
       binfo.final_transform,
-      nullptr
+      parent
     };
 
     for(int i = 0; i < root->mNumChildren; ++i) {
-        ebone.child.push_back(markChildsExternal(&ebone, root->mChildren[i]));
+        ebone.child.push_back(markChildsExternal(&ebone, root->mChildren[i], true));
     }
 
     return ebone;
@@ -118,7 +118,7 @@ public:
   /// Marks a bone to be modified from outside.
   /** @return A structure, which through the bone, and all of its child can be moved.
     * @param boneName - The name of the bone. */
-  ExternalBone markBoneExternal(const std::string& boneName) {
+  ExternalBoneTree markBoneExternal(const std::string& boneName) {
     if(skinning_data_.bone_mapping.find(boneName) == skinning_data_.bone_mapping.end()) {
       throw std::runtime_error(
           "AnimatedMesh '" + filename_ + "' doesn't have any bone named '" + boneName + "'."
@@ -213,17 +213,21 @@ private:
                                   const aiNode* node,
                                   const glm::mat4& parent_transform  = glm::mat4());
 
-  /// Does what it's name says, updates the bones transformations.
-  /** @param time_in_seconds - Expected to be a time value in seconds. It doesn't matter, since when does it count the time, just it should be counting up. */
+public:
+
+  /// Updates the bones transformations.
+  /** @param time_in_seconds - Expected to be a time value in seconds. */
   void updateBoneInfo(float time_in_seconds);
 
-public:
+  /// Updates the bones transformations.
+  /** @param time_in_seconds - Expected to be a time value in seconds. */
+  void uploadBoneInfo(LazyUniform<glm::mat4>& bones);
 
   /// Updates the bones transformation and uploads them into the given uniforms.
   /** @param time_in_seconds - Expect a time value as a float, optimally since the start of the program.
     * @param bones - The uniform naming the bones array. It should be indexable. */
-  void boneTransform(float time_in_seconds,
-                     LazyUniform<glm::mat4>& bones);
+  void updateAndUploadBoneInfo(float time_in_seconds,
+                               LazyUniform<glm::mat4>& bones);
 
   /*       //=====:==-==-==:=====\\                                   //=====:==-==-==:=====\\
     <---<}>==~=~=~==--==--==~=~=~==<{>----- Animation Control -----<}>==~=~=~==--==--==~=~=~==<{>--->

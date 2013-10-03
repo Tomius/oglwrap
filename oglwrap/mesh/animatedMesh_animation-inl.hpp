@@ -286,12 +286,18 @@ inline void AnimatedMesh::updateBoneInfo(float time) {
    }
 }
 
-inline void AnimatedMesh::boneTransform(float time,
-                                        LazyUniform<glm::mat4>& bones) {
-   updateBoneInfo(time);
-   for(unsigned i = 0; i < skinning_data_.num_bones; i++) {
+/// Updates the bones transformations.
+/** @param time_in_seconds - Expected to be a time value in seconds. */
+inline void AnimatedMesh::uploadBoneInfo(LazyUniform<glm::mat4>& bones) {
+  for(unsigned i = 0; i < skinning_data_.num_bones; i++) {
       bones[i] = skinning_data_.bone_info[i].final_transform;
-   }
+  }
+}
+
+inline void AnimatedMesh::updateAndUploadBoneInfo(float time,
+                                                  LazyUniform<glm::mat4>& bones) {
+  updateBoneInfo(time);
+  uploadBoneInfo(bones);
 }
 
 } // namespace oglwrap
