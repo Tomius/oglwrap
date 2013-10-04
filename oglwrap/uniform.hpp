@@ -113,7 +113,7 @@ public:
   /// Queries a variable named 'identifier' in the 'program', and stores it's location.
   /** It writes to stderr if the query didn't work.
     * @param program - The program to seek the uniform in. Will call program.use().
-    * @param _identifier - The name of the uniform that is to be set.
+    * @param identifier - The name of the uniform that is to be set.
     * @param idx - The index of the element in the uniform array.
     * @see glGetUniformLocation */
   IndexedUniform(Program& program, const std::string& identifier, size_t idx) {

@@ -111,7 +111,7 @@ enum FloatDataType {
   Float = GL_FLOAT,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_HALF_FLOAT)
-  HalfFloat = GL_HALF_FLOAT,
+  HalfFloat = GL_HALF_FLOAT
 #endif
 };
 }
@@ -206,7 +206,7 @@ enum BufferBinding {
   TransformFeedback = GL_TRANSFORM_FEEDBACK_BUFFER_BINDING,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNIFORM_BUFFER_BINDING)
-  Uniform = GL_UNIFORM_BUFFER_BINDING,
+  Uniform = GL_UNIFORM_BUFFER_BINDING
 #endif
 };
 }
@@ -242,7 +242,7 @@ enum IndexedBufferBinding {
   TransformFeedback = GL_TRANSFORM_FEEDBACK_BUFFER_BINDING,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNIFORM_BUFFER_BINDING)
-  Uniform = GL_UNIFORM_BUFFER_BINDING,
+  Uniform = GL_UNIFORM_BUFFER_BINDING
 #endif
 };
 }
@@ -337,7 +337,7 @@ enum FramebufferType {
   Draw = GL_DRAW_FRAMEBUFFER,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FRAMEBUFFER)
-  Read_Draw = GL_FRAMEBUFFER,
+  Read_Draw = GL_FRAMEBUFFER
 #endif
 };
 }
@@ -353,7 +353,7 @@ enum FramebufferBinding {
   Draw = GL_DRAW_FRAMEBUFFER_BINDING,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FRAMEBUFFER_BINDING)
-  Read_Draw = GL_FRAMEBUFFER_BINDING,
+  Read_Draw = GL_FRAMEBUFFER_BINDING
 #endif
 };
 }
@@ -481,7 +481,7 @@ enum TexType {
   Tex2DArray = GL_TEXTURE_2D_ARRAY,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_CUBE_MAP)
-  TexCubeMap = GL_TEXTURE_CUBE_MAP,
+  TexCubeMap = GL_TEXTURE_CUBE_MAP
 #endif
 };
 }
@@ -508,7 +508,7 @@ enum TexBinding {
   Tex2DArray = GL_TEXTURE_BINDING_2D_ARRAY,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_BINDING_CUBE_MAP)
-  TexCubeMap = GL_TEXTURE_BINDING_CUBE_MAP,
+  TexCubeMap = GL_TEXTURE_BINDING_CUBE_MAP
 #endif
 };
 }
@@ -550,7 +550,7 @@ enum CubeTarget {
   PosZ = GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z)
-  NegZ = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
+  NegZ = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
 #endif
 };
 }
@@ -562,7 +562,7 @@ enum Tex3DType {
   Tex3D = GL_TEXTURE_3D,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_2D_ARRAY)
-  Tex2DArray = GL_TEXTURE_2D_ARRAY,
+  Tex2DArray = GL_TEXTURE_2D_ARRAY
 #endif
 };
 }
@@ -826,7 +826,7 @@ enum PixelDataInternalFormat {
   Compressed_RG_RGTC2 = GL_COMPRESSED_RG_RGTC2,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COMPRESSED_SIGNED_RG_RGTC2)
-  Compressed_Signed_RG_RGTC2 = GL_COMPRESSED_SIGNED_RG_RGTC2,
+  Compressed_Signed_RG_RGTC2 = GL_COMPRESSED_SIGNED_RG_RGTC2
 #endif
 };
 }
@@ -1088,7 +1088,7 @@ enum CompFunc {
   Always = GL_ALWAYS,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_NEVER)
-  Never = GL_NEVER,
+  Never = GL_NEVER
 #endif
 };
 }

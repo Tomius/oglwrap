@@ -96,18 +96,19 @@ private:
     return nullptr;
   }
 
-  ExternalBone markChildsExternal(ExternalBone* parent, aiNode* root, bool shouldBeExternal = false) {
-    size_t bidx = skinning_data_.bone_mapping[root->mName.data];
+  ExternalBone markChildsExternal(ExternalBone* parent, aiNode* node, bool shouldBeExternal = false) {
+    size_t bidx = skinning_data_.bone_mapping[node->mName.data];
     SkinningData::BoneInfo& binfo = skinning_data_.bone_info[bidx];
     binfo.external = shouldBeExternal;
     ExternalBone ebone = {
+      std::string(node->mName.data),
       binfo.bone_offset,
       binfo.final_transform,
       parent
     };
 
-    for(int i = 0; i < root->mNumChildren; ++i) {
-        ebone.child.push_back(markChildsExternal(&ebone, root->mChildren[i], true));
+    for(int i = 0; i < node->mNumChildren; ++i) {
+        ebone.child.push_back(markChildsExternal(&ebone, node->mChildren[i], true));
     }
 
     return ebone;

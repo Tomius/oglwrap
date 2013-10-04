@@ -91,6 +91,7 @@ struct SkinningData {
 };
 
 struct ExternalBone {
+  std::string name; // FIXME - only for debug
   const glm::mat4& offset;
   glm::mat4& transform;
 

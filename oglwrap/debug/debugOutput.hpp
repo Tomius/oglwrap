@@ -138,8 +138,8 @@ public:
               " error is generated if ",
               " may be generated if ",
             };
-            for(int i = 0; i < 3; i++) {
-              std::string errIsGendIf(buffer2 + possible_starts[i]);
+            for(int j = 0; j < 3; j++) {
+              std::string errIsGendIf(buffer2 + possible_starts[j]);
               if(buffer.find(errIsGendIf) == 0) {
                 buffer.erase(0, errIsGendIf.size() - 2);
                 break;

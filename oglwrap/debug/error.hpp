@@ -16,13 +16,13 @@ static DebugOutput debug_output;
 
 #if OGLWRAP_DEBUG
 
-#if OGLWRAP_USE_ARB_DEBUG_OUTPUT
-#define glfunc(func) func;
+#if OGLWRAP_DISABLE_DEBUG_OUTPUT
+  #define glfunc(func) func;
 #else
-#define glfunc(func) \
-  func;\
-  OGLWRAP_CHECK_ERROR_NAMED(#func);
-#endif // OGLWRAP_USE_ARB_DEBUG_OUTPUT
+  #define glfunc(func) \
+    func;\
+    OGLWRAP_CHECK_ERROR_NAMED(#func);
+#endif // OGLWRAP_DISABLE_DEBUG_OUTPUT
 
 /// Prints additional info in case of a specific OpenGL error.
 /** Conditionally prints more information about an error if the
