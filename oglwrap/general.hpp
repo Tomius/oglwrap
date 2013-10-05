@@ -20,7 +20,7 @@ T ToDegree(const T& x) {
 namespace oglwrap {
 
 /// A simple reference counter that you should use with inheritance.
-/** If your class inherit from this class (protected inheritance recommended),
+/** If your class inherit from this class (w/ protected or public inheritance),
   * at your class' destructor you can call isDeletable(), which returns true
   * if exactly one instance of that object exists. Note that OpenGL RAII needs
   * to be reference counted! */
@@ -60,6 +60,40 @@ public:
     } else {
       (*numInstances_)--;
     }
+  }
+};
+
+template <typename T>
+/// A reference counted pointer that manages a dynamically allocated object.
+/** It releases the resource, if no reference would point to this object. */
+class SmartPtr : protected RefCounted {
+  T* const ptr; /// < The pointer to the resource
+public:
+  /// Default ctr. Dynamically allocates a new object with its default ctor
+  SmartPtr()
+    : ptr(new T())
+  { }
+
+  /// Constructs the SmartPointer from an existing pointer to a dynamically allocated object.
+  SmartPtr(T* ptr)
+    : ptr(ptr)
+  { }
+
+  /// Releases the resource, if no reference would point to this object.
+  ~SmartPtr() {
+    if(isDeletable()) {
+      delete ptr;
+    }
+  }
+
+  /// Returns the pointer.
+  operator T*() const {
+    return ptr;
+  }
+
+  /// Returns the object.
+  operator T&() const {
+    return *ptr;
   }
 };
 

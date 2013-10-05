@@ -100,12 +100,13 @@ private:
     size_t bidx = skinning_data_.bone_mapping[node->mName.data];
     SkinningData::BoneInfo& binfo = skinning_data_.bone_info[bidx];
     binfo.external = shouldBeExternal;
-    ExternalBone ebone = {
-      std::string(node->mName.data),
+    ExternalBone ebone(
+      node->mName.data,
       binfo.bone_offset,
+      convertMatrix(node->mTransformation),
       binfo.final_transform,
       parent
-    };
+    );
 
     for(int i = 0; i < node->mNumChildren; ++i) {
         ebone.child.push_back(markChildsExternal(&ebone, node->mChildren[i], true));
@@ -126,7 +127,23 @@ public:
       );
     }
 
-    return markChildsExternal(nullptr, findNode(scene_->mRootNode, boneName));
+    // Find the bone that is to be marked
+    aiNode* marked_node = findNode(scene_->mRootNode, boneName);
+
+    ExternalBoneTree ebone_tree(
+        markChildsExternal(nullptr, marked_node),
+        skinning_data_.global_inverse_transform
+    );
+
+    // Get the root bone's BoneInfo
+    size_t bidx = skinning_data_.bone_mapping[marked_node->mName.data];
+    SkinningData::BoneInfo& binfo = skinning_data_.bone_info[bidx];
+
+    // Set the root bone's local transformation pointer to be able to set it from "inside".
+    binfo.global_transform_ptr = ebone_tree.global_transform_ptr;
+    binfo.pinned = true;
+
+    return ebone_tree;
   }
 
   /// Returns the number of bones this scene has.

@@ -49,7 +49,11 @@ struct SkinningData {
   struct BoneInfo {
     glm::mat4 bone_offset;
     glm::mat4 final_transform;
+
+    // For editing bones from outside
     bool external = false;
+    bool pinned = false;
+    glm::mat4* global_transform_ptr = nullptr;
   };
 
   /// The OpenGL buffers for the vertex bone data.
@@ -90,23 +94,50 @@ struct SkinningData {
   { }
 };
 
-struct ExternalBone {
-  std::string name; // FIXME - only for debug
-  const glm::mat4& offset;
-  glm::mat4& transform;
+struct ExternalBone;
 
-  ExternalBone* parent;
+struct BasicExternalBone {
+  const std::string name; // FIXME - only for debug
+  const glm::mat4 offset;
+  const glm::mat4 default_transform;
+
   std::vector<ExternalBone> child;
+
+  BasicExternalBone(const std::string& name,
+                    const glm::mat4& offset,
+                    const glm::mat4& default_transform)
+      : name(name)
+      , offset(offset)
+      , default_transform(default_transform)
+  { }
 };
 
-struct ExternalBoneTree {
-  const glm::mat4& transform;
+struct ExternalBone : public BasicExternalBone {
+  glm::mat4& final_transform;
+  const BasicExternalBone* parent;
 
-  std::vector<ExternalBone> child;
-
-  ExternalBoneTree(const ExternalBone& root_ebone)
-    : transform(root_ebone.transform), child(root_ebone.child)
+  ExternalBone(const std::string& name,
+               const glm::mat4& offset,
+               const glm::mat4& default_transform,
+               glm::mat4& final_transform,
+               const BasicExternalBone* parent)
+      : BasicExternalBone(name, offset, default_transform)
+      , final_transform(final_transform)
+      , parent(parent)
   { }
+};
+
+struct ExternalBoneTree : public BasicExternalBone, protected RefCounted {
+  // This will be modified by the AnimatedClass's updateBoneInfo() call.
+  const SmartPtr<glm::mat4> global_transform_ptr;
+  const glm::mat4 global_inverse_transform;
+
+  ExternalBoneTree(const BasicExternalBone& super,
+                   const glm::mat4& global_inverse_transform)
+      : BasicExternalBone(super)
+      , global_inverse_transform(global_inverse_transform)
+  { }
+
 };
 
 } // namespace oglwrap

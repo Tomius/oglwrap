@@ -106,7 +106,7 @@ inline void AnimatedMesh::updateBoneTree(float animationTime,
    std::string node_name(node->mName.data);
    const aiAnimation* animation = current_anim_.handle->mAnimations[0];
    const aiNodeAnim* node_anim = findNodeAnim(animation, node_name);
-   glm::mat4 node_transform = convertMatrix(node->mTransformation);
+   glm::mat4 local_transform = convertMatrix(node->mTransformation);
 
    if(node_anim) {
       // Interpolate the transformations and get the matrices
@@ -132,22 +132,27 @@ inline void AnimatedMesh::updateBoneTree(float animationTime,
          translationM = glm::translate(glm::mat4(), glm::vec3(translation.x, translation.y, translation.z));
       }
       // Combine the transformations
-      node_transform = translationM * rotationM * scalingM;
+      local_transform = translationM * rotationM * scalingM;
    }
 
-   glm::mat4 global_transformation = parent_transform * node_transform;
+   glm::mat4 global_transform = parent_transform * local_transform;
 
    if(skinning_data_.bone_mapping.find(node_name) != skinning_data_.bone_mapping.end()) {
       unsigned bone_idx = skinning_data_.bone_mapping[node_name];
       if(skinning_data_.bone_info[bone_idx].external == false) {
-        skinning_data_.bone_info[bone_idx].final_transform =
-           skinning_data_.global_inverse_transform *
-           global_transformation *
-           skinning_data_.bone_info[bone_idx].bone_offset;
+         skinning_data_.bone_info[bone_idx].final_transform =
+            skinning_data_.global_inverse_transform *
+            global_transform *
+            skinning_data_.bone_info[bone_idx].bone_offset;
+      }
+      if(skinning_data_.bone_info[bone_idx].pinned == true) {
+         *skinning_data_.bone_info[bone_idx].global_transform_ptr = global_transform;
+         // A pinned bone has all external child
+         return;
       }
    }
    for(unsigned i = 0; i < node->mNumChildren; i++) {
-      updateBoneTree(animationTime, node->mChildren[i], global_transformation);
+      updateBoneTree(animationTime, node->mChildren[i], global_transform);
    }
 }
 
@@ -161,7 +166,8 @@ inline void AnimatedMesh::updateBoneTreeInTransition(float prevAnimationTime,
    const aiAnimation* nextAnimation = current_anim_.handle->mAnimations[0];
    const aiNodeAnim* prevNodeAnim = findNodeAnim(prevAnimation, node_name);
    const aiNodeAnim* nextNodeAnim = findNodeAnim(nextAnimation, node_name);
-   glm::mat4 node_transform = convertMatrix(node->mTransformation);
+
+   glm::mat4 local_transform = convertMatrix(node->mTransformation);
 
    if(prevNodeAnim && nextNodeAnim) {
       // Interpolate the transformations and get the matrices
@@ -193,28 +199,35 @@ inline void AnimatedMesh::updateBoneTreeInTransition(float prevAnimationTime,
          translationM = glm::translate(glm::mat4(), glm::vec3(translation.x, translation.y, translation.z));
       }
       // Combine the transformations
-      node_transform = translationM * rotationM * scalingM;
+      local_transform = translationM * rotationM * scalingM;
    }
-   glm::mat4 global_transformation = parent_transform * node_transform;
+
+   glm::mat4 global_transform = parent_transform * local_transform;
+
    if(skinning_data_.bone_mapping.find(node_name) != skinning_data_.bone_mapping.end()) {
       unsigned bone_idx = skinning_data_.bone_mapping[node_name];
       if(skinning_data_.bone_info[bone_idx].external == false) {
-        skinning_data_.bone_info[bone_idx].final_transform =
-           skinning_data_.global_inverse_transform *
-           global_transformation *
-           skinning_data_.bone_info[bone_idx].bone_offset;
+         skinning_data_.bone_info[bone_idx].final_transform =
+            skinning_data_.global_inverse_transform *
+            global_transform *
+            skinning_data_.bone_info[bone_idx].bone_offset;
+      }
+      if(skinning_data_.bone_info[bone_idx].pinned == true) {
+         *skinning_data_.bone_info[bone_idx].global_transform_ptr = global_transform;
+         // A pinned bone has all external child
+         return;
       }
    }
    for(unsigned i = 0; i < node->mNumChildren; i++) {
       updateBoneTreeInTransition(
-         prevAnimationTime, nextAnimationTime, factor, node->mChildren[i], global_transformation
+         prevAnimationTime, nextAnimationTime, factor, node->mChildren[i], global_transform
       );
    }
 }
 
 inline void AnimatedMesh::updateBoneInfo(float time) {
-   if(!current_anim_.handle || current_anim_.handle->mAnimations == 0 ||
-        !last_anim_.handle || last_anim_.handle->mAnimations == 0) {
+   if(!current_anim_.handle || current_anim_.handle->mAnimations == 0
+      || !last_anim_.handle || last_anim_.handle->mAnimations == 0) {
       throw std::runtime_error("Tried to run an invalid animation.");
    }
 
