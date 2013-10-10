@@ -37,6 +37,9 @@ protected:
   /// The vao-s and buffers per mesh.
   std::vector<MeshEntry> entries_;
 
+  /// The transformation that takes the model's world coordinates to the OpenGL style world coordinates.
+  glm::mat4 world_transformation_;
+
   /// A struct containin the state and data of a material type.
   struct MaterialInfo {
     bool active;
@@ -129,6 +132,12 @@ public:
   /** @param center - The vec3 where bounding cuboid's center is to be returned.
     * @param edges - The vec3 where bounding cuboid's edge lengths are to be returned. */
   void bCuboid(glm::vec3& center, glm::vec3& edges) const;
+
+  /// Returns the transformation that takes the model's world coordinates to the OpenGL style world coordinates.
+  /** i.e if you see that a character is laying on ground instead of standing, it is probably
+    * because the character is defined in a space where Z is up not Y. Right multiplying your
+    * model matrix with this matrix will solve that problem. */
+  glm::mat4 worldTransform() const;
 
   /// Returns the center (as xyz) and radius (as w) of the bounding sphere.
   glm::vec4 bSphere() const;

@@ -266,13 +266,11 @@ inline void AnimatedMesh::updateBoneInfo(float time) {
 
    if(in_transition) {
       // Normal animation
-      updateBoneTree(current_animation_time, scene_->mRootNode,
-                     skinning_data_.global_inverse_transform);
+      updateBoneTree(current_animation_time, scene_->mRootNode);
    } else {
       // Transition between two animations.
       updateBoneTreeInTransition(last_animation_time, current_animation_time,
-                                 transition_factor, scene_->mRootNode,
-                                 skinning_data_.global_inverse_transform);
+                                 transition_factor, scene_->mRootNode);
    }
 
    // Start a new loop if necessary

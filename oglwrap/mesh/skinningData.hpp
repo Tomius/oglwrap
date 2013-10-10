@@ -83,9 +83,6 @@ struct SkinningData {
   /// The name of the root bone. It's usually not equal to the root node. It is need to get the offsets.
   std::string root_bone;
 
-  /// Stores the root node transform's inverse.
-  glm::mat4 global_inverse_transform;
-
   SkinningData(size_t num_meshes = 0)
     : vertex_bone_data_buffers(num_meshes)
     , num_bones(0)

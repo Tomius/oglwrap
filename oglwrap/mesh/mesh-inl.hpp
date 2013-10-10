@@ -22,6 +22,11 @@ inline Mesh::Mesh(const std::string& filename, unsigned int flags)
   if(!scene_) {
     throw std::runtime_error("Error parsing " + filename_ + " : " + importer_.GetErrorString());
   }
+
+  // The world transform is the transform that takes the root node to it's parent's space,
+  // which is the OpenGL style world space. The inverse of this is stored as an attribute
+  // of the scene's root node.
+  world_transformation_ = glm::inverse(convertMatrix(scene_->mRootNode->mTransformation));
 }
 
 template <class IdxType>
@@ -274,6 +279,14 @@ inline void Mesh::render() {
 
   VertexArray::Unbind();
   Texture2D::Unbind();
+}
+
+/// The transformation that takes the model's world coordinates to the OpenGL style world coordinates.
+/** i.e if you see that a character is laying on ground instead of standing, it is probably
+  * because the character is defined in a space where XY is flat, and Z is up. Right
+  * multiplying your model matrix with this matrix will solve that problem. */
+inline glm::mat4 Mesh::worldTransform() const {
+  return world_transformation_;
 }
 
 /// Gives information about the mesh's bounding cuboid.
