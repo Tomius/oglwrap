@@ -130,10 +130,7 @@ public:
     // Find the bone that is to be marked
     aiNode* marked_node = findNode(scene_->mRootNode, boneName);
 
-    ExternalBoneTree ebone_tree(
-        markChildsExternal(nullptr, marked_node),
-        skinning_data_.global_inverse_transform
-    );
+    ExternalBoneTree ebone_tree(markChildsExternal(nullptr, marked_node));
 
     // Get the root bone's BoneInfo
     size_t bidx = skinning_data_.bone_mapping[marked_node->mName.data];
@@ -141,6 +138,8 @@ public:
 
     // Set the root bone's local transformation pointer to be able to set it from "inside".
     binfo.global_transform_ptr = ebone_tree.global_transform_ptr;
+    // Make sure that the global transform will be valid.
+    updateBoneTree(0, scene_->mRootNode, skinning_data_.global_inverse_transform);
     binfo.pinned = true;
 
     return ebone_tree;
@@ -218,7 +217,7 @@ private:
     * @param parent_transform - The transformation of the parent node. You should call it with an identity matrix. */
   void updateBoneTree(float animationTime,
                       const aiNode* node,
-                      const glm::mat4& parent_transform = glm::mat4());
+                      const glm::mat4& parent_transform);
 
   /// Does the same thing as readNodeHierarchy, but it is used to create transitions between animations, so it interpolates between four keyframes not two.
   /** @param prevAnimationTime - The animation time of when, the last animation was interrupted.
@@ -229,7 +228,7 @@ private:
                                   float nextAnimationTime,
                                   float factor,
                                   const aiNode* node,
-                                  const glm::mat4& parent_transform  = glm::mat4());
+                                  const glm::mat4& parent_transform);
 
 public:
 

@@ -141,9 +141,7 @@ inline void AnimatedMesh::updateBoneTree(float animationTime,
       unsigned bone_idx = skinning_data_.bone_mapping[node_name];
       if(skinning_data_.bone_info[bone_idx].external == false) {
          skinning_data_.bone_info[bone_idx].final_transform =
-            skinning_data_.global_inverse_transform *
-            global_transform *
-            skinning_data_.bone_info[bone_idx].bone_offset;
+            global_transform * skinning_data_.bone_info[bone_idx].bone_offset;
       }
       if(skinning_data_.bone_info[bone_idx].pinned == true) {
          *skinning_data_.bone_info[bone_idx].global_transform_ptr = global_transform;
@@ -208,9 +206,7 @@ inline void AnimatedMesh::updateBoneTreeInTransition(float prevAnimationTime,
       unsigned bone_idx = skinning_data_.bone_mapping[node_name];
       if(skinning_data_.bone_info[bone_idx].external == false) {
          skinning_data_.bone_info[bone_idx].final_transform =
-            skinning_data_.global_inverse_transform *
-            global_transform *
-            skinning_data_.bone_info[bone_idx].bone_offset;
+            global_transform * skinning_data_.bone_info[bone_idx].bone_offset;
       }
       if(skinning_data_.bone_info[bone_idx].pinned == true) {
          *skinning_data_.bone_info[bone_idx].global_transform_ptr = global_transform;
@@ -270,11 +266,13 @@ inline void AnimatedMesh::updateBoneInfo(float time) {
 
    if(in_transition) {
       // Normal animation
-      updateBoneTree(current_animation_time, scene_->mRootNode);
+      updateBoneTree(current_animation_time, scene_->mRootNode,
+                     skinning_data_.global_inverse_transform);
    } else {
       // Transition between two animations.
       updateBoneTreeInTransition(last_animation_time, current_animation_time,
-                                  transition_factor, scene_->mRootNode);
+                                 transition_factor, scene_->mRootNode,
+                                 skinning_data_.global_inverse_transform);
    }
 
    // Start a new loop if necessary

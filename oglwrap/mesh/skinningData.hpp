@@ -127,15 +127,12 @@ struct ExternalBone : public BasicExternalBone {
   { }
 };
 
-struct ExternalBoneTree : public BasicExternalBone, protected RefCounted {
+struct ExternalBoneTree : public BasicExternalBone {
   // This will be modified by the AnimatedClass's updateBoneInfo() call.
   const SmartPtr<glm::mat4> global_transform_ptr;
-  const glm::mat4 global_inverse_transform;
 
-  ExternalBoneTree(const BasicExternalBone& super,
-                   const glm::mat4& global_inverse_transform)
+  ExternalBoneTree(const BasicExternalBone& super)
       : BasicExternalBone(super)
-      , global_inverse_transform(global_inverse_transform)
   { }
 
 };

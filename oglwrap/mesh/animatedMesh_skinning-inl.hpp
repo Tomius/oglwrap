@@ -5,6 +5,7 @@
 
 namespace oglwrap {
 
+/// Fills the bone_mapping with data.
 inline void AnimatedMesh::mapBones() {
   for(size_t entry = 0; entry < entries_.size(); entry++) {
     const aiMesh* pMesh = scene_->mMeshes[entry];
@@ -25,6 +26,9 @@ inline void AnimatedMesh::mapBones() {
   }
 }
 
+/// A recursive functions that should be started from the root node, and it returns the first bone under it.
+/** @param node - The current root node.
+  * @param anim - The animation to seek the root bone in. */
 inline const aiNodeAnim* AnimatedMesh::getRootBone(const aiNode* node, const aiScene* anim) {
   std::string nodeName(node->mName.data);
 
@@ -55,6 +59,11 @@ inline const aiNodeAnim* AnimatedMesh::getRootBone(const aiNode* node, const aiS
 }
 
 template <class Index_t>
+/// Creates bone attributes data.
+/** It is a template, as the type of boneIDs shouldn't be fix. Most of the times,
+  * a skeleton won't contain more than 256 bones, but that doesn't mean boneIDs
+  * should be forced to GLubyte, it works with shorts and even ints too. Although
+  * I really doubt anyone would be using a skeleton with more than 65535 bones... */
 void AnimatedMesh::loadBones() {
 
   const size_t per_attrib_size = sizeof(SkinningData::VertexBoneData_PerAttribute<Index_t>);
@@ -176,6 +185,8 @@ void AnimatedMesh::loadBones() {
   ArrayBuffer::Unbind();
 }
 
+/// Creates the bone attributes data (the skinning.)
+/** It actually just calls the loadBones function with the appropriate template parameter */
 inline void AnimatedMesh::createBonesData() {
   mapBones();
 
@@ -189,6 +200,14 @@ inline void AnimatedMesh::createBonesData() {
 }
 
 template <class Index_t>
+/// Shader plumbs the bone data.
+/** It is a template, as the type of boneIDs shouldn't be fix. Most of the times,
+  * a skeleton won't contain more than 256 bones, but that doesn't mean boneIDs
+  * should be forced to GLubyte, it works with shorts and even ints too. Although
+  * I really doubt anyone would be using a skeleton with more than 65535 bones...
+  * @param idx_t - The oglwrap enum, naming the data type that should be used.
+  * @param boneIDs - Should be an array of attributes, that will be shader plumbed for the boneIDs data.
+  * @param boneWeights - Should be an array of attributes, that will be shader plumbed for the boneWeights data. */
 void AnimatedMesh::shaderPlumbBones(DataType idx_t, LazyVertexAttribArray boneIDs,
                                     LazyVertexAttribArray boneWeights) {
   const size_t per_attrib_size = sizeof(SkinningData::VertexBoneData_PerAttribute<Index_t>);
@@ -222,6 +241,8 @@ void AnimatedMesh::shaderPlumbBones(DataType idx_t, LazyVertexAttribArray boneID
   ArrayBuffer::Unbind();
 }
 
+/// Returns the number of bones this scene has.
+/** May change the currently active VAO and ArrayBuffer at the first call. */
 inline size_t AnimatedMesh::getNumBones() {
 
   // If loadBones hasn't been called yet, than have to create
@@ -233,6 +254,8 @@ inline size_t AnimatedMesh::getNumBones() {
   return skinning_data_.num_bones;
 }
 
+/// Returns the size that boneIds and BoneWeights attribute arrays should be.
+/** May change the currently active VAO and ArrayBuffer at the first call. */
 inline size_t AnimatedMesh::getBoneAttribNum() {
 
   // If loadBones hasn't been called yet, than have to create
@@ -244,6 +267,12 @@ inline size_t AnimatedMesh::getBoneAttribNum() {
   return skinning_data_.max_bone_attrib_num;
 }
 
+/// Loads in bone weight and id information to the given array of attribute arrays.
+/** Uploads the bone weight and id to an array of attribute arrays, and sets it up for use.
+  * For example if you specified "in vec4 boneIds[3]" you have to give "prog | boneIds"
+  * Calling this function changes the currently active VAO and ArrayBuffer.
+  * @param boneIDs - The array of attributes array to use as destination for bone IDs.
+  * @param boneWeights - The array of attributes array to use as destination for bone weights. */
 inline void AnimatedMesh::setupBones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights) {
 
   if(skinning_data_.is_setup_bones) {
