@@ -138,8 +138,6 @@ public:
 
     // Set the root bone's local transformation pointer to be able to set it from "inside".
     binfo.global_transform_ptr = ebone_tree.global_transform_ptr;
-    // Make sure that the global transform will be valid.
-    updateBoneTree(0, scene_->mRootNode);
     binfo.pinned = true;
 
     return ebone_tree;

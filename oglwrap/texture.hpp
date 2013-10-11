@@ -5,7 +5,7 @@
 #ifndef OGLWRAP_TEXTURE_HPP_
 #define OGLWRAP_TEXTURE_HPP_
 
-#if OGLWRAP_IMAGEMAGICK
+#if OGLWRAP_USE_IMAGEMAGICK
   #include <Magick++.h>
 #endif
 

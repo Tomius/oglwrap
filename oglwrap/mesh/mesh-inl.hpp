@@ -270,11 +270,11 @@ inline void Mesh::render() {
     }
 
     gl(DrawElements(
-         GL_TRIANGLES,
-         entries_[i].idxCount,
-         entries_[i].idxType,
-         0
-       ));
+       GL_TRIANGLES,
+       entries_[i].idxCount,
+       entries_[i].idxType,
+       0
+     ));
   }
 
   VertexArray::Unbind();

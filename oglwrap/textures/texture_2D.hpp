@@ -408,7 +408,7 @@ public:
   }
 #endif // glGetCompressedTexImage
 
-#if OGLWRAP_IMAGEMAGICK
+#if OGLWRAP_USE_IMAGEMAGICK
   /// Loads in, and uploads an image from a file using Magick++.
   /** @param file - Path to the image file.
     * @param formatString - Specifies the number and order of components to be read.

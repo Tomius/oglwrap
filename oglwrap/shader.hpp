@@ -150,8 +150,9 @@ template<ShaderType shader_t>
 class Shader {
   ShaderObject<shader_t> shader; ///< The handle for the buffer.
   bool compiled; ///< Stores if the shader is compiled.
-  std::string filename;  ///< Stores the source file's name if the shader was initialized from file.
 public:
+  std::string filename;  ///< Stores the source file's name if the shader was initialized from file.
+
   /// Creates the an empty shader object.
   Shader() : compiled(false) { }
 
@@ -166,10 +167,22 @@ public:
 #endif // glShaderSource
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glShaderSource)
+  /// Creates a shader and sets the file as the shader source.
+  /** @param source - The source of the shader code.
+    * @see glShaderSource */
+  Shader(const ShaderSource& source)
+    : compiled(false) {
+    const char *str = source.getSource().c_str();
+    filename = source.getFileName();
+    gl(ShaderSource(shader, 1, &str, nullptr));
+  }
+#endif // glShaderSource
+
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glShaderSource)
   /// Uploads a string as the shader's source.
   /** @param source - string containing the shader code.
     * @see glShaderSource */
-  void source(const std::string& source)  {
+  void source(const std::string& source) {
     const char *str = source.c_str();
     gl(ShaderSource(shader, 1, &str, nullptr));
   }
@@ -177,9 +190,9 @@ public:
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glShaderSource)
   /// Uploads a ShaderSource as the shader's source.
-  /** @param source - string containing the shader code.
+  /** @param source - The source of the shader code.
     * @see glShaderSource */
-  void source(const ShaderSource& source)  {
+  void source(const ShaderSource& source) {
     const char *str = source.getSource().c_str();
     filename = source.getFileName();
     gl(ShaderSource(shader, 1, &str, nullptr));
@@ -427,6 +440,7 @@ public:
 class Program {
   ProgramObject program; ///< The C OpenGL handle for the program.
   std::vector<GLuint> shaders; ///< IDs of the shaders attached to the program
+  std::vector<std::string> filenames; /// The names of the shaders are stored to help debugging.
   bool *linked; ///< Stores if the program is linked. Its a pointer, so .use() can be const.
 public:
   /// Creates an empty program object.
@@ -453,6 +467,7 @@ public:
   void attachShader(Shader<shader_t>& shader) {
     shader.compile();
     shaders.push_back(shader.expose());
+    filenames.push_back(shader.filename);
     gl( AttachShader(program, shader.expose()) );
   }
 #endif // glAttachShader
@@ -464,12 +479,10 @@ public:
     * @see glAttachShader */
   void attachShader(const Shader<shader_t>& shader) {
     shaders.push_back(shader.expose());
+    filenames.push_back(shader.filename);
     gl( AttachShader(program, shader.expose()) );
   }
 #endif // glAttachShader
-
-  template<ShaderType shader_t>
-  void attachShader(Shader<shader_t> &&) = delete;
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glAttachShader)
   template<ShaderType shader_t>
@@ -493,9 +506,6 @@ public:
   }
 #endif // glAttachShader
 
-  template<ShaderType shader_t>
-  Program& operator<<(Shader<shader_t> &&) = delete;
-
 #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glLinkProgram) && defined(glGetProgramiv) && defined(glGetProgramInfoLog))
   /// Links the program.
   /** If the linking fails, it throws a std::runtime_error containing the linking info.
@@ -513,7 +523,11 @@ public:
       GLchar *strInfoLog = new GLchar[infoLogLength + 1];
       gl(GetProgramInfoLog(program, infoLogLength, NULL, strInfoLog));
       std::stringstream str;
-      str << "OpenGL program linker failure: " << strInfoLog << std::endl;
+      str << "OpenGL failed to link the following shaders together: " << std::endl;
+      for(int i = 0; i < filenames.size(); i++) {
+        str << " - " << filenames[i] << std::endl;
+      }
+      str << "\nThe error message: \n" << strInfoLog << std::endl;
       delete[] strInfoLog;
 
       throw std::runtime_error(str.str());

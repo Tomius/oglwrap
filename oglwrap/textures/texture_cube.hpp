@@ -468,7 +468,7 @@ public:
   }
 #endif
 
-#if OGLWRAP_IMAGEMAGICK
+#if OGLWRAP_USE_IMAGEMAGICK
   /// Loads in, and uploads an image for one side of the cube from a file using Magick++.
   /** @param target - Specifies which one of the six sides of the cube to use as target.
     * @param file - Path to the image file.

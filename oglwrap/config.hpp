@@ -44,8 +44,8 @@
 #endif
 
 /// If true, uses Magick++ API to load images.
-#ifndef OGLWRAP_IMAGEMAGICK
-  #define OGLWRAP_IMAGEMAGICK 1
+#ifndef OGLWRAP_USE_IMAGEMAGICK
+  #define OGLWRAP_USE_IMAGEMAGICK 1
 #endif
 
 /// If true, sacrifices a bit of performance, to increase portability.
