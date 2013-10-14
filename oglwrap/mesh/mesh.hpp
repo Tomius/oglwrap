@@ -142,6 +142,9 @@ public:
   /// Returns the center (as xyz) and radius (as w) of the bounding sphere.
   glm::vec4 bSphere() const;
 
+  /// Returns the center offseted by the model matrix (as xyz) and radius (as w) of the bounding sphere.
+  glm::vec4 bSphere(glm::mat4 modelMatrix) const;
+
   /// Returns the center of the bounding sphere.
   glm::vec3 bSphereCenter() const;
 

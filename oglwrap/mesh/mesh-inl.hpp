@@ -331,7 +331,14 @@ inline void Mesh::bCuboid(glm::vec3& center, glm::vec3& edges) const {
 inline glm::vec4 Mesh::bSphere() const {
   glm::vec3 center, edges;
   bCuboid(center, edges);
-  return glm::vec4(center, std::max(edges.x, std::max(edges.y, edges.z)) / 2);
+  return glm::vec4(center, sqrt(glm::dot(edges, edges)) / 2); // Pythagoras.
+}
+
+/// Returns the center offseted by the model matrix (as xyz) and radius (as w) of the bounding sphere.
+/** @param modelMatrix - The matrix to use to offset the center of the bounding sphere. */
+inline glm::vec4 Mesh::bSphere(glm::mat4 modelMatrix) const {
+  glm::vec4 m_bSphere = bSphere();
+  return glm::vec4(glm::vec3(modelMatrix * glm::vec4(glm::vec3(m_bSphere), 1)), m_bSphere.w);
 }
 
 /// Returns the center of the bounding sphere.
@@ -345,7 +352,7 @@ inline glm::vec3 Mesh::bSphereCenter() const {
 inline float Mesh::bSphereRadius() const {
   glm::vec3 center, edges;
   bCuboid(center, edges);
-  return std::max(edges.x, std::max(edges.y, edges.z)) / 2;
+  return sqrt(glm::dot(edges, edges)) / 2; // Pythagoras.
 }
 
 } // namespace oglwrap
