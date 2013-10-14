@@ -11,11 +11,11 @@ namespace oglwrap {
 
 /// A class that can load shader sources in from files, and do some preprocessing on them
 class ShaderSource {
-  std::string src; /// The source
-  std::string filename; /// The file's name stored to make debugging easier.
+  std::string src_; /// The source
+  std::string filename_; /// The file's name stored to make debugging easier.
 public:
   /// Default constructor.
-  ShaderSource() : filename("Unnamed shader") { }
+  ShaderSource() : filename_("Unnamed shader") { }
 
   /// Loads in the shader from a file.
   /** @param file - The path to the file. */
@@ -26,13 +26,13 @@ public:
   /// Adds a string as the shader source.
   /** @param source_string - The source string. */
   void source(const std::string& source_string) {
-    src = source_string;
+    src_ = source_string;
   }
 
   /// Loads in the shader from a file.
   /** @param file - The path to the file. */
   void sourceFile(const std::string& file) {
-    filename = file;
+    filename_ = file;
     std::ifstream shaderFile(file.c_str());
     if(!shaderFile.is_open()) {
       shaderFile.open("shaders/" + file);
@@ -44,9 +44,9 @@ public:
     shaderString << shaderFile.rdbuf();
 
     // Remove the EOF from the end of the string.
-    src = shaderString.str();
-    if(src[src.length() - 1] == EOF) {
-      src.pop_back();
+    src_ = shaderString.str();
+    if(src_[src_.length() - 1] == EOF) {
+      src_.pop_back();
     }
   }
 
@@ -55,30 +55,30 @@ public:
   /** @param macro_name - The name of the macro.
     * @param value - The value to insert. */
   void insertMacroValue(const std::string& macro_name, const T& value) {
-    size_t macro_pos = src.find("#define " + macro_name);
+    size_t macro_pos = src_.find("#define " + macro_name);
     if(macro_pos == std::string::npos) {
       throw std::invalid_argument(
-        "ShaderSource::insert_macro_value is called for '" + filename +
+        "ShaderSource::insert_macro_value is called for '" + filename_ +
         "', but the shader doesn't have any macro named " + macro_name
       );
     }
 
-    size_t macro_end = src.find('\n', macro_pos);
+    size_t macro_end = src_.find('\n', macro_pos);
 
     std::stringstream sstream;
-    sstream << src.substr(0, macro_pos + strlen("#define ") + macro_name.length());
-    sstream << ' ' << value << src.substr(macro_end);
-    src = sstream.str();
+    sstream << src_.substr(0, macro_pos + strlen("#define ") + macro_name.length());
+    sstream << ' ' << value << src_.substr(macro_end);
+    src_ = sstream.str();
   }
 
   /// Returns the file's name that was loaded in.
   std::string const& getFileName() const {
-    return filename;
+    return filename_;
   }
 
   /// Returns the source.
   std::string const& getSource() const {
-    return src;
+    return src_;
   }
 };
 
@@ -89,18 +89,18 @@ public:
 template<ShaderType shader_t>
 class ShaderObject : public RefCounted {
   /// The C handle for the object.
-  GLuint *handle;
+  GLuint *handle_;
   /// The boolean for the object being initialized.
   /** It is a pointer because it is shared between the copies. If one inits
     * the handle, then all instances will have the inited handle */
-  bool *inited;
+  bool *inited_;
 public:
   /// Creates the object, but does not allocate any resource yet.
   ShaderObject()
-    : handle(new GLuint)
-    , inited(new bool) {
+    : handle_(new GLuint)
+    , inited_(new bool) {
 
-    *inited = false;
+    *inited_ = false;
   }
 
   /// Deletes the object.
@@ -108,23 +108,23 @@ public:
     * this object exists, and it is initialized. */
   ~ShaderObject() {
     if(isDeletable()) {
-      if(*inited) {
-        gl(DeleteShader(*handle))
+      if(*inited_) {
+        gl(DeleteShader(*handle_))
       }
-      delete inited;
-      delete handle;
+      delete inited_;
+      delete handle_;
     }
   }
 
   /// Allocates the resource. It only happens upon the first use.
   void init() const {
-    *inited = true;
-    *handle = gl(CreateShader(shader_t));
+    *inited_ = true;
+    *handle_ = gl(CreateShader(shader_t));
   }
 
   /// Returns if there's allocated memory for this class.
   bool isInited() const {
-    return *inited;
+    return *inited_;
   }
 
   /// Returns a self-pointer, useful for inheritance
@@ -134,11 +134,11 @@ public:
 
   /// Returns the C handle for the object. Inits it, if this is the first call for it.
   operator GLuint() const {
-    if(!*inited) {
+    if(!*inited_) {
       init();
     }
 
-    return *handle;
+    return *handle_;
   }
 };
 
@@ -148,20 +148,20 @@ template<ShaderType shader_t>
 /// A GLSL shader object used to control the drawing process.
 /** @see glCreateShader, glDeleteShader */
 class Shader {
-  ShaderObject<shader_t> shader; ///< The handle for the buffer.
-  bool compiled; ///< Stores if the shader is compiled.
+  ShaderObject<shader_t> shader_; ///< The handle for the buffer.
+  bool compiled_; ///< Stores if the shader is compiled.
+  std::string filename_;  ///< Stores the source file's name if the shader was initialized from file.
 public:
-  std::string filename;  ///< Stores the source file's name if the shader was initialized from file.
 
   /// Creates the an empty shader object.
-  Shader() : compiled(false) { }
+  Shader() : compiled_(false) { }
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glShaderSource)
   /// Creates a shader and sets the file as the shader source.
   /** @param file - The file to load and set as shader source.
     * @see glShaderSource */
   Shader(const std::string& file)
-    : compiled(false), filename(file) {
+    : compiled_(false), filename_(file) {
     sourceFile(file);
   }
 #endif // glShaderSource
@@ -171,10 +171,10 @@ public:
   /** @param source - The source of the shader code.
     * @see glShaderSource */
   Shader(const ShaderSource& source)
-    : compiled(false) {
+    : compiled_(false) {
     const char *str = source.getSource().c_str();
-    filename = source.getFileName();
-    gl(ShaderSource(shader, 1, &str, nullptr));
+    filename_ = source.getFileName();
+    gl(ShaderSource(shader_, 1, &str, nullptr));
   }
 #endif // glShaderSource
 
@@ -184,7 +184,7 @@ public:
     * @see glShaderSource */
   void source(const std::string& source) {
     const char *str = source.c_str();
-    gl(ShaderSource(shader, 1, &str, nullptr));
+    gl(ShaderSource(shader_, 1, &str, nullptr));
   }
 #endif // glShaderSource
 
@@ -194,8 +194,8 @@ public:
     * @see glShaderSource */
   void source(const ShaderSource& source) {
     const char *str = source.getSource().c_str();
-    filename = source.getFileName();
-    gl(ShaderSource(shader, 1, &str, nullptr));
+    filename_ = source.getFileName();
+    gl(ShaderSource(shader_, 1, &str, nullptr));
   }
 #endif // glShaderSource
 
@@ -204,7 +204,7 @@ public:
   /** @param file - the shader file's path
     * @see glShaderSource */
   void sourceFile(const std::string& file)  {
-    filename = file;
+    filename_ = file;
     std::ifstream shaderFile(file.c_str());
     if(!shaderFile.is_open()) {
       shaderFile.open("shaders/" + file);
@@ -223,7 +223,7 @@ public:
 
     // Add the shader source & compile
     const char *strFileData = fileData.c_str();
-    gl(ShaderSource(shader, 1, &strFileData, nullptr));
+    gl(ShaderSource(shader_, 1, &strFileData, nullptr));
   }
 #endif // glShaderSource
 
@@ -234,21 +234,21 @@ public:
     * when the shader gets attached a program.
     * @see glCompileShader, glGetShaderiv, glGetShaderInfoLog */
   void compile()  {
-    if(compiled) {
+    if(compiled_) {
       return;
     }
-    gl(CompileShader(shader));
-    compiled = true;
+    gl(CompileShader(shader_));
+    compiled_ = true;
 
     // Get compilation status
     GLint status;
-    gl(GetShaderiv(shader, GL_COMPILE_STATUS, &status));
+    gl(GetShaderiv(shader_, GL_COMPILE_STATUS, &status));
     if(status == GL_FALSE) {
       GLint infoLogLength;
-      gl(GetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength));
+      gl(GetShaderiv(shader_, GL_INFO_LOG_LENGTH, &infoLogLength));
 
       GLchar *strInfoLog = new GLchar[infoLogLength + 1];
-      gl(GetShaderInfoLog(shader, infoLogLength, nullptr, strInfoLog));
+      gl(GetShaderInfoLog(shader_, infoLogLength, nullptr, strInfoLog));
 
       const char * strShaderType = nullptr;
       switch(shader_t) {
@@ -286,7 +286,7 @@ public:
 
       std::stringstream str;
       str << "Compile failure in " << strShaderType << "shader '";
-      str << filename << "' :" << std::endl << strInfoLog << std::endl;
+      str << filename_ << "' :" << std::endl << strInfoLog << std::endl;
       delete[] strInfoLog;
 
       throw std::runtime_error(str.str());
@@ -294,9 +294,13 @@ public:
   }
 #endif // glCompileShader && glGetShaderInfoLog && glGetShaderiv
 
+  const std::string& filename() const {
+    return filename_;
+  }
+
   /// Returns the C OpenGL handle for the shader.
   const ShaderObject<shader_t>& expose() const  {
-    return shader;
+    return shader_;
   }
 };
 
@@ -438,24 +442,24 @@ public:
 /// The program object can combine multiple shader stages (built from shader objects) into a single, linked whole.
 /** @see glCreateProgram, glDeleteProgram */
 class Program {
-  ProgramObject program; ///< The C OpenGL handle for the program.
-  std::vector<GLuint> shaders; ///< IDs of the shaders attached to the program
-  std::vector<std::string> filenames; /// The names of the shaders are stored to help debugging.
-  bool *linked; ///< Stores if the program is linked. Its a pointer, so .use() can be const.
+  ProgramObject program_; ///< The C OpenGL handle for the program.
+  std::vector<GLuint> shaders_; ///< IDs of the shaders attached to the program
+  std::vector<std::string> filenames_; /// The names of the shaders are stored to help debugging.
+  bool *linked_; ///< Stores if the program is linked. Its a pointer, so .use() can be const.
 public:
   /// Creates an empty program object.
-  Program() : linked(new bool) {
-    *linked = false;
+  Program() : linked_(new bool) {
+    *linked_ = false;
   }
 
   /// Detaches all the shader objects currently attached to this program, and deletes the program.
   /** @see glDetachShader, glDeleteShader */
   ~Program() {
-    if(program.isDeletable()) {
-      for(size_t i = 0; i < shaders.size(); i++) {
-        gl( DetachShader(program, shaders[i]) );
+    if(program_.isDeletable()) {
+      for(size_t i = 0; i < shaders_.size(); i++) {
+        gl( DetachShader(program_, shaders_[i]) );
       }
-      delete linked;
+      delete linked_;
     }
   }
 
@@ -466,9 +470,9 @@ public:
     * @see glAttachShader */
   void attachShader(Shader<shader_t>& shader) {
     shader.compile();
-    shaders.push_back(shader.expose());
-    filenames.push_back(shader.filename);
-    gl( AttachShader(program, shader.expose()) );
+    shaders_.push_back(shader.expose());
+    filenames_.push_back(shader.filename());
+    gl( AttachShader(program_, shader.expose()) );
   }
 #endif // glAttachShader
 
@@ -478,9 +482,9 @@ public:
   /** @param shader Specifies the shader object that is to be attached.
     * @see glAttachShader */
   void attachShader(const Shader<shader_t>& shader) {
-    shaders.push_back(shader.expose());
-    filenames.push_back(shader.filename);
-    gl( AttachShader(program, shader.expose()) );
+    shaders_.push_back(shader.expose());
+    filenames_.push_back(shader.filename());
+    gl( AttachShader(program_, shader.expose()) );
   }
 #endif // glAttachShader
 
@@ -511,21 +515,21 @@ public:
   /** If the linking fails, it throws a std::runtime_error containing the linking info.
     * @see glLinkProgram, glGetProgramiv, glGetProgramInfoLog */
   const Program& link() const {
-    gl(LinkProgram(program));
-    *linked = true;
+    gl(LinkProgram(program_));
+    *linked_ = true;
 
     GLint status;
-    gl(GetProgramiv(program, GL_LINK_STATUS, &status));
+    gl(GetProgramiv(program_, GL_LINK_STATUS, &status));
     if(status == GL_FALSE) {
       GLint infoLogLength;
-      gl(GetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength));
+      gl(GetProgramiv(program_, GL_INFO_LOG_LENGTH, &infoLogLength));
 
       GLchar *strInfoLog = new GLchar[infoLogLength + 1];
-      gl(GetProgramInfoLog(program, infoLogLength, NULL, strInfoLog));
+      gl(GetProgramInfoLog(program_, infoLogLength, NULL, strInfoLog));
       std::stringstream str;
       str << "OpenGL failed to link the following shaders together: " << std::endl;
-      for(int i = 0; i < filenames.size(); i++) {
-        str << " - " << filenames[i] << std::endl;
+      for(int i = 0; i < filenames_.size(); i++) {
+        str << " - " << filenames_[i] << std::endl;
       }
       str << "\nThe error message: \n" << strInfoLog << std::endl;
       delete[] strInfoLog;
@@ -541,10 +545,10 @@ public:
   /// Installs the program as a part of the current rendering state.
   /** @see glUseProgram */
   const Program& use() const {
-    if(!*linked) {
+    if(!*linked_) {
       link();
     }
-    gl(UseProgram(program));
+    gl(UseProgram(program_));
     return *this;
   }
 #endif
@@ -570,12 +574,12 @@ public:
     GLint currentProgram;
     gl(GetIntegerv(GL_CURRENT_PROGRAM, &currentProgram));
     OGLWRAP_LAST_BIND_TARGET = "GL_CURRENT_PROGRAM";
-    return program == GLuint(currentProgram);
+    return program_ == GLuint(currentProgram);
   }
 
   /// Returns the C OpenGL handle for the program.
   const ProgramObject& expose() const {
-    return program;
+    return program_;
   }
 };
 #endif // glDetachShader
