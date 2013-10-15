@@ -8,6 +8,7 @@
 
 /* TODO:
     - General:
+        - glFramebufferTexture is ONLY 3.2+ !!!
         - context class
         - program uniforms
         - uniform blocks / shader storage

@@ -274,9 +274,9 @@ public:
   /// Changes the distance in which the camera should follow the target.
   /** @param mouseWheelTicks - The number of ticks, the mouse wheel was scrolled. Expect positive on up scroll. */
   void scrolling(int mouseWheelTicks) {
-    destDistMod -= mouseWheelTicks / 10.0f * mouseScrollSensitivity;
-    if(destDistMod < 0.5f) {
-      destDistMod = 0.5f;
+    destDistMod -= mouseWheelTicks / 5.0f * mouseScrollSensitivity;
+    if(destDistMod < 0.25f) {
+      destDistMod = 0.25f;
     } else if(destDistMod > 2.0f) {
       destDistMod = 2.0f;
     }
