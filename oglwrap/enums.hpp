@@ -1113,6 +1113,9 @@ typedef _TransformFeedbackPrimitiveType::TransformFeedbackPrimitiveType TFB_Prim
 
 } // Namespace Enums
 
+// CodeCompletions often do not support inline namespaces
+using namespace Enums;
+
 } // Namespace oglwrap
 
 #endif // OGLWRAP_ENUMS_HPP_

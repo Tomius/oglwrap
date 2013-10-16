@@ -237,27 +237,51 @@ public:
   }
 #endif // glFramebufferRenderbuffer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glFramebufferTexture)
-  template <TexType texture_t>
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glFramebufferTexture1D)
   /// Attach a level of a texture object as a logical buffer to the currently bound framebuffer object
   /** @param attachment - Specifies the attachment point of the framebuffer.
     * @param texture - Specifies the texture object to attach to the framebuffer attachment point named by \a attachment.
     * @param level - Specifies the mipmap level of \a texture to attach.
-    * @see glFramebufferTexture */
-  static void AttachTexture(FramebufferAttachment attachment, const TextureBase<texture_t>& texture, GLuint level) {
-    gl(FramebufferTexture(FBO_TYPE, attachment, texture.expose(), level));
+    * @see glFramebufferTexture1D */
+  static void AttachTexture(FramebufferAttachment attachment, const Texture1D& texture, GLuint level) {
+    gl(FramebufferTexture1D(FBO_TYPE, attachment, TexType::Tex1D, texture.expose(), level));
   }
-  template <TexType texture_t>
   /// Attach a level of a texture object as a logical buffer to the currently bound framebuffer object
   /** @param attachment - Specifies the attachment point of the framebuffer.
     * @param texture - Specifies the texture object to attach to the framebuffer attachment point named by \a attachment.
     * @param level - Specifies the mipmap level of \a texture to attach.
-    * @see glFramebufferTexture */
-  BIND_CHECKED void attachTexture(FramebufferAttachment attachment, const TextureBase<texture_t>& texture, GLuint level) const {
+    * @see glFramebufferTexture1D */
+  BIND_CHECKED void attachTexture(FramebufferAttachment attachment, const Texture1D& texture, GLuint level) const {
     CHECK_BINDING();
     AttachTexture(attachment, texture, level);
   }
-#endif // glFramebufferTexture
+#endif // glFramebufferTexture1D
+
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glFramebufferTexture2D)
+  template <Tex2DType texture_t>
+  /// Attach a level of a texture object as a logical buffer to the currently bound framebuffer object
+  /** @param attachment - Specifies the attachment point of the framebuffer.
+    * @param texture - Specifies the texture object to attach to the framebuffer attachment point named by \a attachment.
+    * @param level - Specifies the mipmap level of \a texture to attach.
+    * @see glFramebufferTexture2D */
+  static void AttachTexture(FramebufferAttachment attachment,
+                            const Texture2D_Base<texture_t>& texture,
+                            GLint level) {
+    gl(FramebufferTexture2D(FBO_TYPE, attachment, texture_t, texture.expose(), level));
+  }
+  template <Tex2DType texture_t>
+  /// Attach a level of a texture object as a logical buffer to the currently bound framebuffer object
+  /** @param attachment - Specifies the attachment point of the framebuffer.
+    * @param texture - Specifies the texture object to attach to the framebuffer attachment point named by \a attachment.
+    * @param level - Specifies the mipmap level of \a texture to attach.
+    * @see glFramebufferTexture2D */
+  BIND_CHECKED void attachTexture(FramebufferAttachment attachment,
+                                  const Texture2D_Base<texture_t>& texture,
+                                  GLint level) const {
+    CHECK_BINDING();
+    AttachTexture(attachment, texture, level);
+  }
+#endif // glFramebufferTexture2D
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glFramebufferTexture2D)
   /// Attach a level of a cube map as a logical buffer to the currently bound framebuffer object.
@@ -266,9 +290,8 @@ public:
     * @param texture - Specifies the texture object to attach to the framebuffer attachment point named by \a attachment.
     * @param level - Specifies the mipmap level of \a texture to attach.
     * @see glFramebufferTexture2D */
-  static void AttachTexture(
-    FramebufferAttachment attachment, CubeTarget target, const TextureCube& texture, GLuint level
-  ) {
+  static void AttachTexture(FramebufferAttachment attachment, CubeTarget target,
+                            const TextureCube& texture, GLint level) {
     gl(FramebufferTexture2D(FBO_TYPE, attachment, target, texture.expose(), level));
   }
   /// Attach a level of a cube map as a logical buffer to the currently bound framebuffer object.
@@ -277,13 +300,66 @@ public:
     * @param texture - Specifies the texture object to attach to the framebuffer attachment point named by \a attachment.
     * @param level - Specifies the mipmap level of \a texture to attach.
     * @see glFramebufferTexture2D */
-  BIND_CHECKED void attachTexture(
-    FramebufferAttachment attachment, CubeTarget target, const TextureCube& texture, GLuint level
-  ) const {
+  BIND_CHECKED void attachTexture(FramebufferAttachment attachment, CubeTarget target,
+                                  const TextureCube& texture, GLint level) const {
     CHECK_BINDING();
     AttachTexture(attachment, target, texture, level);
   }
 #endif // glFramebufferTexture2D
+
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glFramebufferTexture3D)
+  /// Attach a level of a texture object as a logical buffer to the currently bound framebuffer object
+  /** @param attachment - Specifies the attachment point of the framebuffer.
+    * @param texture - Specifies the texture object to attach to the framebuffer attachment point named by \a attachment.
+    * @param level - Specifies the mipmap level of \a texture to attach.
+    * @param layer - Specifies the \a layer of texture to attach.
+    * @see glFramebufferTexture3D */
+  static void AttachTexture(FramebufferAttachment attachment,
+                            const Texture3D& texture,
+                            GLint level, GLint layer) {
+    gl(FramebufferTexture3D(FBO_TYPE, attachment, TexType::Tex3D, texture.expose(), level, layer));
+  }
+  /// Attach a level of a texture object as a logical buffer to the currently bound framebuffer object
+  /** @param attachment - Specifies the attachment point of the framebuffer.
+    * @param texture - Specifies the texture object to attach to the framebuffer attachment point named by \a attachment.
+    * @param level - Specifies the mipmap level of \a texture to attach.
+    * @param layer - Specifies the \a layer of texture to attach.
+    * @see glFramebufferTexture3D */
+  BIND_CHECKED void attachTexture(FramebufferAttachment attachment,
+                                  const Texture3D& texture,
+                                  GLint level, GLint layer) const {
+    CHECK_BINDING();
+    AttachTexture(attachment, texture, level, layer);
+  }
+#endif // glFramebufferTexture3D
+
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glFramebufferTextureLayer)
+  template <TexType texture_t>
+  /// Attach a level of a texture object as a logical buffer to the currently bound framebuffer object
+  /** @param attachment - Specifies the attachment point of the framebuffer.
+    * @param texture - Specifies the texture object to attach to the framebuffer attachment point named by \a attachment.
+    * @param level - Specifies the mipmap level of \a texture to attach.
+    * @param layer - Specifies the \a layer of texture to attach.
+    * @see glFramebufferTexture3D */
+  static void AttachTextureLayer(FramebufferAttachment attachment,
+                                 const TextureBase<texture_t>& texture,
+                                 GLint level, GLint layer) {
+    gl(FramebufferTextureLayer(FBO_TYPE, attachment, texture.expose(), level, layer));
+  }
+  template <TexType texture_t>
+  /// Attach a level of a texture object as a logical buffer to the currently bound framebuffer object
+  /** @param attachment - Specifies the attachment point of the framebuffer.
+    * @param texture - Specifies the texture object to attach to the framebuffer attachment point named by \a attachment.
+    * @param level - Specifies the mipmap level of \a texture to attach.
+    * @param layer - Specifies the \a layer of texture to attach.
+    * @see glFramebufferTexture3D */
+  BIND_CHECKED void attachTextureLayer(FramebufferAttachment attachment,
+                                       const TextureBase<texture_t>& texture,
+                                       GLint level, GLint layer) const {
+    CHECK_BINDING();
+    AttachTextureLayer(attachment, texture, level, layer);
+  }
+#endif // glFramebufferTextureLayer
 
   /// Returns the handle for the framebuffer object.
   const ObjectExt<glGenFramebuffers, glDeleteFramebuffers>& expose() const {
