@@ -10,8 +10,8 @@
 namespace oglwrap {
 
 /// The default callback function for errors. It prints the error to stderr.
-inline void defaultCallback(std::string error_message) {
-  std::cerr << error_message << std::endl;
+inline void defaultCallback(std::string errorMessage) {
+  std::cerr << errorMessage << std::endl;
 }
 
 #if OGLWRAP_DEBUG
@@ -182,20 +182,20 @@ public:
   }
 
 private:
-  std::string formatedFuncSignature(std::string func_signature) {
+  std::string formatedFuncSignature(std::string funcSignature) {
     // Ident the function a little.
-    func_signature.insert(0, "  ");
-    size_t parameters_start = func_signature.find('(');
+    funcSignature.insert(0, "  ");
+    size_t parameters_start = funcSignature.find('(');
 
     std::string endl_plus_tabulation = std::string(parameters_start + 1, ' ');
     endl_plus_tabulation[0] = '\n';
 
     size_t param_pos = parameters_start;
-    while((param_pos = func_signature.find(',', param_pos + 1)) != std::string::npos) {
-      func_signature.insert(param_pos + 1, endl_plus_tabulation);
+    while((param_pos = funcSignature.find(',', param_pos + 1)) != std::string::npos) {
+      funcSignature.insert(param_pos + 1, endl_plus_tabulation);
     }
 
-    return func_signature;
+    return funcSignature;
   }
 
 public:
