@@ -23,7 +23,7 @@ Or this
 oglwrap::Texture2D tex;
 tex.loadImage("image.png"); // Causes bind-check error because tex isn't bound.
 ```
-Of course, these functions should be logically static, but to bindcheck them, they have to be non-static. Though all of the bind-checked functions have a static version, that start with a capital letter, like Texture2D::LoadImage();
+Of course, these functions should be logically static, but to bindcheck them, they have to be non-static. Though all of the bind-checked functions (they all have the BIND_CHECKED macro in their function signature) have a static version, that start with a capital letter, like Texture2D::LoadImage();
 * It has full glm support, glm classes are treated like they were GL types. You can use Uniform< vec2 > to upload with glUniform2fv, 
   you can upload vec2 to buffers, setup attribute arrays with Setup< vec2 >() instead of Pointer(2, GLfloat, ...) etc..
 * Easy to read, easy to parse. It is fully supported by intellicenses unlike the C OpenGL.
