@@ -83,65 +83,25 @@ private:
 
 private:
 
-  aiNode* findNode(aiNode* currentRoot, const std::string& name) {
-    if(currentRoot->mName.data == name)
-      return currentRoot;
+  /// Returns the first node called \a name, who is under \a currentRoot in the bone hierarchy.
+  /** Note: this function is recursive
+    * @param currentRoot - The bone under which to search.
+    * @param name - The name of the bone that is to be found.
+    * @return the handle to the bone that is called name, or nullptr. */
+  aiNode* findNode(aiNode* currentRoot, const std::string& name);
 
-    for(int i = 0; i != currentRoot->mNumChildren; ++i) {
-        aiNode* children_return = findNode(currentRoot->mChildren[i], name);
-        if(children_return)
-          return children_return;
-    }
-
-    return nullptr;
-  }
-
-  ExternalBone markChildsExternal(ExternalBone* parent, aiNode* node, bool shouldBeExternal = false) {
-    size_t bidx = skinning_data_.bone_mapping[node->mName.data];
-    SkinningData::BoneInfo& binfo = skinning_data_.bone_info[bidx];
-    binfo.external = shouldBeExternal;
-    ExternalBone ebone(
-      node->mName.data,
-      binfo.bone_offset,
-      convertMatrix(node->mTransformation),
-      binfo.final_transform,
-      parent
-    );
-
-    for(int i = 0; i < node->mNumChildren; ++i) {
-        ebone.child.push_back(markChildsExternal(&ebone, node->mChildren[i], true));
-    }
-
-    return ebone;
-  }
+  /// Marks all of a bone's child external recursively.
+  /** @param parent - A pointer to the parent ExternalBone struct.
+      @param node - The current node.
+      @param shouldBeExternal - Should be false if called from outside, true if called recursively. */
+  ExternalBone markChildExternal(ExternalBone* parent, aiNode* node, bool shouldBeExternal = false);
 
 public:
 
   /// Marks a bone to be modified from outside.
   /** @return A structure, which through the bone, and all of its child can be moved.
     * @param boneName - The name of the bone. */
-  ExternalBoneTree markBoneExternal(const std::string& boneName) {
-    if(skinning_data_.bone_mapping.find(boneName) == skinning_data_.bone_mapping.end()) {
-      throw std::runtime_error(
-          "AnimatedMesh '" + filename_ + "' doesn't have any bone named '" + boneName + "'."
-      );
-    }
-
-    // Find the bone that is to be marked
-    aiNode* marked_node = findNode(scene_->mRootNode, boneName);
-
-    ExternalBoneTree ebone_tree(markChildsExternal(nullptr, marked_node));
-
-    // Get the root bone's BoneInfo
-    size_t bidx = skinning_data_.bone_mapping[marked_node->mName.data];
-    SkinningData::BoneInfo& binfo = skinning_data_.bone_info[bidx];
-
-    // Set the root bone's local transformation pointer to be able to set it from "inside".
-    binfo.global_transform_ptr = ebone_tree.global_transform_ptr;
-    binfo.pinned = true;
-
-    return ebone_tree;
-  }
+  ExternalBoneTree markBoneExternal(const std::string& boneName);
 
   /// Returns the number of bones this scene has.
   /** May change the currently active VAO and ArrayBuffer at the first call. */

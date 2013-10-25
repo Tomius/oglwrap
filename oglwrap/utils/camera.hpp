@@ -7,6 +7,7 @@
 
 #include <cmath>
 #include <SFML/Window.hpp>
+#include "../oglwrap.hpp"
 
 namespace oglwrap {
 
