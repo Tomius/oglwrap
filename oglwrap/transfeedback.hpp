@@ -7,6 +7,13 @@
 
 namespace oglwrap {
 
+namespace glObject {
+  class TransformFeedback : public Object {
+    void constructor() const { gl(GenTransformFeedbacks(1, handle_)); }
+    void destructor() const { gl(DeleteTransformFeedbacks(1, handle_)); }
+  };
+}
+
 #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGenTransformFeedbacks) && defined(glDeleteTransformFeedbacks))
 /// A wrapper class for transform feedback.
 /** Transform Feedback is the process of altering the rendering pipeline so that primitives
@@ -16,7 +23,7 @@ namespace oglwrap {
   * @see glGenTransformFeedbacks, glDeleteTransformFeedbacks */
 class TransformFeedback : protected RefCounted {
   /// The handle for the TransformFeedback
-  ObjectExt<glGenTransformFeedbacks, glDeleteTransformFeedbacks> handle_;
+  glObject::TransformFeedback tfb_;
   enum TFBstate {TFB_STATE_NONE, TFB_STATE_WORKING, TFB_STATE_PAUSED} state_;
 public:
   /// Generates a transform feedback.
@@ -33,7 +40,7 @@ public:
   /** Also ends it if it's active. In this case it will change the currently active TFB.
     * @see glDeleteTransformFeedbacks */
   ~TransformFeedback() {
-    if(!handle_.isDeletable()) {
+    if(!tfb_.isDeletable()) {
       return;
     }
     if(state_ != TFB_STATE_NONE) {
@@ -46,7 +53,7 @@ public:
   /// Binds the transform feedback.
   /** @see glBindTransformFeedback */
   void bind() const {
-    gl( BindTransformFeedback(GL_TRANSFORM_FEEDBACK, handle_) );
+    gl( BindTransformFeedback(GL_TRANSFORM_FEEDBACK, tfb_) );
   }
 #endif // glBindTransformFeedback
 
@@ -70,7 +77,7 @@ public:
     GLint currentlyBoundTFB;
     gl( GetIntegerv(GL_TRANSFORM_FEEDBACK, &currentlyBoundTFB) );
     OGLWRAP_LAST_BIND_TARGET = "GL_TRANSFORM_FEEDBACK";
-    return handle_ == GLuint(currentlyBoundTFB);
+    return tfb_ == GLuint(currentlyBoundTFB);
   }
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBeginTransformFeedback)

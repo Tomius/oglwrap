@@ -97,118 +97,29 @@ public:
   }
 };
 
-#ifndef APIENTRY
-#define APIENTRY
-#endif
-
-#ifndef GLAPIENTRY
-#define GLAPIENTRY APIENTRY
-#endif
-
-/// The signature of glGen* functions
-typedef void (GLAPIENTRY *glGenFunc)(GLsizei, GLuint*);
-
-/// The signature of glDelete* functions
-typedef void (GLAPIENTRY *glDeleteFunc)(GLsizei, const GLuint*);
-
-// Note the '&' after the function pointer. The template parameters for
-// objects defined in an extension are function pointer that point out
-// to an external library, therefore the function pointer itself has
-// undefined value compile time, it will get a value after linking,
-// but template deductions happen compile time. But the address of
-// the function pointer works fine as a template argument.
-template <const glGenFunc& constructor, const glDeleteFunc& destructor>
-/// A class for managing OpenGL resources that are defined in an extension.
-/** This class is pretty simple, but really important. What it does,
-    is that it moves object creation (server side memory allocation)
-    from the constructor of the object, to the first place, where the object
-    is used. With this you can declare global objects, which would segfault
-    normally, as they are initialized without an existing context. Also
-    if an object is never used then no memory will get allocated to it.
-    On top of this, it is reference counted, so you can copy Objects
-    without having to worry that the deletion of one will effect the other. */
-class ObjectExt : public RefCounted {
-  /// The C handle for the object.
-  GLuint *handle_;
+/// A class for managing OpenGL resources.
+class Object : public RefCounted {
+private:
   /// The boolean for the object being initialized.
   /** It is a pointer because it is shared between the copies. If one inits
     * the handle, then all instances will have the inited handle */
   bool *inited_;
-public:
-  /// Creates the object, but does not allocate any resource yet.
-  ObjectExt()
-    : handle_(new GLuint)
-    , inited_(new bool) {
-
-    *inited_ = false;
-  }
-
-  /// Deletes the object.
-  /** Deletes the resource if only one instance of
-    * this object exists, and it is initialized. */
-  ~ObjectExt() {
-    if(isDeletable()) {
-      if(*inited_) {
-        glfunc(destructor(1, handle_));
-      }
-      delete inited_;
-      delete handle_;
-    }
-  }
 
   /// Allocates the resource. It only happens upon the first use.
   void init() const {
     *inited_ = true;
-    glfunc(constructor(1, handle_));
+    constructor();
   }
 
-  /// Returns if there's allocated memory for this class.
-  bool isInited() const {
-    return *inited_;
-  }
-
-  /// Returns a self-pointer, useful for inheritance
-  const ObjectExt& getHandle() const {
-    return *this;
-  }
-
-  /// Returns the C handle for the object. Inits it, if this is the first call for it.
-  operator GLuint() const {
-    if(!*inited_) {
-      init();
-    }
-
-    return *handle_;
-  }
-};
-
-// Functions that existed in legacy OpenGL like glGenTextures, are explicitly defined
-// compile time. These work fine without the '&'. But they won't work with the ObjectExt
-// class, as they are functions not function pointers, so writing their name already
-// causes an indirection, their name evaluates as a hexa value not a variable, therefore
-// we can't get the address of it, nor can reference it.
-template <const glGenFunc constructor, const glDeleteFunc destructor>
-/// A class for managing OpenGL resources for object that existed in legacy OpenGL.
-/** The class is pretty simple, but really important. What it does,
-    is that it moves object creation (server side memory allocation)
-    from the constructor of the object, to the first place, where the object
-    is used. With this you can declare global objects, which would segfault
-    normally, as they are initialized without an existing context. Also
-    if an object is never used then no memory will get allocated to it.
-    On top of this, it is reference counted, so you can copy Objects
-    without having to worry that the deletion of one will effect the other. */
-class Object : public RefCounted {
+protected:
   /// The C handle for the object.
   GLuint *handle_;
-  /// The boolean for the object being initialized.
-  /** It is a pointer because it is shared between the copies. If one inits
-    * the handle, then all instances will have the inited handle */
-  bool *inited_;
+
 public:
   /// Creates the object, but does not allocate any resource yet.
   Object()
-    : handle_(new GLuint)
-    , inited_(new bool) {
+    : inited_(new bool)
+    , handle_(new GLuint) {
 
     *inited_ = false;
   }
@@ -219,33 +130,23 @@ public:
   ~Object() {
     if(isDeletable()) {
       if(*inited_) {
-        glfunc(destructor(1, handle_));
+        destructor();
       }
       delete inited_;
       delete handle_;
     }
   }
 
-  /// Allocates the resource. It only happens upon the first use.
-  void Init() const {
-    *inited_ = true;
-    glfunc(constructor(1, handle_));
-  }
+  /// The GL function that allocates the name for this object. Must be overwritten.
+  virtual void constructor() const {}
 
-  /// Returns if there's allocated memory for this class.
-  bool isInited() const {
-    return *inited_;
-  }
-
-  /// Returns a self-pointer, useful for inheritance
-  const Object& Handle() const {
-    return *this;
-  }
+  /// The GL function that deallocates the name of this object. Must be overwritten.
+  virtual void destructor() const {}
 
   /// Returns the C handle for the object. Inits it, if this is the first call for it.
   operator GLuint() const {
     if(!*inited_) {
-      Init();
+      init();
     }
 
     return *handle_;

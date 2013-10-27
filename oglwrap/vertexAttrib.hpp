@@ -7,6 +7,13 @@
 
 namespace oglwrap {
 
+namespace glObject {
+  class VertexArray : public Object {
+    void constructor() const { gl(GenVertexArrays(1, handle_)); }
+    void destructor() const { gl(DeleteVertexArrays(1, handle_)); }
+  };
+}
+
 // -------======{[ Vertex Array declaration ]}======-------
 #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGenVertexArrays) && defined(glDeleteVertexArrays))
 /// VAO is an object that remembers which ArrayBuffers to use for a draw call.
@@ -17,7 +24,7 @@ namespace oglwrap {
   * The VAOs simply reference already existing buffer objects.
   * @see glGenVertexArrays, glDeleteVertexArrays */
 class VertexArray {
-  ObjectExt<glGenVertexArrays, glDeleteVertexArrays> vao_; ///< The handle for the VAO
+  glObject::VertexArray vao_; ///< The handle for the VAO
 public:
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindVertexArray)
   /// Binds the Vertex Array object, so that it will be used for the further draw calls.
@@ -54,7 +61,7 @@ public:
 #endif
 
   /// Returns the handle for the VertexArray.
-  const ObjectExt<glGenVertexArrays, glDeleteVertexArrays>& expose() const {
+  const Object& expose() const {
     return vao_;
   }
 };

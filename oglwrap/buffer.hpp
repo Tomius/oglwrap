@@ -7,6 +7,13 @@
 
 namespace oglwrap {
 
+namespace glObject {
+  class Buffer : public Object {
+    void constructor() const { gl(GenBuffers(1, handle_)); }
+    void destructor() const { gl(DeleteBuffers(1, handle_)); }
+  };
+}
+
 #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGenBuffers) && defined(glDeleteBuffers))
 template<BufferType BUFFER_TYPE>
 /// Buffer Objects are OpenGL data stores, arrays on the server memory.
@@ -18,7 +25,7 @@ template<BufferType BUFFER_TYPE>
 class BufferObject {
 protected:
   /// The handle for the buffer.
-  ObjectExt<glGenBuffers, glDeleteBuffers> buffer_;
+  glObject::Buffer buffer_;
 public:
   /// Default constructor.
   BufferObject() {}
@@ -185,7 +192,7 @@ public:
 #endif // glGetBufferParameteriv && GL_BUFFER_SIZE
 
   /// Returns the handle for the buffer.
-  const ObjectExt<glGenBuffers, glDeleteBuffers>& expose() const {
+  const Object& expose() const {
     return buffer_;
   }
 

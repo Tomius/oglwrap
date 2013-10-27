@@ -7,7 +7,7 @@
 #include <GL/glew.h>
 #include "oglwrap.hpp"
 #include "shapes/cube.hpp"
-#include "shapes/fullScreenPic.hpp"
+#include "shapes/fullScreenRect.hpp"
 #include "mesh/mesh.hpp"
 
 using namespace oglwrap;

@@ -7,6 +7,14 @@
 
 namespace oglwrap {
 
+namespace glObject {
+  class Texture : public Object {
+    void constructor() const { gl(GenTextures(1, handle_)); }
+    void destructor() const { gl(DeleteTextures(1, handle_)); }
+  };
+}
+
+
 // -------======{[ TextureBase declaration ]}======-------
 
 template <TexType texture_t>
@@ -15,7 +23,7 @@ template <TexType texture_t>
   * glGenTextures, glDeleteTextures */
 class TextureBase {
 protected:
-  Object<glGenTextures, glDeleteTextures> texture; ///< The handle for the texture.
+  glObject::Texture texture; ///< The handle for the texture.
 public:
   /// Generates an empty texture.
   TextureBase() {}
@@ -319,7 +327,7 @@ public:
   }
 
   /// Returns the handle for the texture.
-  const Object<glGenTextures, glDeleteTextures>& expose() const {
+  const Object& expose() const {
     return texture;
   }
 };

@@ -85,62 +85,13 @@ public:
 // -------======{[ ShaderObject ]}======-------
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glCreateShader) && defined(glDeleteShader))
-/// A specialization of the ObjectExt class for Shaders (they aren't created with glGen*)
-template<ShaderType shader_t>
-class ShaderObject : public RefCounted {
-  /// The C handle for the object.
-  GLuint *handle_;
-  /// The boolean for the object being initialized.
-  /** It is a pointer because it is shared between the copies. If one inits
-    * the handle, then all instances will have the inited handle */
-  bool *inited_;
-public:
-  /// Creates the object, but does not allocate any resource yet.
-  ShaderObject()
-    : handle_(new GLuint)
-    , inited_(new bool) {
-
-    *inited_ = false;
-  }
-
-  /// Deletes the object.
-  /** Deletes the resource if only one instance of
-    * this object exists, and it is initialized. */
-  ~ShaderObject() {
-    if(isDeletable()) {
-      if(*inited_) {
-        gl(DeleteShader(*handle_))
-      }
-      delete inited_;
-      delete handle_;
-    }
-  }
-
-  /// Allocates the resource. It only happens upon the first use.
-  void init() const {
-    *inited_ = true;
-    *handle_ = gl(CreateShader(shader_t));
-  }
-
-  /// Returns if there's allocated memory for this class.
-  bool isInited() const {
-    return *inited_;
-  }
-
-  /// Returns a self-pointer, useful for inheritance
-  const ShaderObject& getHandle() const {
-    return *this;
-  }
-
-  /// Returns the C handle for the object. Inits it, if this is the first call for it.
-  operator GLuint() const {
-    if(!*inited_) {
-      init();
-    }
-
-    return *handle_;
-  }
-};
+namespace glObject {
+  template<ShaderType shader_t>
+  class Shader : public Object {
+    void constructor() const { *handle_ = gl(CreateShader(shader_t)); }
+    void destructor() const { gl(DeleteShader(*handle_)); }
+  };
+}
 
 // -------======{[ Shader ]}======-------
 
@@ -148,7 +99,7 @@ template<ShaderType shader_t>
 /// A GLSL shader object used to control the drawing process.
 /** @see glCreateShader, glDeleteShader */
 class Shader {
-  ShaderObject<shader_t> shader_; ///< The handle for the buffer.
+  glObject::Shader<shader_t> shader_; ///< The handle for the buffer.
   bool compiled_; ///< Stores if the shader is compiled.
   std::string filename_;  ///< Stores the source file's name if the shader was initialized from file.
 public:
@@ -299,7 +250,7 @@ public:
   }
 
   /// Returns the C OpenGL handle for the shader.
-  const ShaderObject<shader_t>& expose() const  {
+  const Object& expose() const  {
     return shader_;
   }
 };
@@ -379,70 +330,23 @@ typedef Shader<ShaderType::TessEval> TessEvalShader;
 
 #endif // glCreateShader && glDeleteShader
 
+
+
 // -------======{[ Shader Program ]}======-------
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glCreateProgram) && defined(glDeleteProgram))
-/// A specialization of the ObjectExt class for Programs (they aren't created with glGen*)
-class ProgramObject : public RefCounted {
-  /// The C handle for the object.
-  GLuint *handle;
-  /// The boolean for the object being initialized.
-  /** It is a pointer because it is shared between the copies. If one inits
-    * the handle, then all instances will have the inited handle */
-  bool *inited;
-public:
-  /// Creates the object, but does not allocate any resource yet.
-  ProgramObject()
-    : handle(new GLuint)
-    , inited(new bool) {
-
-    *inited = false;
-  }
-
-  /// Deletes the object.
-  /** Deletes the resource if only one instance of
-    * this object exists, and it is initialized. */
-  ~ProgramObject() {
-    if(isDeletable()) {
-      if(*inited) {
-        gl(DeleteProgram(*handle))
-      }
-      delete inited;
-      delete handle;
-    }
-  }
-
-  /// Allocates the resource. It only happens upon the first use.
-  void init() const {
-    *inited = true;
-    *handle = gl(CreateProgram());
-  }
-
-  /// Returns if there's allocated memory for this class.
-  bool isInited() const {
-    return *inited;
-  }
-
-  /// Returns a self-pointer, useful for inheritance
-  const ProgramObject& getHandle() const {
-    return *this;
-  }
-
-  /// Returns the C handle for the object. Inits it, if this is the first call for it.
-  operator GLuint() const {
-    if(!*inited) {
-      init();
-    }
-
-    return *handle;
-  }
-};
+namespace glObject {
+  class Program : public Object {
+    void constructor() const { *handle_ = gl(CreateProgram()); }
+    void destructor() const { gl(DeleteProgram(*handle_)); }
+  };
+}
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDetachShader)
 /// The program object can combine multiple shader stages (built from shader objects) into a single, linked whole.
 /** @see glCreateProgram, glDeleteProgram */
 class Program {
-  ProgramObject program_; ///< The C OpenGL handle for the program.
+  glObject::Program program_; ///< The C OpenGL handle for the program.
   std::vector<GLuint> shaders_; ///< IDs of the shaders attached to the program
   std::vector<std::string> filenames_; /// The names of the shaders are stored to help debugging.
   bool *linked_; ///< Stores if the program is linked. Its a pointer, so .use() can be const.
@@ -528,7 +432,7 @@ public:
       gl(GetProgramInfoLog(program_, infoLogLength, NULL, strInfoLog));
       std::stringstream str;
       str << "OpenGL failed to link the following shaders together: " << std::endl;
-      for(int i = 0; i < filenames_.size(); i++) {
+      for(size_t i = 0; i < filenames_.size(); i++) {
         str << " - " << filenames_[i] << std::endl;
       }
       str << "\nThe error message: \n" << strInfoLog << std::endl;
@@ -578,7 +482,7 @@ public:
   }
 
   /// Returns the C OpenGL handle for the program.
-  const ProgramObject& expose() const {
+  const Object& expose() const {
     return program_;
   }
 };
