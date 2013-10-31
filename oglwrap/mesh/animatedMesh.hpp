@@ -6,13 +6,13 @@
 #define OGLWRAP_MESH_ANIMATEDMESH_HPP_
 
 #include "mesh.hpp"
-#include "../config.hpp"
 #include "animState.hpp"
 #include "skinningData.hpp"
 #include "animInfo.hpp"
 
 namespace oglwrap {
 
+/// A class for loading and displaying animations.
 class AnimatedMesh : public Mesh {
 
   /// Stores data related to skin definition.
