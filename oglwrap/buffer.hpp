@@ -98,8 +98,8 @@ public:
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBufferData)
   template<typename GLtype>
-  /// Creates and initializes a buffer object's data store.
-  /** @param data - Specifies a vector of data to upload.
+  /** @brief Creates and initializes a buffer object's data store.
+    * @param data - Specifies a vector of data to upload.
     * @param usage - Specifies the expected usage pattern of the data store.
     * @see glBufferData */
   static void Data(const std::vector<GLtype>& data,

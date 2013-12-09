@@ -360,6 +360,11 @@ public:
   }
 };
 
+/// Is used to set up an attribute.
+/** VertexAttribArrayObject is used to setup the way data is uploaded to
+  * the vertex shader attributes (the 'in' variables in the VS).
+  * When the setup is called, the VAO will remember the currently
+  * active ArrayBuffer and will use that for the draw calls */
 class VertexAttribArray : public VertexAttribArrayObject {
 public:
   /// You can specify the attribute slot you use for the attribute
@@ -377,6 +382,11 @@ public:
   }
 };
 
+/// Is used to set up an attribute.
+/** VertexAttribArrayObject is used to setup the way data is uploaded to
+  * the vertex shader attributes (the 'in' variables in the VS).
+  * When the setup is called, the VAO will remember the currently
+  * active ArrayBuffer and will use that for the draw calls */
 class LazyVertexAttribArray : public VertexAttribArrayObject {
   const Program& program_;
   const std::string identifier_;

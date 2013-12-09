@@ -104,7 +104,7 @@ public:
     std::ifstream is(filename);
     if(!is.good()) {
       std::cerr <<
-                "Couldn't initialize DebugOutput because GLerrors.txt is missing or corrupted." << std::endl;
+        "Couldn't initialize DebugOutput because GLerrors.txt is missing or corrupted." << std::endl;
     }
 
     // Read until EOF, or until an error occurs.

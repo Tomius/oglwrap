@@ -6,15 +6,6 @@
 #ifndef OGLWRAP_OGLWRAP_HPP_
 #define OGLWRAP_OGLWRAP_HPP_
 
-/* TODO:
-    - General:
-        - context class
-        - program uniforms
-        - uniform blocks / shader storage
-        - separable shader stages.
-        - some other 4.0+ features are still missing.
-*/
-
 // standard headers
 #include <map>
 #include <cmath>
