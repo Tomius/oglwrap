@@ -289,21 +289,27 @@ public:
     static sf::Clock clock;
     static float prevTime = 0;
     float time = clock.getElapsedTime().asSeconds();
-    float dt =  time - prevTime;
+    float diff_time = time - prevTime;
     prevTime = time;
 
-    if(firstCall) {
-      target = _target;
-      firstCall = false;
-      return;
-    }
+    while(diff_time > 0) {
+      float time_step = 0.01f;
+      float dt = std::min(time_step, diff_time);
+      diff_time -= time_step;
 
-    target = glm::vec3(_target.x, target.y, _target.z);
+      if(firstCall) {
+        target = _target;
+        firstCall = false;
+        return;
+      }
 
-    float diff = _target.y - target.y;
-    const float offs = std::max(fabs(diff / 2.0f), 0.05) * dt * 20.0f;
-    if(fabs(diff) > offs) {
-      target.y += diff / fabs(diff) * offs;
+      target = glm::vec3(_target.x, target.y, _target.z);
+
+      float diff = _target.y - target.y;
+      const float offs = std::max(fabs(diff / 2.0f), 0.05) * dt * 20.0f;
+      if(fabs(diff) > offs) {
+        target.y += diff / fabs(diff) * offs;
+      }
     }
   }
 
