@@ -6,7 +6,7 @@ Oglwrap is a lightweight, cross-platform, object oriented, header-only C++ wrapp
 Features:
 -------------
 * Portable, and easy to use, as it is platform-indipendent, header only, and doesn't even have to be configured (apart from the extra features, that can be turned on with defining macros before the inclusion of oglwrap, or in the config.hpp).
-* RAII resource handling. You won't have to generate or delete the resources yourself, the memory will be allocated when you first use the object,
+* RAII resource handling. You won't have to allocate or release the OpenGL resources yourself, allocation will happen when you first use the object,
   (It happens there, rather than in the constructor, because this way, you can declare global objects, whose constructor run before the creation of the GL context. Normally this would cause a segfault, but with oglwrap, it works fine)
 * Typesafety, you get compile time error for giving wrong enum arguments to a function, unlike with GLenum, which only signs that you did something wrong runtime, by generating a GL_INVALID_ENUM. This typesafety also applies to binding targets, which means, for ex. you can't call glBindBufferBase (IndexedBuffer::BindBase) on an ArrayBuffer, because that target is not indexed, so calling BindBase on it wouldn't even make sense.
 * oglwrap is not only type-safe, but its also bind-safe, because functions that operate with, or operate on a binding target, are bind-checked. This means that you'll get warnings if you do things like this:
@@ -66,3 +66,6 @@ Has generated the error because one of the following(s) were true:
 * Documented inside the code, so with intellicense you won't ever have to google OpenGL functions again.
 For example:
 ![screenshot](http://oi42.tinypic.com/hrmv7c.jpg)
+
+----------------------
+If you have any problem, please post in the issues tab or mail me at tomius1994@gmail.com. Any feedback would be appreciated.
