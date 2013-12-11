@@ -422,6 +422,7 @@ public:
     gl(LinkProgram(program_));
     *linked_ = true;
 
+    #ifdef OGLWRAP_DEBUG
     GLint status;
     gl(GetProgramiv(program_, GL_LINK_STATUS, &status));
     if(status == GL_FALSE) {
@@ -440,6 +441,17 @@ public:
 
       throw std::runtime_error(str.str());
     }
+
+    gl(ValidateProgram(program_));
+    gl(GetProgramiv(program_, GL_VALIDATE_STATUS, &status));
+    if(status == GL_FALSE) {
+      std::cout << "The validation of the program containing the following shaders failed: " << std::endl;
+      for(size_t i = 0; i < filenames_.size(); i++) {
+        std::cout << " - " << filenames_[i] << std::endl;
+      }
+      std::cout << "This program might generate GL_INVALID_OPERATION when used for rendering" << std::endl;
+    }
+    #endif // OGLWRAP_DEBUG
 
     return *this;
   }
