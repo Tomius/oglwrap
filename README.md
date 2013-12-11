@@ -66,3 +66,6 @@ Has generated the error because one of the following(s) were true:
 * Documented inside the code, so with intellicense you won't ever have to google OpenGL functions again.
 For example:
 ![screenshot](http://oi42.tinypic.com/hrmv7c.jpg)
+
+----------------------
+If you have any problem, please post in the issues tab or mail me at tomius1994@gmail.com. Any feedback would be appreciated.
