@@ -40,11 +40,11 @@ public:
   ~AnimatedMesh();
 
 private:
-  /// Just a private declaration of the copy constructor... it shouldn't be copyable.
-  AnimatedMesh(const AnimatedMesh& src);
+  /// It shouldn't be copyable.
+  AnimatedMesh(const AnimatedMesh& src) = delete;
 
-  /// Just a private declaration of the assign operator... it shouldn't be copyable.
-  void operator=(const AnimatedMesh& rhs);
+  /// It shouldn't be copyable.
+  void operator=(const AnimatedMesh& rhs) = delete;
 
   /*         //=====:==-==-==:=====\\                                 //=====:==-==-==:=====\\
       <---<}>==~=~=~==--==--==~=~=~==<{>----- Skin definition -----<}>==~=~=~==--==--==~=~=~==<{>--->

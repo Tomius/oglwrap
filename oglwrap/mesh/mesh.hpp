@@ -62,9 +62,9 @@ protected:
   bool is_setup_texcoords_;
 
   /// It shouldn't be copyable.
-  Mesh(const Mesh& src);
+  Mesh(const Mesh& src) = delete;
   /// It shouldn't be copyable.
-  void operator=(const Mesh& rhs);
+  void operator=(const Mesh& rhs) = delete;
 
 public:
   /// Loads in the mesh from a file, and does some post-processing on it.
