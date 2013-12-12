@@ -245,6 +245,7 @@ public:
   }
 #endif // glCompileShader && glGetShaderInfoLog && glGetShaderiv
 
+  /// Returns the file's name that was loaded in.
   const std::string& filename() const {
     return filename_;
   }
@@ -392,6 +393,10 @@ public:
   }
 #endif // glAttachShader
 
+  template<ShaderType shader_t>
+  /// Attaching rvalue reference shaders to a programs only work correctly on NVIDIA.
+  Program& attachShader(Shader<shader_t>&& shader) = delete;
+
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glAttachShader)
   template<ShaderType shader_t>
   /// Attaches a shader object to the program.
@@ -401,6 +406,7 @@ public:
     attachShader(shader);
     return *this;
   }
+
 #endif // glAttachShader
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glAttachShader)
@@ -413,6 +419,10 @@ public:
     return *this;
   }
 #endif // glAttachShader
+
+  template<ShaderType shader_t>
+  /// Attaching rvalue reference shaders to a programs only work correctly on NVIDIA.
+  Program& operator<<(Shader<shader_t>&& shader) = delete;
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glLinkProgram) && defined(glGetProgramiv) && defined(glGetProgramInfoLog))
   /// Links the program.
