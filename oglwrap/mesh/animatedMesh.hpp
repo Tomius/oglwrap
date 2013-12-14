@@ -27,6 +27,9 @@ class AnimatedMesh : public Mesh {
   /// The current animation.
   AnimationState current_anim_;
 
+  /// The name of the current animation
+  std::string current_anim_name_;
+
   /// The last animation.
   AnimationState last_anim_;
 
@@ -294,6 +297,11 @@ public:
                              float current_time,
                              float transition_time = 0.0f,
                              float speed = 0.0f);
+
+  /// Returns the currently running animations name.
+  std::string getCurrentAnimation() const {
+    return current_anim_name_;
+  }
 
   /// Tries to change the current animation to the default one.
   /** Only changes it if the current animation is interruptable,

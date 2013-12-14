@@ -54,7 +54,7 @@ struct AnimationState {
   /// The speed modifier
   float speed;
 
-  /// Default constructor
+  /// Default constructor.
   AnimationState()
       : handle(nullptr)
       , idx(0)

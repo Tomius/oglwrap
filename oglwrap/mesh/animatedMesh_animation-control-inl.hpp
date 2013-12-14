@@ -17,6 +17,7 @@ inline void AnimatedMesh::addAnimation(const std::string& filename,
    size_t idx = anims_.data.size();
    anims_.names[anim_name] = idx;
    anims_.data.push_back(AnimInfo());
+   anims_[idx].name = anim_name;
    anims_[idx].importer = new Assimp::Importer();
    anims_[idx].handle = anims_[idx].importer->ReadFile(filename, aiProcess_Debone);
    if(!anims_[idx].handle) {
@@ -70,6 +71,7 @@ inline void AnimatedMesh::changeAnimation(size_t anim_idx,
 
    current_anim_.idx = anim_idx;
    current_anim_.handle = anims_[anim_idx].handle;
+   current_anim_name_ = anims_[anim_idx].name;
 
    if(flags & AnimFlag::Backwards) {
       current_anim_.offset = anims_[anim_idx].end_offset;
