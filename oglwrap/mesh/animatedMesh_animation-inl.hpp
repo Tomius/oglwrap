@@ -1,6 +1,7 @@
 #ifndef OGLWRAP_MESH_ANIMATED_MESH_ANIMATION_INL_HPP_
 #define OGLWRAP_MESH_ANIMATED_MESH_ANIMATION_INL_HPP_
 
+#include "../global.hpp"
 #include "animatedMesh.hpp"
 
 namespace oglwrap {

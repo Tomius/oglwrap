@@ -5,6 +5,15 @@
 #ifndef OGLWRAP_UNIFORM_HPP_
 #define OGLWRAP_UNIFORM_HPP_
 
+#include <stdexcept>
+
+#include "config.hpp"
+#include "enums.hpp"
+#include "shader.hpp"
+
+#include "glm/glm/glm.hpp"
+#include "glm/glm/gtc/type_ptr.hpp"
+
 namespace oglwrap {
 
 // -------======{[ UniformObject ]}======-------

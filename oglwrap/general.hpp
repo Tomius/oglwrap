@@ -5,6 +5,10 @@
 #ifndef OGLWRAP_GENERAL_HPP_
 #define OGLWRAP_GENERAL_HPP_
 
+#include <cmath>
+
+#include "config.hpp"
+
 /// A template to convert an angle value from degrees to radians
 template<class T>
 T ToRadian(const T& x) {

@@ -5,6 +5,10 @@
 #ifndef OGLWRAP_TRANSFORMFEEDBACK_HPP_
 #define OGLWRAP_TRANSFORMFEEDBACK_HPP_
 
+#include "general.hpp"
+#include "debug/error.hpp"
+#include "debug/binding.hpp"
+
 namespace oglwrap {
 
 namespace glObject {

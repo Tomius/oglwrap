@@ -5,6 +5,8 @@
 #ifndef OGLWRAP_ENUMS_HPP_
 #define OGLWRAP_ENUMS_HPP_
 
+#include "config.hpp"
+
 namespace oglwrap {
 
 inline namespace Enums { // just to make doxygen list enum namespaces nicely

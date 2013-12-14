@@ -5,6 +5,10 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include "glm/glm/glm.hpp"
+#include "glm/glm/gtc/type_ptr.hpp"
+#include "glm/glm/gtc/matrix_transform.hpp"
+
 // Conversion between oglplus and glm matrices
 
 namespace oglwrap {

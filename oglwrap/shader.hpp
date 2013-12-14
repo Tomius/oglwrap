@@ -5,6 +5,18 @@
 #ifndef OGLWRAP_SHADER_HPP_
 #define OGLWRAP_SHADER_HPP_
 
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <cstring>
+#include <stdexcept>
+
+#include "config.hpp"
+#include "enums.hpp"
+#include "general.hpp"
+#include "debug/error.hpp"
+#include "debug/binding.hpp"
+
 namespace oglwrap {
 
 // -------======{[ ShaderStorage ]}======-------

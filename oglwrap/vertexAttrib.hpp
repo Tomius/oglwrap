@@ -5,6 +5,18 @@
 #ifndef OGLWRAP_VERTEXATTRIB_HPP_
 #define OGLWRAP_VERTEXATTRIB_HPP_
 
+#include <stdexcept>
+
+#include "shader.hpp"
+#include "config.hpp"
+#include "general.hpp"
+#include "debug/error.hpp"
+#include "debug/binding.hpp"
+#include "enums.hpp"
+
+#include "glm/glm/glm.hpp"
+#include "glm/glm/gtc/type_ptr.hpp"
+
 namespace oglwrap {
 
 namespace glObject {

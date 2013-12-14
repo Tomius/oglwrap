@@ -5,6 +5,9 @@
 #ifndef OGLWRAP_TEXTURES_TEXTURE_CUBE_HPP_
 #define OGLWRAP_TEXTURES_TEXTURE_CUBE_HPP_
 
+#include <stdexcept>
+#include "texture_base.hpp"
+
 namespace oglwrap {
 
 // -------======{[ TextureCube declaration ]}======-------

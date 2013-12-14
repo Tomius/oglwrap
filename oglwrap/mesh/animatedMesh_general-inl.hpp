@@ -1,6 +1,8 @@
 #ifndef OGLWRAP_MESH_ANIMATED_MESH_GENERAL_INL_HPP_
 #define OGLWRAP_MESH_ANIMATED_MESH_GENERAL_INL_HPP_
 
+#include "animatedMesh.hpp"
+
 namespace oglwrap {
 
 inline AnimatedMesh::AnimatedMesh(const std::string& filename, unsigned int flags)

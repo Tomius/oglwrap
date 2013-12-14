@@ -5,6 +5,11 @@
 #ifndef OGLWRAP_DEBUG_BINDING_HPP_
 #define OGLWRAP_DEBUG_BINDING_HPP_
 
+#include <string>
+#include <iostream>
+#include "error.hpp"
+#include "../enums.hpp"
+
 namespace oglwrap {
 
 static std::string OGLWRAP_LAST_BIND_TARGET;

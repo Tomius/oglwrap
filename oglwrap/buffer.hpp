@@ -5,6 +5,12 @@
 #ifndef OGLWRAP_BUFFER_HPP_
 #define OGLWRAP_BUFFER_HPP_
 
+#include "enums.hpp"
+#include "config.hpp"
+#include "general.hpp"
+#include "debug/error.hpp"
+#include "debug/binding.hpp"
+
 namespace oglwrap {
 
 namespace glObject {

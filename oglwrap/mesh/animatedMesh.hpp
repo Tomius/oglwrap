@@ -9,6 +9,7 @@
 #include "animState.hpp"
 #include "skinningData.hpp"
 #include "animInfo.hpp"
+#include "../uniform.hpp"
 
 namespace oglwrap {
 

@@ -7,6 +7,9 @@
 #ifndef OGLWRAP_SHAPES_CUBE_HPP_
 #define OGLWRAP_SHAPES_CUBE_HPP_
 
+#include "../buffer.hpp"
+#include "../vertexAttrib.hpp"
+
 namespace oglwrap {
 
 /// Class providing vertex attributes and instructions for rendering of a cube.

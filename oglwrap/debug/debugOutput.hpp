@@ -5,6 +5,14 @@
 #ifndef OGLWRAP_DEBUG_DEBUGOUTPUT_HPP_
 #define OGLWRAP_DEBUG_DEBUGOUTPUT_HPP_
 
+#include <map>
+#include <vector>
+#include <cassert>
+#include <iostream>
+#include <cstring>
+#include <fstream>
+#include <sstream>
+   
 #include "../config.hpp"
 
 namespace oglwrap {

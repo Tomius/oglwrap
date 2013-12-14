@@ -5,6 +5,8 @@
 #ifndef OGLWRAP_TEXTURES_TEXTURE_3D_HPP_
 #define OGLWRAP_TEXTURES_TEXTURE_3D_HPP_
 
+#include "texture_base.hpp"
+
 namespace oglwrap {
 
 // -------======{[ 3D Textures' declaration ]}======-------

@@ -5,6 +5,14 @@
 #ifndef OGLWRAP_TEXTURES_TEXUTRE_BASE_HPP_
 #define OGLWRAP_TEXTURES_TEXUTRE_BASE_HPP_
 
+#include "../general.hpp"
+#include "../debug/error.hpp"
+#include "../debug/binding.hpp"
+#include "../enums.hpp"
+#include "../buffer.hpp"
+#include "../glm/glm/glm.hpp"
+#include "../glm/glm/gtc/type_ptr.hpp"
+
 namespace oglwrap {
 
 namespace glObject {

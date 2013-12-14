@@ -195,6 +195,7 @@ inline void Mesh::setupTexCoords(VertexAttribArray attrib, unsigned char texCoor
   ArrayBuffer::Unbind();
 }
 
+#if OGLWRAP_USE_IMAGEMAGICK
 template<aiTextureType tex_type>
 /// Sets arbitrary type of textures to a specified texture unit.
 /** Changes the currently active texture unit and Texture2D binding.
@@ -236,6 +237,7 @@ void Mesh::setupTextures(unsigned short texture_unit) {
 
   Texture2D::Unbind();
 }
+#endif
 
 /// Sets the diffuse textures up to a specified texture unit.
 /** Changes the currently active texture unit and Texture2D binding.

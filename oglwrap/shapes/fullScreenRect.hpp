@@ -5,6 +5,9 @@
 #ifndef OGLWRAP_SHAPES_FULLSCREENRECT_HPP_
 #define OGLWRAP_SHAPES_FULLSCREENRECT_HPP_
 
+#include "../buffer.hpp"
+#include "../vertexAttrib.hpp"
+
 namespace oglwrap {
 
 /// Class providing vertex attributes and instructions for rendering of a cube.

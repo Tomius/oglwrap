@@ -55,4 +55,13 @@
   #define OGLWRAP_PORTABILITY_MODE 1
 #endif
 
+/// Oglwrap can be forced to load glew. 
+#ifndef OGLWRAP_USE_GLEW
+  #define OGLWRAP_USE_GLEW 0
+#endif
+
+#if OGLWRAP_USE_GLEW
+  #include "glew.hpp"
+#endif
+
 #endif // OGLWRAP_CONFIG_HPP_

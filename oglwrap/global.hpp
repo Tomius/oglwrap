@@ -5,6 +5,13 @@
 #ifndef OGLWRAP_GLOBAL_HPP_
 #define OGLWRAP_GLOBAL_HPP_
 
+#include <iostream>
+#include <string>
+
+#include "shader.hpp"
+#include "vertexAttrib.hpp"
+#include "glm/glm/glm.hpp"
+
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetAttribLocation)
 /// A global operator that is a VertexArray constructor with nicer syntax.
 /** I think (prog | "Position") does look better than VertexAttribArray(prog, "Position") */

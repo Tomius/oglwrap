@@ -1,6 +1,10 @@
 #ifndef OGLWRAP_MESH_ANIMINFO_HPP_
 #define OGLWRAP_MESH_ANIMINFO_HPP_
 
+#include <map>
+
+#include "../assimp.hpp"
+
 namespace oglwrap {
 
 /// A struct storing info per animation

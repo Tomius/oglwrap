@@ -6,6 +6,12 @@
 #define OGLWRAP_MESH_MESH_HPP_
 
 #include <climits>
+#include <map>
+
+#include "../general.hpp"
+#include "../buffer.hpp"
+#include "../vertexAttrib.hpp"
+#include "../texture.hpp"
 #include "../assimp.hpp"
 
 namespace oglwrap {
