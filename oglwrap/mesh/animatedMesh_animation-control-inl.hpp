@@ -108,18 +108,7 @@ inline void AnimatedMesh::setCurrentAnimation(const std::string& anim_name,
                                               float transition_time,
                                               unsigned flags,
                                               float speed) {
-   if((anim_meta_info_.end_of_last_anim + anim_meta_info_.transition_time) <= current_time
-         && (current_anim_.flags & AnimFlag::Interruptable)) {
-      forceCurrentAnimation(anim_name, current_time, transition_time, flags, speed);
-   }
-}
-
-inline void AnimatedMesh::forceCurrentAnimation(const std::string& anim_name,
-                                                float current_time,
-                                                float transition_time,
-                                                unsigned flags,
-                                                float speed) {
-   if(!anims_.canFind(anim_name)) {
+    if(!anims_.canFind(anim_name)) {
       throw std::invalid_argument(
          "Tried to set current animation to '" + anim_name + "', "
          "but the AnimatedMesh doesn't have an animation with name"
@@ -129,7 +118,7 @@ inline void AnimatedMesh::forceCurrentAnimation(const std::string& anim_name,
    if(current_anim_.handle == anims_[anim_idx].handle) {
       return;
    }
-   if(fabs(speed) < 1e-5) {
+   if(fabs(speed) < 1e-3) {
       changeAnimation(
          anim_idx,
          current_time,
@@ -152,17 +141,6 @@ inline void AnimatedMesh::setCurrentAnimation(const std::string& anim_name,
                                               float current_time,
                                               float transition_time,
                                               float speed) {
-   if((anim_meta_info_.end_of_last_anim + anim_meta_info_.transition_time) <= current_time
-         && (current_anim_.flags & AnimFlag::Interruptable)
-     ) {
-      forceCurrentAnimation(anim_name, current_time, transition_time, speed);
-   }
-}
-
-inline void AnimatedMesh::forceCurrentAnimation(const std::string& anim_name,
-                                                float current_time,
-                                                float transition_time,
-                                                float speed) {
    if(!anims_.canFind(anim_name)) {
       throw std::invalid_argument(
          "Tried to set current animation to '" + anim_name + "', "
@@ -174,7 +152,7 @@ inline void AnimatedMesh::forceCurrentAnimation(const std::string& anim_name,
       return;
    }
 
-   if(fabs(speed) < 1e-5) {
+   if(fabs(speed) < 1e-3) {
       changeAnimation(
          anim_idx,
          current_time,
@@ -194,21 +172,40 @@ inline void AnimatedMesh::forceCurrentAnimation(const std::string& anim_name,
 }
 
 inline void AnimatedMesh::setAnimToDefault(float current_time) {
-   if(current_anim_.flags & AnimFlag::Interruptable) {
-      forceAnimToDefault(current_time);
-   }
+   if(current_anim_.handle != anims_[anim_meta_info_.default_idx].handle)
+   changeAnimation(
+      anim_meta_info_.default_idx,
+      current_time,
+      anim_meta_info_.default_transition_time,
+      anims_[anim_meta_info_.default_idx].flags,
+      anims_[anim_meta_info_.default_idx].speed
+   );
 }
 
-inline void AnimatedMesh::forceAnimToDefault(float current_time) {
-   assert(anims_[anim_meta_info_.default_idx].flags & AnimFlag::Repeat);
-   if(current_anim_.handle != anims_[anim_meta_info_.default_idx].handle)
-      changeAnimation(
-         anim_meta_info_.default_idx,
-         current_time,
-         anim_meta_info_.default_transition_time,
-         anims_[anim_meta_info_.default_idx].flags,
-         anims_[anim_meta_info_.default_idx].speed
+inline void AnimatedMesh::animationEnded(float current_time) {
+   if(anim_ended_callback_ == nullptr) {
+      setAnimToDefault(current_time);
+   } else {
+      bool use_default_speed_and_flags = true;
+      float transition_time = 0.1f, speed = 0.0f;
+      unsigned flags = AnimFlag::None;
+      std::string new_anim = (*anim_ended_callback_)(
+         getCurrentAnimation(), 
+         &transition_time,
+         &use_default_speed_and_flags,
+         &flags,
+         &speed
       );
+      if(anims_.canFind(new_anim)) {
+         if(use_default_speed_and_flags) {
+            setCurrentAnimation(new_anim, current_time, transition_time);
+         } else {
+            setCurrentAnimation(new_anim, current_time, transition_time, flags, speed);
+         }
+      } else {
+         setAnimToDefault(current_time);
+      }
+   }
 }
 
 inline glm::vec2 AnimatedMesh::offsetSinceLastFrame() {

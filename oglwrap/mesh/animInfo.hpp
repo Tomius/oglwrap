@@ -82,6 +82,10 @@ struct AnimData {
     return data[idx];
   }
 
+  const AnimInfo& operator[](size_t idx) const {
+    return data[idx];
+  }
+
   AnimInfo& operator[](std::string anim_name) {
     return data[names[anim_name]];
   }

@@ -252,7 +252,7 @@ inline void AnimatedMesh::updateBoneInfo(float time) {
       if(current_time_in_ticks < (float)current_anim_.handle->mAnimations[0]->mDuration) {
          current_animation_time = current_time_in_ticks;
       } else {
-         forceAnimToDefault(time);
+         animationEnded(time);
          updateBoneInfo(time);
          return;
       }

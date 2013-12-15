@@ -211,6 +211,46 @@ public:
   /*       //=====:==-==-==:=====\\                                   //=====:==-==-==:=====\\
     <---<}>==~=~=~==--==--==~=~=~==<{>----- Animation Control -----<}>==~=~=~==--==--==~=~=~==<{>--->
            \\=====:==-==-==:=====//                                   \\=====:==-==-==:=====//       */
+public:
+  /// An functor contanting a callback function for handling animation changes.
+  struct AnimationEndedListener {
+    /**
+     * @brief A callback function, that is called everytime an animation ends
+     * The function should return the name of the new animation. If it returns a string
+     * that isn't a name of an animation, then the default animation will be played.
+     * @param current_anim - The name of the currently playing animation, that is about to be changed.
+     * @param transition_time - Write the transition time, you'd use with setCurrentAnimation to this ptr.
+     * @param use_default_speed_and_flags - Specifies if the last two parameters should be ignored.
+     * @param flags - Write the animation flags here.
+     * @param speed - Write the animation speed to this ptr.
+     * @return The name of the new animation.
+     */
+    virtual std::string operator()(const std::string& current_anim, 
+                                   float *transition_time, 
+                                   bool *use_default_speed_and_flags,
+                                   unsigned *flags,
+                                   float *speed) = 0;
+  };
+ 
+private:
+  /// The callback functor
+  AnimationEndedListener *anim_ended_callback_;
+
+  /**
+   * @brief The function that changes animations when they end.
+   * @param current_time The current time
+   */
+  void animationEnded(float current_time);
+
+public:
+  /**
+   * Sets a callback functor that is called everytime an animation ends, 
+   * and is resposible for choosing the next animation.
+   * @param listener - The functor to use for the callbacks.
+   */
+  void setAnimationEndedCallback(AnimationEndedListener* listener) {
+    anim_ended_callback_ = listener;
+  }
 
   /// Adds an external animation from a file.
   /** You should give this animation a name, you will be able to
@@ -247,10 +287,7 @@ private:
                        float speed = 1.0f);
 
 public:
-  /// Tries to change the current animation to a specified one.
-  /** Only changes it if the current animation is interruptable,
-    * it's not currently in a transition, and new animation is
-    * not the same as the one currently playing.
+  /** @brief Changes the current animation to a specified one.
     * @param anim_name - The user-defined name of the animation.
     * @param current_time - The current time in seconds, optimally since the start of the program.
     * @param transition_time - The fading time to be used for the transition.
@@ -262,23 +299,7 @@ public:
                            unsigned flags,
                            float speed = 0.0f);
 
-  /// Forces the current animation to a specified one.
-  /** Only changes it if the new animation is not the same as the one currently playing.
-    * @param anim_name - The user-defined name of the animation.
-    * @param current_time - The current time in seconds, optimally since the start of the program.
-    * @param transition_time - The fading time to be used for the transition.
-    * @param flags - A bitfield containing the animation specifier flags.
-    * @param speed - Sets the speed of the animation. If it's 0, will play with the speed specified at the addAnim. If it's negative, it will be played backwards. */
-  void forceCurrentAnimation(const std::string& anim_name,
-                             float current_time,
-                             float transition_time,
-                             unsigned flags,
-                             float speed = 0.0f);
-
-  /// Tries to change the current animation to a specified one, using the default anim modifier flags specified for this anim.
-  /** Only changes it if the current animation is interruptable,
-    * it's not currently in a transition, and new animation is
-    * not the same as the one currently playing.
+  /** @brief Changes the current animation to a specified one, using the default anim modifier flags specified for this anim.
     * @param anim_name - The user-defined name of the animation.
     * @param current_time - The current time in seconds, optimally since the start of the program.
     * @param transition_time - The fading time to be used for the transition.
@@ -288,35 +309,20 @@ public:
                            float transition_time = 0.0f,
                            float speed = 0.0f);
 
-  /// Forces the current animation to a specified one, using the default anim modifier flags specified for this anim.
-  /** Only changes it if the new animation is not the same as the one currently playing.
-    * @param anim_name - The user-defined name of the animation.
-    * @param current_time - The current time in seconds, optimally since the start of the program.
-    * @param transition_time - The fading time to be used for the transition.
-    * @param speed - Sets the speed of the animation. If it's 0, will play with the speed specified at the addAnim. If it's negative, it will be played backwards. */
-  void forceCurrentAnimation(const std::string& anim_name,
-                             float current_time,
-                             float transition_time = 0.0f,
-                             float speed = 0.0f);
-
   /// Returns the currently running animations name.
   std::string getCurrentAnimation() const {
     return current_anim_name_;
   }
 
-  /// Tries to change the current animation to the default one.
-  /** Only changes it if the current animation is interruptable,
-    * it's not currently in a transition, and new animation is
-    * not the same as the one currently playing. Will use the default
-    * anim modifier flags for the default anim.
+  /** @brief Changes the current animation to the default one.
     * @param current_time - The current time in seconds, optimally since the start of the program. */
   void setAnimToDefault(float current_time);
 
-  /// Forces the current animation to the default one.
-  /** Only changes it if the new animation is not the same as the one currently
-    * playing. Will use the default anim modifier flags for the default anim.
-    * @param current_time - The current time in seconds, optimally since the start of the program. */
-  void forceAnimToDefault(float current_time);
+  /// Returns the name of the default animation
+  std::string getDefaultAnim() const {
+    return anims_[anim_meta_info_.default_idx].name;
+  }
+
 
   /// Returns the offset of the root bone, since it was last queried.
   /** It should be queried every frame (hence the name),

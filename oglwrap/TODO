@@ -21,7 +21,7 @@ last edited:
 + Physics
     - Built-in Inverse Kinematics support.
     - Mesh hair simulation.
-    - Collision detection / Reaction.
+    - Collision detection / reaction.
     - Possibly rag-doll physics.
 
 + Documentation

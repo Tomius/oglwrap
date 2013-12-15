@@ -26,13 +26,7 @@ enum AnimFlag {
   Mirrored = 0x4,
 
   /// Plays the animation backwards
-  Backwards = 0x8,
-
-  /// Marks the animation as interruptable by other animations.
-  /** Tip: if your animation is a cycle, 99% that you'll want it be
-    * interruptable, however, single animations like a jump, usually
-    * shouldn't be interrupted by another animations. */
-  Interruptable = 0x10
+  Backwards = 0x8
 };
 }
 typedef _AnimFlag::AnimFlag AnimFlag;
