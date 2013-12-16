@@ -26,7 +26,13 @@ enum AnimFlag {
   Mirrored = 0x4,
 
   /// Plays the animation backwards
-  Backwards = 0x8
+  Backwards = 0x8,
+
+  /// Marks the animation as interruptable by other animations.
+  /** Only affects setCurrentAnimation, forceCurrentAnimation ignores it.  
+    * This logically shouldn't be part of the animation loader & player, 
+    * but it can help to make your code easier to read. */
+  Interruptable = 0x10
 };
 }
 typedef _AnimFlag::AnimFlag AnimFlag;

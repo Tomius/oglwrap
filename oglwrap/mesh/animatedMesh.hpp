@@ -220,14 +220,14 @@ public:
      * that isn't a name of an animation, then the default animation will be played.
      * @param current_anim - The name of the currently playing animation, that is about to be changed.
      * @param transition_time - Write the transition time, you'd use with setCurrentAnimation to this ptr.
-     * @param use_default_speed_and_flags - Specifies if the last two parameters should be ignored.
+     * @param use_default_flags - Specifies if the default flags shold be used.
      * @param flags - Write the animation flags here.
-     * @param speed - Write the animation speed to this ptr.
+     * @param speed - Write the animation speed to this ptr. If it's zero, than the default speed will be used.
      * @return The name of the new animation.
      */
     virtual std::string operator()(const std::string& current_anim, 
                                    float *transition_time, 
-                                   bool *use_default_speed_and_flags,
+                                   bool *use_default_flags,
                                    unsigned *flags,
                                    float *speed) = 0;
   };
@@ -287,7 +287,10 @@ private:
                        float speed = 1.0f);
 
 public:
-  /** @brief Changes the current animation to a specified one.
+  /// Tries to change the current animation to a specified one.
+  /** Only changes it if the current animation is interruptable,
+    * it's not currently in a transition, and new animation is
+    * not the same as the one currently playing.
     * @param anim_name - The user-defined name of the animation.
     * @param current_time - The current time in seconds, optimally since the start of the program.
     * @param transition_time - The fading time to be used for the transition.
@@ -299,7 +302,23 @@ public:
                            unsigned flags,
                            float speed = 0.0f);
 
-  /** @brief Changes the current animation to a specified one, using the default anim modifier flags specified for this anim.
+  /// Forces the current animation to a specified one.
+  /** Only changes it if the new animation is not the same as the one currently playing.
+    * @param anim_name - The user-defined name of the animation.
+    * @param current_time - The current time in seconds, optimally since the start of the program.
+    * @param transition_time - The fading time to be used for the transition.
+    * @param flags - A bitfield containing the animation specifier flags.
+    * @param speed - Sets the speed of the animation. If it's 0, will play with the speed specified at the addAnim. If it's negative, it will be played backwards. */
+  void forceCurrentAnimation(const std::string& anim_name,
+                             float current_time,
+                             float transition_time,
+                             unsigned flags,
+                             float speed = 0.0f);
+
+  /// Tries to change the current animation to a specified one, using the default anim modifier flags specified for this anim.
+  /** Only changes it if the current animation is interruptable,
+    * it's not currently in a transition, and new animation is
+    * not the same as the one currently playing.
     * @param anim_name - The user-defined name of the animation.
     * @param current_time - The current time in seconds, optimally since the start of the program.
     * @param transition_time - The fading time to be used for the transition.
@@ -309,14 +328,35 @@ public:
                            float transition_time = 0.0f,
                            float speed = 0.0f);
 
+  /// Forces the current animation to a specified one, using the default anim modifier flags specified for this anim.
+  /** Only changes it if the new animation is not the same as the one currently playing.
+    * @param anim_name - The user-defined name of the animation.
+    * @param current_time - The current time in seconds, optimally since the start of the program.
+    * @param transition_time - The fading time to be used for the transition.
+    * @param speed - Sets the speed of the animation. If it's 0, will play with the speed specified at the addAnim. If it's negative, it will be played backwards. */
+  void forceCurrentAnimation(const std::string& anim_name,
+                             float current_time,
+                             float transition_time = 0.0f,
+                             float speed = 0.0f);
+
   /// Returns the currently running animations name.
   std::string getCurrentAnimation() const {
     return current_anim_name_;
   }
 
-  /** @brief Changes the current animation to the default one.
+  /// Tries to change the current animation to the default one.
+  /** Only changes it if the current animation is interruptable,
+    * it's not currently in a transition, and new animation is
+    * not the same as the one currently playing. Will use the default
+    * anim modifier flags for the default anim.
     * @param current_time - The current time in seconds, optimally since the start of the program. */
   void setAnimToDefault(float current_time);
+
+  /// Forces the current animation to the default one.
+  /** Only changes it if the new animation is not the same as the one currently
+    * playing. Will use the default anim modifier flags for the default anim.
+    * @param current_time - The current time in seconds, optimally since the start of the program. */
+  void forceAnimToDefault(float current_time);
 
   /// Returns the name of the default animation
   std::string getDefaultAnim() const {
