@@ -339,9 +339,24 @@ public:
                              float transition_time = 0.0f,
                              float speed = 0.0f);
 
-  /// Returns the currently running animations name.
+  /// Returns the currently running animation's name.
   std::string getCurrentAnimation() const {
     return current_anim_name_;
+  }
+
+  /// Returns the currently running animation's state.
+  AnimationState getCurrentAnimState() const {
+    return current_anim_;
+  }
+
+  /// Returns the currently running animation's AnimFlags.
+  unsigned getCurrentAnimFlags() const {
+    return current_anim_.flags;
+  }
+
+  /// Returns if the currently running animation is interruptable.
+  bool isInterrupable() const {
+    return (current_anim_.flags & AnimFlag::Interruptable) == AnimFlag::Interruptable;
   }
 
   /// Tries to change the current animation to the default one.
