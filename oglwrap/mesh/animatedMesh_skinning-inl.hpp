@@ -11,16 +11,16 @@ inline void AnimatedMesh::mapBones() {
     const aiMesh* pMesh = scene_->mMeshes[entry];
 
     for(unsigned i = 0; i < pMesh->mNumBones; i++) {
-      std::string boneName(pMesh->mBones[i]->mName.data);
-      size_t boneIndex = 0;
+      std::string bone_name(pMesh->mBones[i]->mName.data);
+      size_t bone_index = 0;
 
       // Search for this bone in the BoneMap
-      if(skinning_data_.bone_mapping.find(boneName) == skinning_data_.bone_mapping.end()) {
+      if(skinning_data_.bone_mapping.find(bone_name) == skinning_data_.bone_mapping.end()) {
         // Allocate an index for the new bone
-        boneIndex = skinning_data_.num_bones++;
+        bone_index = skinning_data_.num_bones++;
         skinning_data_.bone_info.push_back(SkinningData::BoneInfo());
-        skinning_data_.bone_info[boneIndex].bone_offset = convertMatrix(pMesh->mBones[i]->mOffsetMatrix);
-        skinning_data_.bone_mapping[boneName] = boneIndex;
+        skinning_data_.bone_info[bone_index].bone_offset = convertMatrix(pMesh->mBones[i]->mOffsetMatrix);
+        skinning_data_.bone_mapping[bone_name] = bone_index;
       }
     }
   }
@@ -30,22 +30,22 @@ inline void AnimatedMesh::mapBones() {
 /** @param node - The current root node.
   * @param anim - The animation to seek the root bone in. */
 inline const aiNodeAnim* AnimatedMesh::getRootBone(const aiNode* node, const aiScene* anim) {
-  std::string nodeName(node->mName.data);
+  std::string node_name(node->mName.data);
 
   const aiAnimation* animation = anim->mAnimations[0];
-  const aiNodeAnim* nodeAnim = findNodeAnim(animation, nodeName);
+  const aiNodeAnim* node_anim = findNodeAnim(animation, node_name);
 
-  if(nodeAnim) {
+  if(node_anim) {
     if(skinning_data_.root_bone.empty()) {
-      skinning_data_.root_bone = nodeName;
+      skinning_data_.root_bone = node_name;
     } else {
-      if(skinning_data_.root_bone != nodeName) {
+      if(skinning_data_.root_bone != node_name) {
         throw std::runtime_error(
           "Animation error: the animated skeletons have different root bones."
         );
       }
     }
-    return nodeAnim;
+    return node_anim;
   } else {
     for(unsigned i = 0; i < node->mNumChildren; i++) {
       auto childsReturn = getRootBone(node->mChildren[i], anim);
@@ -78,13 +78,13 @@ void AnimatedMesh::loadBones() {
     // -------======{[ Create the bone ID's and weights data ]}======-------
 
     for(unsigned i = 0; i < pMesh->mNumBones; i++) {
-      std::string boneName(pMesh->mBones[i]->mName.data);
-      size_t boneIndex = skinning_data_.bone_mapping[boneName];
+      std::string bone_name(pMesh->mBones[i]->mName.data);
+      size_t bone_index = skinning_data_.bone_mapping[bone_name];
 
       for(unsigned j = 0; j < pMesh->mBones[i]->mNumWeights; j++) {
         unsigned vertexID = pMesh->mBones[i]->mWeights[j].mVertexId;
         float weight = pMesh->mBones[i]->mWeights[j].mWeight;
-        vertices[vertexID].AddBoneData(boneIndex, weight);
+        vertices[vertexID].AddBoneData(bone_index, weight);
       }
     }
 
@@ -207,9 +207,9 @@ template <class Index_t>
   * I really doubt anyone would be using a skeleton with more than 65535 bones...
   * @param idx_t - The oglwrap enum, naming the data type that should be used.
   * @param boneIDs - Should be an array of attributes, that will be shader plumbed for the boneIDs data.
-  * @param boneWeights - Should be an array of attributes, that will be shader plumbed for the boneWeights data. */
+  * @param bone_weights - Should be an array of attributes, that will be shader plumbed for the bone_weights data. */
 void AnimatedMesh::shaderPlumbBones(DataType idx_t, LazyVertexAttribArray boneIDs,
-                                    LazyVertexAttribArray boneWeights) {
+                                    LazyVertexAttribArray bone_weights) {
   const size_t per_attrib_size = sizeof(SkinningData::VertexBoneData_PerAttribute<Index_t>);
 
   for(size_t entry = 0; entry < entries_.size(); entry++) {
@@ -225,14 +225,14 @@ void AnimatedMesh::shaderPlumbBones(DataType idx_t, LazyVertexAttribArray boneID
       intptr_t weightOffset = baseOffset + 4 * sizeof(Index_t);
 
       boneIDs[boneAttribSet].setup(4, idx_t, stride, (const void*)baseOffset).enable();
-      boneWeights[boneAttribSet].setup(4, DataType::Float, stride, (const void*)weightOffset).enable();
+      bone_weights[boneAttribSet].setup(4, DataType::Float, stride, (const void*)weightOffset).enable();
     }
 
     // static setup the VertexArrays that aren't enabled, to all zero.
     // Remember (0, 0, 0, 1) is the default, which isn't what we want.
     for(int i = current_attrib_max; i < skinning_data_.max_bone_attrib_num; i++) {
       boneIDs[i].static_setup(glm::ivec4(0, 0, 0, 0));
-      boneWeights[i].static_setup(glm::vec4(0, 0, 0, 0));
+      bone_weights[i].static_setup(glm::vec4(0, 0, 0, 0));
     }
   }
 
@@ -262,11 +262,11 @@ inline aiNode* AnimatedMesh::findNode(aiNode* currentRoot, const std::string& na
 /// Marks all of a bone's child external recursively.
 /** @param parent - A pointer to the parent ExternalBone struct.
     @param node - The current node.
-    @param shouldBeExternal - Should be false if called from outside, true if called recursively. */
-inline ExternalBone AnimatedMesh::markChildExternal(ExternalBone* parent, aiNode* node, bool shouldBeExternal) {
+    @param should_be_external - Should be false if called from outside, true if called recursively. */
+inline ExternalBone AnimatedMesh::markChildExternal(ExternalBone* parent, aiNode* node, bool should_be_external) {
   size_t bidx = skinning_data_.bone_mapping[node->mName.data];
   SkinningData::BoneInfo& binfo = skinning_data_.bone_info[bidx];
-  binfo.external = shouldBeExternal;
+  binfo.external = should_be_external;
   ExternalBone ebone(
     node->mName.data,
     binfo.bone_offset,
@@ -284,16 +284,16 @@ inline ExternalBone AnimatedMesh::markChildExternal(ExternalBone* parent, aiNode
 
 /// Marks a bone to be modified from outside.
 /** @return A structure, which through the bone, and all of its child can be moved.
-  * @param boneName - The name of the bone. */
-inline ExternalBoneTree AnimatedMesh::markBoneExternal(const std::string& boneName) {
-  if(skinning_data_.bone_mapping.find(boneName) == skinning_data_.bone_mapping.end()) {
+  * @param bone_name - The name of the bone. */
+inline ExternalBoneTree AnimatedMesh::markBoneExternal(const std::string& bone_name) {
+  if(skinning_data_.bone_mapping.find(bone_name) == skinning_data_.bone_mapping.end()) {
     throw std::runtime_error(
-        "AnimatedMesh '" + filename_ + "' doesn't have any bone named '" + boneName + "'."
+        "AnimatedMesh '" + filename_ + "' doesn't have any bone named '" + bone_name + "'."
     );
   }
 
   // Find the bone that is to be marked
-  aiNode* marked_node = findNode(scene_->mRootNode, boneName);
+  aiNode* marked_node = findNode(scene_->mRootNode, bone_name);
 
   ExternalBoneTree ebone_tree(markChildExternal(nullptr, marked_node));
 
@@ -339,8 +339,8 @@ inline size_t AnimatedMesh::getBoneAttribNum() {
   * For example if you specified "in vec4 boneIds[3]" you have to give "prog | boneIds"
   * Calling this function changes the currently active VAO and ArrayBuffer.
   * @param boneIDs - The array of attributes array to use as destination for bone IDs.
-  * @param boneWeights - The array of attributes array to use as destination for bone weights. */
-inline void AnimatedMesh::setupBones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights) {
+  * @param bone_weights - The array of attributes array to use as destination for bone weights. */
+inline void AnimatedMesh::setupBones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray bone_weights) {
 
   if(skinning_data_.is_setup_bones) {
     throw std::logic_error("AnimatedMesh::setupBones is called multiply times on the same object");
@@ -354,11 +354,11 @@ inline void AnimatedMesh::setupBones(LazyVertexAttribArray boneIDs, LazyVertexAt
   }
 
   if(skinning_data_.num_bones < UCHAR_MAX) {
-    shaderPlumbBones<unsigned char>(DataType::UnsignedByte, boneIDs, boneWeights);
+    shaderPlumbBones<unsigned char>(DataType::UnsignedByte, boneIDs, bone_weights);
   } else if(skinning_data_.num_bones < USHRT_MAX) {
-    shaderPlumbBones<unsigned short>(DataType::UnsignedShort, boneIDs, boneWeights);
+    shaderPlumbBones<unsigned short>(DataType::UnsignedShort, boneIDs, bone_weights);
   } else { // more than 65535 bones? WTF???
-    shaderPlumbBones<unsigned int>(DataType::UnsignedInt, boneIDs, boneWeights);
+    shaderPlumbBones<unsigned int>(DataType::UnsignedInt, boneIDs, bone_weights);
   }
 }
 

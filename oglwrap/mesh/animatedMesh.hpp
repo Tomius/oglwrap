@@ -82,8 +82,8 @@ private:
     * I really doubt anyone would be using a skeleton with more than 65535 bones...
     * @param idx_t - The oglwrap enum, naming the data type that should be used.
     * @param boneIDs - Should be an array of attributes, that will be shader plumbed for the boneIDs data.
-    * @param boneWeights - Should be an array of attributes, that will be shader plumbed for the boneWeights data. */
-  void shaderPlumbBones(DataType idx_t, LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights);
+    * @param bone_weights - Should be an array of attributes, that will be shader plumbed for the bone_weights data. */
+  void shaderPlumbBones(DataType idx_t, LazyVertexAttribArray boneIDs, LazyVertexAttribArray bone_weights);
 
 private:
 
@@ -97,15 +97,15 @@ private:
   /// Marks all of a bone's child external recursively.
   /** @param parent - A pointer to the parent ExternalBone struct.
       @param node - The current node.
-      @param shouldBeExternal - Should be false if called from outside, true if called recursively. */
-  ExternalBone markChildExternal(ExternalBone* parent, aiNode* node, bool shouldBeExternal = false);
+      @param should_be_external - Should be false if called from outside, true if called recursively. */
+  ExternalBone markChildExternal(ExternalBone* parent, aiNode* node, bool should_be_external = false);
 
 public:
 
   /// Marks a bone to be modified from outside.
   /** @return A structure, which through the bone, and all of its child can be moved.
-    * @param boneName - The name of the bone. */
-  ExternalBoneTree markBoneExternal(const std::string& boneName);
+    * @param bone_name - The name of the bone. */
+  ExternalBoneTree markBoneExternal(const std::string& bone_name);
 
   /// Returns the number of bones this scene has.
   /** May change the currently active VAO and ArrayBuffer at the first call. */
@@ -120,8 +120,8 @@ public:
     * For example if you specified "in vec4 boneIds[3]" you have to give "prog | boneIds"
     * Calling this function changes the currently active VAO and ArrayBuffer.
     * @param boneIDs - The array of attributes array to use as destination for bone IDs.
-    * @param boneWeights - The array of attributes array to use as destination for bone weights. */
-  void setupBones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray boneWeights);
+    * @param bone_weights - The array of attributes array to use as destination for bone weights. */
+  void setupBones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray bone_weights);
 
   /*         //=====:==-==-==:=====\\                           //=====:==-==-==:=====\\
       <---<}>==~=~=~==--==--==~=~=~==<{>----- Animation -----<}>==~=~=~==--==--==~=~=~==<{>--->
@@ -130,37 +130,37 @@ public:
 private:
 
   /// Returns the index of the currently active translation keyframe for the given animation and time.
-  /// @param animationTime - The time elapsed since the start of this animation.
-  /// @param node_anim - The animation node, in which the function should search for a keyframe.
-  unsigned findPosition(float animationTime, const aiNodeAnim* node_anim);
+  /** @param anim_time - The time elapsed since the start of this animation.
+    * @param node_anim - The animation node, in which the function should search for a keyframe.*/
+  unsigned findPosition(float anim_time, const aiNodeAnim* node_anim);
 
   /// Returns the index of the currently active rotation keyframe for the given animation and time.
-  /// @param animationTime - The time elapsed since the start of this animation.
-  /// @param node_anim - The animation node, in which the function should search for a keyframe.
-  unsigned findRotation(float animationTime, const aiNodeAnim* node_anim);
+  /** @param anim_time - The time elapsed since the start of this animation.
+    * @param node_anim - The animation node, in which the function should search for a keyframe.*/
+  unsigned findRotation(float anim_time, const aiNodeAnim* node_anim);
 
   /// Returns the index of the currently active scaling keyframe for the given animation and time.
-  /// @param animationTime - The time elapsed since the start of this animation.
-  /// @param node_anim - The animation node, in which the function should search for a keyframe.
-  unsigned findScaling(float animationTime, const aiNodeAnim* node_anim);
+  /** @param anim_time - The time elapsed since the start of this animation.
+    * @param node_anim - The animation node, in which the function should search for a keyframe.*/
+  unsigned findScaling(float anim_time, const aiNodeAnim* node_anim);
 
   /// Returns a linearly interpolated value between the previous and next translation keyframes.
-  /// @param out - Returns the result here.
-  /// @param animationTime - The time elapsed since the start of this animation.
-  /// @param node_anim - The animation node, in which the function should search for the keyframes.
-  void calcInterpolatedPosition(aiVector3D& out, float animTime, const aiNodeAnim* node_anim);
+  /** @param out - Returns the result here.
+    * @param anim_time - The time elapsed since the start of this animation.
+    * @param node_anim - The animation node, in which the function should search for the keyframes. */
+  void calcInterpolatedPosition(aiVector3D& out, float anim_time, const aiNodeAnim* node_anim);
 
   /// Returns a spherically interpolated value (always choosing the short path) between the previous and next rotation keyframes.
-  /// @param out - Returns the result here.
-  /// @param animationTime - The time elapsed since the start of this animation.
-  /// @param node_anim - The animation node, in which the function should search for the keyframes.
-  void calcInterpolatedRotation(aiQuaternion& out, float animTime, const aiNodeAnim* node_anim);
+  /** @param out - Returns the result here.
+    * @param anim_time - The time elapsed since the start of this animation.
+    * @param node_anim - The animation node, in which the function should search for the keyframes. */
+  void calcInterpolatedRotation(aiQuaternion& out, float anim_time, const aiNodeAnim* node_anim);
 
   /// Returns a linearly interpolated value between the previous and next scaling keyframes.
   /** @param out - Returns the result here.
-    * @param animationTime - The time elapsed since the start of this animation.
+    * @param anim_time - The time elapsed since the start of this animation.
     * @param node_anim - The animation node, in which the function should search for the keyframes. */
-  void calcInterpolatedScaling(aiVector3D& out, float animTime, const aiNodeAnim* node_anim);
+  void calcInterpolatedScaling(aiVector3D& out, float anim_time, const aiNodeAnim* node_anim);
 
   /// Returns the animation node in the given animation, referenced by its name.
   /** Returns nullptr if it doesn't find a node with that name,
@@ -174,20 +174,20 @@ private:
     * Also note, that the translation of the root node on the XZ plane is treated differently, that offset isn't
     * baked into the animation, you can get the offset with the offsetSinceLastFrame() function, and you have to
     * externally do the object's movement, as normally it will stay right where it was at the start of the animation.
-    * @param animationTime - The current animation time.
+    * @param anim_time - The current animation time.
     * @param node - The node (bone) whose, and whose child's transformation should be updated. You should call this function with the root node.
     * @param parent_transform - The transformation of the parent node. You should call it with an identity matrix. */
-  void updateBoneTree(float animationTime,
+  void updateBoneTree(float anim_time,
                       const aiNode* node,
                       const glm::mat4& parent_transform = glm::mat4());
 
   /// Does the same thing as readNodeHierarchy, but it is used to create transitions between animations, so it interpolates between four keyframes not two.
-  /** @param prevAnimationTime - The animation time of when, the last animation was interrupted.
-    * @param nextAnimationTime - The current animation time.
+  /** @param prev_animation_time - The animation time of when, the last animation was interrupted.
+    * @param next_animation_time - The current animation time.
     * @param node - The node (bone) whose, and whose child's transformation should be updated. You should call this function with the root node.
     * @param parent_transform - The transformation of the parent node. You should call it with an identity matrix. */
-  void updateBoneTreeInTransition(float prevAnimationTime,
-                                  float nextAnimationTime,
+  void updateBoneTreeInTransition(float prev_animation_time,
+                                  float next_animation_time,
                                   float factor,
                                   const aiNode* node,
                                   const glm::mat4& parent_transform = glm::mat4());

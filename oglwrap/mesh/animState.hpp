@@ -20,7 +20,7 @@ enum AnimFlag {
   MirroredRepeat = 0x3,
 
   /// Mirrors the movement during the animation.
-  /** For example, for a walking with Mirrored flag will cause Moonwalk.
+  /** For example, this flag makes a walk animation become a moonwalk.
     * (The character will be animated as he/she was moving forwards, back
     * he/she actually moves backwards.) */
   Mirrored = 0x4,

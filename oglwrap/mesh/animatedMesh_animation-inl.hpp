@@ -6,36 +6,36 @@
 
 namespace oglwrap {
 
-inline unsigned AnimatedMesh::findPosition(float animationTime, const aiNodeAnim* node_anim) {
+inline unsigned AnimatedMesh::findPosition(float anim_time, const aiNodeAnim* node_anim) {
    // Find the first one that is bigger or equals
    for(unsigned i = 0; i < node_anim->mNumPositionKeys - 1; i++) {
-      if(animationTime <= (float)node_anim->mPositionKeys[i + 1].mTime) {
+      if(anim_time <= (float)node_anim->mPositionKeys[i + 1].mTime) {
          return i;
       }
    }
    // Should never get here
-   throw std::runtime_error("Animation Error - Position keyframe not found");
+   assert(0);
 }
 
-inline unsigned AnimatedMesh::findRotation(float animationTime, const aiNodeAnim* node_anim) {
+inline unsigned AnimatedMesh::findRotation(float anim_time, const aiNodeAnim* node_anim) {
    for(unsigned i = 0; i < node_anim->mNumRotationKeys - 1; i++) {
-      if(animationTime <= (float)node_anim->mRotationKeys[i + 1].mTime) {
+      if(anim_time <= (float)node_anim->mRotationKeys[i + 1].mTime) {
          return i;
       }
    }
-   throw std::runtime_error("Animation Error - Rotation keyframe not found");
+   assert(0);
 }
 
-inline unsigned AnimatedMesh::findScaling(float animationTime, const aiNodeAnim* node_anim) {
+inline unsigned AnimatedMesh::findScaling(float anim_time, const aiNodeAnim* node_anim) {
    for(unsigned i = 0; i < node_anim->mNumScalingKeys - 1; i++) {
-      if(animationTime <= (float)node_anim->mScalingKeys[i + 1].mTime) {
+      if(anim_time <= (float)node_anim->mScalingKeys[i + 1].mTime) {
          return i;
       }
    }
-   throw std::runtime_error("Animation Error - Scaling keyframe not found");
+   assert(0);
 }
 
-inline void AnimatedMesh::calcInterpolatedPosition(aiVector3D& out, float animTime,
+inline void AnimatedMesh::calcInterpolatedPosition(aiVector3D& out, float anim_time,
                                                    const aiNodeAnim* node_anim) {
    const auto& keys = node_anim->mPositionKeys;
    const auto& numKeys = node_anim->mNumPositionKeys;
@@ -43,9 +43,9 @@ inline void AnimatedMesh::calcInterpolatedPosition(aiVector3D& out, float animTi
       out = keys[0].mValue;
       return;
    }
-   size_t i = findPosition(animTime, node_anim);
+   size_t i = findPosition(anim_time, node_anim);
    float deltaTime = keys[i + 1].mTime - keys[i].mTime;
-   float factor = (animTime - (float)keys[i].mTime) / deltaTime;
+   float factor = (anim_time - (float)keys[i].mTime) / deltaTime;
    factor = clamp(factor, 0.0f, 1.0f);
 
    const aiVector3D& start = keys[i].mValue;
@@ -53,7 +53,7 @@ inline void AnimatedMesh::calcInterpolatedPosition(aiVector3D& out, float animTi
    out = interpolate(start, end, factor);
 }
 
-inline void AnimatedMesh::calcInterpolatedRotation(aiQuaternion& out, float animTime,
+inline void AnimatedMesh::calcInterpolatedRotation(aiQuaternion& out, float anim_time,
                                                    const aiNodeAnim* node_anim) {
    const auto& keys = node_anim->mRotationKeys;
    const auto& numKeys = node_anim->mNumRotationKeys;
@@ -61,18 +61,18 @@ inline void AnimatedMesh::calcInterpolatedRotation(aiQuaternion& out, float anim
       out = keys[0].mValue;
       return;
    }
-   size_t i = findRotation(animTime, node_anim);
+   size_t i = findRotation(anim_time, node_anim);
    float deltaTime = keys[i + 1].mTime - keys[i].mTime;
-   float factor = (animTime - (float)keys[i].mTime) / deltaTime;
+   float factor = (anim_time - (float)keys[i].mTime) / deltaTime;
    factor = clamp(factor, 0.0f, 1.0f);
 
    const aiQuaternion& start = keys[i].mValue;
    const aiQuaternion& end   = keys[i + 1].mValue;
-   aiQuaternion::Interpolate(out, start, end, factor); // spherical interpolation
+   aiQuaternion::Interpolate(out, start, end, factor);
    out = out.Normalize();
 }
 
-inline void AnimatedMesh::calcInterpolatedScaling(aiVector3D& out, float animTime,
+inline void AnimatedMesh::calcInterpolatedScaling(aiVector3D& out, float anim_time,
                                                   const aiNodeAnim* node_anim) {
    const auto& keys = node_anim->mScalingKeys;
    const auto& numKeys = node_anim->mNumScalingKeys;
@@ -80,9 +80,9 @@ inline void AnimatedMesh::calcInterpolatedScaling(aiVector3D& out, float animTim
       out = keys[0].mValue;
       return;
    }
-   size_t i = findRotation(animTime, node_anim);
+   size_t i = findRotation(anim_time, node_anim);
    float deltaTime = keys[i + 1].mTime - keys[i].mTime;
-   float factor = (animTime - (float)keys[i].mTime) / deltaTime;
+   float factor = (anim_time - (float)keys[i].mTime) / deltaTime;
    factor = clamp(factor, 0.0f, 1.0f);
 
    const aiVector3D& start = keys[i].mValue;
@@ -101,7 +101,7 @@ inline const aiNodeAnim* AnimatedMesh::findNodeAnim(const aiAnimation* animation
    return nullptr;
 }
 
-inline void AnimatedMesh::updateBoneTree(float animationTime,
+inline void AnimatedMesh::updateBoneTree(float anim_time,
                                          const aiNode* node,
                                          const glm::mat4& parent_transform) {
    std::string node_name(node->mName.data);
@@ -112,15 +112,15 @@ inline void AnimatedMesh::updateBoneTree(float animationTime,
    if(node_anim) {
       // Interpolate the transformations and get the matrices
       aiVector3D scaling;
-      calcInterpolatedScaling(scaling, animationTime, node_anim);
+      calcInterpolatedScaling(scaling, anim_time, node_anim);
       glm::mat4 scalingM = glm::scale(glm::mat4(), glm::vec3(scaling.x, scaling.y, scaling.z));
 
       aiQuaternion rotation;
-      calcInterpolatedRotation(rotation, animationTime, node_anim);
+      calcInterpolatedRotation(rotation, anim_time, node_anim);
       glm::mat4 rotationM = convertMatrix(rotation.GetMatrix());
 
       aiVector3D translation;
-      calcInterpolatedPosition(translation, animationTime, node_anim);
+      calcInterpolatedPosition(translation, anim_time, node_anim);
       glm::mat4 translationM;
 
       if(node_name == skinning_data_.root_bone) {
@@ -151,45 +151,46 @@ inline void AnimatedMesh::updateBoneTree(float animationTime,
       }
    }
    for(unsigned i = 0; i < node->mNumChildren; i++) {
-      updateBoneTree(animationTime, node->mChildren[i], global_transform);
+      updateBoneTree(anim_time, node->mChildren[i], global_transform);
    }
 }
 
-inline void AnimatedMesh::updateBoneTreeInTransition(float prevAnimationTime,
-                                                     float nextAnimationTime,
+inline void AnimatedMesh::updateBoneTreeInTransition(float prev_anim_time,
+                                                     float next_anim_time,
                                                      float factor,
                                                      const aiNode* node,
                                                      const glm::mat4& parent_transform) {
    std::string node_name(node->mName.data);
-   const aiAnimation* prevAnimation = last_anim_.handle->mAnimations[0];
-   const aiAnimation* nextAnimation = current_anim_.handle->mAnimations[0];
-   const aiNodeAnim* prevNodeAnim = findNodeAnim(prevAnimation, node_name);
-   const aiNodeAnim* nextNodeAnim = findNodeAnim(nextAnimation, node_name);
+   const aiAnimation* prev_animation = last_anim_.handle->mAnimations[0];
+   const aiAnimation* next_animation = current_anim_.handle->mAnimations[0];
+   const aiNodeAnim* prev_node_anim = findNodeAnim(prev_animation, node_name);
+   const aiNodeAnim* next_node_anim = findNodeAnim(next_animation, node_name);
 
    glm::mat4 local_transform = convertMatrix(node->mTransformation);
 
-   if(prevNodeAnim && nextNodeAnim) {
+   if(prev_node_anim && next_node_anim) {
       // Interpolate the transformations and get the matrices
-      aiVector3D prevScaling, nextScaling;
-      calcInterpolatedScaling(prevScaling, prevAnimationTime, prevNodeAnim);
-      calcInterpolatedScaling(nextScaling, nextAnimationTime, nextNodeAnim);
-      aiVector3D scaling = interpolate(prevScaling, nextScaling, factor);
+      aiVector3D prev_scaling, next_scaling;
+      calcInterpolatedScaling(prev_scaling, prev_anim_time, prev_node_anim);
+      calcInterpolatedScaling(next_scaling, next_anim_time, next_node_anim);
+      aiVector3D scaling = interpolate(prev_scaling, next_scaling, factor);
       glm::mat4 scalingM = glm::scale(glm::mat4(), glm::vec3(scaling.x, scaling.y, scaling.z));
 
-      aiQuaternion prevRotation, nextRotation, rotation;
-      calcInterpolatedRotation(prevRotation, prevAnimationTime, prevNodeAnim);
-      calcInterpolatedRotation(nextRotation, nextAnimationTime, nextNodeAnim);
-      // spherical interpolation, and it always chooses the shorter path (exactly what we want).
-      aiQuaternion::Interpolate(rotation, prevRotation, nextRotation, factor);
+      aiQuaternion prev_rotation, next_rotation, rotation;
+      calcInterpolatedRotation(prev_rotation, prev_anim_time, prev_node_anim);
+      calcInterpolatedRotation(next_rotation, next_anim_time, next_node_anim);
+      
+      // Spherical linear interpolation, that chooses the shorter path.
+      aiQuaternion::Interpolate(rotation, prev_rotation, next_rotation, factor);
       glm::mat4 rotationM = convertMatrix(rotation.GetMatrix());
 
-      aiVector3D prevTranslation, nextTranslation;
-      calcInterpolatedPosition(prevTranslation, prevAnimationTime, prevNodeAnim);
-      calcInterpolatedPosition(nextTranslation, nextAnimationTime, nextNodeAnim);
-      aiVector3D translation = interpolate(prevTranslation, nextTranslation, factor);
+      aiVector3D prev_translation, next_translation;
+      calcInterpolatedPosition(prev_translation, prev_anim_time, prev_node_anim);
+      calcInterpolatedPosition(next_translation, next_anim_time, next_node_anim);
+      aiVector3D translation = interpolate(prev_translation, next_translation, factor);
       glm::mat4 translationM;
       if(node_name == skinning_data_.root_bone) {
-         current_anim_.offset = glm::vec3(nextTranslation.x, 0, nextTranslation.z);
+         current_anim_.offset = glm::vec3(next_translation.x, 0, next_translation.z);
          if(current_anim_.flags & AnimFlag::Mirrored) {
             current_anim_.offset *= -1;
          }
@@ -217,7 +218,7 @@ inline void AnimatedMesh::updateBoneTreeInTransition(float prevAnimationTime,
    }
    for(unsigned i = 0; i < node->mNumChildren; i++) {
       updateBoneTreeInTransition(
-         prevAnimationTime, nextAnimationTime, factor, node->mChildren[i], global_transform
+         prev_anim_time, next_anim_time, factor, node->mChildren[i], global_transform
       );
    }
 }
@@ -231,26 +232,26 @@ inline void AnimatedMesh::updateBoneInfo(float time) {
    float last_ticks_per_second = last_anim_.handle->mAnimations[0]->mTicksPerSecond > 1e-10 ? // != 0
                                  last_anim_.handle->mAnimations[0]->mTicksPerSecond : 24.0f;
    float last_time_in_ticks = anim_meta_info_.last_period_time * (last_anim_.speed * last_ticks_per_second);
-   float last_animation_time;
+   float last_anim_time;
    if(last_anim_.flags & AnimFlag::Repeat) {
-      last_animation_time = fmod(last_time_in_ticks, (float)last_anim_.handle->mAnimations[0]->mDuration);
+      last_anim_time = fmod(last_time_in_ticks, (float)last_anim_.handle->mAnimations[0]->mDuration);
    } else {
-      last_animation_time = std::min(last_time_in_ticks, (float)last_anim_.handle->mAnimations[0]->mDuration);
+      last_anim_time = std::min(last_time_in_ticks, (float)last_anim_.handle->mAnimations[0]->mDuration);
    }
    if(last_anim_.flags & AnimFlag::Backwards) {
-      last_animation_time = (float)last_anim_.handle->mAnimations[0]->mDuration - last_animation_time;
+      last_anim_time = (float)last_anim_.handle->mAnimations[0]->mDuration - last_anim_time;
    }
 
    float current_ticks_per_second = current_anim_.handle->mAnimations[0]->mTicksPerSecond > 1e-10 ? // != 0
                                     current_anim_.handle->mAnimations[0]->mTicksPerSecond : 24.0f;
    float current_time_in_ticks =
       (time - anim_meta_info_.end_of_last_anim) * (current_anim_.speed * current_ticks_per_second);
-   float current_animation_time;
+   float current_anim_time;
    if(current_anim_.flags & AnimFlag::Repeat) {
-      current_animation_time = fmod(current_time_in_ticks, (float)current_anim_.handle->mAnimations[0]->mDuration);
+      current_anim_time = fmod(current_time_in_ticks, (float)current_anim_.handle->mAnimations[0]->mDuration);
    } else {
       if(current_time_in_ticks < (float)current_anim_.handle->mAnimations[0]->mDuration) {
-         current_animation_time = current_time_in_ticks;
+         current_anim_time = current_time_in_ticks;
       } else {
          animationEnded(time);
          updateBoneInfo(time);
@@ -259,7 +260,7 @@ inline void AnimatedMesh::updateBoneInfo(float time) {
    }
 
    if(current_anim_.flags & AnimFlag::Backwards) {
-      current_animation_time = (float)current_anim_.handle->mAnimations[0]->mDuration - current_animation_time;
+      current_anim_time = (float)current_anim_.handle->mAnimations[0]->mDuration - current_anim_time;
    }
 
    bool in_transition = anim_meta_info_.transition_time < time - anim_meta_info_.end_of_last_anim;
@@ -267,10 +268,10 @@ inline void AnimatedMesh::updateBoneInfo(float time) {
 
    if(in_transition) {
       // Normal animation
-      updateBoneTree(current_animation_time, scene_->mRootNode);
+      updateBoneTree(current_anim_time, scene_->mRootNode);
    } else {
       // Transition between two animations.
-      updateBoneTreeInTransition(last_animation_time, current_animation_time,
+      updateBoneTreeInTransition(last_anim_time, current_anim_time,
                                  transition_factor, scene_->mRootNode);
    }
 
@@ -304,8 +305,7 @@ inline void AnimatedMesh::uploadBoneInfo(LazyUniform<glm::mat4>& bones) {
   }
 }
 
-inline void AnimatedMesh::updateAndUploadBoneInfo(float time,
-                                                  LazyUniform<glm::mat4>& bones) {
+inline void AnimatedMesh::updateAndUploadBoneInfo(float time, LazyUniform<glm::mat4>& bones) {
   updateBoneInfo(time);
   uploadBoneInfo(bones);
 }
