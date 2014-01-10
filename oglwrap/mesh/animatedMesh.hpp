@@ -236,18 +236,15 @@ private:
   /// The callback functor
   AnimationEndedListener *anim_ended_callback_;
 
-  /**
-   * @brief The function that changes animations when they end.
-   * @param current_time The current time
-   */
+  /// The function that changes animations when they end.
+  /** @param current_time The current time */
   void animationEnded(float current_time);
 
 public:
-  /**
-   * Sets a callback functor that is called everytime an animation ends, 
+ /// Sets a callback functor
+ /** Sets a callback functor that is called everytime an animation ends, 
    * and is resposible for choosing the next animation.
-   * @param listener - The functor to use for the callbacks.
-   */
+   * @param listener - The functor to use for the callbacks. */
   void setAnimationEndedCallback(AnimationEndedListener* listener) {
     anim_ended_callback_ = listener;
   }

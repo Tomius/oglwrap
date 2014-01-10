@@ -326,7 +326,7 @@ inline void Mesh::bCuboid(glm::vec3& center, glm::vec3& edges) const {
   }
 
   center = (mins + maxes) / 2.0f;
-  center = glm::vec3(worldTransform() * glm::vec4(center, 1));
+  //center = glm::vec3(worldTransform() * glm::vec4(center, 1));
   edges = glm::abs(maxes - mins);
 }
 
