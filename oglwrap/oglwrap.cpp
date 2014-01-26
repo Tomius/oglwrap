@@ -1,34 +1,20 @@
 /** @file oglwrap.cpp
-    @brief A test file.
+    @brief The file to link if OGLWRAP_HEADER_ONLY is 0. 
+    It might grant a little speed boost.
 */
 
+#define OGLWRAP_HEADER_ONLY 0
+#include "oglwrap/glew.hpp"
+#include "oglwrap/oglwrap.hpp"
 
-#include <SFML/Window.hpp>
-#include <GL/glew.h>
-#include "oglwrap.hpp"
-#include "shapes/cube.hpp"
-#include "shapes/fullScreenRect.hpp"
-#include "mesh/mesh.hpp"
+namespace oglwrap {
 
-using namespace oglwrap;
+DebugOutput debug_output;
+#if OGLWRAP_DEBUG
+  GLenum OGLWRAP_LAST_ERROR = GL_NO_ERROR;
+#endif
 
-UniformBuffer buf;
-
-int main() {
-    sf::Window window(
-        sf::VideoMode(800, 600), "Debug Context",
-        sf::Style::Default, sf::ContextSettings(24, 8, 0, 3, 3)
-    );
-    assert(glewInit() == GLEW_OK);
-
-    buf.bindRange(2, -1, -1);
-    buf.data(-1, (void*)0);
-
-    Texture2D tex;
-    tex.bind();
-    tex.generateMipmap();
-
-    return 0;
 }
+
 
 

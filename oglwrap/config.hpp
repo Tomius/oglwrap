@@ -8,6 +8,20 @@
 /// A macro to sign functions that are bind-checked in their signature.
 #define BIND_CHECKED
 
+/// Oglwrap can be forced to load glew. 
+#ifndef OGLWRAP_USE_GLEW
+  #define OGLWRAP_USE_GLEW 0
+#endif
+
+#if OGLWRAP_USE_GLEW
+  #include "glew.hpp"
+#endif
+
+// Oglwrap works in header only mode by default, but with linking oglwrap.cpp, it can be a bit faster.
+#ifndef OGLWRAP_HEADER_ONLY
+    #define OGLWRAP_HEADER_ONLY 1
+#endif
+
 /// A macro for internal use only
 #ifdef GL_LINE
   #define OGLWRAP_OPENGL_INCLUDED 1
@@ -38,7 +52,7 @@
 #endif
 
 /// If set to true, disable the oglwrap debug output.
-/** Setting OGLWRAP_DEBUG flag to true will override this flag, and will turn the debug output off */
+/** Setting OGLWRAP_DEBUG flag to false will override this flag, and will also turn the debug output off */
 #ifndef OGLWRAP_DISABLE_DEBUG_OUTPUT
   #define OGLWRAP_DISABLE_DEBUG_OUTPUT 0
 #endif
@@ -53,15 +67,6 @@
   * systems, but are definitely faster on most configurations. */
 #ifndef OGLWRAP_PORTABILITY_MODE
   #define OGLWRAP_PORTABILITY_MODE 1
-#endif
-
-/// Oglwrap can be forced to load glew. 
-#ifndef OGLWRAP_USE_GLEW
-  #define OGLWRAP_USE_GLEW 0
-#endif
-
-#if OGLWRAP_USE_GLEW
-  #include "glew.hpp"
 #endif
 
 #endif // OGLWRAP_CONFIG_HPP_
