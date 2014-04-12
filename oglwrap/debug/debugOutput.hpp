@@ -12,7 +12,7 @@
 #include <cstring>
 #include <fstream>
 #include <sstream>
-   
+
 #include "../config.hpp"
 
 namespace oglwrap {
@@ -25,11 +25,17 @@ inline void defaultCallback(std::string errorMessage) {
 #if OGLWRAP_DEBUG
 
 /// A global variable storing the last OpenGL error.
-#if OGLWRAP_HEADER_ONLY
-  static GLenum OGLWRAP_LAST_ERROR = GL_NO_ERROR;
+#if OGLWRAP_INSTATIATE_TEMPLATES
+  // Yeah i know, a global variable is not a template, whatever...
+  GLenum OGLWRAP_LAST_ERROR = GL_NO_ERROR;
 #else
-  extern GLenum OGLWRAP_LAST_ERROR;
+  #if OGLWRAP_HEADER_ONLY
+    static GLenum OGLWRAP_LAST_ERROR = GL_NO_ERROR;
+  #else
+    extern GLenum OGLWRAP_LAST_ERROR;
+  #endif
 #endif
+
 
 #if !OGLWRAP_DISABLE_DEBUG_OUTPUT
 #define OGLWRAP_GET_FILENAME() __FILE__

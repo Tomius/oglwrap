@@ -31,16 +31,18 @@
 #include "glm/glm/gtc/type_ptr.hpp"
 #include "glm/glm/gtc/matrix_transform.hpp"
 
-// Own headers
+// Commonly used oglwrap headers
 #include "shader.hpp"
 #include "uniform.hpp"
 #include "buffer.hpp"
 #include "vertexAttrib.hpp"
 #include "global.hpp"
-#include "texture.hpp"
-#include "framebuffer.hpp"
-#include "transfeedback.hpp"
 
-#undef BIND_CHECKED
+// Optional headers
+#if OGLWRAP_INCLUDE_EVERYTHING
+	#include "texture.hpp"
+	#include "framebuffer.hpp"
+	#include "transfeedback.hpp"
+#endif
 
 #endif // OGLWRAP_OGLWRAP_HPP_

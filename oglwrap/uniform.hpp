@@ -24,18 +24,17 @@ template<class GLtype>
 class UniformObject {
 protected:
   GLuint location_; ///< The C handle for the uniform's location
+  Program *program_; ///< The program the uniform is in.
 
-  /// The handle defaults to INVALID_LOCATION
-  UniformObject()
-    : location_(INVALID_LOCATION) { }
-
-  /// Sets the location handle.
-  UniformObject(GLuint location)
-    : location_(location) { }
+  /// Creates a UniformObject
+  /// @param program - The program in which the uniform is used
+  /// @param location - The location of the uniform in the program
+  UniformObject(Program* program, GLuint location=INVALID_LOCATION)
+    : location_(location), program_(program) { }
 
   /// Sets the uniform to a GLtype variable's value.
   /** It finds the appropriate glUniform* using template specialization.
-    * If it is called with not an OpenGL type, it throws std::invalid argument.
+    * If it is called with not an OpenGL type, it throws std::invalid_argument.
     * @param value - The value to set the uniform.
     * @see glUniform* */
   void set(const GLtype& value) { // See the specializations at the end of this file.
@@ -44,11 +43,29 @@ protected:
 
   /// Sets the uniform to a GLtype variable's value.
   /** It finds the appropriate glUniform* using template specialization.
-    * If it is called with not an OpenGL type, it throws std::invalid argument.
+    * If it is called with not an OpenGL type, it throws std::invalid_argument.
     * @param value - The value to set the uniform.
     * @see glUniform* */
   void operator=(const GLtype& value) {
     set(value);
+  }
+
+  /// Gets the current value of the uniform.
+  /** It finds the appropriate glGetUniform* using template specialization.
+    * If it is called with not an OpenGL type, it throws std::invalid_argument.
+    * @return The current value of the uniform.
+    * @see glUniform* */
+  GLtype get() const {
+    throw std::invalid_argument("Trying to set a uniform to a value that is not an OpenGL type.");
+  }
+
+  /// Gets the current value of the uniform.
+  /** It finds the appropriate glGetUniform* using template specialization.
+    * If it is called with not an OpenGL type, it throws std::invalid_argument.
+    * @return The current value of the uniform.
+    * @see glUniform* */
+  operator GLtype() const {
+    return get();
   }
 
 public:
@@ -69,17 +86,19 @@ class Uniform : public UniformObject<GLtype> {
 public:
   /// Queries a variable named 'identifier' in the 'program', and stores it's location.
   /** It writes to stderr if the query didn't work.
-    * @param program - The program to seek the uniform in. Will call program.use().
+    * @param program - The program to seek the uniform in. May call program.use().
     * @param identifier - The name of the uniform that is to be set.
     * @see glGetUniformLocation */
   Uniform(Program& program, const std::string& identifier)
-    :identifier_(identifier) {
+      : UniformObject<GLtype>(&program)
+      , identifier_(identifier) {
     CHECK_ACTIVE_PROGRAM(program);
 
     UniformObject<GLtype>::location_ = gl(GetUniformLocation(program.expose(), identifier_.c_str()));
 
     if(UniformObject<GLtype>::location_ == INVALID_LOCATION) {
-      debug_output.callback("Error getting the location of uniform '" + identifier_ + "'");
+      debug_output.callback("Error getting the location of uniform '" + identifier_ +
+        "' in the program using the following shaders:\n" + program.getShaderNames());
     }
   }
 
@@ -94,7 +113,8 @@ public:
       GL_INVALID_OPERATION,
       "Uniform::set is called for uniform '" + identifier_ + "' but the uniform"
       " template parameter and the actual uniform type mismatches, "
-      "or there is no current program object."
+      "or there is no current program object. The error happened in the program"
+      " using the following shaders:\n" + UniformObject<GLtype>::program_->getShaderNames()
     )
   }
 
@@ -104,6 +124,33 @@ public:
     * @see glUniform* */
   void operator=(const GLtype& value) {
     set(value);
+  }
+
+  /// Gets the current value of the uniform.
+  /** It finds the appropriate glGetUniform* using template specialization.
+    * If it is called with not an OpenGL type, it throws std::invalid_argument.
+    * @return The current value of the uniform.
+    * @see glUniform* */
+  GLtype get() const {
+    GLtype val = glfunc(UniformObject<GLtype>::get());
+
+    OGLWRAP_PRINT_ERROR(
+      GL_INVALID_OPERATION,
+      "Uniform::get is called for uniform '" + identifier_ + "' but the uniform"
+      " template parameter and the actual uniform type mismatches, "
+      "or there is no current program object. The error happened in the program"
+      " using the following shaders:\n" + UniformObject<GLtype>::program_->getShaderNames()
+    )
+    return val;
+  }
+
+  /// Gets the current value of the uniform.
+  /** It finds the appropriate glGetUniform* using template specialization.
+    * If it is called with not an OpenGL type, it throws std::invalid_argument.
+    * @return The current value of the uniform.
+    * @see glUniform* */
+  operator GLtype() const {
+    return get();
   }
 };
 
@@ -125,7 +172,8 @@ public:
     * @param identifier - The name of the uniform that is to be set.
     * @param idx - The index of the element in the uniform array.
     * @see glGetUniformLocation */
-  IndexedUniform(Program& program, const std::string& identifier, size_t idx) {
+  IndexedUniform(Program& program, const std::string& identifier, size_t idx)
+      : UniformObject<GLtype>(&program) {
     std::stringstream id;
     id << identifier << '[' << idx << ']';
     identifier_ = id.str();
@@ -135,7 +183,8 @@ public:
     UniformObject<GLtype>::location_ = gl(GetUniformLocation(program.expose(), id.str().c_str()));
 
     if(UniformObject<GLtype>::location_ == INVALID_LOCATION) {
-      debug_output.callback("Error getting the location of uniform '" + id.str() + "'");
+      debug_output.callback("Error getting the location of uniform '" + identifier_ +
+        "' in the program using the following shaders:\n" + program.getShaderNames());
     }
   }
 
@@ -150,7 +199,8 @@ public:
       GL_INVALID_OPERATION,
       "Uniform::set is called for uniform '" + identifier_ + "' but the uniform"
       " template parameter and the actual uniform type mismatches, "
-      "or there is no current program object."
+      "or there is no current program object. The error happened in the program"
+      " using the following shaders:\n" + UniformObject<GLtype>::program_->getShaderNames()
     )
   }
 
@@ -160,6 +210,33 @@ public:
     * @see glUniform* */
   void operator=(const GLtype& value) {
     set(value);
+  }
+
+  /// Gets the current value of the uniform.
+  /** It finds the appropriate glGetUniform* using template specialization.
+    * If it is called with not an OpenGL type, it throws std::invalid_argument.
+    * @return The current value of the uniform.
+    * @see glUniform* */
+  GLtype get() const {
+    GLtype val = glfunc(UniformObject<GLtype>::get());
+
+    OGLWRAP_PRINT_ERROR(
+      GL_INVALID_OPERATION,
+      "Uniform::get is called for uniform '" + identifier_ + "' but the uniform"
+      " template parameter and the actual uniform type mismatches, "
+      "or there is no current program object. The error happened in the program"
+      " using the following shaders:\n" + UniformObject<GLtype>::program_->getShaderNames()
+    )
+    return val;
+  }
+
+  /// Gets the current value of the uniform.
+  /** It finds the appropriate glGetUniform* using template specialization.
+    * If it is called with not an OpenGL type, it throws std::invalid_argument.
+    * @return The current value of the uniform.
+    * @see glUniform* */
+  operator GLtype() const {
+    return get();
   }
 };
 
@@ -178,7 +255,6 @@ template<typename GLtype>
   * to write program's and the uniform's name once, no matter how many
   * times you set it. */
 class LazyUniform : public UniformObject<GLtype> {
-  Program& program_; ///< The program in which the uniform should be set.
   const std::string identifier_; ///< The uniform's name.
   bool firstCall_;
 public:
@@ -188,8 +264,7 @@ public:
     * @param program - The program in which the uniform is to be set.
     * @param identifier - The uniform's name. */
   LazyUniform(Program& program, const std::string& identifier)
-    : UniformObject<GLtype>(INVALID_LOCATION)
-    , program_(program)
+    : UniformObject<GLtype>(&program)
     , identifier_(identifier)
     , firstCall_(true) {
   }
@@ -199,15 +274,16 @@ public:
     * At every call it sets the uniform to the specified value.
     * @param value - Specifies the new value to be used for the uniform variable. */
   void set(const GLtype& value) {
-    CHECK_ACTIVE_PROGRAM(program_);
+    CHECK_ACTIVE_PROGRAM((*UniformObject<GLtype>::program_));
 
     // Get the uniform's location only at the first set call.
     if(firstCall_) {
-      UniformObject<GLtype>::location_ = gl(GetUniformLocation(program_.expose(), identifier_.c_str()));
+      UniformObject<GLtype>::location_ = gl(GetUniformLocation(UniformObject<GLtype>::program_->expose(), identifier_.c_str()));
 
       // Check if it worked.
       if(UniformObject<GLtype>::location_ == INVALID_LOCATION) {
-        debug_output.callback("Error getting the location of uniform '" + identifier_ + "'");
+        debug_output.callback("Error getting the location of uniform '" + identifier_ +
+        "' in the program using the following shaders:\n" + UniformObject<GLtype>::program_->getShaderNames());
       }
 
       firstCall_ = false;
@@ -217,9 +293,10 @@ public:
 
     OGLWRAP_PRINT_ERROR(
       GL_INVALID_OPERATION,
-      "Uniform::set is called for uniform '" + identifier_ + "' but the "
-      "uniform template parameter and the actual uniform type mismatches, "
-      "or there is no current program object."
+      "Uniform::set is called for uniform '" + identifier_ + "' but the uniform"
+      " template parameter and the actual uniform type mismatches, "
+      "or there is no current program object. The error happened in the program"
+      " using the following shaders:\n" + UniformObject<GLtype>::program_->getShaderNames()
     )
   }
 
@@ -232,11 +309,53 @@ public:
     set(value);
   }
 
+  /// Gets the current value of the uniform.
+  /** It finds the appropriate glGetUniform* using template specialization.
+    * If it is called with not an OpenGL type, it throws std::invalid_argument.
+    * @return The current value of the uniform.
+    * @see glUniform* */
+  GLtype get() {
+    CHECK_ACTIVE_PROGRAM((*UniformObject<GLtype>::program_));
+
+    // Get the uniform's location only at the first set call.
+    if(firstCall_) {
+      UniformObject<GLtype>::location_ = gl(GetUniformLocation(UniformObject<GLtype>::program_->expose(), identifier_.c_str()));
+
+      // Check if it worked.
+      if(UniformObject<GLtype>::location_ == INVALID_LOCATION) {
+        debug_output.callback("Error getting the location of uniform '" + identifier_ +
+        "' in the program using the following shaders:\n" + UniformObject<GLtype>::program_->getShaderNames());
+      }
+
+      firstCall_ = false;
+    }
+
+    GLtype val = glfunc(UniformObject<GLtype>::get());
+
+    OGLWRAP_PRINT_ERROR(
+      GL_INVALID_OPERATION,
+      "Uniform::get is called for uniform '" + identifier_ + "' but the uniform"
+      " template parameter and the actual uniform type mismatches, "
+      "or there is no current program object. The error happened in the program"
+      " using the following shaders:\n" + UniformObject<GLtype>::program_->getShaderNames()
+    )
+    return val;
+  }
+
+  /// Gets the current value of the uniform.
+  /** It finds the appropriate glGetUniform* using template specialization.
+    * If it is called with not an OpenGL type, it throws std::invalid_argument.
+    * @return The current value of the uniform.
+    * @see glUniform* */
+  operator GLtype() {
+    return get();
+  }
+
   /// Is used to set an element of a uniform array.
   /** For example if you have a mat4 myMatrix[10]; and you created a lazyUniform
     * myMatUnif(prog, "myMatrix), you can call myMatUnif[5].set() to set myMatrix[5]. */
   IndexedUniform<GLtype> operator[](size_t idx) const {
-    return IndexedUniform<GLtype>(program_, identifier_, idx);
+    return IndexedUniform<GLtype>(*UniformObject<GLtype>::program_, identifier_, idx);
   }
 };
 
@@ -398,6 +517,198 @@ inline void UniformObject<glm::dmat4>::set(const glm::dmat4& mat) {
   glUniformMatrix4dv(location_, 1, GL_FALSE, glm::value_ptr(mat));
 }
 #endif // glUniformMatrix4dv
+
+
+// -------======{[ UniformObject::get specializations ]}======-------
+
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetUniformfv)
+template<>
+inline GLfloat UniformObject<GLfloat>::get() const {
+  GLfloat value;
+  glGetUniformfv(program_->expose(), location_, &value);
+  return value;
+}
+
+template<>
+inline glm::vec2 UniformObject<glm::vec2>::get() const {
+  glm::vec2 value;
+  glGetUniformfv(program_->expose(), location_, glm::value_ptr(value));
+  return value;
+}
+
+template<>
+inline glm::vec3 UniformObject<glm::vec3>::get() const {
+  glm::vec3 value;
+  glGetUniformfv(program_->expose(), location_, glm::value_ptr(value));
+  return value;
+}
+
+template<>
+inline glm::vec4 UniformObject<glm::vec4>::get() const {
+  glm::vec4 value;
+  glGetUniformfv(program_->expose(), location_, glm::value_ptr(value));
+  return value;
+}
+
+template<>
+inline glm::mat2 UniformObject<glm::mat2>::get() const {
+  glm::mat2 value;
+  glGetUniformfv(program_->expose(), location_, glm::value_ptr(value));
+  return value;
+}
+
+template<>
+inline glm::mat3 UniformObject<glm::mat3>::get() const {
+  glm::mat3 value;
+  glGetUniformfv(program_->expose(), location_, glm::value_ptr(value));
+  return value;
+}
+
+template<>
+inline glm::mat4 UniformObject<glm::mat4>::get() const {
+  glm::mat4 value;
+  glGetUniformfv(program_->expose(), location_, glm::value_ptr(value));
+  return value;
+}
+#endif // glGetUniformfv
+
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetUniformdv)
+template<>
+inline GLdouble UniformObject<GLdouble>::get() const {
+  GLdouble value;
+  glGetUniformdv(program_->expose(), location_, &value);
+  return value;
+}
+
+template<>
+inline glm::dvec2 UniformObject<glm::dvec2>::get() const {
+  glm::dvec2 value;
+  glGetUniformdv(program_->expose(), location_, glm::value_ptr(value));
+  return value;
+}
+
+template<>
+inline glm::dvec3 UniformObject<glm::dvec3>::get() const {
+  glm::dvec3 value;
+  glGetUniformdv(program_->expose(), location_, glm::value_ptr(value));
+  return value;
+}
+
+template<>
+inline glm::dvec4 UniformObject<glm::dvec4>::get() const {
+  glm::dvec4 value;
+  glGetUniformdv(program_->expose(), location_, glm::value_ptr(value));
+  return value;
+}
+
+template<>
+inline glm::dmat2 UniformObject<glm::dmat2>::get() const {
+  glm::dmat2 value;
+  glGetUniformdv(program_->expose(), location_, glm::value_ptr(value));
+  return value;
+}
+
+template<>
+inline glm::dmat3 UniformObject<glm::dmat3>::get() const {
+  glm::dmat3 value;
+  glGetUniformdv(program_->expose(), location_, glm::value_ptr(value));
+  return value;
+}
+
+template<>
+inline glm::dmat4 UniformObject<glm::dmat4>::get() const {
+  glm::dmat4 value;
+  glGetUniformdv(program_->expose(), location_, glm::value_ptr(value));
+  return value;
+}
+#endif // glGetUniformdv
+
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetUniformiv)
+template<>
+inline GLint UniformObject<GLint>::get() const {
+  GLint value;
+  glGetUniformiv(program_->expose(), location_, &value);
+  return value;
+}
+
+template<>
+inline glm::ivec2 UniformObject<glm::ivec2>::get() const {
+  glm::ivec2 value;
+  glGetUniformiv(program_->expose(), location_, glm::value_ptr(value));
+  return value;
+}
+
+template<>
+inline glm::ivec3 UniformObject<glm::ivec3>::get() const {
+  glm::ivec3 value;
+  glGetUniformiv(program_->expose(), location_, glm::value_ptr(value));
+  return value;
+}
+
+template<>
+inline glm::ivec4 UniformObject<glm::ivec4>::get() const {
+  glm::ivec4 value;
+  glGetUniformiv(program_->expose(), location_, glm::value_ptr(value));
+  return value;
+}
+#endif // glGetUniformiv
+
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetUniformuiv)
+template<>
+inline GLuint UniformObject<GLuint>::get() const {
+  GLuint value;
+  glGetUniformuiv(program_->expose(), location_, &value);
+  return value;
+}
+
+template<>
+inline glm::uvec2 UniformObject<glm::uvec2>::get() const {
+  glm::uvec2 value;
+  glGetUniformuiv(program_->expose(), location_, glm::value_ptr(value));
+  return value;
+}
+
+template<>
+inline glm::uvec3 UniformObject<glm::uvec3>::get() const {
+  glm::uvec3 value;
+  glGetUniformuiv(program_->expose(), location_, glm::value_ptr(value));
+  return value;
+}
+
+template<>
+inline glm::uvec4 UniformObject<glm::uvec4>::get() const {
+  glm::uvec4 value;
+  glGetUniformuiv(program_->expose(), location_, glm::value_ptr(value));
+  return value;
+}
+#endif // glGetUniformuiv
+
+// Explicit instantiate just the common ones.
+#if OGLWRAP_INSTATIATE_TEMPLATES
+  template class Uniform<GLint>;
+  template class Uniform<glm::vec3>;
+  template class Uniform<glm::vec4>;
+  template class Uniform<glm::mat3>;
+  template class Uniform<glm::mat4>;
+  template class LazyUniform<GLint>;
+  template class LazyUniform<glm::vec3>;
+  template class LazyUniform<glm::vec4>;
+  template class LazyUniform<glm::mat3>;
+  template class LazyUniform<glm::mat4>;
+#else
+  #if !OGLWRAP_HEADER_ONLY
+    extern template class Uniform<GLint>;
+    extern template class Uniform<glm::vec3>;
+    extern template class Uniform<glm::vec4>;
+    extern template class Uniform<glm::mat3>;
+    extern template class Uniform<glm::mat4>;
+    extern template class LazyUniform<GLint>;
+    extern template class LazyUniform<glm::vec3>;
+    extern template class LazyUniform<glm::vec4>;
+    extern template class LazyUniform<glm::mat3>;
+    extern template class LazyUniform<glm::mat4>;
+  #endif
+#endif
 
 #endif // glGetUniformLocation
 } // namespace oglwrap

@@ -270,6 +270,15 @@ public:
   * but only when VertexAttribArray::Pointer​ is called.
   * @see GL_ARRAY_BUFFER */
 typedef BufferObject<BufferType::Array> ArrayBuffer;
+
+#if OGLWRAP_INSTATIATE_TEMPLATES
+  template class BufferObject<BufferType::Array>;
+#else
+  #if !OGLWRAP_HEADER_ONLY
+    extern template class BufferObject<BufferType::Array>;
+  #endif
+#endif
+
 #endif // GL_ARRAY_BUFFER
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_ELEMENT_ARRAY_BUFFER)
@@ -280,6 +289,15 @@ typedef BufferObject<BufferType::Array> ArrayBuffer;
   * VAO must be bound before binding a buffer here.
   * @see GL_ELEMENT_ARRAY_BUFFER */
 typedef BufferObject<BufferType::ElementArray> IndexBuffer;
+
+#if OGLWRAP_INSTATIATE_TEMPLATES
+  template class BufferObject<BufferType::ElementArray>;
+#else
+  #if !OGLWRAP_HEADER_ONLY
+    extern template class BufferObject<BufferType::ElementArray>;
+  #endif
+#endif
+
 #endif // GL_ELEMENT_ARRAY_BUFFER
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_BUFFER)
@@ -287,6 +305,15 @@ typedef BufferObject<BufferType::ElementArray> IndexBuffer;
 /** This buffer has no special semantics, it is intended to use as a buffer object for Buffer Textures.
   * @see GL_TEXTURE_BUFFER */
 typedef BufferObject<BufferType::Texture> TextureBuffer;
+
+#if OGLWRAP_INSTATIATE_TEMPLATES
+  template class BufferObject<BufferType::Texture>;
+#else
+  #if !OGLWRAP_HEADER_ONLY
+    extern template class BufferObject<BufferType::Texture>;
+  #endif
+#endif
+
 #endif // GL_TEXTURE_BUFFER
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glBindBufferBase) && defined(glBindBufferRange))
@@ -340,12 +367,30 @@ public:
 /// An indexed buffer binding for buffers used as storage for uniform blocks.
 /** @see GL_UNIFORM_BUFFER */
 typedef IndexedBufferObject<IndexedBufferType::Uniform> UniformBuffer;
+
+#if OGLWRAP_INSTATIATE_TEMPLATES
+  template class IndexedBufferObject<IndexedBufferType::Uniform>;
+#else
+  #if !OGLWRAP_HEADER_ONLY
+    extern template class IndexedBufferObject<IndexedBufferType::Uniform>;
+  #endif
+#endif
+
 #endif // GL_UNIFORM_BUFFER
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TRANSFORM_FEEDBACK_BUFFER)
 /// An indexed buffer binding for buffers used in Transform Feedback operations.
 /** @see GL_TRANSFORM_FEEDBACK_BUFFER */
 typedef IndexedBufferObject<IndexedBufferType::TransformFeedback> TransformFeedbackBuffer;
+
+#if OGLWRAP_INSTATIATE_TEMPLATES
+  template class IndexedBufferObject<IndexedBufferType::TransformFeedback>;
+#else
+  #if !OGLWRAP_HEADER_ONLY
+    extern template class IndexedBufferObject<IndexedBufferType::TransformFeedback>;
+  #endif
+#endif
+
 #endif // GL_TRANSFORM_FEEDBACK_BUFFER
 
 #endif // glBindBufferRange && glBindBufferBase

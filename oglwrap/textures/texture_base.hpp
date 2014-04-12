@@ -5,6 +5,11 @@
 #ifndef OGLWRAP_TEXTURES_TEXUTRE_BASE_HPP_
 #define OGLWRAP_TEXTURES_TEXUTRE_BASE_HPP_
 
+#if OGLWRAP_USE_IMAGEMAGICK
+  #include <Magick++.h>
+#endif
+
+#include "../config.hpp"
 #include "../general.hpp"
 #include "../debug/error.hpp"
 #include "../debug/binding.hpp"

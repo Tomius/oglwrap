@@ -277,6 +277,17 @@ public:
   * @version It is core since OpenGL 4.3.
   * @see GL_COMPUTE_SHADER */
 typedef Shader<ShaderType::Compute> ComputeShader;
+
+#if OGLWRAP_INSTATIATE_TEMPLATES
+  template class glObject::Shader<ShaderType::Compute>;
+  template class Shader<ShaderType::Compute>;
+#else
+  #if !OGLWRAP_HEADER_ONLY
+    extern template class glObject::Shader<ShaderType::Compute>;
+    extern template class Shader<ShaderType::Compute>;
+  #endif
+#endif
+
 #endif // GL_COMPUTE_SHADER
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_VERTEX_SHADER)
@@ -288,6 +299,17 @@ typedef Shader<ShaderType::Compute> ComputeShader;
   * @version It is core since OpenGL 2.1
   * @see GL_VERTEX_SHADER */
 typedef Shader<ShaderType::Vertex> VertexShader;
+
+#if OGLWRAP_INSTATIATE_TEMPLATES
+  template class glObject::Shader<ShaderType::Vertex>;
+  template class Shader<ShaderType::Vertex>;
+#else
+  #if !OGLWRAP_HEADER_ONLY
+    extern template class glObject::Shader<ShaderType::Vertex>;
+    extern template class Shader<ShaderType::Vertex>;
+  #endif
+#endif
+
 #endif // GL_VERTEX_SHADER
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_GEOMETRY_SHADER)
@@ -298,6 +320,17 @@ typedef Shader<ShaderType::Vertex> VertexShader;
   * @version It is core since OpenGL 3.2
   * @see GL_GEOMETRY_SHADER */
 typedef Shader<ShaderType::Geometry> GeometryShader;
+
+#if OGLWRAP_INSTATIATE_TEMPLATES
+  template class glObject::Shader<ShaderType::Geometry>;
+  template class Shader<ShaderType::Geometry>;
+#else
+  #if !OGLWRAP_HEADER_ONLY
+    extern template class glObject::Shader<ShaderType::Geometry>;
+    extern template class Shader<ShaderType::Geometry>;
+  #endif
+#endif
+
 #endif // GL_GEOMETRY_SHADER
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FRAGMENT_SHADER)
@@ -313,6 +346,17 @@ typedef Shader<ShaderType::Geometry> GeometryShader;
   * @version It is core since OpenGL 2.1
   * @see GL_FRAGMENT_SHADER */
 typedef Shader<ShaderType::Fragment> FragmentShader;
+
+#if OGLWRAP_INSTATIATE_TEMPLATES
+  template class glObject::Shader<ShaderType::Fragment>;
+  template class Shader<ShaderType::Fragment>;
+#else
+  #if !OGLWRAP_HEADER_ONLY
+    extern template class glObject::Shader<ShaderType::Fragment>;
+    extern template class Shader<ShaderType::Fragment>;
+  #endif
+#endif
+
 #endif // GL_FRAGMENT_SHADER
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TESS_CONTROL_SHADER)
@@ -326,6 +370,17 @@ typedef Shader<ShaderType::Fragment> FragmentShader;
   * @version It is core since OpenGL 4.0.
   * @see GL_TESS_CONTROL_SHADER */
 typedef Shader<ShaderType::TessControl> TessControlShader;
+
+#if OGLWRAP_INSTATIATE_TEMPLATES
+  template class glObject::Shader<ShaderType::TessControl>;
+  template class Shader<ShaderType::TessControl>;
+#else
+  #if !OGLWRAP_HEADER_ONLY
+    extern template class glObject::Shader<ShaderType::TessControl>;
+    extern template class Shader<ShaderType::TessControl>;
+  #endif
+#endif
+
 #endif // GL_TESS_CONTROL_SHADER
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TESS_EVALUATION_SHADER)
@@ -339,6 +394,17 @@ typedef Shader<ShaderType::TessControl> TessControlShader;
   * @version It is core since OpenGL 4.0.
   * @see GL_TESS_EVALUATION_SHADER */
 typedef Shader<ShaderType::TessEval> TessEvalShader;
+
+#if OGLWRAP_INSTATIATE_TEMPLATES
+  template class glObject::Shader<ShaderType::TessEval>;
+  template class Shader<ShaderType::TessEval>;
+#else
+  #if !OGLWRAP_HEADER_ONLY
+    extern template class glObject::Shader<ShaderType::TessEval>;
+    extern template class Shader<ShaderType::TessEval>;
+  #endif
+#endif
+
 #endif // GL_TESS_EVALUATION_SHADER
 
 #endif // glCreateShader && glDeleteShader
@@ -361,7 +427,7 @@ namespace glObject {
 class Program {
   glObject::Program program_; ///< The C OpenGL handle for the program.
   std::vector<GLuint> shaders_; ///< IDs of the shaders attached to the program
-  std::vector<std::string> filenames_; /// The names of the shaders are stored to help debugging.
+  std::vector<std::string> filenames_; ///< The names of the shaders are stored to help debugging.
   bool *linked_; ///< Stores if the program is linked. Its a pointer, so .use() can be const.
 public:
   /// Creates an empty program object.
@@ -406,7 +472,7 @@ public:
 #endif // glAttachShader
 
   template<ShaderType shader_t>
-  /// Attaching rvalue reference shaders to a programs only work correctly on NVIDIA.
+  /// Attaching rvalue reference shaders to programs only work correctly on NVIDIA.
   Program& attachShader(Shader<shader_t>&& shader) = delete;
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glAttachShader)
@@ -418,7 +484,6 @@ public:
     attachShader(shader);
     return *this;
   }
-
 #endif // glAttachShader
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glAttachShader)
@@ -435,6 +500,15 @@ public:
   template<ShaderType shader_t>
   /// Attaching rvalue reference shaders to a programs only work correctly on NVIDIA.
   Program& operator<<(Shader<shader_t>&& shader) = delete;
+
+  /// Returns a formatted list of the names of the shaders that this program uses.
+  std::string getShaderNames() const {
+    std::string str;
+    for(size_t i = 0; i < filenames_.size(); i++) {
+        str += " - " + filenames_[i] + "\n";
+    }
+    return str;
+  }
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glLinkProgram) && defined(glGetProgramiv) && defined(glGetProgramInfoLog))
   /// Links the program.
@@ -455,10 +529,8 @@ public:
       gl(GetProgramInfoLog(program_, infoLogLength, NULL, strInfoLog));
       std::stringstream str;
       str << "OpenGL failed to link the following shaders together: " << std::endl;
-      for(size_t i = 0; i < filenames_.size(); i++) {
-        str << " - " << filenames_[i] << std::endl;
-      }
-      str << "\nThe error message: \n" << strInfoLog << std::endl;
+      str << getShaderNames() << std::endl;
+      str << "The error message: \n" << strInfoLog << std::endl;
       delete[] strInfoLog;
 
       throw std::runtime_error(str.str());
@@ -468,9 +540,7 @@ public:
     gl(GetProgramiv(program_, GL_VALIDATE_STATUS, &status));
     if(status == GL_FALSE) {
       std::cout << "The validation of the program containing the following shaders failed: " << std::endl;
-      for(size_t i = 0; i < filenames_.size(); i++) {
-        std::cout << " - " << filenames_[i] << std::endl;
-      }
+      std::cout << getShaderNames() << std::endl;
       std::cout << "This program might generate GL_INVALID_OPERATION when used for rendering" << std::endl;
     }
     #endif // OGLWRAP_DEBUG
@@ -520,6 +590,88 @@ public:
     return program_;
   }
 };
+
+// Explicit template instantiation (is ugly, but makes compilation a lot faster)
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glAttachShader)
+  #if OGLWRAP_INSTATIATE_TEMPLATES
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COMPUTE_SHADER)
+      template void Program::attachShader(ComputeShader&);
+      template void Program::attachShader(const ComputeShader&);
+      template Program& Program::operator<<(ComputeShader&);
+      template Program& Program::operator<<(const ComputeShader&);
+    #endif
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_VERTEX_SHADER)
+      template void Program::attachShader(VertexShader&);
+      template void Program::attachShader(const VertexShader&);
+      template Program& Program::operator<<(VertexShader&);
+      template Program& Program::operator<<(const VertexShader&);
+    #endif
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FRAGMENT_SHADER)
+      template void Program::attachShader(FragmentShader&);
+      template void Program::attachShader(const FragmentShader&);
+      template Program& Program::operator<<(FragmentShader&);
+      template Program& Program::operator<<(const FragmentShader&);
+    #endif
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_GEOMETRY_SHADER)
+      template void Program::attachShader(GeometryShader&);
+      template void Program::attachShader(const GeometryShader&);
+      template Program& Program::operator<<(GeometryShader&);
+      template Program& Program::operator<<(const GeometryShader&);
+    #endif
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TESS_CONTROL_SHADER)
+      template void Program::attachShader(TessControlShader&);
+      template void Program::attachShader(const TessControlShader&);
+      template Program& Program::operator<<(TessControlShader&);
+      template Program& Program::operator<<(const TessControlShader&);
+    #endif
+    #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TESS_EVALUATION_SHADER)
+      template void Program::attachShader(TessEvalShader&);
+      template void Program::attachShader(const TessEvalShader&);
+      template Program& Program::operator<<(TessEvalShader&);
+      template Program& Program::operator<<(const TessEvalShader&);
+    #endif
+  #else
+    #if !OGLWRAP_HEADER_ONLY
+      #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COMPUTE_SHADER)
+        extern template void Program::attachShader(ComputeShader&);
+        extern template void Program::attachShader(const ComputeShader&);
+        extern template Program& Program::operator<<(ComputeShader&);
+        extern template Program& Program::operator<<(const ComputeShader&);
+      #endif
+      #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_VERTEX_SHADER)
+        extern template void Program::attachShader(VertexShader&);
+        extern template void Program::attachShader(const VertexShader&);
+        extern template Program& Program::operator<<(VertexShader&);
+        extern template Program& Program::operator<<(const VertexShader&);
+      #endif
+      #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FRAGMENT_SHADER)
+        extern template void Program::attachShader(FragmentShader&);
+        extern template void Program::attachShader(const FragmentShader&);
+        extern template Program& Program::operator<<(FragmentShader&);
+        extern template Program& Program::operator<<(const FragmentShader&);
+      #endif
+      #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_GEOMETRY_SHADER)
+        extern template void Program::attachShader(GeometryShader&);
+        extern template void Program::attachShader(const GeometryShader&);
+        extern template Program& Program::operator<<(GeometryShader&);
+        extern template Program& Program::operator<<(const GeometryShader&);
+      #endif
+      #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TESS_CONTROL_SHADER)
+        extern template void Program::attachShader(TessControlShader&);
+        extern template void Program::attachShader(const TessControlShader&);
+        extern template Program& Program::operator<<(TessControlShader&);
+        extern template Program& Program::operator<<(const TessControlShader&);
+      #endif
+      #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TESS_EVALUATION_SHADER)
+        extern template void Program::attachShader(TessEvalShader&);
+        extern template void Program::attachShader(const TessEvalShader&);
+        extern template Program& Program::operator<<(TessEvalShader&);
+        extern template Program& Program::operator<<(const TessEvalShader&);
+      #endif
+    #endif
+  #endif
+#endif
+
 #endif // glDetachShader
 #endif // glCreateProgram && glDeleteProgram
 

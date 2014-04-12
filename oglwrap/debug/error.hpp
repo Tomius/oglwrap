@@ -12,10 +12,15 @@ namespace oglwrap {
 /// A global debug output variable.
 /** It is always defined, but is only functional, if
   * OGLWRAP_DEBUG is true, and OGLWRAP_DISABLE_DEBUG_OUTPUT is false */
-#if OGLWRAP_HEADER_ONLY
-  static DebugOutput debug_output;
+#if OGLWRAP_INSTATIATE_TEMPLATES
+  // Yeah i know, a global variable is not a template, whatever...
+  DebugOutput debug_output;
 #else
-  extern DebugOutput debug_output;
+  #if OGLWRAP_HEADER_ONLY
+    static DebugOutput debug_output;
+  #else
+    extern DebugOutput debug_output;
+  #endif
 #endif
 
 #if OGLWRAP_DEBUG

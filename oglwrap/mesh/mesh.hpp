@@ -8,6 +8,7 @@
 #include <climits>
 #include <map>
 
+#include "../config.hpp"
 #include "../general.hpp"
 #include "../buffer.hpp"
 #include "../vertexAttrib.hpp"

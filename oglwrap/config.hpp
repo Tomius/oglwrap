@@ -8,7 +8,7 @@
 /// A macro to sign functions that are bind-checked in their signature.
 #define BIND_CHECKED
 
-/// Oglwrap can be forced to load glew. 
+/// Oglwrap can be forced to load glew.
 #ifndef OGLWRAP_USE_GLEW
   #define OGLWRAP_USE_GLEW 0
 #endif
@@ -17,9 +17,17 @@
   #include "glew.hpp"
 #endif
 
-// Oglwrap works in header only mode by default, but with linking oglwrap.cpp, it can be a bit faster.
+/// Oglwrap works in header only mode by default, but with linking oglwrap.cpp, it can compile and run faster.
 #ifndef OGLWRAP_HEADER_ONLY
-    #define OGLWRAP_HEADER_ONLY 1
+  #define OGLWRAP_HEADER_ONLY 1
+#endif
+
+/// Instantiates the templates that can be used only with a few types.
+/** The compile time can be drastically decreased with this.
+  * This also makes sure that global variables are only defined once
+  */
+#ifndef OGLWRAP_INSTATIATE_TEMPLATES
+  #define OGLWRAP_INSTATIATE_TEMPLATES 0
 #endif
 
 /// A macro for internal use only
@@ -67,6 +75,12 @@
   * systems, but are definitely faster on most configurations. */
 #ifndef OGLWRAP_PORTABILITY_MODE
   #define OGLWRAP_PORTABILITY_MODE 1
+#endif
+
+/// If true, includes every oglwrap header, not just the commonly used ones.
+/** Setting this to true can drastically increase the compilation time */
+#ifndef OGLWRAP_INCLUDE_EVERYTHING
+  #define OGLWRAP_INCLUDE_EVERYTHING 0
 #endif
 
 #endif // OGLWRAP_CONFIG_HPP_
