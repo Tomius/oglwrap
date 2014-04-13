@@ -225,13 +225,13 @@ public:
      * @param speed - Write the animation speed to this ptr. If it's zero, than the default speed will be used.
      * @return The name of the new animation.
      */
-    virtual std::string operator()(const std::string& current_anim, 
-                                   float *transition_time, 
+    virtual std::string operator()(const std::string& current_anim,
+                                   float *transition_time,
                                    bool *use_default_flags,
                                    unsigned *flags,
                                    float *speed) = 0;
   };
- 
+
 private:
   /// The callback functor
   AnimationEndedListener *anim_ended_callback_;
@@ -242,7 +242,7 @@ private:
 
 public:
  /// Sets a callback functor
- /** Sets a callback functor that is called everytime an animation ends, 
+ /** Sets a callback functor that is called everytime an animation ends,
    * and is resposible for choosing the next animation.
    * @param listener - The functor to use for the callbacks. */
   void setAnimationEndedCallback(AnimationEndedListener* listener) {

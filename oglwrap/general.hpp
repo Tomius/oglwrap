@@ -128,6 +128,9 @@ public:
     *inited_ = false;
   }
 
+  /// Default copy constructor
+  Object(const Object& obj) = default;
+
   /// Deletes the object.
   /** Deletes the resource if only one instance of
     * this object exists, and it is initialized. */
