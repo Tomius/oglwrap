@@ -229,7 +229,7 @@ inline void AnimatedMesh::animationEnded(float current_time) {
       bool use_default_flags = true;
       float transition_time = 0.1f, speed = 0.0f;
       unsigned flags = AnimFlag::None;
-      std::string new_anim = (*anim_ended_callback_)(
+      std::string new_anim = anim_ended_callback_(
          getCurrentAnimation(),
          &transition_time,
          &use_default_flags,

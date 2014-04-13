@@ -5,6 +5,7 @@
 #ifndef OGLWRAP_MESH_ANIMATEDMESH_HPP_
 #define OGLWRAP_MESH_ANIMATEDMESH_HPP_
 
+#include <functional>
 #include "mesh.hpp"
 #include "animState.hpp"
 #include "skinningData.hpp"
@@ -212,41 +213,46 @@ public:
     <---<}>==~=~=~==--==--==~=~=~==<{>----- Animation Control -----<}>==~=~=~==--==--==~=~=~==<{>--->
            \\=====:==-==-==:=====//                                   \\=====:==-==-==:=====//       */
 public:
-  /// An functor contanting a callback function for handling animation changes.
-  struct AnimationEndedListener {
-    /**
+  /**
      * @brief A callback function, that is called everytime an animation ends
      * The function should return the name of the new animation. If it returns a string
      * that isn't a name of an animation, then the default animation will be played.
+     *
+     * It is typically created using std::bind, like this:
+     *
+     * using namespace std::placeholders;
+     * oglwrap::AnimatedMesh::AnimationEndedCallback callback =
+     *   std::bind(&MyClass::animationEndedCallback, this, _1, _2, _3, _4, _5);
+     *
      * @param current_anim - The name of the currently playing animation, that is about to be changed.
      * @param transition_time - Write the transition time, you'd use with setCurrentAnimation to this ptr.
-     * @param use_default_flags - Specifies if the default flags shold be used.
+     * @param use_default_flags - Specifies if the default flags should be used.
      * @param flags - Write the animation flags here.
      * @param speed - Write the animation speed to this ptr. If it's zero, than the default speed will be used.
      * @return The name of the new animation.
      */
-    virtual std::string operator()(const std::string& current_anim,
-                                   float *transition_time,
-                                   bool *use_default_flags,
-                                   unsigned *flags,
-                                   float *speed) = 0;
-  };
+  using AnimationEndedCallback =
+    std::function<std::string(const std::string& current_anim,
+                              float *transition_time,
+                              bool *use_default_flags,
+                              unsigned *flags,
+                              float *speed)>;
 
 private:
   /// The callback functor
-  AnimationEndedListener *anim_ended_callback_;
+  AnimationEndedCallback anim_ended_callback_;
 
   /// The function that changes animations when they end.
   /** @param current_time The current time */
   void animationEnded(float current_time);
 
 public:
- /// Sets a callback functor
- /** Sets a callback functor that is called everytime an animation ends,
-   * and is resposible for choosing the next animation.
-   * @param listener - The functor to use for the callbacks. */
-  void setAnimationEndedCallback(AnimationEndedListener* listener) {
-    anim_ended_callback_ = listener;
+  /// Sets a callback functor
+  /** Sets a callback functor that is called everytime an animation ends,
+    * and is resposible for choosing the next animation.
+    * @param callback - The functor to use for the callbacks. */
+  void setAnimationEndedCallback(AnimationEndedCallback callback) {
+    anim_ended_callback_ = callback;
   }
 
   /// Adds an external animation from a file.
