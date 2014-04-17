@@ -402,6 +402,8 @@ public:
 class LazyVertexAttribArray : public VertexAttribArrayObject {
   const Program& program_;
   const std::string identifier_;
+  const bool isArray_;
+
   /// Queries the location of the attribute using the attribute's name
   /** @see glGetAttribLocation */
   void init() {
@@ -418,14 +420,20 @@ public:
   /// Saves the details of the vertex attribute, but will only query the location at the first use.
   /** @param program - Specifies the program in which you want to setup an attribute.
     * @param identifier - Specifies the attribute's name you want to setup.
+    * @param isArray - Specifies if the attribute is an array.
     * @see glGetAttribLocation */
-  LazyVertexAttribArray(const Program& program, const std::string& identifier)
+  LazyVertexAttribArray(const Program& program, const std::string& identifier, bool isArray = true)
     : program_(program)
     , identifier_(identifier)
+    , isArray_(isArray)
   {}
 
   LazyVertexAttribArray operator[](unsigned char idx) {
-    return LazyVertexAttribArray(program_, identifier_ + '[' + static_cast<const char>(idx + '0') + ']');
+    if(isArray_) {
+      return LazyVertexAttribArray(program_, identifier_ + '[' + static_cast<const char>(idx + '0') + ']', isArray_);
+    } else {
+      return LazyVertexAttribArray(program_, identifier_ + static_cast<const char>(idx + '0'), isArray_);
+    }
   }
 
   operator VertexAttribArray() {

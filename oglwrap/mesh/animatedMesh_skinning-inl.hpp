@@ -207,9 +207,10 @@ template <class Index_t>
   * I really doubt anyone would be using a skeleton with more than 65535 bones...
   * @param idx_t - The oglwrap enum, naming the data type that should be used.
   * @param boneIDs - Should be an array of attributes, that will be shader plumbed for the boneIDs data.
-  * @param bone_weights - Should be an array of attributes, that will be shader plumbed for the bone_weights data. */
+  * @param bone_weights - Should be an array of attributes, that will be shader plumbed for the bone_weights data.
+  * @param integerIDs - If true, boneIDs are uploaded as integers (#version 130+) else they are uploaded as floats */
 void AnimatedMesh::shaderPlumbBones(DataType idx_t, LazyVertexAttribArray boneIDs,
-                                    LazyVertexAttribArray bone_weights) {
+                                    LazyVertexAttribArray bone_weights, bool integerIDs) {
   const size_t per_attrib_size = sizeof(SkinningData::VertexBoneData_PerAttribute<Index_t>);
 
   for(size_t entry = 0; entry < entries_.size(); entry++) {
@@ -224,14 +225,22 @@ void AnimatedMesh::shaderPlumbBones(DataType idx_t, LazyVertexAttribArray boneID
       intptr_t baseOffset = boneAttribSet * per_attrib_size;
       intptr_t weightOffset = baseOffset + 4 * sizeof(Index_t);
 
-      boneIDs[boneAttribSet].setup(4, idx_t, stride, (const void*)baseOffset).enable();
+      if(integerIDs) {
+        boneIDs[boneAttribSet].ipointer(4, oglwrap::WholeDataType(idx_t), stride, (const void*)baseOffset).enable();
+      } else {
+        boneIDs[boneAttribSet].pointer(4, idx_t, false, stride, (const void*)baseOffset).enable();
+      }
       bone_weights[boneAttribSet].setup(4, DataType::Float, stride, (const void*)weightOffset).enable();
     }
 
     // static setup the VertexArrays that aren't enabled, to all zero.
     // Remember (0, 0, 0, 1) is the default, which isn't what we want.
     for(int i = current_attrib_max; i < skinning_data_.max_bone_attrib_num; i++) {
-      boneIDs[i].static_setup(glm::ivec4(0, 0, 0, 0));
+      if(integerIDs) {
+        boneIDs[i].static_setup(glm::ivec4(0, 0, 0, 0));
+      } else {
+        boneIDs[i].static_setup(glm::vec4(0, 0, 0, 0));
+      }
       bone_weights[i].static_setup(glm::vec4(0, 0, 0, 0));
     }
   }
@@ -339,8 +348,9 @@ inline size_t AnimatedMesh::getBoneAttribNum() {
   * For example if you specified "in vec4 boneIds[3]" you have to give "prog | boneIds"
   * Calling this function changes the currently active VAO and ArrayBuffer.
   * @param boneIDs - The array of attributes array to use as destination for bone IDs.
-  * @param bone_weights - The array of attributes array to use as destination for bone weights. */
-inline void AnimatedMesh::setupBones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray bone_weights) {
+  * @param bone_weights - The array of attributes array to use as destination for bone weights.
+  * @param integerIDs - if true, boneIDs are uploaded as integers (#version 130+) else they are uploaded as floats */
+inline void AnimatedMesh::setupBones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray bone_weights, bool integerIDs) {
 
   if(skinning_data_.is_setup_bones) {
     throw std::logic_error("AnimatedMesh::setupBones is called multiply times on the same object");
@@ -354,11 +364,11 @@ inline void AnimatedMesh::setupBones(LazyVertexAttribArray boneIDs, LazyVertexAt
   }
 
   if(skinning_data_.num_bones < UCHAR_MAX) {
-    shaderPlumbBones<unsigned char>(DataType::UnsignedByte, boneIDs, bone_weights);
+    shaderPlumbBones<unsigned char>(DataType::UnsignedByte, boneIDs, bone_weights, integerIDs);
   } else if(skinning_data_.num_bones < USHRT_MAX) {
-    shaderPlumbBones<unsigned short>(DataType::UnsignedShort, boneIDs, bone_weights);
+    shaderPlumbBones<unsigned short>(DataType::UnsignedShort, boneIDs, bone_weights, integerIDs);
   } else { // more than 65535 bones? WTF???
-    shaderPlumbBones<unsigned int>(DataType::UnsignedInt, boneIDs, bone_weights);
+    shaderPlumbBones<unsigned int>(DataType::UnsignedInt, boneIDs, bone_weights, integerIDs);
   }
 }
 

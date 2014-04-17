@@ -83,8 +83,9 @@ private:
     * I really doubt anyone would be using a skeleton with more than 65535 bones...
     * @param idx_t - The oglwrap enum, naming the data type that should be used.
     * @param boneIDs - Should be an array of attributes, that will be shader plumbed for the boneIDs data.
-    * @param bone_weights - Should be an array of attributes, that will be shader plumbed for the bone_weights data. */
-  void shaderPlumbBones(DataType idx_t, LazyVertexAttribArray boneIDs, LazyVertexAttribArray bone_weights);
+    * @param bone_weights - Should be an array of attributes, that will be shader plumbed for the bone_weights data.
+    * @param integerIDs - If true, boneIDs are uploaded as integers (#version 130+) else they are uploaded as floats */
+  void shaderPlumbBones(DataType idx_t, LazyVertexAttribArray boneIDs, LazyVertexAttribArray bone_weights, bool integerWeights = true);
 
 private:
 
@@ -121,8 +122,9 @@ public:
     * For example if you specified "in vec4 boneIds[3]" you have to give "prog | boneIds"
     * Calling this function changes the currently active VAO and ArrayBuffer.
     * @param boneIDs - The array of attributes array to use as destination for bone IDs.
-    * @param bone_weights - The array of attributes array to use as destination for bone weights. */
-  void setupBones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray bone_weights);
+    * @param bone_weights - The array of attributes array to use as destination for bone weights.
+    * @param integerIDs - if true, boneIDs are uploaded as integers (#version 130+) else they are uploaded as floats */
+  void setupBones(LazyVertexAttribArray boneIDs, LazyVertexAttribArray bone_weights, bool integerIDs = true);
 
   /*         //=====:==-==-==:=====\\                           //=====:==-==-==:=====\\
       <---<}>==~=~=~==--==--==~=~=~==<{>----- Animation -----<}>==~=~=~==--==--==~=~=~==<{>--->
@@ -232,15 +234,15 @@ public:
      * @return The name of the new animation.
      */
   using AnimationEndedCallback =
-    std::function<std::string(const std::string& current_anim,
-                              float *transition_time,
-                              bool *use_default_flags,
-                              unsigned *flags,
-                              float *speed)>;
+    std::string(const std::string& current_anim,
+                float *transition_time,
+                bool *use_default_flags,
+                unsigned *flags,
+                float *speed);
 
 private:
   /// The callback functor
-  AnimationEndedCallback anim_ended_callback_;
+ std::function<AnimationEndedCallback> anim_ended_callback_;
 
   /// The function that changes animations when they end.
   /** @param current_time The current time */
@@ -251,7 +253,7 @@ public:
   /** Sets a callback functor that is called everytime an animation ends,
     * and is resposible for choosing the next animation.
     * @param callback - The functor to use for the callbacks. */
-  void setAnimationEndedCallback(AnimationEndedCallback callback) {
+  void setAnimationEndedCallback(std::function<AnimationEndedCallback> callback) {
     anim_ended_callback_ = callback;
   }
 
