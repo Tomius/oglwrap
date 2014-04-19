@@ -29,8 +29,8 @@ enum AnimFlag {
   Backwards = 0x8,
 
   /// Marks the animation as interruptable by other animations.
-  /** Only affects setCurrentAnimation, forceCurrentAnimation ignores it.  
-    * This logically shouldn't be part of the animation loader & player, 
+  /** Only affects setCurrentAnimation, forceCurrentAnimation ignores it.
+    * This logically shouldn't be part of the animation loader & player,
     * but it can help to make your code easier to read. */
   Interruptable = 0x10
 };
@@ -60,6 +60,54 @@ struct AnimationState {
       , idx(0)
       , flags(0)
       , speed(1.0f)
+  { }
+};
+
+/// A placeholder class for passing AnimationParameters
+struct AnimParams {
+  /// The name of the animation
+  std::string name;
+
+  /// The transition time between the last, and this animation, in seconds
+  float transition_time;
+
+  /// Specifies if the default flags should be used for this animation
+  bool use_default_flags;
+
+  /// A "bitfield" of the Animation modifying flags
+  unsigned flags;
+
+  /// The speed multiplier
+  float speed;
+
+  /// Creates a placeholder class for passing AnimationParameters
+  /** @param name - The name of the animation.
+    * @param transition_time - The transition time between the last, and this animation, in seconds.
+    * @param flags - A "bitfield" of the Animation modifying flags
+    * @param speed - The speed multiplier. Uses the default anim speed if it is zero */
+  AnimParams(std::string name,
+             float transition_time,
+             unsigned flags,
+             float speed = 0.0f)
+      : name(name)
+      , transition_time(transition_time)
+      , use_default_flags(false)
+      , flags(flags)
+      , speed(speed)
+  { }
+
+  /// Creates a placeholder class for passing AnimationParameters using the default animation flags.
+  /** @param name - The name of the animation.
+    * @param transition_time - The transition time between the last, and this animation, in seconds.
+    * @param speed - The speed multiplier. Uses the default anim speed if it is zero */
+  AnimParams(std::string name = "",
+             float transition_time = 0.1f,
+             float speed = 0.0f)
+      : name(name)
+      , transition_time(transition_time)
+      , use_default_flags(true)
+      , flags(AnimFlag::None)
+      , speed(speed)
   { }
 };
 

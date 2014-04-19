@@ -222,23 +222,18 @@ public:
      *
      * It is typically created using std::bind, like this:
      *
-     * using namespace std::placeholders;
-     * oglwrap::AnimatedMesh::AnimationEndedCallback callback =
-     *   std::bind(&MyClass::animationEndedCallback, this, _1, _2, _3, _4, _5);
+     * using std::placeholders::_1;
+     * auto callback = std::bind(&MyClass::animationEndedCallback, this, _1);
+     *
+     * Or, if you prefer you can use lambdas, to create the callback:
+     *
+     * auto callback2 = [this](const std::string& current_anim){return animationEndedCallback(current_anim);};
      *
      * @param current_anim - The name of the currently playing animation, that is about to be changed.
-     * @param transition_time - Write the transition time, you'd use with setCurrentAnimation to this ptr.
-     * @param use_default_flags - Specifies if the default flags should be used.
-     * @param flags - Write the animation flags here.
-     * @param speed - Write the animation speed to this ptr. If it's zero, than the default speed will be used.
-     * @return The name of the new animation.
+     * @return The parameters of the new animation.
      */
   using AnimationEndedCallback =
-    std::string(const std::string& current_anim,
-                float *transition_time,
-                bool *use_default_flags,
-                unsigned *flags,
-                float *speed);
+    AnimParams(const std::string& current_anim);
 
 private:
   /// The callback functor
@@ -296,53 +291,17 @@ public:
   /** Only changes it if the current animation is interruptable,
     * it's not currently in a transition, and new animation is
     * not the same as the one currently playing.
-    * @param anim_name - The user-defined name of the animation.
-    * @param current_time - The current time in seconds, optimally since the start of the program.
-    * @param transition_time - The fading time to be used for the transition.
-    * @param flags - A bitfield containing the animation specifier flags.
-    * @param speed - Sets the speed of the animation. If it's 0, will play with the speed specified at the addAnim. If it's negative, it will be played backwards. */
-  void setCurrentAnimation(const std::string& anim_name,
-                           float current_time,
-                           float transition_time,
-                           unsigned flags,
-                           float speed = 0.0f);
+    * @param new_anim - The parameters of the new animation.
+    * @param current_time - The current time in seconds, optimally since the start of the program. */
+  void setCurrentAnimation(AnimParams new_anim,
+                           float current_time);
 
   /// Forces the current animation to a specified one.
   /** Only changes it if the new animation is not the same as the one currently playing.
-    * @param anim_name - The user-defined name of the animation.
-    * @param current_time - The current time in seconds, optimally since the start of the program.
-    * @param transition_time - The fading time to be used for the transition.
-    * @param flags - A bitfield containing the animation specifier flags.
-    * @param speed - Sets the speed of the animation. If it's 0, will play with the speed specified at the addAnim. If it's negative, it will be played backwards. */
-  void forceCurrentAnimation(const std::string& anim_name,
-                             float current_time,
-                             float transition_time,
-                             unsigned flags,
-                             float speed = 0.0f);
-
-  /// Tries to change the current animation to a specified one, using the default anim modifier flags specified for this anim.
-  /** Only changes it if the current animation is interruptable,
-    * it's not currently in a transition, and new animation is
-    * not the same as the one currently playing.
-    * @param anim_name - The user-defined name of the animation.
-    * @param current_time - The current time in seconds, optimally since the start of the program.
-    * @param transition_time - The fading time to be used for the transition.
-    * @param speed - Sets the speed of the animation. If it's 0, will play with the speed specified at the addAnim. If it's negative, it will be played backwards. */
-  void setCurrentAnimation(const std::string& anim_name,
-                           float current_time,
-                           float transition_time = 0.0f,
-                           float speed = 0.0f);
-
-  /// Forces the current animation to a specified one, using the default anim modifier flags specified for this anim.
-  /** Only changes it if the new animation is not the same as the one currently playing.
-    * @param anim_name - The user-defined name of the animation.
-    * @param current_time - The current time in seconds, optimally since the start of the program.
-    * @param transition_time - The fading time to be used for the transition.
-    * @param speed - Sets the speed of the animation. If it's 0, will play with the speed specified at the addAnim. If it's negative, it will be played backwards. */
-  void forceCurrentAnimation(const std::string& anim_name,
-                             float current_time,
-                             float transition_time = 0.0f,
-                             float speed = 0.0f);
+    * @param new_anim - The parameters of the new animation.
+    * @param current_time - The current time in seconds, optimally since the start of the program.*/
+  void forceCurrentAnimation(AnimParams new_anim,
+                             float current_time);
 
   /// Returns the currently running animation's name.
   std::string getCurrentAnimation() const {

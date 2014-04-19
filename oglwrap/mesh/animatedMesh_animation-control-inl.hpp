@@ -103,106 +103,48 @@ inline void AnimatedMesh::changeAnimation(size_t anim_idx,
    anim_meta_info_.end_of_last_anim = current_time;
 }
 
-inline void AnimatedMesh::setCurrentAnimation(const std::string& anim_name,
-                                              float current_time,
-                                              float transition_time,
-                                              unsigned flags,
-                                              float speed) {
+inline void AnimatedMesh::setCurrentAnimation(AnimParams new_anim,
+                                              float current_time) {
    if((anim_meta_info_.end_of_last_anim + anim_meta_info_.transition_time) <= current_time
          && (current_anim_.flags & AnimFlag::Interruptable)) {
-      if(!anims_.canFind(anim_name)) {
+      if(!anims_.canFind(new_anim.name)) {
          throw std::invalid_argument(
-            "Tried to set current animation to '" + anim_name + "', "
+            "Tried to set current animation to '" + new_anim.name + "', "
             "but the AnimatedMesh doesn't have an animation with name"
          );
       }
-      size_t anim_idx = anims_.names[anim_name];
+      size_t anim_idx = anims_.names[new_anim.name];
       if(current_anim_.handle != anims_[anim_idx].handle) {
-         forceCurrentAnimation(anim_name, current_time, transition_time, flags, speed);
+         forceCurrentAnimation(new_anim, current_time);
       }
    }
 }
 
-inline void AnimatedMesh::forceCurrentAnimation(const std::string& anim_name,
-                                                float current_time,
-                                                float transition_time,
-                                                unsigned flags,
-                                                float speed) {
-   if(!anims_.canFind(anim_name)) {
-      throw std::invalid_argument(
-         "Tried to set current animation to '" + anim_name + "', "
-         "but the AnimatedMesh doesn't have an animation with name"
-      );
-   }
-   size_t anim_idx = anims_.names[anim_name];
-   if(fabs(speed) < 1e-5) {
-      changeAnimation(
-         anim_idx,
-         current_time,
-         transition_time,
-         flags,
-         anims_[anim_idx].speed
-      );
-   } else {
-      changeAnimation(
-         anim_idx,
-         current_time,
-         transition_time,
-         flags,
-         speed
-      );
-   }
-}
+inline void AnimatedMesh::forceCurrentAnimation(AnimParams new_anim,
+                                                float current_time) {
+  if(!anims_.canFind(new_anim.name)) {
+    throw std::invalid_argument(
+      "Tried to set current animation to '" + new_anim.name + "', "
+      "but the AnimatedMesh doesn't have an animation with name"
+    );
+  }
 
-inline void AnimatedMesh::setCurrentAnimation(const std::string& anim_name,
-                                              float current_time,
-                                              float transition_time,
-                                              float speed) {
-  if((anim_meta_info_.end_of_last_anim + anim_meta_info_.transition_time) <= current_time
-         && (current_anim_.flags & AnimFlag::Interruptable)
-     ) {
-      if(!anims_.canFind(anim_name)) {
-        throw std::invalid_argument(
-          "Tried to set current animation to '" + anim_name + "', "
-          "but the AnimatedMesh doesn't have an animation with name"
-        );
-      }
-      size_t anim_idx = anims_.names[anim_name];
-      if(current_anim_.handle != anims_[anim_idx].handle) {
-         forceCurrentAnimation(anim_name, current_time, transition_time, speed);
-      }
-   }
-}
+  size_t anim_idx = anims_.names[new_anim.name];
 
-inline void AnimatedMesh::forceCurrentAnimation(const std::string& anim_name,
-                                                float current_time,
-                                                float transition_time,
-                                                float speed) {
-  if(!anims_.canFind(anim_name)) {
-      throw std::invalid_argument(
-         "Tried to set current animation to '" + anim_name + "', "
-         "but the AnimatedMesh doesn't have an animation with name"
-      );
-   }
-   size_t anim_idx = anims_.names[anim_name];
+  if(fabs(new_anim.speed) < 1e-5) {
+    new_anim.speed = anims_[anim_idx].speed;
+  }
+  if(new_anim.use_default_flags) {
+    new_anim.flags = anims_[anim_idx].flags;
+  }
 
-   if(fabs(speed) < 1e-5) {
-      changeAnimation(
-         anim_idx,
-         current_time,
-         transition_time,
-         anims_[anim_idx].flags,
-         anims_[anim_idx].speed
-      );
-   } else {
-      changeAnimation(
-         anim_idx,
-         current_time,
-         transition_time,
-         anims_[anim_idx].flags,
-         speed
-      );
-   }
+  changeAnimation(
+    anim_idx,
+    current_time,
+    new_anim.transition_time,
+    new_anim.flags,
+    new_anim.speed
+  );
 }
 
 inline void AnimatedMesh::setAnimToDefault(float current_time) {
@@ -226,21 +168,13 @@ inline void AnimatedMesh::animationEnded(float current_time) {
    if(anim_ended_callback_ == nullptr) {
       forceAnimToDefault(current_time);
    } else {
-      bool use_default_flags = true;
-      float transition_time = 0.1f, speed = 0.0f;
-      unsigned flags = AnimFlag::None;
-      std::string new_anim = anim_ended_callback_(
-         getCurrentAnimation(),
-         &transition_time,
-         &use_default_flags,
-         &flags,
-         &speed
-      );
-      if(anims_.canFind(new_anim)) {
-         if(use_default_flags) {
-            forceCurrentAnimation(new_anim, current_time, transition_time, speed);
+      auto new_anim = anim_ended_callback_(getCurrentAnimation());
+
+      if(anims_.canFind(new_anim.name)) {
+         if(new_anim.use_default_flags) {
+            forceCurrentAnimation(new_anim, current_time);
          } else {
-            forceCurrentAnimation(new_anim, current_time, transition_time, flags, speed);
+            forceCurrentAnimation(new_anim, current_time);
          }
       } else {
          forceAnimToDefault(current_time);
