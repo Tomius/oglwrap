@@ -216,22 +216,22 @@ public:
            \\=====:==-==-==:=====//                                   \\=====:==-==-==:=====//       */
 public:
   /**
-     * @brief A callback function, that is called everytime an animation ends
-     * The function should return the name of the new animation. If it returns a string
-     * that isn't a name of an animation, then the default animation will be played.
-     *
-     * It is typically created using std::bind, like this:
-     *
-     * using std::placeholders::_1;
-     * auto callback = std::bind(&MyClass::animationEndedCallback, this, _1);
-     *
-     * Or, if you prefer you can use lambdas, to create the callback:
-     *
-     * auto callback2 = [this](const std::string& current_anim){return animationEndedCallback(current_anim);};
-     *
-     * @param current_anim - The name of the currently playing animation, that is about to be changed.
-     * @return The parameters of the new animation.
-     */
+   * @brief A callback function, that is called everytime an animation ends
+   * The function should return the name of the new animation. If it returns a string
+   * that isn't a name of an animation, then the default animation will be played.
+   *
+   * It is typically created using std::bind, like this:
+   *
+   * using std::placeholders::_1;
+   * auto callback = std::bind(&MyClass::animationEndedCallback, this, _1);
+   *
+   * Or, if you prefer you can use lambdas, to create the callback:
+   *
+   * auto callback2 = [this](const std::string& current_anim){return animationEndedCallback(current_anim);};
+   *
+   * @param current_anim - The name of the currently playing animation, that is about to be changed.
+   * @return The parameters of the new animation.
+   */
   using AnimationEndedCallback =
     AnimParams(const std::string& current_anim);
 

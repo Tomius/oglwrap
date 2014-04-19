@@ -260,9 +260,9 @@ inline aiNode* AnimatedMesh::findNode(aiNode* currentRoot, const std::string& na
     return currentRoot;
 
   for(int i = 0; i != currentRoot->mNumChildren; ++i) {
-      aiNode* children_return = findNode(currentRoot->mChildren[i], name);
-      if(children_return)
-        return children_return;
+    aiNode* children_return = findNode(currentRoot->mChildren[i], name);
+    if(children_return)
+      return children_return;
   }
 
   return nullptr;
@@ -285,7 +285,7 @@ inline ExternalBone AnimatedMesh::markChildExternal(ExternalBone* parent, aiNode
   );
 
   for(int i = 0; i < node->mNumChildren; ++i) {
-      ebone.child.push_back(markChildExternal(&ebone, node->mChildren[i], true));
+    ebone.child.push_back(markChildExternal(&ebone, node->mChildren[i], true));
   }
 
   return ebone;
@@ -297,7 +297,7 @@ inline ExternalBone AnimatedMesh::markChildExternal(ExternalBone* parent, aiNode
 inline ExternalBoneTree AnimatedMesh::markBoneExternal(const std::string& bone_name) {
   if(skinning_data_.bone_mapping.find(bone_name) == skinning_data_.bone_mapping.end()) {
     throw std::runtime_error(
-        "AnimatedMesh '" + filename_ + "' doesn't have any bone named '" + bone_name + "'."
+      "AnimatedMesh '" + filename_ + "' doesn't have any bone named '" + bone_name + "'."
     );
   }
 
