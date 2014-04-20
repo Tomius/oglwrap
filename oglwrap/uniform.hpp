@@ -36,7 +36,6 @@ protected:
 
   /// Sets the uniform to a GLtype variable's value.
   /** It finds the appropriate glUniform* using template specialization.
-    * If it is called with not an OpenGL type, it throws std::invalid_argument.
     * @param value - The value to set the uniform.
     * @see glUniform* */
   void set(const GLtype& value) { // See the specializations at the end of this file.
@@ -99,7 +98,7 @@ public:
     UniformObject<GLtype>::location_ = gl(GetUniformLocation(program.expose(), identifier_.c_str()));
 
     if(UniformObject<GLtype>::location_ == INVALID_LOCATION) {
-      debug_output.callback("Error getting the location of uniform '" + identifier_ +
+      oglwrap_debug_output.callback("Error getting the location of uniform '" + identifier_ +
         "' in the program using the following shaders:\n" + program.getShaderNames());
     }
   }
@@ -185,7 +184,7 @@ public:
     UniformObject<GLtype>::location_ = gl(GetUniformLocation(program.expose(), id.str().c_str()));
 
     if(UniformObject<GLtype>::location_ == INVALID_LOCATION) {
-      debug_output.callback("Error getting the location of uniform '" + identifier_ +
+      oglwrap_debug_output.callback("Error getting the location of uniform '" + identifier_ +
         "' in the program using the following shaders:\n" + program.getShaderNames());
     }
   }
@@ -284,7 +283,7 @@ public:
 
       // Check if it worked.
       if(UniformObject<GLtype>::location_ == INVALID_LOCATION) {
-        debug_output.callback("Error getting the location of uniform '" + identifier_ +
+        oglwrap_debug_output.callback("Error getting the location of uniform '" + identifier_ +
         "' in the program using the following shaders:\n" + UniformObject<GLtype>::program_.getShaderNames());
       }
 
@@ -325,7 +324,7 @@ public:
 
       // Check if it worked.
       if(UniformObject<GLtype>::location_ == INVALID_LOCATION) {
-        debug_output.callback("Error getting the location of uniform '" + identifier_ +
+        oglwrap_debug_output.callback("Error getting the location of uniform '" + identifier_ +
         "' in the program using the following shaders:\n" + UniformObject<GLtype>::program_.getShaderNames());
       }
 

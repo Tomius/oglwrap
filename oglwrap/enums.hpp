@@ -1374,6 +1374,48 @@ enum ProvokeMode {
 }
 typedef _ProvokeMode::ProvokeMode ProvokeMode;
 
+namespace _PrimitiveType {
+enum PrimitiveType {
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_POINTS)
+  Points = GL_POINTS,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_LINES)
+  Lines = GL_LINES,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_LINE_STRIP)
+  LineStrip = GL_LINE_STRIP,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_LINE_LOOP)
+  LineLoop = GL_LINE_LOOP,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TRIANGLES)
+  Triangles = GL_TRIANGLES,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TRIANGLE_STRIP)
+  TriangleStrip = GL_TRIANGLE_STRIP,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TRIANGLE_FAN)
+  TriangleFan = GL_TRIANGLE_FAN,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_LINES_ADJACENCY)
+  LinesAdjacency = GL_LINES_ADJACENCY,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_LINE_STRIP_ADJACENCY)
+  LineStripAdjacency = GL_LINE_STRIP_ADJACENCY,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TRIANGLES_ADJACENCY)
+  TrianglesAdjacency = GL_TRIANGLES_ADJACENCY,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TRIANGLE_STRIP_ADJACENCY)
+  TriangleStripAdjacency = GL_TRIANGLE_STRIP_ADJACENCY,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_PATCHES)
+  Patches = GL_PATCHES,
+#endif
+};
+}
+typedef _PrimitiveType::PrimitiveType PrimitiveType;
+
 } // Namespace Enums
 
 // CodeCompletions often do not support inline namespaces

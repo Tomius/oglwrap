@@ -78,7 +78,7 @@ inline void __print_another_object_is_bound_error(const char *file, const char *
   }
   sstream << std::endl;
 
-  debug_output.callback(sstream.str());
+  oglwrap_debug_output.callback(sstream.str());
 }
 
 /// A function used by CHECK_FOR_DEFAULT_BINDING_EXPLICIT() macro
@@ -94,7 +94,7 @@ inline void __print_default_object_is_bound_error(const char *file, const char *
   }
   sstream << std::endl;
 
-  debug_output.callback(sstream.str());
+  oglwrap_debug_output.callback(sstream.str());
 }
 
 /// Checks if the program is the currently active one, and if not, it returns prints out an error, and calls use on that program.
@@ -119,7 +119,7 @@ inline void __print_another_program_is_active_error(const char *file, const char
   }
   sstream << std::endl;
 
-  debug_output.callback(sstream.str());
+  oglwrap_debug_output.callback(sstream.str());
 }
 #else
 /// Calls the isBound() member function, and prints an error, and binds it, if it returns false.

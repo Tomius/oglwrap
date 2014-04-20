@@ -14,12 +14,12 @@ namespace oglwrap {
   * OGLWRAP_DEBUG is true, and OGLWRAP_DISABLE_DEBUG_OUTPUT is false */
 #if OGLWRAP_INSTATIATE_TEMPLATES
   // Yeah i know, a global variable is not a template, whatever...
-  DebugOutput debug_output;
+  DebugOutput oglwrap_debug_output;
 #else
   #if OGLWRAP_HEADER_ONLY
-    static DebugOutput debug_output;
+    static DebugOutput oglwrap_debug_output;
   #else
-    extern DebugOutput debug_output;
+    extern DebugOutput oglwrap_debug_output;
   #endif
 #endif
 
@@ -36,7 +36,7 @@ namespace oglwrap {
 /// Prints additional info in case of a specific OpenGL error.
 /** Conditionally prints more information about an error if the
   * condition equals with the last error catched by OGLWRAP_CHECK_ERROR() */
-#define OGLWRAP_PRINT_ERROR(cond, text) if(OGLWRAP_LAST_ERROR == cond) {debug_output.callback(text);}
+#define OGLWRAP_PRINT_ERROR(cond, text) if(OGLWRAP_LAST_ERROR == cond) {oglwrap_debug_output.callback(text);}
 
 /// A wrapper around glGetError, that prints file, function, line, and the error in human-readable format.
 /** An error checking macro used for debugging purposes. If OGLWRAP_DEBUG
@@ -99,9 +99,9 @@ inline void __CheckError(const char *file, const char *func, int line, const cha
     sstream << "In function: " << cut_end_of_pretty_func(func) << std::endl;
     sstream << "In '" << file << "' at line " << line << std::endl << std::endl;
 
-    debug_output.printError(glfunc, sstream);
+    oglwrap_debug_output.printError(glfunc, sstream);
 
-    debug_output.callback(sstream.str());
+    oglwrap_debug_output.callback(sstream.str());
   }
 }
 #else
