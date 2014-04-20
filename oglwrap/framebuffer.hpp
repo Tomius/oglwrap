@@ -11,12 +11,15 @@
 #include "textures/texture_cube.hpp"
 #include "textures/texture_3D.hpp"
 
+#include "define_internal_macros.hpp"
+
 namespace oglwrap {
 
 namespace glObject {
   class Renderbuffer : public Object {
     void constructor() const { gl(GenRenderbuffers(1, handle_)); }
-    void destructor() const { gl(DeleteRenderbuffers(1, handle_)); }
+  public:
+    ~Renderbuffer() { if(isDeletable() && *inited_) gl(DeleteRenderbuffers(1, handle_)); }
   };
 }
 
@@ -107,7 +110,8 @@ public:
 namespace glObject {
   class Framebuffer : public Object {
     void constructor() const { gl(GenFramebuffers(1, handle_)); }
-    void destructor() const { gl(DeleteFramebuffers(1, handle_)); }
+  public:
+    ~Framebuffer() { if(isDeletable() && *inited_) gl(DeleteFramebuffers(1, handle_)); }
   };
 }
 
@@ -391,6 +395,8 @@ typedef FramebufferObject<FramebufferType::Draw> Draw_Framebuffer;
 #endif // glGenFramebuffers && glDeleteFramebuffers
 
 } // namespace oglwrap
+
+#include "undefine_internal_macros.hpp"
 
 #endif // OGLWRAP_FRAMEBUFFER_HPP_
 

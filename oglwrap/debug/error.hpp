@@ -26,9 +26,9 @@ namespace oglwrap {
 #if OGLWRAP_DEBUG
 
 #if OGLWRAP_DISABLE_DEBUG_OUTPUT
-  #define glfunc(func) func;
+  #define OGLWRAP_CHECKED_GLFUNCTION(func) func;
 #else
-  #define glfunc(func) \
+  #define OGLWRAP_CHECKED_GLFUNCTION(func) \
     func;\
     OGLWRAP_CHECK_ERROR_NAMED(#func);
 #endif // OGLWRAP_DISABLE_DEBUG_OUTPUT
@@ -86,6 +86,9 @@ inline void __CheckError(const char *file, const char *func, int line, const cha
       case GL_INVALID_FRAMEBUFFER_OPERATION:
         sstream << "GL_INVALID_FRAMEBUFFER_OPERATION";
         break;
+      case GL_TABLE_TOO_LARGE:
+        sstream << "GL_TABLE_TOO_LARGE";
+        break;
     };
 
     sstream << " ]}=========---------\n" << std::endl;
@@ -105,10 +108,10 @@ inline void __CheckError(const char *file, const char *func, int line, const cha
   #define OGLWRAP_PRINT_ERROR(cond, text)
   #define OGLWRAP_CHECK_ERROR()
   #define OGLWRAP_CHECK_ERROR_NAMED(glfunc)
-  #define glfunc(func) func;
+  #define OGLWRAP_CHECKED_FUNCTION(func) func;
 #endif
 
-#define gl(func) glfunc(gl##func)
+#define OGLWRAP_CHECKED_FUNCTION(func) OGLWRAP_CHECKED_GLFUNCTION(gl##func)
 
 } // namespace oglwrap
 

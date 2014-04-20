@@ -17,6 +17,8 @@
 #include "debug/error.hpp"
 #include "debug/binding.hpp"
 
+#include "define_internal_macros.hpp"
+
 namespace oglwrap {
 
 // -------======{[ ShaderStorage ]}======-------
@@ -101,7 +103,8 @@ namespace glObject {
   template<ShaderType shader_t>
   class Shader : public Object {
     void constructor() const { *handle_ = gl(CreateShader(shader_t)); }
-    void destructor() const { gl(DeleteShader(*handle_)); }
+  public:
+    ~Shader() { if(isDeletable() && *inited_) gl(DeleteShader(*handle_)); }
   };
 }
 
@@ -417,7 +420,8 @@ typedef Shader<ShaderType::TessEval> TessEvalShader;
 namespace glObject {
   class Program : public Object {
     void constructor() const { *handle_ = gl(CreateProgram()); }
-    void destructor() const { gl(DeleteProgram(*handle_)); }
+  public:
+    ~Program() { if(isDeletable() && *inited_) gl(DeleteProgram(*handle_)); }
   };
 }
 
@@ -676,5 +680,7 @@ public:
 #endif // glCreateProgram && glDeleteProgram
 
 } // namespace oglwrap
+
+#include "undefine_internal_macros.hpp"
 
 #endif // OGLWRAP_SHADER_HPP_

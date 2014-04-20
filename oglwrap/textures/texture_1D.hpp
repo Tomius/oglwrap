@@ -7,6 +7,8 @@
 
 #include "texture_base.hpp"
 
+#include "../define_internal_macros.hpp"
+
 namespace oglwrap {
 
 // -------======{[ Texture1D declaration ]}======-------
@@ -352,5 +354,7 @@ public:
 };
 
 } // namespace oglwrap
+
+#include "../undefine_internal_macros.hpp"
 
 #endif // OGLWRAP_TEXTURES_TEXTURE_1D_HPP_

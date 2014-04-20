@@ -17,12 +17,15 @@
 #include "glm/glm/glm.hpp"
 #include "glm/glm/gtc/type_ptr.hpp"
 
+#include "define_internal_macros.hpp"
+
 namespace oglwrap {
 
 namespace glObject {
   class VertexArray : public Object {
     void constructor() const { gl(GenVertexArrays(1, handle_)); }
-    void destructor() const { gl(DeleteVertexArrays(1, handle_)); }
+  public:
+    ~VertexArray() { if(isDeletable() && *inited_) gl(DeleteVertexArrays(1, handle_)); }
   };
 }
 
@@ -732,5 +735,7 @@ inline void VertexAttribArrayObject::static_setup_helper(const glm::uvec4 value)
 #endif // glGetAttribLocation
 
 } // namespace oglwrap
+
+#include "undefine_internal_macros.hpp"
 
 #endif // OGLWRAP_VERTEXATTRIB_HPP_

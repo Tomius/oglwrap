@@ -18,12 +18,15 @@
 #include "../glm/glm/glm.hpp"
 #include "../glm/glm/gtc/type_ptr.hpp"
 
+#include "../define_internal_macros.hpp"
+
 namespace oglwrap {
 
 namespace glObject {
   class Texture : public Object {
     void constructor() const { gl(GenTextures(1, handle_)); }
-    void destructor() const { gl(DeleteTextures(1, handle_)); }
+  public:
+    ~Texture() { if(isDeletable() && *inited_) gl(DeleteTextures(1, handle_)); }
   };
 }
 
@@ -346,5 +349,7 @@ public:
 };
 
 } // namespace oglwrap
+
+#include "../undefine_internal_macros.hpp"
 
 #endif // OGLWRAP_TEXTURES_TEXUTRE_BASE_HPP_

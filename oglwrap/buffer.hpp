@@ -10,13 +10,15 @@
 #include "general.hpp"
 #include "debug/error.hpp"
 #include "debug/binding.hpp"
+#include "define_internal_macros.hpp"
 
 namespace oglwrap {
 
 namespace glObject {
   class Buffer : public Object {
     void constructor() const { gl(GenBuffers(1, handle_)); }
-    void destructor() const { gl(DeleteBuffers(1, handle_)); }
+  public:
+    ~Buffer() { if(isDeletable() && *inited_) gl(DeleteBuffers(1, handle_)); }
   };
 }
 
@@ -397,5 +399,7 @@ typedef IndexedBufferObject<IndexedBufferType::TransformFeedback> TransformFeedb
 #endif // glGenBuffers && glDeleteBuffers
 
 } // namespace oglwrap
+
+#include "undefine_internal_macros.hpp"
 
 #endif // OGLWRAP_BUFFER_HPP_

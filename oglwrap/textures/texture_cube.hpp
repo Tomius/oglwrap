@@ -8,6 +8,8 @@
 #include <stdexcept>
 #include "texture_base.hpp"
 
+#include "../define_internal_macros.hpp"
+
 namespace oglwrap {
 
 // -------======{[ TextureCube declaration ]}======-------
@@ -561,5 +563,7 @@ public:
 #endif // GL_TEXTURE_CUBE_MAP
 
 } // namespace oglwrap
+
+#include "../undefine_internal_macros.hpp"
 
 #endif // OGLWRAP_TEXTURES_TEXTURE_CUBE_HPP_

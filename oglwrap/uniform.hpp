@@ -14,6 +14,8 @@
 #include "glm/glm/glm.hpp"
 #include "glm/glm/gtc/type_ptr.hpp"
 
+#include "define_internal_macros.hpp"
+
 namespace oglwrap {
 
 // -------======{[ UniformObject ]}======-------
@@ -712,5 +714,8 @@ inline glm::uvec4 UniformObject<glm::uvec4>::get() const {
 
 #endif // glGetUniformLocation
 } // namespace oglwrap
+
+
+#include "undefine_internal_macros.hpp"
 
 #endif // OGLWRAP_UNIFORM_HPP_

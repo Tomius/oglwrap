@@ -6,6 +6,16 @@
 #ifndef OGLWRAP_OGLWRAP_HPP_
 #define OGLWRAP_OGLWRAP_HPP_
 
+ #ifdef gl
+    #undef gl
+    #warning Please don't define a 'gl' macro before including oglwrap
+ #endif
+
+  #ifdef glfunc
+    #undef glfunc
+    #warning Please don't define a 'glfunc' macro before including oglwrap
+ #endif
+
 // standard headers
 #include <map>
 #include <cmath>
@@ -32,6 +42,7 @@
 #include "glm/glm/gtc/matrix_transform.hpp"
 
 // Commonly used oglwrap headers
+#include "context.hpp"
 #include "shader.hpp"
 #include "uniform.hpp"
 #include "buffer.hpp"
@@ -43,6 +54,11 @@
 	#include "texture.hpp"
 	#include "framebuffer.hpp"
 	#include "transfeedback.hpp"
+#endif
+
+// Put a warning if someone forgot to undef a macro
+#ifdef gl
+  #warning Some oglwrap header forgot to undefine its internal macros.
 #endif
 
 #endif // OGLWRAP_OGLWRAP_HPP_

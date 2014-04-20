@@ -103,7 +103,7 @@ public:
 
 /// A class for managing OpenGL resources.
 class Object : public RefCounted {
-private:
+protected:
   /// The boolean for the object being initialized.
   /** It is a pointer because it is shared between the copies. If one inits
     * the handle, then all instances will have the inited handle */
@@ -115,7 +115,6 @@ private:
     constructor();
   }
 
-protected:
   /// The C handle for the object.
   GLuint *handle_;
 
@@ -136,19 +135,13 @@ public:
     * this object exists, and it is initialized. */
   ~Object() {
     if(isDeletable()) {
-      if(*inited_) {
-        destructor();
-      }
       delete inited_;
       delete handle_;
     }
   }
 
   /// The GL function that allocates the name for this object. Must be overwritten.
-  virtual void constructor() const {}
-
-  /// The GL function that deallocates the name of this object. Must be overwritten.
-  virtual void destructor() const {}
+  virtual void constructor() const = 0;
 
   /// Returns the C handle for the object. Inits it, if this is the first call for it.
   operator GLuint() const {

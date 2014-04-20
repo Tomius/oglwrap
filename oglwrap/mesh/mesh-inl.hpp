@@ -3,6 +3,8 @@
 
 #include "mesh.hpp"
 
+#include "../define_internal_macros.hpp"
+
 namespace oglwrap {
 
 /// Loads in the mesh from a file, and does some post-processing on it.
@@ -358,5 +360,7 @@ inline float Mesh::bSphereRadius() const {
 }
 
 } // namespace oglwrap
+
+#include "../undefine_internal_macros.hpp"
 
 #endif // OGLWRAP_MESH_MESH_INL_HPP

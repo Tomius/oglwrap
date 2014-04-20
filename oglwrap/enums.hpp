@@ -31,7 +31,7 @@ enum ShaderType {
   TessControl = GL_TESS_CONTROL_SHADER,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TESS_EVALUATION_SHADER)
-  TessEval = GL_TESS_EVALUATION_SHADER
+  TessEval = GL_TESS_EVALUATION_SHADER,
 #endif
 };
 }
@@ -73,7 +73,7 @@ enum DataType {
   UnsignedShort = GL_UNSIGNED_SHORT,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNSIGNED_INT)
-  UnsignedInt = GL_UNSIGNED_INT
+  UnsignedInt = GL_UNSIGNED_INT,
 #endif
 };
 }
@@ -97,7 +97,7 @@ enum WholeDataType {
   UnsignedShort = GL_UNSIGNED_SHORT,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNSIGNED_INT)
-  UnsignedInt = GL_UNSIGNED_INT
+  UnsignedInt = GL_UNSIGNED_INT,
 #endif
 };
 }
@@ -113,7 +113,7 @@ enum FloatDataType {
   Float = GL_FLOAT,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_HALF_FLOAT)
-  HalfFloat = GL_HALF_FLOAT
+  HalfFloat = GL_HALF_FLOAT,
 #endif
 };
 }
@@ -161,7 +161,7 @@ enum BufferType {
   TransformFeedback = GL_TRANSFORM_FEEDBACK_BUFFER,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNIFORM_BUFFER)
-  Uniform = GL_UNIFORM_BUFFER
+  Uniform = GL_UNIFORM_BUFFER,
 #endif
 };
 }
@@ -208,7 +208,7 @@ enum BufferBinding {
   TransformFeedback = GL_TRANSFORM_FEEDBACK_BUFFER_BINDING,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNIFORM_BUFFER_BINDING)
-  Uniform = GL_UNIFORM_BUFFER_BINDING
+  Uniform = GL_UNIFORM_BUFFER_BINDING,
 #endif
 };
 }
@@ -226,7 +226,7 @@ enum IndexedBufferType {
   TransformFeedback = GL_TRANSFORM_FEEDBACK_BUFFER,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNIFORM_BUFFER)
-  Uniform = GL_UNIFORM_BUFFER
+  Uniform = GL_UNIFORM_BUFFER,
 #endif
 };
 }
@@ -244,7 +244,7 @@ enum IndexedBufferBinding {
   TransformFeedback = GL_TRANSFORM_FEEDBACK_BUFFER_BINDING,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNIFORM_BUFFER_BINDING)
-  Uniform = GL_UNIFORM_BUFFER_BINDING
+  Uniform = GL_UNIFORM_BUFFER_BINDING,
 #endif
 };
 }
@@ -277,7 +277,7 @@ enum BufferUsage {
   DynamicRead = GL_DYNAMIC_READ,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_DYNAMIC_COPY)
-  DynamicCopy = GL_DYNAMIC_COPY
+  DynamicCopy = GL_DYNAMIC_COPY,
 #endif
 };
 }
@@ -292,7 +292,7 @@ enum BufferMapAccess {
   Write = GL_WRITE_ONLY,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_READ_WRITE)
-  ReadWrite = GL_READ_WRITE
+  ReadWrite = GL_READ_WRITE,
 #endif
 };
 }
@@ -322,7 +322,7 @@ enum BufferMapAccessFlags {
   Persistent_Bit = GL_MAP_PERSISTENT_BIT,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_MAP_COHERENT_BIT)
-  Coherent_Bit = GL_MAP_COHERENT_BIT
+  Coherent_Bit = GL_MAP_COHERENT_BIT,
 #endif
 };
 }
@@ -339,7 +339,7 @@ enum FramebufferType {
   Draw = GL_DRAW_FRAMEBUFFER,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FRAMEBUFFER)
-  Read_Draw = GL_FRAMEBUFFER
+  Read_Draw = GL_FRAMEBUFFER,
 #endif
 };
 }
@@ -355,7 +355,7 @@ enum FramebufferBinding {
   Draw = GL_DRAW_FRAMEBUFFER_BINDING,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FRAMEBUFFER_BINDING)
-  Read_Draw = GL_FRAMEBUFFER_BINDING
+  Read_Draw = GL_FRAMEBUFFER_BINDING,
 #endif
 };
 }
@@ -389,7 +389,7 @@ enum FramebufferStatus {
   Incomplete_Multisample = GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS)
-  Incomplete_LayerTargets = GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS
+  Incomplete_LayerTargets = GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS,
 #endif
 };
 }
@@ -399,7 +399,7 @@ typedef _FramebufferStatus::FramebufferStatus FboStatus;
 namespace _FramebufferAttachment {
 enum FramebufferAttachment {
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_ATTACHMENT0)
-  Color = GL_COLOR_ATTACHMENT0,
+  Color0 = GL_COLOR_ATTACHMENT0,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_ATTACHMENT1)
   Color1 = GL_COLOR_ATTACHMENT1,
@@ -453,7 +453,7 @@ enum FramebufferAttachment {
   Stencil = GL_STENCIL_ATTACHMENT,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_DEPTH_STENCIL_ATTACHMENT)
-  DepthStencil = GL_DEPTH_STENCIL_ATTACHMENT
+  DepthStencil = GL_DEPTH_STENCIL_ATTACHMENT,
 #endif
 };
 }
@@ -483,7 +483,7 @@ enum TexType {
   Tex2DArray = GL_TEXTURE_2D_ARRAY,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_CUBE_MAP)
-  TexCubeMap = GL_TEXTURE_CUBE_MAP
+  TexCubeMap = GL_TEXTURE_CUBE_MAP,
 #endif
 };
 }
@@ -510,7 +510,7 @@ enum TexBinding {
   Tex2DArray = GL_TEXTURE_BINDING_2D_ARRAY,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_BINDING_CUBE_MAP)
-  TexCubeMap = GL_TEXTURE_BINDING_CUBE_MAP
+  TexCubeMap = GL_TEXTURE_BINDING_CUBE_MAP,
 #endif
 };
 }
@@ -528,7 +528,7 @@ enum Tex2DType {
   TexRect = GL_TEXTURE_RECTANGLE,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_CUBE_MAP)
-  TexCubeMap = GL_TEXTURE_CUBE_MAP
+  TexCubeMap = GL_TEXTURE_CUBE_MAP,
 #endif
 };
 }
@@ -552,7 +552,7 @@ enum CubeTarget {
   PosZ = GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z)
-  NegZ = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
+  NegZ = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
 #endif
 };
 }
@@ -564,7 +564,7 @@ enum Tex3DType {
   Tex3D = GL_TEXTURE_3D,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_2D_ARRAY)
-  Tex2DArray = GL_TEXTURE_2D_ARRAY
+  Tex2DArray = GL_TEXTURE_2D_ARRAY,
 #endif
 };
 }
@@ -580,7 +580,7 @@ enum ExtraTexType {
   Tex2DMultisample = GL_TEXTURE_2D_MULTISAMPLE,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_2D_MULTISAMPLE_ARRAY)
-  Tex2DMultisampleArray = GL_TEXTURE_2D_MULTISAMPLE_ARRAY
+  Tex2DMultisampleArray = GL_TEXTURE_2D_MULTISAMPLE_ARRAY,
 #endif
 };
 }
@@ -828,7 +828,7 @@ enum PixelDataInternalFormat {
   Compressed_RG_RGTC2 = GL_COMPRESSED_RG_RGTC2,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COMPRESSED_SIGNED_RG_RGTC2)
-  Compressed_Signed_RG_RGTC2 = GL_COMPRESSED_SIGNED_RG_RGTC2
+  Compressed_Signed_RG_RGTC2 = GL_COMPRESSED_SIGNED_RG_RGTC2,
 #endif
 };
 }
@@ -892,7 +892,7 @@ enum PixelDataFormat {
   BGR_Integer = GL_BGR_INTEGER,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_BGRA_INTEGER)
-  BGRA_Integer = GL_BGRA_INTEGER
+  BGRA_Integer = GL_BGRA_INTEGER,
 #endif
 };
 }
@@ -970,7 +970,7 @@ enum PixelDataType {
   UnsignedInt_5_9_9_9_Rev = GL_UNSIGNED_INT_5_9_9_9_REV,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FLOAT_32_UNSIGNED_INT_24_8_REV)
-  Float_32UnsignedInt_24_8_Rev = GL_FLOAT_32_UNSIGNED_INT_24_8_REV
+  Float_32UnsignedInt_24_8_Rev = GL_FLOAT_32_UNSIGNED_INT_24_8_REV,
 #endif
 };
 }
@@ -988,7 +988,7 @@ enum Wrap {
   ClampToBorder = GL_CLAMP_TO_BORDER,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_MIRRORED_REPEAT)
-  MirroredRepeat = GL_MIRRORED_REPEAT
+  MirroredRepeat = GL_MIRRORED_REPEAT,
 #endif
 };
 }
@@ -1012,7 +1012,7 @@ enum MinFilter {
   LinearMipmapNearest = GL_LINEAR_MIPMAP_NEAREST,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_LINEAR_MIPMAP_LINEAR)
-  LinearMipmapLinear = GL_LINEAR_MIPMAP_LINEAR
+  LinearMipmapLinear = GL_LINEAR_MIPMAP_LINEAR,
 #endif
 };
 }
@@ -1024,7 +1024,7 @@ enum MagFilter {
   Nearest = GL_NEAREST,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_LINEAR)
-  Linear = GL_LINEAR
+  Linear = GL_LINEAR,
 #endif
 };
 }
@@ -1048,7 +1048,7 @@ enum Swizzle {
   Zero = GL_ZERO,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_ONE)
-  One = GL_ONE
+  One = GL_ONE,
 #endif
 };
 }
@@ -1060,7 +1060,7 @@ enum CompMode {
   None = GL_NONE,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COMPARE_REF_TO_TEXTURE)
-  CompareRefToTexture = GL_COMPARE_REF_TO_TEXTURE
+  CompareRefToTexture = GL_COMPARE_REF_TO_TEXTURE,
 #endif
 };
 }
@@ -1090,7 +1090,7 @@ enum CompFunc {
   Always = GL_ALWAYS,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_NEVER)
-  Never = GL_NEVER
+  Never = GL_NEVER,
 #endif
 };
 }
@@ -1105,13 +1105,274 @@ enum TransformFeedbackPrimitiveType {
   Lines = GL_LINES,
 #endif
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_POINTS)
-  Points = GL_POINTS
+  Points = GL_POINTS,
 #endif
 };
 }
 
 typedef _TransformFeedbackPrimitiveType::TransformFeedbackPrimitiveType TransformFeedbackPrimitiveType;
 typedef _TransformFeedbackPrimitiveType::TransformFeedbackPrimitiveType TFB_PrimType;
+
+namespace _Capability {
+enum Capability {
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_BLEND)
+  Blend = GL_BLEND,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_CLIP_DISTANCE)
+  ClipDistance = GL_CLIP_DISTANCE,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_LOGIC_OP)
+  ColorLogicOp = GL_COLOR_LOGIC_OP,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_CULL_FACE)
+  CullFace = GL_CULL_FACE,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_DEBUG_OUTPUT)
+  DebugOutput = GL_DEBUG_OUTPUT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_DEBUG_OUTPUT_SYNCHRONOUS)
+  DebugOutputSynchronous = GL_DEBUG_OUTPUT_SYNCHRONOUS,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_DEPTH_CLAMP)
+  DepthClamp = GL_DEPTH_CLAMP,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_DEPTH_TEST)
+  DepthTest = GL_DEPTH_TEST,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_DITHER)
+  Dither = GL_DITHER,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FRAMEBUFFER_SRGB)
+  FramebufferSrgb = GL_FRAMEBUFFER_SRGB,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_LINE_SMOOTH)
+  LineSmooth = GL_LINE_SMOOTH,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_MULTISAMPLE)
+  Multisample = GL_MULTISAMPLE,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_POLYGON_OFFSET_FILL)
+  PolygonOffsetFill = GL_POLYGON_OFFSET_FILL,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_POLYGON_OFFSET_LINE)
+  PolygonOffsetLine = GL_POLYGON_OFFSET_LINE,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_POLYGON_OFFSET_POINT)
+  PolgonOffsetPoint = GL_POLYGON_OFFSET_POINT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_POLYGON_SMOOTH)
+  PolygonSmooth = GL_POLYGON_SMOOTH,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_PRIMITIVE_RESTART)
+  PrimitiveRestart = GL_PRIMITIVE_RESTART,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_PRIMITIVE_RESTART_FIXED_INDEX)
+  PrimitiveRestartFixedIndex = GL_PRIMITIVE_RESTART_FIXED_INDEX,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_RASTERIZER_DISCARD)
+  RasterizerDiscard = GL_RASTERIZER_DISCARD,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_SAMPLE_ALPHA_TO_COVERAGE)
+  SampleAlphaToCoverage = GL_SAMPLE_ALPHA_TO_COVERAGE,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_SAMPLE_ALPHA_TO_ONE)
+  SampleAlphaToOne = GL_SAMPLE_ALPHA_TO_ONE,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_SAMPLE_COVERAGE)
+  SampleCoverage = GL_SAMPLE_COVERAGE,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_SAMPLE_SHADING)
+  SampleShading = GL_SAMPLE_SHADING,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_SAMPLE_MASK)
+  SampleMask = GL_SAMPLE_MASK,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_SCISSOR_TEST)
+  ScissorTest = GL_SCISSOR_TEST,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_STENCIL_TEST)
+  StencilTest = GL_STENCIL_TEST,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_CUBE_MAP_SEAMLESS)
+  TextureCubeMapSeamless = GL_TEXTURE_CUBE_MAP_SEAMLESS,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_PROGRAM_POINT_SIZE)
+  ProgramPointSize = GL_PROGRAM_POINT_SIZE,
+#endif
+};
+}
+typedef _Capability::Capability Capability;
+
+namespace _GLError {
+enum GLError {
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_NO_ERROR)
+  NoError = GL_NO_ERROR,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_INVALID_ENUM)
+  InvalidEnum = GL_INVALID_ENUM,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_INVALID_VALUE)
+  InvalidValue = GL_INVALID_VALUE,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_INVALID_OPERATION)
+  InvalidOperation = GL_INVALID_OPERATION,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_STACK_OVERFLOW)
+  StackOverflow = GL_STACK_OVERFLOW,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_STACK_UNDERFLOW)
+  StackUnderflow = GL_STACK_UNDERFLOW,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_OUT_OF_MEMORY)
+  OutOfMemory = GL_OUT_OF_MEMORY,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_INVALID_FRAMEBUFFER_OPERATION)
+  InvalidFramebufferOperation = GL_INVALID_FRAMEBUFFER_OPERATION,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TABLE_TOO_LARGE)
+  TableTooLarge = GL_TABLE_TOO_LARGE,
+#endif
+};
+}
+typedef _GLError::GLError GLError;
+
+namespace _ColorBuffer {
+enum ColorBuffer {
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_NONE)
+  None = GL_NONE,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FRONT_LEFT)
+  FrontLeft = GL_FRONT_LEFT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FRONT_RIGHT)
+  FrontRight = GL_FRONT_RIGHT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_BACK_LEFT)
+  BackLeft = GL_BACK_LEFT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_BACK_RIGHT)
+  BackRight = GL_BACK_RIGHT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FRONT)
+  Front = GL_FRONT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_BACK)
+  Back = GL_BACK,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_LEFT)
+  Left = GL_LEFT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_RIGHT)
+  Right = GL_RIGHT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FRONT_AND_BACK)
+  FrontAndBack = GL_FRONT_AND_BACK,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_ATTACHMENT0)
+  Color0 = GL_COLOR_ATTACHMENT0,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_ATTACHMENT1)
+  Color1 = GL_COLOR_ATTACHMENT1,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_ATTACHMENT2)
+  Color2 = GL_COLOR_ATTACHMENT2,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_ATTACHMENT3)
+  Color3 = GL_COLOR_ATTACHMENT3,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_ATTACHMENT4)
+  Color4 = GL_COLOR_ATTACHMENT4,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_ATTACHMENT5)
+  Color5 = GL_COLOR_ATTACHMENT5,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_ATTACHMENT6)
+  Color6 = GL_COLOR_ATTACHMENT6,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_ATTACHMENT7)
+  Color7 = GL_COLOR_ATTACHMENT7,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_ATTACHMENT8)
+  Color8 = GL_COLOR_ATTACHMENT8,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_ATTACHMENT9)
+  Color9 = GL_COLOR_ATTACHMENT9,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_ATTACHMENT10)
+  Color10 = GL_COLOR_ATTACHMENT10,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_ATTACHMENT11)
+  Color11 = GL_COLOR_ATTACHMENT11,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_ATTACHMENT12)
+  Color12 = GL_COLOR_ATTACHMENT12,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_ATTACHMENT13)
+  Color13 = GL_COLOR_ATTACHMENT13,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_ATTACHMENT14)
+  Color14 = GL_COLOR_ATTACHMENT14,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_ATTACHMENT15)
+  Color15 = GL_COLOR_ATTACHMENT15,
+#endif
+};
+}
+typedef _ColorBuffer::ColorBuffer ColorBuffer;
+
+namespace _Face {
+enum Face {
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FRONT)
+  Front = GL_FRONT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_BACK)
+  Back = GL_BACK,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FRONT_AND_BACK)
+  FrontAndBack = GL_FRONT_AND_BACK,
+#endif
+};
+}
+typedef _Face::Face Face;
+
+namespace _FaceOrientation {
+enum FaceOrientation {
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_CW)
+  CW = GL_CW,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_CCW)
+  CCW = GL_CCW,
+#endif
+};
+}
+typedef _FaceOrientation::FaceOrientation FaceOrientation;
+
+namespace _PolyMode {
+enum PolyMode {
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_POINT)
+  Point = GL_POINT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_LINE)
+  Line = GL_LINE,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FILL)
+  Fill = GL_FILL,
+#endif
+};
+}
+typedef _PolyMode::PolyMode PolyMode;
+
+namespace _ProvokeMode {
+enum ProvokeMode {
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FIRST_VERTEX_CONVENTION)
+  FirstVertexConvention = GL_FIRST_VERTEX_CONVENTION,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_LAST_VERTEX_CONVENTION)
+  LastVertexConvention = GL_LAST_VERTEX_CONVENTION,
+#endif
+};
+}
+typedef _ProvokeMode::ProvokeMode ProvokeMode;
 
 } // Namespace Enums
 

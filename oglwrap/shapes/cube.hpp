@@ -10,6 +10,8 @@
 #include "../buffer.hpp"
 #include "../vertexAttrib.hpp"
 
+#include "../define_internal_macros.hpp"
+
 namespace oglwrap {
 
 /// Class providing vertex attributes and instructions for rendering of a cube.
@@ -234,6 +236,8 @@ public:
 };
 
 } // Namespace oglwrap
+
+#include "../undefine_internal_macros.hpp"
 
 #endif // OGLWRAP_SHAPES_CUBE_HPP_
 

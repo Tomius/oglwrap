@@ -7,6 +7,8 @@
 
 #include "texture_base.hpp"
 
+#include "../define_internal_macros.hpp"
+
 namespace oglwrap {
 
 // -------======{[ 3D Textures' declaration ]}======-------
@@ -412,5 +414,7 @@ typedef Texture3D_Base<Tex3DType::Tex2DArray> Texture2D_Array;
 #endif // GL_TEXTURE_3D
 
 } // namespace oglwrap
+
+#include "../undefine_internal_macros.hpp"
 
 #endif // OGLWRAP_TEXTURES_TEXTURE_3D_HPP_
