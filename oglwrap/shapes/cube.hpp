@@ -8,6 +8,7 @@
 #define OGLWRAP_SHAPES_CUBE_HPP_
 
 #include "../buffer.hpp"
+#include "../context.hpp"
 #include "../vertexAttrib.hpp"
 
 #include "../define_internal_macros.hpp"
@@ -214,7 +215,7 @@ public:
   void render() {
     if(is_setup_positions_) {
       vao.bind();
-      gl(DrawArrays(GL_TRIANGLES, 0, 108 * sizeof(float)));
+      Context::DrawArrays(PrimType::Triangles, 0, 108 * sizeof(float));
       vao.unbind();
     }
   }

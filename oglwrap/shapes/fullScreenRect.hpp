@@ -6,6 +6,7 @@
 #define OGLWRAP_SHAPES_FULLSCREENRECT_HPP_
 
 #include "../buffer.hpp"
+#include "../context.hpp"
 #include "../vertexAttrib.hpp"
 
 #include "../define_internal_macros.hpp"
@@ -83,7 +84,7 @@ public:
   void render() {
     if(is_setup_positions_) {
       vao.bind();
-      gl(DrawArrays(GL_TRIANGLE_STRIP, 0, 4));
+      Context::DrawArrays(PrimType::TriangleStrip, 0, 4);
       vao.unbind();
     }
   }

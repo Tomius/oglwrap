@@ -15,16 +15,17 @@ namespace context {
 
 class Drawing {
 public:
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawArrays)
   /// Draws count of primitives from the bound array buffer.
   /** @param type    Specifies what kind of primitives to render.
     * @param first   Specifies the starting index in the enabled arrays.
     * @param count   Specifies the number of indices to be rendered.
     * @see glDrawArrays */
-  static void DrawArrays(PrimitiveType type, GLint first, GLsizei count) {
+  static void DrawArrays(PrimitiveType type,
+                         GLint first,
+                         GLsizei count
+  ) {
     gl(DrawArrays(type, first, count));
   }
-  #endif
 
   #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawArraysInstaced)
   /// Draw multiples instances of a range of elements.
@@ -92,41 +93,125 @@ public:
   /// Render multiple sets of primitives from array data
   /** @param type        Specifies what kind of primitives to render.
     * @param indirect    Specifies the address of an array of structures containing the draw parameters.
-    * @param drawcount   Specifies the the number of elements in the array of draw parameter structures.
+    * @param draw_count  Specifies the the number of elements in the array of draw parameter structures.
     * @param stride      Specifies the distance in basic machine units between elements of the draw parameter array.
     * @see glMultiDrawArraysIndirect */
   static void MultiDrawArraysIndirect(PrimitiveType type,
                                       const void *indirect,
-                                      GLsizei drawcount,
+                                      GLsizei draw_count,
                                       GLsizei stride
   ) {
-    gl(MultiDrawArraysIndirect(type, indirect, drawcount, stride));
+    gl(MultiDrawArraysIndirect(type, indirect, draw_count, stride));
   }
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElements)
   /// Draws a sequence of primitives from the bound element array buffers, in the order specified by the bound index buffer.
   /** @param type         Specifies what kind of primitives to render.
     * @param count        Specifies the number of elements to be rendered.
     * @param index_type   Specifies the type of the values in the index buffer.
     * @see glDrawElements */
-  static void DrawElements(PrimitiveType type, GLsizei count, WholeDataType index_type) {
+  static void DrawElements(PrimitiveType type,
+                           GLsizei count,
+                           WholeDataType index_type
+  ) {
     gl(DrawElements(type, count, index_type, nullptr));
   }
-  #endif
 
   template <typename GLtype>
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElements)
   /// Draws a sequence of primitives from the bound element array buffers, in the order specified by the bound index buffer.
   /** @param type         Specifies what kind of primitives to render.
     * @param count        Specifies the number of elements to be rendered.
-    * @param index_type   Specifies the type of the values in the index buffer.
+    * @param indices      Specifies the offset pointer in the index buffer.
     * @see glDrawElements */
-  static void DrawElements(PrimitiveType type, GLsizei count, const GLtype* indices) {
-    static_assert((sizeof(GLtype), false), "index_type must be one of GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT, or GL_UNSIGNED_INT");
+  static void DrawElements(PrimitiveType type,
+                           GLsizei count,
+                           const GLtype* indices) {
+    static_assert((sizeof(GLtype), false), "index type must be one of GLubyte, GLushort, or GLuint");
+  }
+
+
+  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsInstanced)
+  /// Draws multiple instances of a sequence of primitives from the bound element array buffers, in the order specified by the bound index buffer.
+  /** @param type         Specifies what kind of primitives to render.
+    * @param count        Specifies the number of elements to be rendered.
+    * @param index_type   Specifies the type of the values in the index buffer.
+    * @param inst_count   Specifies the number of instances of the specified range of indices to be rendered.
+    * @see glDrawElementsInstanced */
+  static void DrawElementsInstanced(PrimitiveType type,
+                                    GLsizei count,
+                                    WholeDataType index_type,
+                                    GLsizei inst_count
+  ) {
+    gl(DrawElementsInstanced(type, count, index_type, nullptr, inst_count));
+  }
+
+  template <typename GLtype>
+  /// Draws multiple instances of a sequence of primitives from the bound element array buffers, in the order specified by the bound index buffer.
+  /** @param type         Specifies what kind of primitives to render.
+    * @param count        Specifies the number of elements to be rendered.
+    * @param indices      Specifies the offset pointer in the index buffer.
+    * @param inst_count   Specifies the number of instances of the specified range of indices to be rendered.
+    * @see glDrawElementsInstanced */
+  static void DrawElementsInstanced(PrimitiveType type,
+                                    GLsizei count,
+                                    const GLtype* indices,
+                                    GLsizei inst_count
+  ) {
+    static_assert((sizeof(GLtype), false), "index type must be one of GLubyte, GLushort, or GLuint");
   }
   #endif
 
+  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsInstancedBaseInstance)
+  /// Draws multiple instances of a sequence of primitives from the bound element array buffers, in the order specified by the bound index buffer.
+  /** @param type           Specifies what kind of primitives to render.
+    * @param count          Specifies the number of elements to be rendered.
+    * @param index_type     Specifies the type of the values in the index buffer.
+    * @param inst_count     Specifies the number of instances of the specified range of indices to be rendered.
+    * @param base_instance  Specifies the base instance for use in fetching instanced vertex attributes.
+    * @see glDrawElementsInstancedBaseInstance */
+  static void DrawElementsInstancedBaseInstance(PrimitiveType type,
+                                                GLsizei count,
+                                                WholeDataType index_type,
+                                                GLsizei inst_count,
+                                                GLuint base_instance
+  ) {
+    gl(DrawElementsInstancedBaseInstance(type, count, index_type, nullptr, inst_count, base_instance));
+  }
+
+  template <typename GLtype>
+  /// Draws multiple instances of a sequence of primitives from the bound element array buffers, in the order specified by the bound index buffer.
+  /** @param type         Specifies what kind of primitives to render.
+    * @param count        Specifies the number of elements to be rendered.
+    * @param indices      Specifies the offset pointer in the index buffer.
+    * @param inst_count   Specifies the number of instances of the specified range of indices to be rendered.
+    * @param base_instace Specifies the base instance for use in fetching instanced vertex attributes.
+    * @see glDrawElementsInstancedBaseInstance */
+  static void DrawElementsInstancedBaseInstance(PrimitiveType type,
+                                                GLsizei count,
+                                                const GLtype* indices,
+                                                GLsizei inst_count,
+                                                GLuint base_instance
+  ) {
+    static_assert((sizeof(GLtype), false), "index type must be one of GLubyte, GLushort, or GLuint");
+  }
+  #endif
+
+  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glMultiDrawElements)
+  template <typename GLtype>
+  /// Draws multiple sets of sequences of primitives from the bound element array buffers, in the order specified by the bound index buffer.
+  /** @param type         Specifies what kind of primitives to render.
+    * @param count        Points to an array of the elements counts.
+    * @param indices      Specifies a pointer to the location where the offset pointers to the index buffer are stored.
+    * @param draw_count   Specifies the size of the count and indices arrays.
+    * @see glMultiDrawElements */
+  static void MultiDrawElements(PrimitiveType type,
+                                const GLsizei* count,
+                                const GLtype* const* indices,
+                                GLsizei draw_count
+  ) {
+    static_assert((sizeof(GLtype), false), "index type must be one of GLubyte, GLushort, or GLuint");
+  }
+  #endif
 
   #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glPrimitiveRestartIndex)
   /// Sets the primitive restart index.
@@ -138,7 +223,6 @@ public:
 };
 
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElements)
 template<>
 inline void Drawing::DrawElements<GLubyte>(PrimitiveType type, GLsizei count, const GLubyte* indices) {
   gl(DrawElements(type, count, DataType::UnsignedByte, indices));
@@ -152,6 +236,70 @@ inline void Drawing::DrawElements<GLushort>(PrimitiveType type, GLsizei count, c
 template<>
 inline void Drawing::DrawElements<GLuint>(PrimitiveType type, GLsizei count, const GLuint* indices) {
   gl(DrawElements(type, count, DataType::UnsignedInt, indices));
+}
+
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsInstanced)
+template<>
+inline void Drawing::DrawElementsInstanced<GLubyte>(PrimitiveType type, GLsizei count, const GLubyte* indices, GLsizei inst_count) {
+  gl(DrawElementsInstanced(type, count, DataType::UnsignedByte, indices, inst_count));
+}
+
+template<>
+inline void Drawing::DrawElementsInstanced<GLushort>(PrimitiveType type, GLsizei count, const GLushort* indices, GLsizei inst_count) {
+  gl(DrawElementsInstanced(type, count, DataType::UnsignedShort, indices, inst_count));
+}
+
+template<>
+inline void Drawing::DrawElementsInstanced<GLuint>(PrimitiveType type, GLsizei count, const GLuint* indices, GLsizei inst_count) {
+  gl(DrawElementsInstanced(type, count, DataType::UnsignedInt, indices, inst_count));
+}
+#endif
+
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsInstancedBaseInstance)
+template<>
+inline void Drawing::DrawElementsInstancedBaseInstance<GLubyte>(PrimitiveType type, GLsizei count, const GLubyte* indices, GLsizei inst_count, GLuint base_instance) {
+  gl(DrawElementsInstancedBaseInstance(type, count, DataType::UnsignedByte, indices, inst_count, base_instance));
+}
+
+template<>
+inline void Drawing::DrawElementsInstancedBaseInstance<GLushort>(PrimitiveType type, GLsizei count, const GLushort* indices, GLsizei inst_count, GLuint base_instance) {
+  gl(DrawElementsInstancedBaseInstance(type, count, DataType::UnsignedShort, indices, inst_count, base_instance));
+}
+
+template<>
+inline void Drawing::DrawElementsInstancedBaseInstance<GLuint>(PrimitiveType type, GLsizei count, const GLuint* indices, GLsizei inst_count, GLuint base_instance) {
+  gl(DrawElementsInstancedBaseInstance(type, count, DataType::UnsignedInt, indices, inst_count, base_instance));
+}
+#endif
+
+// glMultiDrawElements used to have a const GLvoid** parameter, that became
+// const GLvoid* const* in later version. In order to avoid GLEW version
+// dependency this wrapper class enables casting a pointer to either of
+// these two types.
+class OGLWRAP_POINTER_HACKER {
+  void* ptr_;
+public:
+  template <typename T>
+  OGLWRAP_POINTER_HACKER(T ptr) : ptr_((void*)ptr) {}
+
+  template <typename U>
+  operator U() { return U(ptr_); }
+};
+
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glMultiDrawElements)
+template<>
+inline void Drawing::MultiDrawElements<GLubyte>(PrimitiveType type, const GLsizei* count, const GLubyte* const* indices, GLsizei draw_count) {
+  gl(MultiDrawElements(type, count, DataType::UnsignedByte, OGLWRAP_POINTER_HACKER(indices), draw_count));
+}
+
+template<>
+inline void Drawing::MultiDrawElements<GLushort>(PrimitiveType type, const GLsizei* count, const GLushort* const* indices, GLsizei draw_count) {
+  gl(MultiDrawElements(type, count, DataType::UnsignedShort, OGLWRAP_POINTER_HACKER(indices), draw_count));
+}
+
+template<>
+inline void Drawing::MultiDrawElements<GLuint>(PrimitiveType type, const GLsizei* count, const GLuint* const* indices, GLsizei draw_count) {
+  gl(MultiDrawElements(type, count, DataType::UnsignedInt, OGLWRAP_POINTER_HACKER(indices), draw_count));
 }
 #endif
 

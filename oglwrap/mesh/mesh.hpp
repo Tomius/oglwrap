@@ -27,7 +27,7 @@ protected:
     ArrayBuffer verts, normals, texCoords;
     IndexBuffer indices;
     unsigned idxCount, materialIndex;
-    DataType idxType;
+    WholeDataType idxType;
 
     MeshEntry() : materialIndex(0xFFFFFFFF) {} // Invalid material
   };

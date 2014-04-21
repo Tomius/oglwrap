@@ -1415,6 +1415,7 @@ enum PrimitiveType {
 };
 }
 typedef _PrimitiveType::PrimitiveType PrimitiveType;
+typedef PrimitiveType PrimType;
 
 } // Namespace Enums
 

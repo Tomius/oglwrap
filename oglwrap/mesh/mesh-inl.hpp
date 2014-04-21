@@ -2,6 +2,7 @@
 #define OGLWRAP_MESH_MESH_INL_HPP
 
 #include "mesh.hpp"
+#include "../context.hpp"
 
 #include "../define_internal_macros.hpp"
 
@@ -89,13 +90,13 @@ inline void Mesh::setupPositions(VertexAttribArray attrib) {
     // ~~~~~~<{ Load the indices }>~~~~~~
 
     if(paiMesh->mNumFaces * 3 < UCHAR_MAX) {
-      entries_[i].idxType = DataType::UnsignedByte;
+      entries_[i].idxType = WholeDataType::UnsignedByte;
       setIndices<unsigned char>(i);
     } else if(paiMesh->mNumFaces * 3 < USHRT_MAX) {
-      entries_[i].idxType = DataType::UnsignedShort;
+      entries_[i].idxType = WholeDataType::UnsignedShort;
       setIndices<unsigned short>(i);
     } else {
-      entries_[i].idxType = DataType::UnsignedInt;
+      entries_[i].idxType = WholeDataType::UnsignedInt;
       setIndices<unsigned int>(i);
     }
   }
@@ -273,12 +274,11 @@ inline void Mesh::render() {
       material.textures[materialIndex].bind();
     }
 
-    gl(DrawElements(
-       GL_TRIANGLES,
-       entries_[i].idxCount,
-       entries_[i].idxType,
-       0
-     ));
+    Context::DrawElements(
+      PrimType::Triangles,
+      entries_[i].idxCount,
+      entries_[i].idxType
+    );
   }
 
   VertexArray::Unbind();
