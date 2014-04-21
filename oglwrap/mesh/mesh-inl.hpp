@@ -266,12 +266,15 @@ inline void Mesh::render() {
     entries_[i].vao.bind();
 
     const unsigned int materialIndex = entries_[i].materialIndex;
-    for(auto iter = materials_.begin(); iter != materials_.end(); iter++) {
-      auto material = iter->second;
-      if(material.active == true && materialIndex < material.textures.size()) {
-        material.textures[materialIndex].active(material.texUnit);
+
+    if(textures_enabled_) {
+      for(auto iter = materials_.begin(); iter != materials_.end(); iter++) {
+        auto material = iter->second;
+        if(material.active == true && materialIndex < material.textures.size()) {
+          material.textures[materialIndex].active(material.texUnit);
+        }
+        material.textures[materialIndex].bind();
       }
-      material.textures[materialIndex].bind();
     }
 
     Context::DrawElements(
@@ -279,10 +282,19 @@ inline void Mesh::render() {
       entries_[i].idxCount,
       entries_[i].idxType
     );
+
+    if(textures_enabled_) {
+      for(auto iter = materials_.begin(); iter != materials_.end(); iter++) {
+        auto material = iter->second;
+        if(material.active == true && materialIndex < material.textures.size()) {
+          material.textures[materialIndex].active(material.texUnit);
+        }
+        material.textures[materialIndex].unbind();
+      }
+    }
   }
 
   VertexArray::Unbind();
-  Texture2D::Unbind();
 }
 
 /// The transformation that takes the model's world coordinates to the OpenGL style world coordinates.

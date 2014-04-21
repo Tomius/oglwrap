@@ -515,8 +515,9 @@ public:
   }
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glLinkProgram) && defined(glGetProgramiv) && defined(glGetProgramInfoLog))
-  /// Links the program.
-  /** If the linking fails, it throws a std::runtime_error containing the linking info.
+  /// Links the program and checks for error if OGLWRAP_DEBUG is defined.
+  /** If the linking fails, it throws an
+    * std::runtime_error containing the linking info.
     * @see glLinkProgram, glGetProgramiv, glGetProgramInfoLog */
   const Program& link() const {
     gl(LinkProgram(program_));
@@ -539,7 +540,21 @@ public:
 
       throw std::runtime_error(str.str());
     }
+    #endif // OGLWRAP_DEBUG
 
+    return *this;
+  }
+#endif // glLinkProgram && glGetProgramiv && glGetProgramInfoLog
+
+#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glValidateProgram) && defined(glGetProgramiv) && defined(glGetProgramInfoLog))
+  /// Validates the program if OGLWRAP_DEBUG is defined.
+  /** Returns the validation info, or an empty string.
+    * @see glLinkProgram, glGetProgramiv, glGetProgramInfoLog */
+  std::string validate() const {
+    std::string ret;
+
+    #ifdef OGLWRAP_DEBUG
+    GLint status;
     gl(ValidateProgram(program_));
     gl(GetProgramiv(program_, GL_VALIDATE_STATUS, &status));
     if(status == GL_FALSE) {
@@ -548,18 +563,20 @@ public:
 
       GLchar *strInfoLog = new GLchar[infoLogLength + 1];
       gl(GetProgramInfoLog(program_, infoLogLength, NULL, strInfoLog));
-      std::cout << "The validation of the program containing the following shaders failed: " << std::endl;
-      std::cout << getShaderNames() << std::endl;
-      std::cout << "This program might generate GL_INVALID_OPERATION when used for rendering" << std::endl;
+      std::stringstream str;
+      str << "The validation of the program containing the following shaders failed: " << std::endl;
+      str << getShaderNames() << std::endl;
+      str << "This program might generate GL_INVALID_OPERATION when used for rendering" << std::endl;
       if(infoLogLength)
-        std::cout << "The validation info: " << strInfoLog << std::endl;
+        str << "The validation info: " << strInfoLog << std::endl;
       delete[] strInfoLog;
+      ret = str.str();
     }
-    #endif // OGLWRAP_DEBUG
+    #endif
 
-    return *this;
+    return ret;
   }
-#endif // glLinkProgram && glGetProgramiv && glGetProgramInfoLog
+#endif // glValidateProgram && glGetProgramiv && glGetProgramInfoLog
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glUseProgram)
   /// Installs the program as a part of the current rendering state.

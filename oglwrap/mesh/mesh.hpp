@@ -67,6 +67,8 @@ protected:
   bool is_setup_normals_;
   /// Stores if the setup_texcoords function is called (they shouldn't be called more than once).
   bool is_setup_texcoords_;
+  /// Textures can be disabled, and not used for rendering
+  bool textures_enabled_;
 
   /// It shouldn't be copyable.
   Mesh(const Mesh& src) = delete;
@@ -157,6 +159,12 @@ public:
 
   /// Returns the radius of the bounding sphere.
   float bSphereRadius() const;
+
+  /// Enables the use of textures for rendering.
+  void enableTextures() { textures_enabled_ = true; }
+
+  /// Disables the use of textures for rendering.
+  void disableTextures() { textures_enabled_ = true; }
 
 }; // Mesh class
 
