@@ -52,8 +52,8 @@ public:
     const void *data
   ) {
     gl(TexImage3D(
-         texture_t, 0, internalFormat, width, height, depth, 0, format, type, data
-       ));
+      texture_t, 0, internalFormat, width, height, depth, 0, format, type, data
+    ));
   }
   /// Uploads the base image.
   /** @param internalFormat - Specifies the number, order, and size of the color components in the texture.
@@ -100,8 +100,8 @@ public:
     const void *data
   ) {
     gl(TexImage3D(
-         texture_t, level, internalFormat, width, height, depth, 0, format, type, data
-       ));
+      texture_t, level, internalFormat, width, height, depth, 0, format, type, data
+    ));
   }
   /// Uploads a mipmap of the image.
   /** @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
@@ -148,8 +148,8 @@ public:
     const void *data
   ) {
     gl(TexSubImage3D(
-         texture_t, 0, xOffset, yOffset, zOffset, width, height, depth, format, type, data
-       ));
+      texture_t, 0, xOffset, yOffset, zOffset, width, height, depth, format, type, data
+    ));
   }
   /// Updates a part of the base image.
   /** @param xOffset/yOffset/zOffset - Specifies a texel offset in the x/y/z direction within the texture array.
@@ -196,8 +196,8 @@ public:
     const void *data
   ) {
     gl(TexSubImage3D(
-         texture_t, level, xOffset, yOffset, zOffset, width, height, depth, format, type, data
-       ));
+      texture_t, level, xOffset, yOffset, zOffset, width, height, depth, format, type, data
+    ));
   }
   /// Updates a part of a mipmap image.
   /** @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.

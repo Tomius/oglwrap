@@ -123,7 +123,7 @@ public:
     * @param index_type   Specifies the type of the values in the index buffer.
     * @see glDrawElements */
   static void DrawElements(PrimitiveType type, GLsizei count, const GLtype* indices) {
-    throw std::invalid_argument("index_type must be one of GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT, or GL_UNSIGNED_INT");
+    static_assert((sizeof(GLtype), false), "index_type must be one of GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT, or GL_UNSIGNED_INT");
   }
   #endif
 

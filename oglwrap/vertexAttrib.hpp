@@ -150,7 +150,7 @@ public:
     * @param values_per_vertex - The dimension of the attribute data divided by the dimension of the template parameter.
     * @see glVertexAttribPointer, glVertexAttribIPointer, glVertexAttribLPointer */
   VertexAttribArrayObject& setup(GLuint values_per_vertex = 1) {
-    throw std::invalid_argument("Unrecognized OpenGL type for VertexAttribArrayObject::setup");
+    static_assert((sizeof(GLtype), false), "Unrecognized OpenGL type for VertexAttribArrayObject::setup");
     return *this;
   }
 

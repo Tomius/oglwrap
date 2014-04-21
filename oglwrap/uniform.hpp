@@ -39,7 +39,7 @@ protected:
     * @param value - The value to set the uniform.
     * @see glUniform* */
   void set(const GLtype& value) { // See the specializations at the end of this file.
-    throw std::invalid_argument("Trying to set a uniform to a value that is not an OpenGL type.");
+    static_assert((sizeof(GLtype), false), "Trying to set a uniform to a value that is not an OpenGL type.");
   }
 
   /// Sets the uniform to a GLtype variable's value.
@@ -57,7 +57,7 @@ protected:
     * @return The current value of the uniform.
     * @see glUniform* */
   GLtype get() const {
-    throw std::invalid_argument("Trying to set a uniform to a value that is not an OpenGL type.");
+    static_assert((sizeof(GLtype), false), "Trying to get a uniform to a value that is not an OpenGL type.");
   }
 
   /// Gets the current value of the uniform.

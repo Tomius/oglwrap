@@ -543,15 +543,16 @@ public:
     gl(ValidateProgram(program_));
     gl(GetProgramiv(program_, GL_VALIDATE_STATUS, &status));
     if(status == GL_FALSE) {
-            GLint infoLogLength;
+      GLint infoLogLength;
       gl(GetProgramiv(program_, GL_INFO_LOG_LENGTH, &infoLogLength));
 
       GLchar *strInfoLog = new GLchar[infoLogLength + 1];
       gl(GetProgramInfoLog(program_, infoLogLength, NULL, strInfoLog));
       std::cout << "The validation of the program containing the following shaders failed: " << std::endl;
       std::cout << getShaderNames() << std::endl;
-      std::cout << "The validation info: " << strInfoLog << std::endl;
       std::cout << "This program might generate GL_INVALID_OPERATION when used for rendering" << std::endl;
+      if(infoLogLength)
+        std::cout << "The validation info: " << strInfoLog << std::endl;
       delete[] strInfoLog;
     }
     #endif // OGLWRAP_DEBUG
