@@ -731,7 +731,7 @@ public:
                                         GLsizei draw_count,
                                         GLsizei stride = 0,
                                         const void* indirect = nullptr) {
-    gl(MultiDrawElementsIndirect(type, index_type, draw_count, stride, indirect));
+    gl(MultiDrawElementsIndirect(type, index_type, indirect, draw_count, stride));
   }
   #endif
 
