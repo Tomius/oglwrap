@@ -226,7 +226,7 @@ void AnimatedMesh::shaderPlumbBones(DataType idx_t, LazyVertexAttribArray boneID
       intptr_t weightOffset = baseOffset + 4 * sizeof(Index_t);
 
       if(integerIDs) {
-        boneIDs[boneAttribSet].ipointer(4, oglwrap::WholeDataType(idx_t), stride, (const void*)baseOffset).enable();
+        boneIDs[boneAttribSet].ipointer(4, WholeDataType(idx_t), stride, (const void*)baseOffset).enable();
       } else {
         boneIDs[boneAttribSet].pointer(4, idx_t, false, stride, (const void*)baseOffset).enable();
       }

@@ -90,13 +90,13 @@ inline void Mesh::setupPositions(VertexAttribArray attrib) {
     // ~~~~~~<{ Load the indices }>~~~~~~
 
     if(paiMesh->mNumFaces * 3 < UCHAR_MAX) {
-      entries_[i].idxType = WholeDataType::UnsignedByte;
+      entries_[i].idxType = IndexType::UnsignedByte;
       setIndices<unsigned char>(i);
     } else if(paiMesh->mNumFaces * 3 < USHRT_MAX) {
-      entries_[i].idxType = WholeDataType::UnsignedShort;
+      entries_[i].idxType = IndexType::UnsignedShort;
       setIndices<unsigned short>(i);
     } else {
-      entries_[i].idxType = WholeDataType::UnsignedInt;
+      entries_[i].idxType = IndexType::UnsignedInt;
       setIndices<unsigned int>(i);
     }
   }
