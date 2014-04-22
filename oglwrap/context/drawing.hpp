@@ -170,12 +170,15 @@ public:
    * aren't modified remain well defined.
    *
    * @param mode       Specifies what kind of primitives to render.
-   * @param indirect   Specifies the address of a structure containing the draw
+   * @param indirect   Specifies a byte offset (cast to a pointer type) into the
+   *                   buffer bound to GL_DRAW_INDIRECT_BUFFER​, which designates
+   *                   the starting point of the structure containing the draw
    *                   parameters.
    * @see glDrawArraysIndirect
    * @version OpenGL 4.0
    */
-  static void DrawArraysIndirect(PrimitiveType type, const void *indirect) {
+  static void DrawArraysIndirect(PrimitiveType type,
+                                 const void *indirect = nullptr) {
     gl(DrawArraysIndirect(type, indirect));
   }
   #endif
@@ -264,8 +267,10 @@ public:
    * glMultiDrawArraysIndirect is available only if the GL version is 4.3 or greater.
    *
    * @param type        Specifies what kind of primitives to render.
-   * @param indirect    Specifies the address of an array of structures
-   *                    containing the draw parameters.
+   * @param indirect    Specifies a byte offset (cast to a pointer type) into the
+   *                    buffer bound to GL_DRAW_INDIRECT_BUFFER​, which designates
+   *                    the starting point of the structure containing the draw
+   *                    parameters.
    * @param draw_count  Specifies the the number of elements in the array of
    *                    draw parameter structures.
    * @param stride      Specifies the distance in basic machine units between
@@ -274,7 +279,7 @@ public:
    * @version OpenGL 4.3
    */
   static void MultiDrawArraysIndirect(PrimitiveType type,
-                                      const void *indirect,
+                                      const void *indirect = nullptr,
                                       GLsizei draw_count,
                                       GLsizei stride) {
     gl(MultiDrawArraysIndirect(type, indirect, draw_count, stride));
@@ -697,21 +702,47 @@ public:
    * unspecified value after glDrawElementsIndirect returns. Attributes that
    * aren't modified remain well defined.
    *
-   * @param type       [description]
-   * @param index_type [description]
-   * @param indirect   [description]
+   * Notes: The baseInstance​ member of the DrawElementsIndirectCommand​ structure
+   * is defined only if the GL version is 4.2 or greater. For versions of the GL
+   * less than 4.2, this parameter is present but is reserved and should be set
+   * to zero. On earlier versions of the GL, behavior is undefined if it is
+   * non-zero.
+   *
+   * @param type       Specifies what kind of primitives to render.
+   * @param index_type Specifies the type of data in the IndexBuffer.
+   * @param indirect   Specifies a byte offset (cast to a pointer type) into the
+   *                   buffer bound to GL_DRAW_INDIRECT_BUFFER​, which designates
+   *                   the starting point of the structure containing the draw
+   *                   parameters.
    * @see glDrawElementsIndirect
    * @version OpenGL 4.0
    */
   static void DrawElementsIndirect(PrimType type,
                                    IndexType index_type,
-                                   const void* indirect) {
+                                   const void* indirect = nullptr) {
     gl(DrawElementsIndirect(type, index_type, indirect));
   }
 
   #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glPrimitiveRestartIndex)
   /**
    * @brief Sets the primitive restart index.
+   *
+   * glPrimitiveRestartIndex specifies a vertex array element that is treated
+   * specially when primitive restarting is enabled. This is known as the
+   * primitive restart index.
+   *
+   * When one of the Draw* commands transfers a set of generic attribute array
+   * elements to the GL, if the index within the vertex arrays corresponding to
+   * that set is equal to the primitive restart index, then the GL does not
+   * process those elements as a vertex. Instead, it is as if the drawing
+   * command ended with the immediately preceding transfer, and another drawing
+   * command is immediately started with the same parameters, but only
+   * transferring the immediately following element through the end of the
+   * originally specified elements.
+   *
+   * When either glDrawElementsBaseVertex, glDrawElementsInstancedBaseVertex or
+   * glMultiDrawElementsBaseVertex is used, the primitive restart comparison
+   * occurs before the basevertex offset is added to the array index.
    *
    * @param index Specifies the index to function as primitive restart.
    * @see glPrimitiveRestartIndex
