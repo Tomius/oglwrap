@@ -20,7 +20,8 @@ inline Mesh::Mesh(const std::string& filename, unsigned int flags)
   , entries_(scene_->mNumMeshes)
   , is_setup_positions_(false)
   , is_setup_normals_(false)
-  , is_setup_texcoords_(false) {
+  , is_setup_texcoords_(false)
+  , textures_enabled_(true) {
 
   if(!scene_) {
     throw std::runtime_error("Error parsing " + filename_ + " : " + importer_.GetErrorString());
@@ -90,13 +91,13 @@ inline void Mesh::setupPositions(VertexAttribArray attrib) {
     // ~~~~~~<{ Load the indices }>~~~~~~
 
     if(paiMesh->mNumFaces * 3 < UCHAR_MAX) {
-      entries_[i].idxType = WholeDataType::UnsignedByte;
+      entries_[i].idxType = IndexType::UnsignedByte;
       setIndices<unsigned char>(i);
     } else if(paiMesh->mNumFaces * 3 < USHRT_MAX) {
-      entries_[i].idxType = WholeDataType::UnsignedShort;
+      entries_[i].idxType = IndexType::UnsignedShort;
       setIndices<unsigned short>(i);
     } else {
-      entries_[i].idxType = WholeDataType::UnsignedInt;
+      entries_[i].idxType = IndexType::UnsignedInt;
       setIndices<unsigned int>(i);
     }
   }

@@ -103,6 +103,21 @@ enum WholeDataType {
 }
 typedef _WholeDataType::WholeDataType WholeDataType;
 
+namespace _IndexType {
+enum IndexType {
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNSIGNED_BYTE)
+  UnsignedByte = GL_UNSIGNED_BYTE,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNSIGNED_SHORT)
+  UnsignedShort = GL_UNSIGNED_SHORT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNSIGNED_INT)
+  UnsignedInt = GL_UNSIGNED_INT,
+#endif
+};
+}
+typedef _IndexType::IndexType IndexType;
+
 // SinglePrecisionRealDataType if I wanted to be correct...
 namespace _FloatDataType {
 enum FloatDataType {
