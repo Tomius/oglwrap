@@ -1,5 +1,5 @@
 /** @file general.hpp
-    @brief Contains codes that are (mostly) not related to OpenGL
+    @brief Contains codes that are not related to OpenGL
 */
 
 #ifndef OGLWRAP_GENERAL_HPP_

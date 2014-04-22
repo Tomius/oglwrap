@@ -13,6 +13,7 @@
 #include "context/buffer_clearing.hpp"
 #include "context/rasterization.hpp"
 #include "context/drawing.hpp"
+#include "context/extensions.hpp"
 
 namespace oglwrap {
 	class Context
@@ -24,6 +25,7 @@ namespace oglwrap {
 		, public context::BufferClearing
 		, public context::Rasterization
 		, public context::Drawing
+		, public context::Extensions
 	{ };
 }
 
