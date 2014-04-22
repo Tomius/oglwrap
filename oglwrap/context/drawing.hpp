@@ -279,7 +279,7 @@ public:
    * @version OpenGL 4.3
    */
   static void MultiDrawArraysIndirect(PrimitiveType type,
-                                      const void *indirect = nullptr,
+                                      const void *indirect,
                                       GLsizei draw_count,
                                       GLsizei stride) {
     gl(MultiDrawArraysIndirect(type, indirect, draw_count, stride));
