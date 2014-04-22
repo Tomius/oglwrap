@@ -656,6 +656,7 @@ public:
   }
   #endif
 
+  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsIndirect)
   /**
    * @brief ender indexed primitives from array data, taking parameters from memory
    *
@@ -722,6 +723,134 @@ public:
                                    const void* indirect = nullptr) {
     gl(DrawElementsIndirect(type, index_type, indirect));
   }
+  #endif
+
+  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glMultiDrawElementsIndirect)
+  static void MultiDrawElementsIndirect(PrimType type,
+                                        IndexType index_type,
+                                        GLsizei draw_count,
+                                        GLsizei stride = 0,
+                                        const void* indirect = nullptr) {
+    gl(MultiDrawElementsIndirect(type, index_type, draw_count, stride, indirect));
+  }
+  #endif
+
+  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsBaseVertex)
+  static void DrawElementsBaseVertex(PrimType type,
+                                     GLsizei count,
+                                     IndexType index_type,
+                                     GLint base_vertex) {
+    gl(DrawElementsBaseVertex(type, count, index_type, nullptr, base_vertex));
+  }
+
+  template<typename GLtype>
+  static void DrawElementsBaseVertex(PrimType type,
+                                     GLsizei count,
+                                     const GLtype* indices,
+                                     GLint base_vertex) {
+    static_assert((sizeof(GLtype), false),
+      "index type must be one of GLubyte, GLushort, or GLuint"
+    );
+  }
+  #endif
+
+  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawRangeElementsBaseVertex)
+  static void DrawRangeElementsBaseVertex(PrimType type,
+                                          GLuint start,
+                                          GLuint end,
+                                          GLsizei count,
+                                          IndexType index_type,
+                                          GLint base_vertex) {
+    gl(DrawRangeElementsBaseVertex(
+      type, start, end, count, index_type, nullptr, base_vertex
+    ));
+  }
+
+  template<typename GLtype>
+  static void DrawRangeElementsBaseVertex(PrimType type,
+                                          GLuint start,
+                                          GLuint end,
+                                          GLsizei count,
+                                          const GLtype* indices,
+                                          GLint base_vertex) {
+    static_assert((sizeof(GLtype), false),
+      "index type must be one of GLubyte, GLushort, or GLuint"
+    );
+  }
+  #endif
+
+  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsInstancedBaseVertex)
+  static void DrawElementsInstancedBaseVertex(PrimType type,
+                                              GLsizei count,
+                                              IndexType index_type,
+                                              GLsizei inst_count,
+                                              GLint base_vertex) {
+    gl(DrawElementsInstancedBaseVertex(
+      type, count, index_type, nullptr, inst_count, base_vertex
+    ));
+  }
+
+  template<typename GLtype>
+  static void DrawElementsInstancedBaseVertex(PrimType type,
+                                              GLsizei count,
+                                              const GLtype* indices,
+                                              GLsizei inst_count,
+                                              GLint base_vertex) {
+    static_assert((sizeof(GLtype), false),
+      "index type must be one of GLubyte, GLushort, or GLuint"
+    );
+  }
+  #endif
+
+  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glMultiDrawElementsBaseVertex)
+  static void MultiDrawElementsBaseVertex(PrimType type,
+                                          const GLsizei *count,
+                                          IndexType index_type,
+                                          GLuint draw_count,
+                                          const GLint *base_vertex) {
+    gl(MultiDrawElementsBaseVertex(
+      type, (GLsizei*)count, index_type, nullptr,
+      draw_count, (GLint*)base_vertex
+    ));
+  }
+
+  template<typename GLtype>
+  static void MultiDrawElementsBaseVertex(PrimType type,
+                                          const GLsizei *count,
+                                          const GLtype* const* indices,
+                                          GLuint draw_count,
+                                          const GLint *base_vertex) {
+    static_assert((sizeof(GLtype), false),
+      "index type must be one of GLubyte, GLushort, or GLuint"
+    );
+  }
+  #endif
+
+  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsInstancedBaseVertexBaseInstance)
+  static void DrawElementsInstancedBaseVertexBaseInstance(PrimType type,
+                                                         GLsizei count,
+                                                         IndexType index_type,
+                                                         GLsizei inst_count,
+                                                         GLint base_vertex,
+                                                         GLuint base_instance) {
+    gl(DrawElementsInstancedBaseVertexBaseInstance(
+      type, count, index_type, nullptr, inst_count, base_vertex, base_instance
+    ));
+  }
+
+  template<typename GLtype>
+  static void DrawElementsInstancedBaseVertexBaseInstance(PrimType type,
+                                                         GLsizei count,
+                                                         const GLtype* indices,
+                                                         GLsizei inst_count,
+                                                         GLint base_vertex,
+                                                         GLuint base_instance) {
+    static_assert((sizeof(GLtype), false),
+      "index type must be one of GLubyte, GLushort, or GLuint"
+    );
+  }
+  #endif
+
 
   #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glPrimitiveRestartIndex)
   /**
@@ -924,6 +1053,195 @@ inline void Drawing::DrawRangeElements<GLuint>(PrimitiveType type,
                                                const GLuint* indices) {
   gl(DrawRangeElements(
     type, start, end, count, IndexType::UnsignedInt, indices
+  ));
+}
+#endif
+
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsBaseVertex)
+template<>
+inline void Drawing::DrawElementsBaseVertex<GLubyte>(PrimType type,
+                                                     GLsizei count,
+                                                     const GLubyte* indices,
+                                                     GLint base_vertex) {
+  gl(DrawElementsBaseVertex(
+    type, count, IndexType::UnsignedByte, (void*)indices, base_vertex
+  ));
+}
+template<>
+inline void Drawing::DrawElementsBaseVertex<GLushort>(PrimType type,
+                                                      GLsizei count,
+                                                      const GLushort* indices,
+                                                      GLint base_vertex) {
+  gl(DrawElementsBaseVertex(
+    type, count, IndexType::UnsignedShort, (void*)indices, base_vertex
+  ));
+}
+template<>
+inline void Drawing::DrawElementsBaseVertex<GLuint>(PrimType type,
+                                                    GLsizei count,
+                                                    const GLuint* indices,
+                                                    GLint base_vertex) {
+  gl(DrawElementsBaseVertex(
+    type, count, IndexType::UnsignedInt, (void*)indices, base_vertex
+  ));
+}
+#endif
+
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawRangeElementsBaseVertex)
+template<>
+inline void Drawing::DrawRangeElementsBaseVertex<GLubyte>(PrimType type,
+                                                          GLuint start,
+                                                          GLuint end,
+                                                          GLsizei count,
+                                                          const GLubyte* indices,
+                                                          GLint base_vertex) {
+  gl(DrawRangeElementsBaseVertex(
+    type, start, end, count, IndexType::UnsignedByte,
+    (void*)indices, base_vertex
+  ));
+}
+template<>
+inline void Drawing::DrawRangeElementsBaseVertex<GLushort>(PrimType type,
+                                                          GLuint start,
+                                                          GLuint end,
+                                                          GLsizei count,
+                                                          const GLushort* indices,
+                                                          GLint base_vertex) {
+  gl(DrawRangeElementsBaseVertex(
+    type, start, end, count, IndexType::UnsignedShort,
+    (void*)indices, base_vertex
+  ));
+}
+template<>
+inline void Drawing::DrawRangeElementsBaseVertex<GLuint>(PrimType type,
+                                                         GLuint start,
+                                                         GLuint end,
+                                                         GLsizei count,
+                                                         const GLuint* indices,
+                                                         GLint base_vertex) {
+  gl(DrawRangeElementsBaseVertex(
+    type, start, end, count, IndexType::UnsignedInt,
+    (void*)indices, base_vertex
+  ));
+}
+#endif
+
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsInstancedBaseVertex)
+template<>
+inline void Drawing::DrawElementsInstancedBaseVertex<GLubyte>(
+                                                    PrimType type,
+                                                    GLsizei count,
+                                                    const GLubyte* indices,
+                                                    GLsizei inst_count,
+                                                    GLint base_vertex) {
+  gl(DrawElementsInstancedBaseVertex(
+    type, count, IndexType::UnsignedByte,
+    (void*)indices, inst_count, base_vertex
+  ));
+}
+template<>
+inline void Drawing::DrawElementsInstancedBaseVertex<GLushort>(
+                                                    PrimType type,
+                                                    GLsizei count,
+                                                    const GLushort* indices,
+                                                    GLsizei inst_count,
+                                                    GLint base_vertex) {
+  gl(DrawElementsInstancedBaseVertex(
+    type, count, IndexType::UnsignedShort,
+    (void*)indices, inst_count, base_vertex
+  ));
+}
+template<>
+inline void Drawing::DrawElementsInstancedBaseVertex<GLuint>(
+                                                    PrimType type,
+                                                    GLsizei count,
+                                                    const GLuint* indices,
+                                                    GLsizei inst_count,
+                                                    GLint base_vertex) {
+  gl(DrawElementsInstancedBaseVertex(
+    type, count, IndexType::UnsignedInt,
+    (void*)indices, inst_count, base_vertex
+  ));
+}
+#endif
+
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glMultiDrawElementsBaseVertex)
+template<>
+inline void Drawing::MultiDrawElementsBaseVertex<GLubyte>(
+                                                  PrimType type,
+                                                  const GLsizei *count,
+                                                  const GLubyte* const* indices,
+                                                  GLuint draw_count,
+                                                  const GLint *base_vertex) {
+  gl(MultiDrawElementsBaseVertex(
+    type, (GLsizei*)count, IndexType::UnsignedByte,
+    OGLWRAP_POINTER_HACKER(indices), draw_count, (GLint*)base_vertex
+  ));
+}
+template<>
+inline void Drawing::MultiDrawElementsBaseVertex<GLushort>(
+                                                  PrimType type,
+                                                  const GLsizei *count,
+                                                  const GLushort* const* indices,
+                                                  GLuint draw_count,
+                                                  const GLint *base_vertex) {
+  gl(MultiDrawElementsBaseVertex(
+    type, (GLsizei*)count, IndexType::UnsignedShort,
+    OGLWRAP_POINTER_HACKER(indices), draw_count, (GLint*)base_vertex
+  ));
+}
+template<>
+inline void Drawing::MultiDrawElementsBaseVertex<GLuint>(
+                                                  PrimType type,
+                                                  const GLsizei *count,
+                                                  const GLuint* const* indices,
+                                                  GLuint draw_count,
+                                                  const GLint *base_vertex) {
+  gl(MultiDrawElementsBaseVertex(
+    type, (GLsizei*)count, IndexType::UnsignedInt,
+    OGLWRAP_POINTER_HACKER(indices), draw_count, (GLint*)base_vertex
+  ));
+}
+#endif
+
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsInstancedBaseVertexBaseInstance)
+template<>
+inline void Drawing::DrawElementsInstancedBaseVertexBaseInstance<GLubyte>(
+                                                    PrimType type,
+                                                    GLsizei count,
+                                                    const GLubyte* indices,
+                                                    GLsizei inst_count,
+                                                    GLint base_vertex,
+                                                    GLuint base_instance) {
+  gl(DrawElementsInstancedBaseVertexBaseInstance(
+    type, count, IndexType::UnsignedByte,
+    (void*)indices, inst_count, base_vertex, base_instance
+  ));
+}
+template<>
+inline void Drawing::DrawElementsInstancedBaseVertexBaseInstance<GLushort>(
+                                                    PrimType type,
+                                                    GLsizei count,
+                                                    const GLushort* indices,
+                                                    GLsizei inst_count,
+                                                    GLint base_vertex,
+                                                    GLuint base_instance) {
+  gl(DrawElementsInstancedBaseVertexBaseInstance(
+    type, count, IndexType::UnsignedShort,
+    (void*)indices, inst_count, base_vertex, base_instance
+  ));
+}
+template<>
+inline void Drawing::DrawElementsInstancedBaseVertexBaseInstance<GLuint>(
+                                                    PrimType type,
+                                                    GLsizei count,
+                                                    const GLuint* indices,
+                                                    GLsizei inst_count,
+                                                    GLint base_vertex,
+                                                    GLuint base_instance) {
+  gl(DrawElementsInstancedBaseVertexBaseInstance(
+    type, count, IndexType::UnsignedInt,
+    (void*)indices, inst_count, base_vertex, base_instance
   ));
 }
 #endif

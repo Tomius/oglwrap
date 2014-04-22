@@ -24,12 +24,14 @@ inline Mesh::Mesh(const std::string& filename, unsigned int flags)
   , textures_enabled_(true) {
 
   if(!scene_) {
-    throw std::runtime_error("Error parsing " + filename_ + " : " + importer_.GetErrorString());
+    throw std::runtime_error(
+      "Error parsing " + filename_ + " : " + importer_.GetErrorString()
+    );
   }
 
-  // The world transform is the transform that takes the root node to it's parent's space,
-  // which is the OpenGL style world space. The inverse of this is stored as an attribute
-  // of the scene's root node.
+  // The world transform is the transform that takes the root node to it's
+  // parent's space, which is the OpenGL style world space. The inverse of this
+  // is stored as an attribute of the scene's root node.
   world_transformation_ = glm::inverse(convertMatrix(scene_->mRootNode->mTransformation));
 }
 
