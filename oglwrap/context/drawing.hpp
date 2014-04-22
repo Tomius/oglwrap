@@ -16,24 +16,62 @@ namespace context {
 /// Wrapper for primitive drawing operations
 class Drawing {
 public:
-  /// Draws count of primitives from the bound array buffer.
-  /** @param type    Specifies what kind of primitives to render.
-    * @param first   Specifies the starting index in the enabled arrays.
-    * @param count   Specifies the number of indices to be rendered.
-    * @see glDrawArrays */
+  /**
+   * @brief Draws count of primitives from the bound array buffer.
+   *
+   * glDrawArrays specifies multiple geometric primitives with very few
+   * subroutine calls. Instead of calling a GL procedure to pass each individual
+   * vertex attribute, you can use glVertexAttribPointer to prespecify separate
+   * arrays of vertices, normals, and colors and use them to construct a
+   * sequence of primitives with a single call to glDrawArrays.
+   *
+   * When glDrawArrays is called, it uses count sequential elements from each
+   * enabled array to construct a sequence of geometric primitives, beginning
+   * with element first. mode specifies what kind of primitives are constructed
+   * and how the array elements construct those primitives.
+   *
+   * To enable and disable a generic vertex attribute array, call
+   * glEnableVertexAttribArray and glDisableVertexAttribArray.
+   *
+   * @param type    Specifies what kind of primitives to render.
+   * @param first   Specifies the starting index in the enabled arrays.
+   * @param count   Specifies the number of indices to be rendered.
+   * @see glDrawArrays
+   * @version OpenGL 1.1
+   */
   static void DrawArrays(PrimitiveType type,
                          GLint first,
                          GLsizei count) {
     gl(DrawArrays(type, first, count));
   }
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawArraysInstaced)
-  /// Draw multiples instances of a range of elements.
-  /** @param type       Specifies what kind of primitives to render.
-    * @param first      Specifies the starting index in the enabled arrays.
-    * @param count      Specifies the number of indices to be rendered.
-    * @param inst_count Specifies the number of instances of the specified range of indices to be rendered.
-    * @see glDrawArraysInstaced */
+  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawArraysInstanced)
+  /**
+   * @brief Draw multiples instances of a range of elements.
+   *
+   * glDrawArraysInstanced behaves identically to glDrawArrays except that
+   * inst_count instances of the range of elements are executed. Those attributes
+   * that have divisor N where N is other than zero (as specified by
+   * glVertexAttribDivisor) advance once every N instances. Thus, the element
+   * transferred from instanced vertex attributes is given by: instance divisor
+   *
+   * The value of instance may be read by a vertex shader as gl_InstanceID.
+   *
+   * To enable and disable a generic vertex attribute array, call
+   * glEnableVertexAttribArray and glDisableVertexAttribArray.
+   *
+   * If an array corresponding to a generic attribute required by a vertex
+   * shader is not enabled, then the corresponding element is taken from the
+   * current generic attribute state.
+   *
+   * @param type       Specifies what kind of primitives to render.
+   * @param first      Specifies the starting index in the enabled arrays.
+   * @param count      Specifies the number of indices to be rendered.
+   * @param inst_count Specifies the number of instances of the specified range
+   *                   of indices to be rendered.
+   * @see glDrawArraysInstanced
+   * @version OpenGL 3.1
+   */
   static void DrawArraysInstanced(PrimitiveType type,
                                   GLint first,
                                   GLsizei count,
@@ -43,13 +81,45 @@ public:
   #endif
 
   #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawArraysInstancedBaseInstance)
-  /// Draw multiples instances of a range of elements from a starting instance count.
-  /** @param type           Specifies what kind of primitives to render.
-    * @param first          Specifies the starting index in the enabled arrays.
-    * @param count          Specifies the number of indices to be rendered.
-    * @param inst_count     Specifies the number of instances of the specified range of indices to be rendered.
-    * @param base_instace   Specifies the base instance for use in fetching instanced vertex attributes.
-    * @see glDrawArraysInstancedBaseInstance */
+  /**
+   * @brief Draw multiples instances of a range of elements from a starting
+   *        instance count.
+   *
+   * glDrawArraysInstancedBaseInstance behaves identically to glDrawArrays​
+   * except that inst_count instances of the range of elements are executed and
+   * the value of the internal counter instanceID​ advances for each iteration.
+   * instanceID​ is an internal 32-bit integer counter that may be read by a
+   * vertex shader as gl_InstanceID​.
+   *
+   * glDrawArraysInstancedBaseInstance has the same effect as:
+   *
+   * if ( mode or count is invalid )
+   *     generate appropriate error
+   * else {
+   *     for (int i = 0; i < inst_count ; i++) {
+   *         instanceID = i;
+   *         glDrawArrays(mode, first, count);
+   *     }
+   *     instanceID = 0;
+   * }
+   *
+   * Specific vertex attributes may be classified as instanced through the use
+   * of glVertexAttribDivisor​. Instanced vertex attributes supply per-instance
+   * vertex data to the vertex shader. The index of the vertex fetched from the
+   * enabled instanced vertex attribute arrays is calculated as:
+   * ⌊gl_InstanceID/divisor⌋+baseInstance. Note that baseinstance​ does not
+   * affect the shader-visible value of gl_InstanceID​.
+   *
+   * @param type           Specifies what kind of primitives to render.
+   * @param first          Specifies the starting index in the enabled arrays.
+   * @param count          Specifies the number of indices to be rendered.
+   * @param inst_count     Specifies the number of instances of the specified
+   *                       range of indices to be rendered.
+   * @param base_instace   Specifies the base instance for use in fetching
+   *                       instanced vertex attributes.
+   * @see glDrawArraysInstancedBaseInstance
+   * @version OpenGL 4.2
+   */
   static void DrawArraysInstancedBaseInstance(PrimitiveType type,
                                               GLint first,
                                               GLsizei count,
@@ -62,12 +132,53 @@ public:
   #endif
 
   #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawArraysIndirect)
-  /// Renders primitives from array data, taking parameters from memory
-  /** @param mode       Specifies what kind of primitives to render.
-    * @param indirect   Specifies the address of a structure containing the draw parameters.
-    * @see glDrawArraysIndirect
-    */
-  static void DrawArraysIndirect(PrimitiveType type, const void *indirect) {
+  /**
+   * @brief Renders primitives from array data, taking parameters from memory.
+   *
+   * glDrawArraysIndirect specifies multiple geometric primitives with very few
+   * subroutine calls. glDrawArraysIndirect behaves similarly to
+   * glDrawArraysInstancedBaseInstance​, except that the parameters to
+   * glDrawArraysInstancedBaseInstance​ are stored in the buffer bound to
+   * GL_DRAW_INDIRECT_BUFFER​, offset by indirect​ bytes.
+   *
+   * The parameters referenced by indirect​ are packed into a structure that
+   * takes the form (in C):
+   *
+   * typedef  struct {
+   *     uint  count;
+   *     uint  instanceCount;
+   *     uint  first;
+   *     uint  baseInstance;
+   * } DrawArraysIndirectCommand;
+   *
+   * const DrawArraysIndirectCommand *cmd =
+   *   (const DrawArraysIndirectCommand *)indirect;
+   * glDrawArraysInstancedBaseInstance(
+   *   mode, cmd->first, cmd->count, cmd->instanceCount, cmd->baseInstance
+   * );
+   *
+   * indirect​ is interpreted as an offset, in basic machine units, into the
+   * buffer bound to GL_DRAW_INDIRECT_BUFFER​ at the time of the call. The
+   * parameter data stored there is read from the buffer and executed.
+   *
+   * In contrast to glDrawArraysInstancedBaseInstance​, the first​ member of the
+   * parameter structure is unsigned, and out-of-range indices do not generate
+   * an error.
+   *
+   * Vertex attributes that are modified by glDrawArraysIndirect have an
+   * unspecified value after glDrawArraysIndirect returns. Attributes that
+   * aren't modified remain well defined.
+   *
+   * @param mode       Specifies what kind of primitives to render.
+   * @param indirect   Specifies a byte offset (cast to a pointer type) into the
+   *                   buffer bound to GL_DRAW_INDIRECT_BUFFER​, which designates
+   *                   the starting point of the structure containing the draw
+   *                   parameters.
+   * @see glDrawArraysIndirect
+   * @version OpenGL 4.0
+   */
+  static void DrawArraysIndirect(PrimitiveType type,
+                                 const void *indirect = nullptr) {
     gl(DrawArraysIndirect(type, indirect));
   }
   #endif
@@ -77,8 +188,10 @@ public:
    * @brief Renders multiple sets of primitives from array data
    *
    * @param type         Specifies what kind of primitives to render.
-   * @param first        Points to an array of starting indices in the enabled arrays.
-   * @param count        Points to an array of the number of indices to be rendered.
+   * @param first        Points to an array of starting indices in the enabled
+   *                     arrays.
+   * @param count        Points to an array of the number of indices to be
+   *                     rendered.
    * @param prim_count   Specifies the size of the first and count
    * @see glMultiDrawArrays
    * @version OpenGL 1.4
@@ -121,7 +234,7 @@ public:
    * for (n = 0; n < drawcount; n++) {
    *     const DrawArraysIndirectCommand *cmd;
    *     if (stride != 0) {
-   *         cmd = (const DrawArraysIndirectCommand*)((uintptr)indirect + n*stride);
+   *         cmd = (const DrawArraysIndirectCommand*)((uintptr)indirect +n*stride);
    *     } else  {
    *         cmd = (const DrawArraysIndirectCommand*)indirect + n;
    *     }
@@ -154,8 +267,10 @@ public:
    * glMultiDrawArraysIndirect is available only if the GL version is 4.3 or greater.
    *
    * @param type        Specifies what kind of primitives to render.
-   * @param indirect    Specifies the address of an array of structures
-   *                    containing the draw parameters.
+   * @param indirect    Specifies a byte offset (cast to a pointer type) into the
+   *                    buffer bound to GL_DRAW_INDIRECT_BUFFER​, which designates
+   *                    the starting point of the structure containing the draw
+   *                    parameters.
    * @param draw_count  Specifies the the number of elements in the array of
    *                    draw parameter structures.
    * @param stride      Specifies the distance in basic machine units between
@@ -164,7 +279,7 @@ public:
    * @version OpenGL 4.3
    */
   static void MultiDrawArraysIndirect(PrimitiveType type,
-                                      const void *indirect,
+                                      const void *indirect = nullptr,
                                       GLsizei draw_count,
                                       GLsizei stride) {
     gl(MultiDrawArraysIndirect(type, indirect, draw_count, stride));
@@ -189,6 +304,7 @@ public:
    * Vertex attributes that are modified by glDrawElements have an unspecified
    * value after glDrawElements returns. Attributes that aren't modified maintain
    * their previous values.
+   *
    * @param type         Specifies what kind of primitives to render.
    * @param count        Specifies the number of elements to be rendered.
    * @param index_type   Specifies the type of the values in the index buffer.
@@ -541,22 +657,92 @@ public:
   #endif
 
   /**
-   * [DrawElementsIndirect description]
-   * @param type       [description]
-   * @param index_type [description]
-   * @param indirect   [description]
+   * @brief ender indexed primitives from array data, taking parameters from memory
+   *
+   * glDrawElementsIndirect specifies multiple indexed geometric primitives with
+   * very few subroutine calls. glDrawElementsIndirect behaves similarly to
+   * glDrawElementsInstancedBaseVertexBaseInstance​, except that the parameters
+   * to glDrawElementsInstancedBaseVertexBaseInstance​ are stored in the buffer
+   * bound to GL_DRAW_INDIRECT_BUFFER​, offset by indirect​ bytes.
+   *
+   * The parameters referenced by indirect​ are packed into a structure that
+   * takes the form (in C):
+   *
+   * typedef  struct {
+   *     uint  count;
+   *     uint  primCount;
+   *     uint  firstIndex;
+   *     uint  baseVertex;
+   *     uint  baseInstance;
+   * } DrawElementsIndirectCommand;
+   *
+   * glDrawElementsIndirect is equivalent to:
+   *
+   *  void glDrawElementsIndirect(GLenum mode, GLenum type, const void *indirect)
+   *  {
+   *      const DrawElementsIndirectCommand *cmd  =
+   *        (const DrawElementsIndirectCommand *)indirect;
+   *      glDrawElementsInstancedBaseVertexBaseInstance(
+   *        mode,
+   *        cmd->count,
+   *        type,
+   *        cmd->firstIndex * size-of-type,
+   *        cmd->primCount,
+   *        cmd->baseVertex,
+   *        cmd->baseInstance
+   *      );
+   *  }
+   * indirect​ is interpreted as an offset, in basic machine units, into the
+   * buffer bound to GL_DRAW_INDIRECT_BUFFER​ at the time of the call. That
+   * buffer and the parameter data stored there is read from the buffer and
+   * executed. If no buffer is bound to the GL_ELEMENT_ARRAY_BUFFER​ binding, an
+   * error will be generated.
+   *
+   * Vertex attributes that are modified by glDrawElementsIndirect have an
+   * unspecified value after glDrawElementsIndirect returns. Attributes that
+   * aren't modified remain well defined.
+   *
+   * Notes: The baseInstance​ member of the DrawElementsIndirectCommand​ structure
+   * is defined only if the GL version is 4.2 or greater. For versions of the GL
+   * less than 4.2, this parameter is present but is reserved and should be set
+   * to zero. On earlier versions of the GL, behavior is undefined if it is
+   * non-zero.
+   *
+   * @param type       Specifies what kind of primitives to render.
+   * @param index_type Specifies the type of data in the IndexBuffer.
+   * @param indirect   Specifies a byte offset (cast to a pointer type) into the
+   *                   buffer bound to GL_DRAW_INDIRECT_BUFFER​, which designates
+   *                   the starting point of the structure containing the draw
+   *                   parameters.
    * @see glDrawElementsIndirect
    * @version OpenGL 4.0
    */
   static void DrawElementsIndirect(PrimType type,
                                    IndexType index_type,
-                                   const void* indirect) {
+                                   const void* indirect = nullptr) {
     gl(DrawElementsIndirect(type, index_type, indirect));
   }
 
   #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glPrimitiveRestartIndex)
   /**
    * @brief Sets the primitive restart index.
+   *
+   * glPrimitiveRestartIndex specifies a vertex array element that is treated
+   * specially when primitive restarting is enabled. This is known as the
+   * primitive restart index.
+   *
+   * When one of the Draw* commands transfers a set of generic attribute array
+   * elements to the GL, if the index within the vertex arrays corresponding to
+   * that set is equal to the primitive restart index, then the GL does not
+   * process those elements as a vertex. Instead, it is as if the drawing
+   * command ended with the immediately preceding transfer, and another drawing
+   * command is immediately started with the same parameters, but only
+   * transferring the immediately following element through the end of the
+   * originally specified elements.
+   *
+   * When either glDrawElementsBaseVertex, glDrawElementsInstancedBaseVertex or
+   * glMultiDrawElementsBaseVertex is used, the primitive restart comparison
+   * occurs before the basevertex offset is added to the array index.
    *
    * @param index Specifies the index to function as primitive restart.
    * @see glPrimitiveRestartIndex

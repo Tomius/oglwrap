@@ -20,7 +20,8 @@ inline Mesh::Mesh(const std::string& filename, unsigned int flags)
   , entries_(scene_->mNumMeshes)
   , is_setup_positions_(false)
   , is_setup_normals_(false)
-  , is_setup_texcoords_(false) {
+  , is_setup_texcoords_(false)
+  , textures_enabled_(true) {
 
   if(!scene_) {
     throw std::runtime_error("Error parsing " + filename_ + " : " + importer_.GetErrorString());
