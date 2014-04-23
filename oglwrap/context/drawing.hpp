@@ -187,6 +187,24 @@ public:
   /**
    * @brief Renders multiple sets of primitives from array data
    *
+   * glMultiDrawArrays specifies multiple sets of geometric primitives with
+   * very few subroutine calls. Instead of calling a GL procedure to pass each
+   * individual vertex, normal, texture coordinate, edge flag, or color, you can
+   * prespecify separate arrays of vertices, normals, and colors and use them to
+   * construct a sequence of primitives with a single call to glMultiDrawArrays.
+   *
+   * glMultiDrawArrays behaves identically to glDrawArrays​ except that drawcount​
+   * separate ranges of elements are specified instead.
+   *
+   * When glMultiDrawArrays is called, it uses count​ sequential elements from
+   * each enabled array to construct a sequence of geometric primitives,
+   * beginning with element first​. mode​ specifies what kind of primitives are
+   * constructed, and how the array elements construct those primitives.
+   *
+   * Vertex attributes that are modified by glMultiDrawArrays have an
+   * unspecified value after glMultiDrawArrays returns. Attributes that aren't
+   * modified remain well defined.
+   *
    * @param type         Specifies what kind of primitives to render.
    * @param first        Points to an array of starting indices in the enabled
    *                     arrays.
@@ -726,6 +744,85 @@ public:
   #endif
 
   #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glMultiDrawElementsIndirect)
+  /**
+   * @brief glMultiDrawElementsIndirect: render indexed primitives from array
+   *        data, taking parameters from memory
+   *
+   * glMultiDrawElementsIndirect specifies multiple indexed geometric primitives
+   * with very few subroutine calls. glMultiDrawElementsIndirect behaves like
+   * repeated calls to glDrawElementsIndirect​.
+   *
+   * The parameters addressed by indirect​ are packed into a structure that takes
+   * the form (in C):
+   *
+   * typedef  struct {
+   *     uint  count;
+   *     uint  instanceCount;
+   *     uint  firstIndex;
+   *     uint  baseVertex;
+   *     uint  baseInstance;
+   * } DrawElementsIndirectCommand;
+   * A single call to glMultiDrawElementsIndirect is equivalent, assuming no
+   * errors are generated to:
+   *
+   * GLsizei n;
+   * for (n = 0; n < drawcount; n++)
+   * {
+   *     const DrawElementsIndirectCommand  *cmd;
+   *     if (stride != 0)
+   *     {
+   *         cmd = (const DrawElementsIndirectCommand  *)
+   *               ((uintptr)indirect + n * stride);
+   *     }
+   *     else
+   *     {
+   *         cmd = (const DrawElementsIndirectCommand  *)indirect + n;
+   *     }
+   *
+   *     glDrawElementsInstancedBaseVertexBaseInstance(
+   *       mode,
+   *       cmd->count,
+   *       type,
+   *       cmd->firstIndex + size-of-type,
+   *       cmd->instanceCount,
+   *       cmd->baseVertex,
+   *       cmd->baseInstance
+   *      );
+   * }
+   *
+   * indirect​ is interpreted as an offset, in basic machine units, into the
+   * buffer bound to GL_DRAW_INDIRECT_BUFFER​ at the time of the call. That
+   * buffer and the parameter data stored there is read from the buffer and
+   * executed. If no buffer is bound to the GL_ELEMENT_ARRAY_BUFFER​ binding, an
+   * error will be generated.
+   *
+   * The results of the operation are undefined if the reservedMustBeZero​ member
+   * of the parameter structure is non-zero. However, no error is generated in
+   * this case.
+   *
+   * Vertex attributes that are modified by glDrawElementsIndirect have an
+   * unspecified value after glDrawElementsIndirect returns. Attributes that
+   * aren't modified remain well defined.
+   *
+   * Notes: The baseInstance​ member of the DrawElementsIndirectCommand​ structure
+   * is defined only if the GL version is 4.2 or greater. For versions of the GL
+   * less than 4.2, this parameter is present but is reserved and should be set
+   * to zero. On earlier versions of the GL, behavior is undefined if it is
+   * non-zero.
+   *
+   * @param type       Specifies what kind of primitives to render.
+   * @param index_type Specifies the type of data in the IndexBuffer.
+   * @param draw_count Specifies a byte offset (cast to a pointer type) into the
+   *                   buffer bound to GL_DRAW_INDIRECT_BUFFER​, which designates
+   *                   the starting point of the structure containing the draw
+   *                   parameters.
+   * @param stride     Specifies the number of elements in the array addressed
+   *                   by indirect​.
+   * @param indirect   Specifies the distance in basic machine units between
+   *                   elements of the draw parameter array.
+   * @see glMultiDrawElementsIndirect
+   * @version OpenGL 4.3
+   */
   static void MultiDrawElementsIndirect(PrimType type,
                                         IndexType index_type,
                                         GLsizei draw_count,
@@ -736,6 +833,29 @@ public:
   #endif
 
   #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsBaseVertex)
+  /**
+   * @brief render primitives from array data with a per-element offset
+   *
+   * glDrawElementsBaseVertex behaves identically to glDrawElements​ except that
+   * each index fetched from GL_ELEMENT_ARRAY_BUFFER​ (starting from the byte
+   * offset indices​ in bytesbytes) will have basevertex​ added to it before
+   * fetching that index from the vertex arrays. If the resulting index is
+   * larger than the maximum value representable by type​, it is as if the
+   * calculation were upconverted to 32-bit unsigned integers (with wrapping on
+   * overflow conditions). The operation is undefined if the sum would be negative.
+   *
+   * The gl_VertexID​ passed to the Vertex Shader will be the index after being
+   * offset by basevertex​, not the index fetched from the buffer.
+   *
+   * @param type        Specifies what kind of primitives to render.
+   * @param count       Specifies the number of elements to be rendered.
+   * @param index_type  Specifies the type of the values in indices.
+   * @param base_vertex Specifies a constant that should be added to each
+   *                    element of indices​ when chosing elements from the
+   *                    enabled vertex arrays.
+   * @see glDrawElementsBaseVertex
+   * @version OpenGL 3.2
+   */
   static void DrawElementsBaseVertex(PrimType type,
                                      GLsizei count,
                                      IndexType index_type,
@@ -744,6 +864,31 @@ public:
   }
 
   template<typename GLtype>
+  /**
+   * @brief render primitives from array data with a per-element offset
+   *
+   * glDrawElementsBaseVertex behaves identically to glDrawElements​ except that
+   * each index fetched from GL_ELEMENT_ARRAY_BUFFER​ (starting from the byte
+   * offset indices​ in bytesbytes) will have basevertex​ added to it before
+   * fetching that index from the vertex arrays. If the resulting index is
+   * larger than the maximum value representable by type​, it is as if the
+   * calculation were upconverted to 32-bit unsigned integers (with wrapping on
+   * overflow conditions). The operation is undefined if the sum would be negative.
+   *
+   * The gl_VertexID​ passed to the Vertex Shader will be the index after being
+   * offset by basevertex​, not the index fetched from the buffer.
+   *
+   * @param type        Specifies what kind of primitives to render.
+   * @param count       Specifies the number of elements to be rendered.
+   * @param indices     Specifies a byte offset (cast to a pointer type) into
+   *                    the buffer bound to GL_ELEMENT_ARRAY_BUFFER​ to start
+   *                    reading indices from.
+   * @param base_vertex Specifies a constant that should be added to each
+   *                    element of indices​ when chosing elements from the
+   *                    enabled vertex arrays.
+   * @see glDrawElementsBaseVertex
+   * @version OpenGL 3.2
+   */
   static void DrawElementsBaseVertex(PrimType type,
                                      GLsizei count,
                                      const GLtype* indices,
@@ -755,6 +900,34 @@ public:
   #endif
 
   #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawRangeElementsBaseVertex)
+  /**
+   * @brief render primitives from array data with a per-element offset
+   *
+   * glDrawRangeElementsBaseVertex is a restricted form of
+   * glDrawElementsBaseVertex​. mode​, start​, end​, count​ and basevertex​ match the
+   * corresponding arguments to glDrawElementsBaseVertex​, with the additional
+   * constraint that all values in the array indices​ must lie between start​ and
+   * end​, inclusive, prior to adding basevertex​. Index values lying outside the
+   * range [start​, end​] are treated in the same way as glDrawRangeElements​.
+   *
+   * Each index fetched from GL_ELEMENT_ARRAY_BUFFER​ (starting from the byte
+   * offset indices​ in bytesbytes) will have basevertex​ added to it before
+   * fetching that index from the vertex arrays. If the resulting value is
+   * larger than the maximum value representable by type​, it is as if the
+   * calculation were upconverted to 32-bit unsigned integers (with wrapping on
+   * overflow conditions). The operation is undefined if the sum would be negative.
+   *
+   * @param type        Specifies what kind of primitives to render.
+   * @param start       Specifies the minimum array index contained in indices​.
+   * @param end         Specifies the maximum array index contained in indices​.
+   * @param count       Specifies the number of elements to be rendered.
+   * @param index_type  Specifies the type of the values in indices.
+   * @param base_vertex Specifies a constant that should be added to each
+   *                    element of indices​ when chosing elements from the
+   *                    enabled vertex arrays.
+   * @see glDrawRangeElementsBaseVertex
+   * @version OpenGL 3.2
+   */
   static void DrawRangeElementsBaseVertex(PrimType type,
                                           GLuint start,
                                           GLuint end,
@@ -767,6 +940,36 @@ public:
   }
 
   template<typename GLtype>
+  /**
+   * @brief render primitives from array data with a per-element offset
+   *
+   * glDrawRangeElementsBaseVertex is a restricted form of
+   * glDrawElementsBaseVertex​. mode​, start​, end​, count​ and basevertex​ match the
+   * corresponding arguments to glDrawElementsBaseVertex​, with the additional
+   * constraint that all values in the array indices​ must lie between start​ and
+   * end​, inclusive, prior to adding basevertex​. Index values lying outside the
+   * range [start​, end​] are treated in the same way as glDrawRangeElements​.
+   *
+   * Each index fetched from GL_ELEMENT_ARRAY_BUFFER​ (starting from the byte
+   * offset indices​ in bytesbytes) will have basevertex​ added to it before
+   * fetching that index from the vertex arrays. If the resulting value is
+   * larger than the maximum value representable by type​, it is as if the
+   * calculation were upconverted to 32-bit unsigned integers (with wrapping on
+   * overflow conditions). The operation is undefined if the sum would be negative.
+   *
+   * @param type        Specifies what kind of primitives to render.
+   * @param start       Specifies the minimum array index contained in indices​.
+   * @param end         Specifies the maximum array index contained in indices​.
+   * @param count       Specifies the number of elements to be rendered.
+   * @param indices     Specifies a byte offset (cast to a pointer type) into
+   *                    the buffer bound to GL_ELEMENT_ARRAY_BUFFER​ to start
+   *                    reading indices from.
+   * @param base_vertex Specifies a constant that should be added to each
+   *                    element of indices​ when choosing elements from the
+   *                    enabled vertex arrays.
+   * @see glDrawRangeElementsBaseVertex
+   * @version OpenGL 3.2
+   */
   static void DrawRangeElementsBaseVertex(PrimType type,
                                           GLuint start,
                                           GLuint end,
@@ -780,6 +983,30 @@ public:
   #endif
 
   #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsInstancedBaseVertex)
+  /**
+   * @brief render multiple instances of a set of primitives from array data
+   *        with a per-element offset
+   *
+   * glDrawElementsInstancedBaseVertex behaves identically to
+   * glDrawElementsInstanced​ except that each index fetched from
+   * GL_ELEMENT_ARRAY_BUFFER​ (starting from the byte offset indices​ in
+   * bytesbytes) will have basevertex​ added to it before fetching that index
+   * from the vertex arrays. If the resulting value is larger than the maximum
+   * value representable by type​, it is as if the calculation were upconverted
+   * to 32-bit unsigned integers (with wrapping on overflow conditions).
+   * The operation is undefined if the sum would be negative.
+   *
+   * @param type        Specifies what kind of primitives to render.
+   * @param count       Specifies the number of elements to be rendered.
+   * @param index_type  Specifies the type of the values in indices.
+   * @param inst_count  Specifies the number of instances of the indexed
+   *                    geometry that should be drawn.
+   * @param base_vertex Specifies a constant that should be added to each
+   *                    element of indices​ when choosing elements from the
+   *                    enabled vertex arrays.
+   * @see glDrawElementsInstancedBaseVertex
+   * @version OpenGL 3.2
+   */
   static void DrawElementsInstancedBaseVertex(PrimType type,
                                               GLsizei count,
                                               IndexType index_type,
@@ -791,6 +1018,32 @@ public:
   }
 
   template<typename GLtype>
+  /**
+   * @brief render multiple instances of a set of primitives from array data
+   *        with a per-element offset
+   *
+   * glDrawElementsInstancedBaseVertex behaves identically to
+   * glDrawElementsInstanced​ except that each index fetched from
+   * GL_ELEMENT_ARRAY_BUFFER​ (starting from the byte offset indices​ in
+   * bytesbytes) will have basevertex​ added to it before fetching that index
+   * from the vertex arrays. If the resulting value is larger than the maximum
+   * value representable by type​, it is as if the calculation were upconverted
+   * to 32-bit unsigned integers (with wrapping on overflow conditions).
+   * The operation is undefined if the sum would be negative.
+   *
+   * @param type        Specifies what kind of primitives to render.
+   * @param count       Specifies the number of elements to be rendered.
+   * @param indices     Specifies a byte offset (cast to a pointer type) into
+   *                    the buffer bound to GL_ELEMENT_ARRAY_BUFFER​ to start
+   *                    reading indices from.
+   * @param inst_count  Specifies the number of instances of the indexed
+   *                    geometry that should be drawn.
+   * @param base_vertex Specifies a constant that should be added to each
+   *                    element of indices​ when choosing elements from the
+   *                    enabled vertex arrays.
+   * @see glDrawElementsInstancedBaseVertex
+   * @version OpenGL 3.2
+   */
   static void DrawElementsInstancedBaseVertex(PrimType type,
                                               GLsizei count,
                                               const GLtype* indices,
@@ -803,6 +1056,33 @@ public:
   #endif
 
   #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glMultiDrawElementsBaseVertex)
+  /**
+   * @brief render multiple sets of primitives by specifying indices of array
+   *        data elements and an index to apply to each index
+   *
+   * glMultiDrawElementsBaseVertex behaves identically to
+   * glDrawElementsBaseVertex, except that draw_count separate lists of elements
+   * are specified instead.
+   *
+   * It has the same effect as:
+   *
+   *  for (int i = 0; i < draw_count; i++)
+   *     if (count[i] > 0)
+   *         glDrawElementsBaseVertex(mode,
+   *                                  count[i],
+   *                                  type,
+   *                                  indices[i],
+   *                                  basevertex[i]);
+   *
+   * @param type        Specifies what kind of primitives to render.
+   * @param count       Points to an array of the elements counts.
+   * @param index_type  Specifies the type of the values in indices.
+   * @param draw_count  Specifies the size of the count array.
+   * @param base_vertex Specifies a pointer to the location where the base
+   *                    vertices are stored.
+   * @see glMultiDrawElementsBaseVertex
+   * @version OpenGL 3.2
+   */
   static void MultiDrawElementsBaseVertex(PrimType type,
                                           const GLsizei *count,
                                           IndexType index_type,
@@ -815,6 +1095,35 @@ public:
   }
 
   template<typename GLtype>
+  /**
+   * @brief render multiple sets of primitives by specifying indices of array
+   *        data elements and an index to apply to each index
+   *
+   * glMultiDrawElementsBaseVertex behaves identically to
+   * glDrawElementsBaseVertex, except that draw_count separate lists of elements
+   * are specified instead.
+   *
+   * It has the same effect as:
+   *
+   *  for (int i = 0; i < draw_count; i++)
+   *     if (count[i] > 0)
+   *         glDrawElementsBaseVertex(mode,
+   *                                  count[i],
+   *                                  type,
+   *                                  indices[i],
+   *                                  basevertex[i]);
+   *
+   * @param type        Specifies what kind of primitives to render.
+   * @param count       Points to an array of the elements counts.
+   * @param indices     Points to an array of draw_count​ values, where each value
+   *                    is a byte offset (cast to a pointer type) into the buffer
+   *                    bound to GL_ELEMENT_ARRAY_BUFFER​ to start reading indices from.
+   * @param draw_count  Specifies the size of the count array.
+   * @param base_vertex Specifies a pointer to the location where the base
+   *                    vertices are stored.
+   * @see glMultiDrawElementsBaseVertex
+   * @version OpenGL 3.2
+   */
   static void MultiDrawElementsBaseVertex(PrimType type,
                                           const GLsizei *count,
                                           const GLtype* const* indices,
@@ -826,7 +1135,41 @@ public:
   }
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsInstancedBaseVertexBaseInstance)
+  #if !OGLWRAP_CHECK_DEPENDENCIES \
+  || defined(glDrawElementsInstancedBaseVertexBaseInstance)
+  /**
+   * @brief render multiple instances of a set of primitives from array data
+   *        with a per-element offset
+   *
+   * glDrawElementsInstancedBaseVertexBaseInstance behaves identically to
+   * glDrawElementsInstanced​ except that each index fetched from
+   * GL_ELEMENT_ARRAY_BUFFER​ (starting from the byte offset indices​ in bytes)
+   * will have base_vertex​ added to it before fetching that index from the vertex
+   * arrays. If the resulting value is larger than the maximum value
+   * representable by type​, it is as if the calculation were upconverted to
+   * 32-bit unsigned integers (with wrapping on overflow conditions). The
+   * operation is undefined if the sum would be negative.
+   *
+   * Specific vertex attributes may be classified as instanced through the use
+   * of glVertexAttribDivisor​. Instanced vertex attributes supply per-instance
+   * vertex data to the vertex shader. The index of the vertex fetched from the
+   * enabled instanced vertex attribute arrays is calculated as
+   * ⌊gl_InstanceID/divisor⌋+baseInstance. Note that base_instance​ does not
+   * affect the shader-visible value of gl_InstanceID​.
+   *
+   * @param type          Specifies what kind of primitives to render.
+   * @param count         Specifies the number of elements to be rendered.
+   * @param index_type    Specifies the type of the values in indices.
+   * @param inst_count    Specifies the number of instances of the indexed
+   *                      geometry that should be drawn.
+   * @param base_vertex   Specifies a constant that should be added to each
+   *                      element of indices​ when choosing elements from the
+   *                      enabled vertex arrays.
+   * @param base_instance Specifies the base instance for use in fetching
+   *                      instanced vertex attributes.
+   * @see glDrawElementsInstancedBaseVertexBaseInstance
+   * @version OpenGL 4.2
+   */
   static void DrawElementsInstancedBaseVertexBaseInstance(PrimType type,
                                                          GLsizei count,
                                                          IndexType index_type,
@@ -839,6 +1182,41 @@ public:
   }
 
   template<typename GLtype>
+  /**
+   * @brief render multiple instances of a set of primitives from array data
+   *        with a per-element offset
+   *
+   * glDrawElementsInstancedBaseVertexBaseInstance behaves identically to
+   * glDrawElementsInstanced​ except that each index fetched from
+   * GL_ELEMENT_ARRAY_BUFFER​ (starting from the byte offset indices​ in bytes)
+   * will have base_vertex​ added to it before fetching that index from the vertex
+   * arrays. If the resulting value is larger than the maximum value
+   * representable by type​, it is as if the calculation were upconverted to
+   * 32-bit unsigned integers (with wrapping on overflow conditions). The
+   * operation is undefined if the sum would be negative.
+   *
+   * Specific vertex attributes may be classified as instanced through the use
+   * of glVertexAttribDivisor​. Instanced vertex attributes supply per-instance
+   * vertex data to the vertex shader. The index of the vertex fetched from the
+   * enabled instanced vertex attribute arrays is calculated as
+   * ⌊gl_InstanceID/divisor⌋+baseInstance. Note that base_instance​ does not
+   * affect the shader-visible value of gl_InstanceID​.
+   *
+   * @param type          Specifies what kind of primitives to render.
+   * @param count         Specifies the number of elements to be rendered.
+   * @param indices       Specifies a byte offset (cast to a pointer type) into
+   *                      the buffer bound to GL_ELEMENT_ARRAY_BUFFER​ to start
+   *                      reading indices from.
+   * @param inst_count    Specifies the number of instances of the indexed
+   *                      geometry that should be drawn.
+   * @param base_vertex   Specifies a constant that should be added to each
+   *                      element of indices​ when choosing elements from the
+   *                      enabled vertex arrays.
+   * @param base_instance Specifies the base instance for use in fetching
+   *                      instanced vertex attributes.
+   * @see glDrawElementsInstancedBaseVertexBaseInstance
+   * @version OpenGL 4.2
+   */
   static void DrawElementsInstancedBaseVertexBaseInstance(PrimType type,
                                                          GLsizei count,
                                                          const GLtype* indices,
