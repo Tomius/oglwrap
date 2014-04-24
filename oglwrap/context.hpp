@@ -14,6 +14,9 @@
 #include "context/rasterization.hpp"
 #include "context/drawing.hpp"
 #include "context/extensions.hpp"
+#include "context/computing.hpp"
+#include "context/depth_test.hpp"
+#include "context/stencil_test.hpp"
 
 namespace oglwrap {
 	class Context
@@ -26,6 +29,9 @@ namespace oglwrap {
 		, public context::Rasterization
 		, public context::Drawing
 		, public context::Extensions
+		, public context::Computing
+		, public context::DepthTest
+		, public context::StencilTest
 	{ };
 }
 

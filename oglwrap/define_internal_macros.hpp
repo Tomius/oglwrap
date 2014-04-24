@@ -2,6 +2,8 @@
     @brief Defines oglwrap's internal macros
 */
 
+#include "debug/error.hpp"
+
 #ifndef glfunc
 	#define glfunc(func) OGLWRAP_CHECKED_GLFUNCTION(func)
 #endif

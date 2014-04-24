@@ -1432,6 +1432,66 @@ enum PrimitiveType {
 typedef _PrimitiveType::PrimitiveType PrimitiveType;
 typedef PrimitiveType PrimType;
 
+namespace _CompareFunction {
+enum CompareFunction {
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_LEQUAL)
+  LEqual = GL_LEQUAL,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_GEQUAL)
+  GEqual = GL_GEQUAL,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_LESS)
+  Less = GL_LESS,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_GREATER)
+  Greater = GL_GREATER,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_EQUAL)
+  Equal = GL_EQUAL,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_NOTEQUAL)
+  NotEqual = GL_NOTEQUAL,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_ALWAYS)
+  Always = GL_ALWAYS,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_NEVER)
+  Never = GL_NEVER,
+#endif
+};
+}
+typedef _CompareFunction::CompareFunction CompareFunction;
+
+namespace _StencilOperation {
+enum StencilOperation {
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_KEEP)
+  Keep = GL_KEEP,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_ZERO)
+  Zero = GL_ZERO,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_REPLACE)
+  Replace = GL_REPLACE,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_INCR)
+  Incr = GL_INCR,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_DECR)
+  Decr = GL_DECR,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_INVERT)
+  Invert = GL_INVERT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_INCR_WRAP)
+  IncrWrap = GL_INCR_WRAP,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_DECR_WRAP)
+  DecrWrap = GL_DECR_WRAP,
+#endif
+};
+}
+typedef _StencilOperation::StencilOperation StencilOperation;
+
 } // Namespace Enums
 
 // CodeCompletions often do not support inline namespaces
