@@ -15,11 +15,16 @@
 
 namespace oglwrap {
 
-namespace glObject {
-  class Renderbuffer : public Object {
-    void constructor() const { gl(GenRenderbuffers(1, handle_)); }
+namespace glObjects {
+  class Renderbuffer : public glObject {
+#if OGLWRAP_INITIALIZE_GLOBAL_GL_OBJECTS_ON_USE
+  protected: void constructor() const override
+#else
+  public: Renderbuffer()
+#endif
+  { gl(GenRenderbuffers(1, handle_.get())); }
   public:
-    ~Renderbuffer() { if(isDeletable() && *inited_) gl(DeleteRenderbuffers(1, handle_)); }
+    ~Renderbuffer() { if(unique()) gl(DeleteRenderbuffers(1, handle_.get())); }
   };
 }
 
@@ -28,7 +33,7 @@ namespace glObject {
 /** @see glGenRenderbuffers, glDeleteRenderbuffers */
 class Renderbuffer {
   /// The handle for the render buffer.
-  glObject::Renderbuffer renderbuffer_;
+  glObjects::Renderbuffer renderbuffer_;
 public:
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindRenderbuffer)
   /// Binds this renderbuffer.
@@ -101,17 +106,22 @@ public:
 #endif // glRenderbufferStorageMultisample
 
   /// Returns the handle for this object.
-  const Object& expose() const {
+  const glObject& expose() const {
     return renderbuffer_;
   }
 };
 #endif // glGenRenderbuffers && glDeleteRenderbuffers
 
-namespace glObject {
-  class Framebuffer : public Object {
-    void constructor() const { gl(GenFramebuffers(1, handle_)); }
+namespace glObjects {
+  class Framebuffer : public glObject {
+#if OGLWRAP_INITIALIZE_GLOBAL_GL_OBJECTS_ON_USE
+  protected: void constructor() const override
+#else
+  public: Framebuffer()
+#endif
+    { gl(GenFramebuffers(1, handle_.get())); }
   public:
-    ~Framebuffer() { if(isDeletable() && *inited_) gl(DeleteFramebuffers(1, handle_)); }
+    ~Framebuffer() { if(unique()) gl(DeleteFramebuffers(1, handle_.get())); }
   };
 }
 
@@ -119,7 +129,7 @@ namespace glObject {
 /// A buffer that you can draw to.
 template<FramebufferType FBO_TYPE>
 class FramebufferObject {
-  glObject::Framebuffer framebuffer_; ///< The handle for the framebuffer
+  glObjects::Framebuffer framebuffer_; ///< The handle for the framebuffer
 public:
 
   /// Default constructor
@@ -245,14 +255,14 @@ public:
   /** @param attachment - Specifies the attachment point to which renderbuffer should be attached.
     * @param renderBuffer - Specifies the renderbuffer object that is to be attached.
     * @see glFramebufferRenderbuffer */
-  static void AttachBuffer(FramebufferAttachment attachment, Renderbuffer renderBuffer) {
+  static void AttachBuffer(FramebufferAttachment attachment, const Renderbuffer& renderBuffer) {
     gl(FramebufferRenderbuffer(FBO_TYPE, attachment, GL_RENDERBUFFER, renderBuffer.expose()));
   }
   /// Attach a renderbuffer as a logical buffer to the currently bound framebuffer object
   /** @param attachment - Specifies the attachment point to which renderbuffer should be attached.
     * @param renderBuffer - Specifies the renderbuffer object that is to be attached.
     * @see glFramebufferRenderbuffer */
-  BIND_CHECKED void attachBuffer(FramebufferAttachment attachment, Renderbuffer renderBuffer) const {
+  BIND_CHECKED void attachBuffer(FramebufferAttachment attachment, const Renderbuffer& renderBuffer) const {
     CHECK_BINDING();
     AttachBuffer(attachment, renderBuffer);
   }
@@ -383,7 +393,7 @@ public:
 #endif // glFramebufferTextureLayer
 
   /// Returns the handle for the framebuffer object.
-  const Object& expose() const {
+  const glObject& expose() const {
     return framebuffer_;
   }
 }; // class Framebuffer

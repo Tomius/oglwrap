@@ -21,25 +21,31 @@
 
 namespace oglwrap {
 
-namespace glObject {
-  class VertexArray : public Object {
-    void constructor() const { gl(GenVertexArrays(1, handle_)); }
+namespace glObjects {
+  class VertexArray : public glObject {
+#if OGLWRAP_INITIALIZE_GLOBAL_GL_OBJECTS_ON_USE
+  protected: void constructor() const override
+#else
+  public: VertexArray()
+#endif
+    { gl(GenVertexArrays(1, handle_.get())); }
   public:
-    ~VertexArray() { if(isDeletable() && *inited_) gl(DeleteVertexArrays(1, handle_)); }
+    ~VertexArray() { if(unique()) gl(DeleteVertexArrays(1, handle_.get())); }
   };
 }
 
 // -------======{[ Vertex Array declaration ]}======-------
+
 #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGenVertexArrays) && defined(glDeleteVertexArrays))
 /// VAO is an object that remembers which ArrayBuffers to use for a draw call.
-/** A Vertex Array Object (VAO) is an object that encapsulates all of the
+/** A Vertex Array glObject (VAO) is an object that encapsulates all of the
   * state needed to specify vertex data. They define the format of the vertex
   * data as well as the sources for the vertex arrays. Note that VAOs do not
   * contain the arrays themselves, the arrays are stored in ArrayBuffer Objects.
   * The VAOs simply reference already existing buffer objects.
   * @see glGenVertexArrays, glDeleteVertexArrays */
 class VertexArray {
-  glObject::VertexArray vao_; ///< The handle for the VAO
+  glObjects::VertexArray vao_; ///< The handle for the VAO
 public:
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindVertexArray)
   /// Binds the Vertex Array object, so that it will be used for the further draw calls.
@@ -76,7 +82,7 @@ public:
 #endif
 
   /// Returns the handle for the VertexArray.
-  const Object& expose() const {
+  const glObject& expose() const {
     return vao_;
   }
 };

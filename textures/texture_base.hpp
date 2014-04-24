@@ -22,11 +22,16 @@
 
 namespace oglwrap {
 
-namespace glObject {
-  class Texture : public Object {
-    void constructor() const { gl(GenTextures(1, handle_)); }
+namespace glObjects {
+  class Texture : public glObject {
+#if OGLWRAP_INITIALIZE_GLOBAL_GL_OBJECTS_ON_USE
+  protected: void constructor() const override
+#else
+  public: Texture()
+#endif
+    { gl(GenTextures(1, handle_.get())); }
   public:
-    ~Texture() { if(isDeletable() && *inited_) gl(DeleteTextures(1, handle_)); }
+    ~Texture() { if(unique()) gl(DeleteTextures(1, handle_.get())); }
   };
 }
 
@@ -39,7 +44,7 @@ template <TexType texture_t>
   * glGenTextures, glDeleteTextures */
 class TextureBase {
 protected:
-  glObject::Texture texture; ///< The handle for the texture.
+  glObjects::Texture texture; ///< The handle for the texture.
 public:
   /// Generates an empty texture.
   TextureBase() {}
@@ -343,7 +348,7 @@ public:
   }
 
   /// Returns the handle for the texture.
-  const Object& expose() const {
+  const glObject& expose() const {
     return texture;
   }
 };

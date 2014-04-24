@@ -17,15 +17,20 @@
   #include "glew.hpp"
 #endif
 
-/// Oglwrap works in header only mode by default, but with linking oglwrap.cpp, it can compile and run faster.
+/**
+ * @brief Oglwrap works in header only mode by default, but with linking
+ * oglwrap.cpp, it can compile and run faster.
+ */
 #ifndef OGLWRAP_HEADER_ONLY
   #define OGLWRAP_HEADER_ONLY 1
 #endif
 
-/// Instantiates the templates that can be used only with a few types.
-/** The compile time can be drastically decreased with this.
-  * This also makes sure that global variables are only defined once
-  */
+/**
+ * @brief Instantiates the templates that can be used only with a few types.
+ *
+ * The compile time can be drastically decreased with this.
+ * This also makes sure that global variables are only defined once
+ */
 #ifndef OGLWRAP_INSTATIATE_TEMPLATES
   #define OGLWRAP_INSTATIATE_TEMPLATES 0
 #endif
@@ -37,12 +42,17 @@
   #define OGLWRAP_OPENGL_INCLUDED 0
 #endif
 
-/// If true, loads only the extensions, that are available.
-/** By default, it's only turned on, if a GL header is included. */
+/**
+ * @brief If true, loads only the extensions, that are available.
+ *
+ * By default, it's only turned on, if a GL header is included.
+ */
 #ifndef OGLWRAP_CHECK_DEPENDENCIES
   #if OGLWRAP_OPENGL_INCLUDED // If an OpenGL header is loaded.
     #define OGLWRAP_CHECK_DEPENDENCIES 1
-  #else // else all #if defined(gl*) would evaluate as false, so better just disable dependency check
+  #else
+    // else all #if defined(gl*) would evaluate as false,
+    // so better just disable dependency check
     #define OGLWRAP_CHECK_DEPENDENCIES 0
   #endif
 #endif
@@ -52,15 +62,26 @@
   #define OGLWRAP_DEBUG 1
 #endif
 
-/// If true, warns you if you call a function that requires binding, through an object that isn't the currently bound one.
+/**
+ * @brief If true, warns you if you call a function that requires binding,
+ * through an object that isn't the currently bound one.
+ */
 #if OGLWRAP_DEBUG
   #ifndef OGLWRAP_BINDCHECK
     #define OGLWRAP_BINDCHECK 1
   #endif
+#else
+  #ifndef OGLWRAP_BINDCHECK
+    #define OGLWRAP_BINDCHECK 0
+  #endif
 #endif
 
-/// If set to true, disable the oglwrap debug output.
-/** Setting OGLWRAP_DEBUG flag to false will override this flag, and will also turn the debug output off */
+/**
+ * @brief If set to true, disable the oglwrap debug output.
+ *
+ * Setting OGLWRAP_DEBUG flag to false will override this flag, and will
+ * also turn the debug output off
+ */
 #ifndef OGLWRAP_DISABLE_DEBUG_OUTPUT
   #define OGLWRAP_DISABLE_DEBUG_OUTPUT 0
 #endif
@@ -70,17 +91,38 @@
   #define OGLWRAP_USE_IMAGEMAGICK 0
 #endif
 
-/// If true, sacrifices a bit of performance, to increase portability.
-/** For example, excludes codes that do not work well with dual-gpu
-  * systems, but are definitely faster on most configurations. */
+/**
+ * @brief If true, sacrifices a bit of performance, to increase portability.
+ *
+ * For example, excludes codes that do not work well with dual-gpu
+ * systems, but are definitely faster on most configurations.
+ */
 #ifndef OGLWRAP_PORTABILITY_MODE
   #define OGLWRAP_PORTABILITY_MODE 1
 #endif
 
-/// If true, includes every oglwrap header, not just the commonly used ones.
-/** Setting this to true can drastically increase the compilation time */
+/**
+ * @brief If true, includes every oglwrap header, not just the commonly used ones.
+ *
+ * Setting this to true can drastically increase the compilation time
+ */
 #ifndef OGLWRAP_INCLUDE_EVERYTHING
   #define OGLWRAP_INCLUDE_EVERYTHING 0
+#endif
+
+/**
+ * @brief If true, glObjects will be initialized when they are first used,
+ *        rather than at their constructor. This enables using global and
+ *        static glObjects, but has negative effect on performance.
+ */
+#if OGLWRAP_DEBUG
+  #ifndef OGLWRAP_INITIALIZE_GLOBAL_GL_OBJECTS_ON_USE
+    #define OGLWRAP_INITIALIZE_GLOBAL_GL_OBJECTS_ON_USE 1
+  #endif
+#else
+  #ifndef OGLWRAP_INITIALIZE_GLOBAL_GL_OBJECTS_ON_USE
+    #define OGLWRAP_INITIALIZE_GLOBAL_GL_OBJECTS_ON_USE 0
+  #endif
 #endif
 
 #endif // OGLWRAP_CONFIG_HPP_

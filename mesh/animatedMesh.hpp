@@ -41,9 +41,6 @@ public:
     * @param flags - The assimp post-process flags to use while loading the mesh. */
   AnimatedMesh(const std::string& filename, unsigned int flags);
 
-  /// Destructor.
-  ~AnimatedMesh();
-
 private:
   /// It shouldn't be copyable.
   AnimatedMesh(const AnimatedMesh& src) = delete;

@@ -19,7 +19,6 @@ inline void AnimatedMesh::addAnimation(const std::string& filename,
   anims_.names[anim_name] = idx;
   anims_.data.push_back(AnimInfo());
   anims_[idx].name = anim_name;
-  anims_[idx].importer = new Assimp::Importer();
   anims_[idx].handle = anims_[idx].importer->ReadFile(filename, aiProcess_Debone);
   if(!anims_[idx].handle) {
     throw std::runtime_error("Error parsing " + filename

@@ -18,7 +18,7 @@
 namespace oglwrap {
 
 /// A class that can load in and draw meshes from over 30 file formats using assimp.
-class Mesh : protected RefCounted {
+class Mesh {
 protected:
 
   /// A class to store per mesh data (the class loads in a scene, that might contain multiply meshes).

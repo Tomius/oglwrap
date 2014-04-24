@@ -1,5 +1,5 @@
 /** @file buffer.hpp
-    @brief Implements wrappers around OpenGL Buffer Object.
+    @brief Implements wrappers around OpenGL Buffer glObject.
 */
 
 #ifndef OGLWRAP_BUFFER_HPP_
@@ -14,11 +14,16 @@
 
 namespace oglwrap {
 
-namespace glObject {
-  class Buffer : public Object {
-    void constructor() const { gl(GenBuffers(1, handle_)); }
+namespace glObjects {
+  class Buffer : public glObject {
+#if OGLWRAP_INITIALIZE_GLOBAL_GL_OBJECTS_ON_USE
+  protected: void constructor() const override
+#else
+  public: Buffer()
+#endif
+    { gl(GenBuffers(1, handle_.get())); }
   public:
-    ~Buffer() { if(isDeletable() && *inited_) gl(DeleteBuffers(1, handle_)); }
+    ~Buffer() { if(handle_.unique()) gl(DeleteBuffers(1, handle_.get())); }
   };
 }
 
@@ -33,7 +38,7 @@ template<BufferType BUFFER_TYPE>
 class BufferObject {
 protected:
   /// The handle for the buffer.
-  glObject::Buffer buffer_;
+  glObjects::Buffer buffer_;
 public:
   /// Default constructor.
   BufferObject() {}
@@ -200,7 +205,7 @@ public:
 #endif // glGetBufferParameteriv && GL_BUFFER_SIZE
 
   /// Returns the handle for the buffer.
-  const Object& expose() const {
+  const glObject& expose() const {
     return buffer_;
   }
 

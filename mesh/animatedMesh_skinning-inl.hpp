@@ -114,14 +114,14 @@ void AnimatedMesh::loadBones() {
 #if OGLWRAP_PORTABILITY_MODE // Don't use mapping in portability mode
 
     // Upload the bones data into a continuous buffer then upload that to OpenGL.
-    GLbyte* data = new GLbyte[buffer_size];
+    std::unique_ptr<GLbyte> data{ new GLbyte[buffer_size] };
     GLintptr offset = 0;
     for(size_t i = 0; i < vertices.size(); i++) {
       size_t curr_size = vertices[i].data.size() * per_attrib_size;
 
       // Copy the bone data
       memcpy(
-        data + offset, // destination
+        data.get() + offset, // destination
         vertices[i].data.data(),  // source
         curr_size // length
       );
@@ -130,7 +130,7 @@ void AnimatedMesh::loadBones() {
       // bone with a 0.0f weight doesn't have any influence
       if(per_vertex_size > curr_size) {
         memset(
-          data + offset + curr_size, // memory place
+          data.get() + offset + curr_size, // memory place
           0, // value
           per_vertex_size - curr_size // length
         );
@@ -140,8 +140,7 @@ void AnimatedMesh::loadBones() {
     }
 
     // upload
-    skinning_data_.vertex_bone_data_buffers[entry].data(buffer_size, data);
-    delete[] data;
+    skinning_data_.vertex_bone_data_buffers[entry].data(buffer_size, data.get());
 
 #else // Upload the bones data in continuous, fix-sized parts using mapping.
 
@@ -311,7 +310,7 @@ inline ExternalBoneTree AnimatedMesh::markBoneExternal(const std::string& bone_n
   SkinningData::BoneInfo& binfo = skinning_data_.bone_info[bidx];
 
   // Set the root bone's local transformation pointer to be able to set it from "inside".
-  binfo.global_transform_ptr = ebone_tree.global_transform_ptr;
+  binfo.global_transform_ptr = ebone_tree.global_transform_ptr.get();
   binfo.pinned = true;
 
   return ebone_tree;

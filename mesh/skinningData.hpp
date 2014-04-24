@@ -1,6 +1,7 @@
 #ifndef OGLWRAP_MESH_SKINNING_DATA_HPP_
 #define OGLWRAP_MESH_SKINNING_DATA_HPP_
 
+#include <memory>
 #include "mesh.hpp"
 
 namespace oglwrap {
@@ -126,10 +127,11 @@ struct ExternalBone : public BasicExternalBone {
 
 struct ExternalBoneTree : public BasicExternalBone {
   // This will be modified by the AnimatedClass's updateBoneInfo() call.
-  const SmartPtr<glm::mat4> global_transform_ptr;
+  std::shared_ptr<glm::mat4> global_transform_ptr;
 
   ExternalBoneTree(const BasicExternalBone& super)
       : BasicExternalBone(super)
+      , global_transform_ptr(new glm::mat4{})
   { }
 
 };

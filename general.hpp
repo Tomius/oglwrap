@@ -6,6 +6,7 @@
 #define OGLWRAP_GENERAL_HPP_
 
 #include <cmath>
+#include <memory>
 
 #include "config.hpp"
 
@@ -23,134 +24,30 @@ T ToDegree(const T& x) {
 
 namespace oglwrap {
 
-/// A simple reference counter that you should use with inheritance.
-/** If your class inherit from this class (w/ protected or public inheritance),
-  * at your class' destructor you can call isDeletable(), which returns true
-  * if exactly one instance of that object exists. Note that OpenGL RAII needs
-  * to be reference counted! */
-class RefCounted {
-  int *numInstances_; ///< A dynamically allocated int that stores the number of currently active instances.
-
-protected:
-  /// Allocates the counter.
-  RefCounted() {
-    numInstances_ = new int;
-    *numInstances_ = 1;
-  }
-
-public:
-  /// Creates a copy (copy ctor), and increases counter.
-  RefCounted(const RefCounted& rhs) {
-    numInstances_ = rhs.numInstances_;
-    (*numInstances_)++;
-  }
-
-  /// Creates a copy (assign op), and increases counter.
-  RefCounted& operator=(const RefCounted& rhs) {
-    numInstances_ = rhs.numInstances_;
-    (*numInstances_)++;
-    return *this;
-  }
-
-  /// Returns if only one instance of this object exists.
-  bool isDeletable() {
-    return *numInstances_ == 1;
-  }
-
-  /// Decreases counter, or deletes the counter.
-  ~RefCounted() {
-    if(isDeletable()) {
-      delete numInstances_;
-    } else {
-      (*numInstances_)--;
-    }
-  }
-};
-
-template <typename T>
-/// A reference counted pointer that manages a dynamically allocated object.
-/** It releases the resource, if no reference would point to this object. */
-class SmartPtr : protected RefCounted {
-  T* const ptr; /// < The pointer to the resource
-public:
-  /// Default ctr. Dynamically allocates a new object with its default ctor
-  SmartPtr()
-    : ptr(new T())
-  { }
-
-  /// Constructs the SmartPointer from an existing pointer to a dynamically allocated object.
-  SmartPtr(T* ptr)
-    : ptr(ptr)
-  { }
-
-  /// Releases the resource, if no reference would point to this object.
-  ~SmartPtr() {
-    if(isDeletable()) {
-      delete ptr;
-    }
-  }
-
-  /// Returns the pointer.
-  operator T*() const {
-    return ptr;
-  }
-
-  /// Returns the object.
-  operator T&() const {
-    return *ptr;
-  }
-};
-
 /// A class for managing OpenGL resources.
-class Object : public RefCounted {
+class glObject {
 protected:
-  /// The boolean for the object being initialized.
-  /** It is a pointer because it is shared between the copies. If one inits
-    * the handle, then all instances will have the inited handle */
-  bool *inited_;
-
-  /// Allocates the resource. It only happens upon the first use.
-  void init() const {
-    *inited_ = true;
-    constructor();
-  }
-
   /// The C handle for the object.
-  GLuint *handle_;
+  std::shared_ptr<GLuint> handle_;
+  glObject() : handle_(new GLuint{0}) {}
 
 public:
-  /// Creates the object, but does not allocate any resource yet.
-  Object()
-    : inited_(new bool)
-    , handle_(new GLuint) {
+  /// Returns if this is the only instance of this glObject
+  bool unique() const { return handle_.unique(); }
 
-    *inited_ = false;
-  }
-
-  /// Default copy constructor
-  Object(const Object& obj) = default;
-
-  /// Deletes the object.
-  /** Deletes the resource if only one instance of
-    * this object exists, and it is initialized. */
-  ~Object() {
-    if(isDeletable()) {
-      delete inited_;
-      delete handle_;
-    }
-  }
-
-  /// The GL function that allocates the name for this object. Must be overwritten.
+#if OGLWRAP_INITIALIZE_GLOBAL_GL_OBJECTS_ON_USE
   virtual void constructor() const = 0;
+#endif
 
-  /// Returns the C handle for the object. Inits it, if this is the first call for it.
+  /// Returns the C handle for the object.
   operator GLuint() const {
-    if(!*inited_) {
-      init();
+#if OGLWRAP_INITIALIZE_GLOBAL_GL_OBJECTS_ON_USE
+    if(*handle_ == 0) {
+      constructor();
     }
-
-    return *handle_;
-  }
+#endif
+     return *handle_;
+   }
 };
 
 } // namespace oglwrap

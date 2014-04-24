@@ -13,8 +13,8 @@
 
 namespace oglwrap {
 
-namespace glObject {
-  class TransformFeedback : public Object {
+namespace glObjects {
+  class TransformFeedback : public glObject {
     void constructor() const { gl(GenTransformFeedbacks(1, handle_)); }
   public:
     ~TransformFeedback() { if(isDeletable() && *inited_) gl(DeleteTransformFeedbacks(1, handle_)); }
@@ -30,7 +30,7 @@ namespace glObject {
   * @see glGenTransformFeedbacks, glDeleteTransformFeedbacks */
 class TransformFeedback : protected RefCounted {
   /// The handle for the TransformFeedback
-  glObject::TransformFeedback tfb_;
+  glObjects::TransformFeedback tfb_;
   enum TFBstate {TFB_STATE_NONE, TFB_STATE_WORKING, TFB_STATE_PAUSED} state_;
 public:
   /// Generates a transform feedback.

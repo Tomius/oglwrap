@@ -3,6 +3,7 @@
 
 #include <map>
 
+#include <memory>
 #include "../assimp.hpp"
 
 namespace oglwrap {
@@ -10,7 +11,9 @@ namespace oglwrap {
 /// A struct storing info per animation
 struct AnimInfo {
   /// The importer that stores the animations.
-  Assimp::Importer* importer;
+  // It is a shared_ptr because we want to use AnimInfo
+  // in std::vector, which needs copy ctor
+  std::shared_ptr<Assimp::Importer> importer;
 
   /// Handle for the animations
   const aiScene* handle;
@@ -32,7 +35,7 @@ struct AnimInfo {
 
   /// Default constructor
   AnimInfo()
-      : importer(nullptr)
+      : importer(new Assimp::Importer{})
       , handle(nullptr)
       , flags(0)
       , speed(1.0f)
