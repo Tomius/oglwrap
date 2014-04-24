@@ -220,7 +220,7 @@ public:
       gl(GetShaderiv(shader_, GL_INFO_LOG_LENGTH, &infoLogLength));
 
       std::unique_ptr<GLchar> strInfoLog{ new GLchar[infoLogLength + 1] };
-      gl(GetShaderInfoLog(shader_, infoLogLength, nullptr, strInfoLog));
+      gl(GetShaderInfoLog(shader_, infoLogLength, nullptr, strInfoLog.get()));
 
       const char * strShaderType = nullptr;
       switch(shader_t) {
@@ -258,7 +258,7 @@ public:
 
       std::stringstream str;
       str << "Compile failure in " << strShaderType << "shader '";
-      str << filename_ << "' :" << std::endl << strInfoLog << std::endl;
+      str << filename_ << "' :" << std::endl << strInfoLog.get() << std::endl;
 
       throw std::runtime_error(str.str());
     }
