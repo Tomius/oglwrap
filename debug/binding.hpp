@@ -70,6 +70,7 @@ inline void __print_another_object_is_bound_error(const char *file, const char *
   sstream << "\n---------========={[ BIND CHECK FAILURE ]}=========---------\n" << std::endl;
   sstream << "In function: " << cut_end_of_pretty_func(func) << std::endl;
   sstream << "In '" << file << "' at line " << line << "\n\n";
+  __PrintStackTrace(sstream);
   sstream << "The function is called through an object that is different ";
   sstream << "than the one, currently bound to " << OGLWRAP_LAST_BIND_TARGET << ".\n";
   sstream << "Did you forget to call .bind() on the object? \n\n";
@@ -79,6 +80,15 @@ inline void __print_another_object_is_bound_error(const char *file, const char *
   sstream << std::endl;
 
   oglwrap_debug_output.callback(sstream.str());
+
+#if OGLWRAP_STOP_AFTER_X_ERRORS
+  if(++OGLWRAP_ERRORS_NUM >= OGLWRAP_STOP_AFTER_X_ERRORS) {
+    oglwrap_debug_output.callback(
+      "\nEncountered too many errors, stopping now.\n\n"
+    );
+    exit(1);
+  }
+#endif
 }
 
 /// A function used by CHECK_FOR_DEFAULT_BINDING_EXPLICIT() macro
@@ -87,6 +97,7 @@ inline void __print_default_object_is_bound_error(const char *file, const char *
   sstream << "\n---------========={[ BIND CHECK FAILURE ]}=========---------\n" << std::endl;
   sstream << "In function: " << cut_end_of_pretty_func(func) << std::endl;
   sstream << "In '" << file << "' at line " << line << "\n\n";
+  __PrintStackTrace(sstream);
   sstream << "The function requires an object to be bound to " << OGLWRAP_LAST_BIND_TARGET;
   sstream << " but only the default object '0' is bound to that target.\n\n";
   for(size_t i = 0; i < strlen("---------========={[ BIND CHECK FAILURE ]}=========---------"); i++) {
@@ -95,6 +106,15 @@ inline void __print_default_object_is_bound_error(const char *file, const char *
   sstream << std::endl;
 
   oglwrap_debug_output.callback(sstream.str());
+
+#if OGLWRAP_STOP_AFTER_X_ERRORS
+  if(++OGLWRAP_ERRORS_NUM >= OGLWRAP_STOP_AFTER_X_ERRORS) {
+    oglwrap_debug_output.callback(
+      "\nEncountered too many errors, stopping now.\n\n"
+    );
+    exit(1);
+  }
+#endif
 }
 
 /// Checks if the program is the currently active one, and if not, it returns prints out an error, and calls use on that program.
@@ -111,6 +131,7 @@ inline void __print_another_program_is_active_error(const char *file, const char
   sstream << "\n---------========={[ ACTIVE PROGRAM CHECK FAILURE ]}=========---------\n" << std::endl;
   sstream << "In function: " << cut_end_of_pretty_func(func) << std::endl;
   sstream << "In '" << file << "' at line " << line << "\n\n";
+  __PrintStackTrace(sstream);
   sstream << "The currently active program is different than "
           << "the one, this function is supposed to operate on.\n";
   sstream << "Did you forget to call .use() on the program? \n\n";
@@ -120,6 +141,15 @@ inline void __print_another_program_is_active_error(const char *file, const char
   sstream << std::endl;
 
   oglwrap_debug_output.callback(sstream.str());
+
+#if OGLWRAP_STOP_AFTER_X_ERRORS
+  if(++OGLWRAP_ERRORS_NUM >= OGLWRAP_STOP_AFTER_X_ERRORS) {
+    oglwrap_debug_output.callback(
+      "\nEncountered too many errors, stopping now.\n\n"
+    );
+    exit(1);
+  }
+#endif
 }
 #else
 /// Calls the isBound() member function, and prints an error, and binds it, if it returns false.

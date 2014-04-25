@@ -125,4 +125,10 @@
   #endif
 #endif
 
+#if OGLWRAP_DEBUG
+  #ifndef OGLWRAP_STOP_AFTER_X_ERRORS
+    #define OGLWRAP_STOP_AFTER_X_ERRORS 5
+  #endif
+#endif
+
 #endif // OGLWRAP_CONFIG_HPP_
