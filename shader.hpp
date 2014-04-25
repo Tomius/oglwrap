@@ -24,13 +24,24 @@ namespace oglwrap {
 
 // -------======{[ ShaderStorage ]}======-------
 
-/// A class that can load shader sources in from files, and do some preprocessing on them
+/**
+ * @brief A class that can load shader sources in from files, and do some
+ *        preprocessing on them.
+ */
 class ShaderSource {
   std::string src_; /// The source
-  std::string filename_; /// The file's name stored to make debugging easier.
+
+  #if OGLWRAP_DEBUG
+    std::string filename_; /// The file's name stored to make debugging easier.
+  #endif
+
 public:
   /// Default constructor.
-  ShaderSource() : filename_("Unnamed shader") { }
+  #if OGLWRAP_DEBUG
+    ShaderSource() : filename_("Unnamed shader") { }
+  #else
+    ShaderSource() = default;
+  #endif
 
   /// Loads in the shader from a file.
   /** @param file - The path to the file. */
@@ -47,11 +58,10 @@ public:
   /// Loads in the shader from a file.
   /** @param file - The path to the file. */
   void sourceFile(const std::string& file) {
-    filename_ = file;
-    std::ifstream shaderFile(file.c_str());
-    if(!shaderFile.is_open()) {
-      shaderFile.open("shaders/" + file);
-    }
+    #if OGLWRAP_DEBUG
+      filename_ = file;
+    #endif
+    std::ifstream shaderFile((OGLWRAP_DEFAULT_SHADER_PATH + file).c_str());
     if(!shaderFile.is_open()) {
       throw std::runtime_error("Shader file '" + file + "' not found.");
     }
@@ -71,12 +81,14 @@ public:
     * @param value - The value to insert. */
   void insertMacroValue(const std::string& macro_name, const T& value) {
     size_t macro_pos = src_.find("#define " + macro_name);
-    if(macro_pos == std::string::npos) {
-      throw std::invalid_argument(
-        "ShaderSource::insert_macro_value is called for '" + filename_ +
-        "', but the shader doesn't have any macro named " + macro_name
-      );
-    }
+    #if OGLWRAP_DEBUG
+      if(macro_pos == std::string::npos) {
+        throw std::invalid_argument(
+          "ShaderSource::insert_macro_value is called for '" + filename_ +
+          "', but the shader doesn't have any macro named " + macro_name
+        );
+      }
+    #endif
 
     size_t macro_end = src_.find('\n', macro_pos);
 
@@ -86,10 +98,12 @@ public:
     src_ = sstream.str();
   }
 
-  /// Returns the file's name that was loaded in.
-  std::string const& getFileName() const {
-    return filename_;
-  }
+  #if OGLWRAP_DEBUG
+    /// Returns the file's name that was loaded in.
+    std::string const& getFileName() const {
+      return filename_;
+    }
+  #endif
 
   /// Returns the source.
   std::string const& getSource() const {
@@ -110,7 +124,7 @@ namespace glObjects {
 #endif
     { *handle_ = gl(CreateShader(shader_t)); }
   public:
-    ~Shader() { if(unique()) gl(DeleteShader(*handle_)); }
+    ~Shader() { if(unique()) { gl(DeleteShader(*handle_)); } }
   };
 }
 
@@ -122,31 +136,38 @@ template<ShaderType shader_t>
 class Shader {
   glObjects::Shader<shader_t> shader_; ///< The handle for the buffer.
   bool compiled_; ///< Stores if the shader is compiled.
-  std::string filename_;  ///< Stores the source file's name if the shader was initialized from file.
+
+  #if OGLWRAP_DEBUG
+    /// Stores the source file's name if the shader was initialized from file.
+    std::string filename_;
+  #endif
+
 public:
 
   /// Creates the an empty shader object.
-  Shader() : compiled_(false) { }
+  #if OGLWRAP_DEBUG
+    Shader() : compiled_(false), filename_("Unnamed shader") { }
+  #else
+    Shader() : compiled_(false) { }
+  #endif
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glShaderSource)
   /// Creates a shader and sets the file as the shader source.
   /** @param file - The file to load and set as shader source.
     * @see glShaderSource */
   Shader(const std::string& file)
-    : compiled_(false), filename_(file) {
+    : compiled_(false) {
     sourceFile(file);
   }
 #endif // glShaderSource
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glShaderSource)
   /// Creates a shader and sets the file as the shader source.
-  /** @param source - The source of the shader code.
+  /** @param src - The source of the shader code.
     * @see glShaderSource */
-  Shader(const ShaderSource& source)
+  Shader(const ShaderSource& src)
     : compiled_(false) {
-    const char *str = source.getSource().c_str();
-    filename_ = source.getFileName();
-    gl(ShaderSource(shader_, 1, &str, nullptr));
+    source(src);
   }
 #endif // glShaderSource
 
@@ -166,7 +187,9 @@ public:
     * @see glShaderSource */
   void source(const ShaderSource& source) {
     const char *str = source.getSource().c_str();
-    filename_ = source.getFileName();
+    #if OGLWRAP_DEBUG
+      filename_ = source.getFileName();
+    #endif
     gl(ShaderSource(shader_, 1, &str, nullptr));
   }
 #endif // glShaderSource
@@ -176,26 +199,7 @@ public:
   /** @param file - the shader file's path
     * @see glShaderSource */
   void sourceFile(const std::string& file)  {
-    filename_ = file;
-    std::ifstream shaderFile(file.c_str());
-    if(!shaderFile.is_open()) {
-      shaderFile.open("shaders/" + file);
-    }
-    if(!shaderFile.is_open()) {
-      throw std::runtime_error("Shader file '" + file + "' not found.");
-    }
-    std::stringstream shaderString;
-    shaderString << shaderFile.rdbuf();
-
-    // Remove the EOF from the end of the string.
-    std::string fileData = shaderString.str();
-    if(fileData[fileData.length() - 1] == EOF) {
-      fileData.pop_back();
-    }
-
-    // Add the shader source & compile
-    const char *strFileData = fileData.c_str();
-    gl(ShaderSource(shader_, 1, &strFileData, nullptr));
+    source(ShaderSource(file));
   }
 #endif // glShaderSource
 
@@ -212,6 +216,7 @@ public:
     gl(CompileShader(shader_));
     compiled_ = true;
 
+    #ifdef OGLWRAP_DEBUG
     // Get compilation status
     GLint status;
     gl(GetShaderiv(shader_, GL_COMPILE_STATUS, &status));
@@ -257,18 +262,24 @@ public:
       }
 
       std::stringstream str;
-      str << "Compile failure in " << strShaderType << "shader '";
-      str << filename_ << "' :" << std::endl << strInfoLog.get() << std::endl;
+        str << "Compile failure in " << strShaderType << "shader '";
+        str << filename_ << "' :" << std::endl << strInfoLog.get();
 
-      throw std::runtime_error(str.str());
+      OGLWRAP_PRINT_FATAL_ERROR(
+        "Shader compile failure",
+        str.str()
+      )
     }
+    #endif
   }
 #endif // glCompileShader && glGetShaderInfoLog && glGetShaderiv
 
-  /// Returns the file's name that was loaded in.
-  const std::string& filename() const {
-    return filename_;
-  }
+  #if OGLWRAP_DEBUG
+    /// Returns the file's name that was loaded in.
+    const std::string& filename() const {
+      return filename_;
+    }
+  #endif
 
   /// Returns the C OpenGL handle for the shader.
   const glObject& expose() const  {
@@ -286,12 +297,10 @@ public:
   * @see GL_COMPUTE_SHADER */
 typedef Shader<ShaderType::Compute> ComputeShader;
 
-#if OGLWRAP_INSTATIATE_TEMPLATES
+#if OGLWRAP_INSTATIATE
   template class Shader<ShaderType::Compute>;
 #else
-  #if !OGLWRAP_HEADER_ONLY
-    extern template class Shader<ShaderType::Compute>;
-  #endif
+  extern template class Shader<ShaderType::Compute>;
 #endif
 
 #endif // GL_COMPUTE_SHADER
@@ -306,12 +315,10 @@ typedef Shader<ShaderType::Compute> ComputeShader;
   * @see GL_VERTEX_SHADER */
 typedef Shader<ShaderType::Vertex> VertexShader;
 
-#if OGLWRAP_INSTATIATE_TEMPLATES
+#if OGLWRAP_INSTATIATE
   template class Shader<ShaderType::Vertex>;
 #else
-  #if !OGLWRAP_HEADER_ONLY
-    extern template class Shader<ShaderType::Vertex>;
-  #endif
+  extern template class Shader<ShaderType::Vertex>;
 #endif
 
 #endif // GL_VERTEX_SHADER
@@ -325,12 +332,10 @@ typedef Shader<ShaderType::Vertex> VertexShader;
   * @see GL_GEOMETRY_SHADER */
 typedef Shader<ShaderType::Geometry> GeometryShader;
 
-#if OGLWRAP_INSTATIATE_TEMPLATES
+#if OGLWRAP_INSTATIATE
   template class Shader<ShaderType::Geometry>;
 #else
-  #if !OGLWRAP_HEADER_ONLY
-    extern template class Shader<ShaderType::Geometry>;
-  #endif
+  extern template class Shader<ShaderType::Geometry>;
 #endif
 
 #endif // GL_GEOMETRY_SHADER
@@ -349,12 +354,10 @@ typedef Shader<ShaderType::Geometry> GeometryShader;
   * @see GL_FRAGMENT_SHADER */
 typedef Shader<ShaderType::Fragment> FragmentShader;
 
-#if OGLWRAP_INSTATIATE_TEMPLATES
+#if OGLWRAP_INSTATIATE
   template class Shader<ShaderType::Fragment>;
 #else
-  #if !OGLWRAP_HEADER_ONLY
-    extern template class Shader<ShaderType::Fragment>;
-  #endif
+  extern template class Shader<ShaderType::Fragment>;
 #endif
 
 #endif // GL_FRAGMENT_SHADER
@@ -371,12 +374,10 @@ typedef Shader<ShaderType::Fragment> FragmentShader;
   * @see GL_TESS_CONTROL_SHADER */
 typedef Shader<ShaderType::TessControl> TessControlShader;
 
-#if OGLWRAP_INSTATIATE_TEMPLATES
+#if OGLWRAP_INSTATIATE
   template class Shader<ShaderType::TessControl>;
 #else
-  #if !OGLWRAP_HEADER_ONLY
-    extern template class Shader<ShaderType::TessControl>;
-  #endif
+  extern template class Shader<ShaderType::TessControl>;
 #endif
 
 #endif // GL_TESS_CONTROL_SHADER
@@ -393,12 +394,10 @@ typedef Shader<ShaderType::TessControl> TessControlShader;
   * @see GL_TESS_EVALUATION_SHADER */
 typedef Shader<ShaderType::TessEval> TessEvalShader;
 
-#if OGLWRAP_INSTATIATE_TEMPLATES
+#if OGLWRAP_INSTATIATE
   template class Shader<ShaderType::TessEval>;
 #else
-  #if !OGLWRAP_HEADER_ONLY
-    extern template class Shader<ShaderType::TessEval>;
-  #endif
+  extern template class Shader<ShaderType::TessEval>;
 #endif
 
 #endif // GL_TESS_EVALUATION_SHADER
@@ -424,13 +423,23 @@ namespace glObjects {
 }
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDetachShader)
-/// The program object can combine multiple shader stages (built from shader objects) into a single, linked whole.
-/** @see glCreateProgram, glDeleteProgram */
+/**
+ * @brief The program object can combine multiple shader stages (built from
+ *        shader objects) into a single, linked whole.
+ * @see glCreateProgram, glDeleteProgram
+ */
 class Program {
   glObjects::Program program_; ///< The C OpenGL handle for the program.
   std::vector<GLuint> shaders_; ///< IDs of the shaders attached to the program
-  std::vector<std::string> filenames_; ///< The names of the shaders are stored to help debugging.
-  const std::shared_ptr<bool> linked_; ///< Stores if the program is linked. Its a pointer, so .use() can be const.
+
+  #if OGLWRAP_DEBUG
+    /// The names of the shaders are stored to help debugging.
+    std::vector<std::string> filenames_;
+  #endif
+
+  /// Stores if the program is linked. Its a pointer, so .use() can be const.
+  const std::shared_ptr<bool> linked_;
+
 public:
   /// Creates an empty program object.
   Program() : linked_(new bool{false}) {}
@@ -440,8 +449,12 @@ public:
   Program(const Program&) = default;
   Program& operator=(const Program&) = default;
 
-  /// Detaches all the shader objects currently attached to this program, and deletes the program.
-  /** @see glDetachShader, glDeleteShader */
+  /**
+   * @brief Detaches all the shader objects currently attached to this program,
+   * and deletes the program.
+   *
+   * @see glDetachShader, glDeleteShader
+   */
   ~Program() {
     if(program_.unique()) {
       for(size_t i = 0; i < shaders_.size(); i++) {
@@ -458,7 +471,11 @@ public:
   void attachShader(Shader<shader_t>& shader) {
     shader.compile();
     shaders_.push_back(shader.expose());
-    filenames_.push_back(shader.filename());
+
+    #if OGLWRAP_DEBUG
+      filenames_.push_back(shader.filename());
+    #endif
+
     gl(AttachShader(program_, shader.expose()));
   }
 #endif // glAttachShader
@@ -470,7 +487,11 @@ public:
     * @see glAttachShader */
   void attachShader(const Shader<shader_t>& shader) {
     shaders_.push_back(shader.expose());
-    filenames_.push_back(shader.filename());
+
+    #if OGLWRAP_DEBUG
+      filenames_.push_back(shader.filename());
+    #endif
+
     gl(AttachShader(program_, shader.expose()));
   }
 #endif // glAttachShader
@@ -505,14 +526,16 @@ public:
   /// Attaching rvalue reference shaders to a programs only work correctly on NVIDIA.
   Program& operator<<(Shader<shader_t>&& shader) = delete;
 
-  /// Returns a formatted list of the names of the shaders that this program uses.
-  std::string getShaderNames() const {
-    std::string str;
-    for(size_t i = 0; i < filenames_.size(); i++) {
-        str += " - " + filenames_[i] + "\n";
+  #if OGLWRAP_DEBUG
+    /// Returns a formatted list of the names of the shaders that this program uses.
+    std::string getShaderNames() const {
+      std::string str;
+      for(size_t i = 0; i < filenames_.size(); i++) {
+          str += " - " + filenames_[i] + "\n";
+      }
+      return str;
     }
-    return str;
-  }
+  #endif
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glLinkProgram) && defined(glGetProgramiv) && defined(glGetProgramInfoLog))
   /// Links the program and checks for error if OGLWRAP_DEBUG is defined.
@@ -535,9 +558,12 @@ public:
       std::stringstream str;
       str << "OpenGL failed to link the following shaders together: " << std::endl;
       str << getShaderNames() << std::endl;
-      str << "The error message: \n" << strInfoLog.get() << std::endl;
+      str << "The error message: \n" << strInfoLog.get();
 
-      throw std::runtime_error(str.str());
+      OGLWRAP_PRINT_FATAL_ERROR(
+        "Program link failure",
+        str.str()
+      )
     }
     #endif // OGLWRAP_DEBUG
 
@@ -547,11 +573,8 @@ public:
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glValidateProgram) && defined(glGetProgramiv) && defined(glGetProgramInfoLog))
   /// Validates the program if OGLWRAP_DEBUG is defined.
-  /** Returns the validation info, or an empty string.
-    * @see glLinkProgram, glGetProgramiv, glGetProgramInfoLog */
-  std::string validate() const {
-    std::string ret;
-
+  /** @see glLinkProgram, glGetProgramiv, glGetProgramInfoLog */
+  void validate() const {
     #ifdef OGLWRAP_DEBUG
     GLint status;
     gl(ValidateProgram(program_));
@@ -566,13 +589,14 @@ public:
       str << "The validation of the program containing the following shaders failed: " << std::endl;
       str << getShaderNames() << std::endl;
       str << "This program might generate GL_INVALID_OPERATION when used for rendering" << std::endl;
-      if(infoLogLength)
-        str << "The validation info: " << strInfoLog.get() << std::endl;
-      ret = str.str();
+      str << "The validation info: " << strInfoLog.get();
+
+      OGLWRAP_PRINT_ERROR(
+        "Program validation failure",
+        str.str()
+      )
     }
     #endif
-
-    return ret;
   }
 #endif // glValidateProgram && glGetProgramiv && glGetProgramInfoLog
 
@@ -608,7 +632,11 @@ public:
   bool isActive() const {
     GLint currentProgram;
     gl(GetIntegerv(GL_CURRENT_PROGRAM, &currentProgram));
-    OGLWRAP_LAST_BIND_TARGET = "GL_CURRENT_PROGRAM";
+
+    #if OGLWRAP_DEBUG
+      OGLWRAP_LAST_BIND_TARGET = "GL_CURRENT_PROGRAM";
+    #endif
+
     return program_ == GLuint(currentProgram);
   }
 
@@ -620,7 +648,7 @@ public:
 
 // Explicit template instantiation (is ugly, but makes compilation a lot faster)
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glAttachShader)
-  #if OGLWRAP_INSTATIATE_TEMPLATES
+  #if OGLWRAP_INSTATIATE
     #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COMPUTE_SHADER)
       template void Program::attachShader(ComputeShader&);
       template void Program::attachShader(const ComputeShader&);

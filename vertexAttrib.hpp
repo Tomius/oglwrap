@@ -36,20 +36,28 @@ namespace glObjects {
 
 // -------======{[ Vertex Array declaration ]}======-------
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGenVertexArrays) && defined(glDeleteVertexArrays))
-/// VAO is an object that remembers which ArrayBuffers to use for a draw call.
-/** A Vertex Array glObject (VAO) is an object that encapsulates all of the
-  * state needed to specify vertex data. They define the format of the vertex
-  * data as well as the sources for the vertex arrays. Note that VAOs do not
-  * contain the arrays themselves, the arrays are stored in ArrayBuffer Objects.
-  * The VAOs simply reference already existing buffer objects.
-  * @see glGenVertexArrays, glDeleteVertexArrays */
+#if !OGLWRAP_CHECK_DEPENDENCIES \
+    || (defined(glGenVertexArrays) && defined(glDeleteVertexArrays))
+/**
+ * @brief VAO is an object that remembers which ArrayBuffers to use for a
+ *        draw call.
+ *
+ * A Vertex Array glObject (VAO) is an object that encapsulates all of the
+ * state needed to specify vertex data. They define the format of the vertex
+ * data as well as the sources for the vertex arrays. Note that VAOs do not
+ * contain the arrays themselves, the arrays are stored in ArrayBuffer Objects.
+ * The VAOs simply reference already existing buffer objects.
+ * @see glGenVertexArrays, glDeleteVertexArrays
+ */
 class VertexArray {
   glObjects::VertexArray vao_; ///< The handle for the VAO
 public:
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindVertexArray)
-  /// Binds the Vertex Array object, so that it will be used for the further draw calls.
-  /** @see glBindVertexArray */
+  /**
+   * @brief Binds the Vertex Array object, so that it will be used for the
+   *        further draw calls.
+   * @see glBindVertexArray
+   */
   void bind() {
     gl(BindVertexArray(vao_));
   }
@@ -60,7 +68,11 @@ public:
   bool isBound() const {
     GLint currentlyBoundVAO;
     gl(GetIntegerv(GL_VERTEX_ARRAY_BINDING, &currentlyBoundVAO));
-    OGLWRAP_LAST_BIND_TARGET = "GL_VERTEX_ARRAY_BINDING";
+
+    #if OGLWRAP_DEBUG
+      OGLWRAP_LAST_BIND_TARGET = "GL_VERTEX_ARRAY_BINDING";
+    #endif
+
     return vao_ == GLuint(currentlyBoundVAO);
   }
 
@@ -110,15 +122,16 @@ public:
   VertexAttribArrayObject() : location_(INVALID_LOCATION), inited_(false) {}
 
   /// You can specify the attribute slot you use for the attribute.
-  VertexAttribArrayObject(GLuint vertexAttribSlot) : location_(vertexAttribSlot), inited_(false) {}
+  VertexAttribArrayObject(GLuint vertexAttribSlot)
+  : location_(vertexAttribSlot), inited_(false) {}
 
 private:
   template <class GLtype>
   /// A helper function for static setup
-  /** @param value - The default value to be used for this attribute. */
+  /** @param value The default value to be used for this attribute. */
   void static_setup_helper(const GLtype value) {
-    throw std::invalid_argument(
-      "Unrecognized OpenGL type for VertexAttribArrayObject static setup"
+   static_assert((sizeof(GLtype), false),
+    "Unrecognized OpenGL type for VertexAttribArrayObject::static_setup"
     );
   }
 
@@ -127,7 +140,7 @@ public:
   /// static setup of the Vertex Array (all of the values will be the same).
   /** Ints and doubles won't be converted to floats.
     * If you need a GLfixed value, use glVertexAttrib directly
-    * @param value - The default value to be used for this attribute.
+    * @param value The default value to be used for this attribute.
     * @see glVertexAttrib* */
   void static_setup(const GLtype value) {
     if(!inited_) {
@@ -142,34 +155,57 @@ public:
   /// static setup of the Vertex Array (all of the values will be the same).
   /** Ints and doubles won't be converted to floats.
     * If you need a GLfixed value, use glVertexAttrib directly
-    * @param value - The default value to be used for this attribute.
+    * @param value The default value to be used for this attribute.
     * @see glVertexAttrib* */
   void operator=(const GLtype value) {
     static_setup(value);
   }
 
   template <class GLtype>
-  /// Sets up an attribute. It can be templated with any OpenGL type or glm vector.
-  /** Integers and doubles won't be converted to floats, if you want that call pointer()
-    * So you can write setup<ivec3>(); instead of IPointer(3, WholeDataType::Int);
-    * but if you want Pointer(3, DataType::Int) you explicitly have to call that function.
-    * @param values_per_vertex - The dimension of the attribute data divided by the dimension of the template parameter.
-    * @see glVertexAttribPointer, glVertexAttribIPointer, glVertexAttribLPointer */
+  /**
+   * @brief Sets up an attribute. It can be templated with any OpenGL type or
+   *        glm vector.
+   *
+   * Integers and doubles won't be converted to floats, if you want that call
+   * pointer(). So you can write setup<ivec3>(); instead of
+   * IPointer(3, WholeDataType::Int); but if you want
+   * Pointer(3, DataType::Int) you explicitly have to call that function.
+   * @param values_per_vertex The dimension of the attribute data divided by
+   *                          the dimension of the template parameter.
+   * @see glVertexAttribPointer, glVertexAttribIPointer, glVertexAttribLPointer
+   */
   VertexAttribArrayObject& setup(GLuint values_per_vertex = 1) {
-    static_assert((sizeof(GLtype), false), "Unrecognized OpenGL type for VertexAttribArrayObject::setup");
+    static_assert((sizeof(GLtype), false),
+      "Unrecognized OpenGL type for VertexAttribArrayObject::setup"
+    );
     return *this;
   }
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glVertexAttribPointer) && defined(glVertexAttribIPointer))
-  /// Sets up an attribute for arbitrary data type.
-  /** Integers and doubles won't be converted to floats, if you want that call pointer()
-    * So you can write setup<ivec3>(); instead of IPointer(3, WholeDataType::Int);
-    * but if you want Pointer(3, DataType::Int) you explicitly have to call that function.
-    * @param values_per_vertex - The dimension of the attribute data. For example is 3 for a vec3. The initial value is 4.
-    * @param type - The data type of each component in the array.
-    * @param stride - Specifies the byte offset between consecutive generic vertex attributes. If stride is 0, the generic vertex attributes are understood to be tightly packed in the array. The initial value is 0.
-    * @param offset_pointer - Specifies a offset of the first component of the first generic vertex attribute in the array in the data store of the buffer currently bound to the GL_ARRAY_BUFFER target. The initial value is 0.
-    * @see glVertexAttribPointer, glVertexAttribIPointer, glVertexAttribLPointer */
+#if !OGLWRAP_CHECK_DEPENDENCIES \
+    || (defined(glVertexAttribPointer) && defined(glVertexAttribIPointer))
+  /**
+   * @brief Sets up an attribute for arbitrary data type.
+   *
+   * Integers and doubles won't be converted to floats, if you want that call
+   * pointer(). So you can write setup<ivec3>(); instead of
+   * IPointer(3, WholeDataType::Int); but if you want Pointer(3, DataType::Int)
+   * you explicitly have to call that function.
+   *
+   * @param values_per_vertex  The dimension of the attribute data. For example
+   *                           is 3 for a vec3. The initial value is 4.
+   * @param type               The data type of each component in the array.
+   * @param stride             Specifies the byte offset between consecutive
+   *                           generic vertex attributes. If stride is 0, the
+   *                           generic vertex attributes are understood to be
+   *                           tightly packed in the array. The initial value
+   *                           is 0.
+   * @param offset_pointer     Specifies a offset of the first component of the
+   *                           first generic vertex attribute in the array in
+   *                           the data store of the buffer currently bound to
+   *                           the GL_ARRAY_BUFFER target. The initial value
+   *                           is 0.
+   * @see glVertexAttribPointer, glVertexAttribIPointer, glVertexAttribLPointer
+   */
   VertexAttribArrayObject setup(GLuint values_per_vertex,
                                 DataType type,
                                 GLsizei stride = 0,
@@ -191,7 +227,9 @@ public:
 #endif // glVertexAttribLPointer
         break;
       default:
-        ipointer(values_per_vertex, WholeDataType(type), stride, offset_pointer);
+        ipointer(
+          values_per_vertex, WholeDataType(type), stride, offset_pointer
+        );
         break;
     }
     return *this;
@@ -199,13 +237,29 @@ public:
 #endif // glVertexAttribPointer && glVertexAttribIPointer
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribPointer)
-  /// Sets up an attribute for float type data. You can upload any data type to it, but it will be converted to float.
-  /** @param values_per_vertex - The dimension of the attribute data. For example is 3 for a vec3. The initial value is 4.
-    * @param type - The data type of each component in the array.
-    * @param normalized - specifies whether fixed-point data values should be normalized (GL_TRUE) or converted directly as fixed-point values (GL_FALSE) when they are accessed.
-    * @param stride - Specifies the byte offset between consecutive generic vertex attributes. If stride is 0, the generic vertex attributes are understood to be tightly packed in the array. The initial value is 0.
-    * @param offset_pointer - Specifies a offset of the first component of the first generic vertex attribute in the array in the data store of the buffer currently bound to the GL_ARRAY_BUFFER target. The initial value is 0.
-    * @see glVertexAttribPointer */
+  /**
+   * @brief Sets up an attribute for float type data. You can upload any data
+   *        type to it, but it will be converted to float.
+   *
+   * @param values_per_vertex   The dimension of the attribute data. For example
+   *                            is 3 for a vec3. The initial value is 4.
+   * @param type                The data type of each component in the array.
+   * @param normalized          Specifies whether fixed-point data values should
+   *                            be normalized (GL_TRUE) or converted directly as
+   *                            fixed-point values (GL_FALSE) when they are
+   *                            accessed.
+   * @param stride              Specifies the byte offset between consecutive
+   *                            generic vertex attributes. If stride is 0, the
+   *                            generic vertex attributes are understood to be
+   *                            tightly packed in the array. The initial value
+   *                            is 0.
+   * @param offset_pointer      Specifies a offset of the first component of the
+   *                            first generic vertex attribute in the array in
+   *                            the data store of the buffer currently bound to
+   *                            the GL_ARRAY_BUFFER target. The initial value
+   *                            is 0.
+   * @see glVertexAttribPointer
+   */
   VertexAttribArrayObject& pointer(GLuint values_per_vertex = 4,
                                    DataType type = DataType::Float,
                                    bool normalized = false,
@@ -218,18 +272,32 @@ public:
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_ARRAY_BUFFER_BINDING);
 
-    gl(VertexAttribPointer(location_, values_per_vertex, type, normalized, stride, offset_pointer));
+    gl(VertexAttribPointer(
+      location_, values_per_vertex, type, normalized, stride, offset_pointer
+    ));
     return *this;
   }
 #endif // glVertexAttribPointer
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
-  /// Sets up an attribute for integral type data.
-  /** @param values_per_vertex - The dimension of the attribute data. For example is 3 for a vec3. The initial value is 4.
-    * @param type - The data type of each component in the array.
-    * @param stride - Specifies the byte offset between consecutive generic vertex attributes. If stride is 0, the generic vertex attributes are understood to be tightly packed in the array. The initial value is 0.
-    * @param offset_pointer - Specifies a offset of the first component of the first generic vertex attribute in the array in the data store of the buffer currently bound to the GL_ARRAY_BUFFER target. The initial value is 0.
-    * @see glVertexAttribIPointer */
+  /**
+   * @brief Sets up an attribute for integral type data.
+   *
+   * @param values_per_vertex   The dimension of the attribute data. For example
+   *                            is 3 for a vec3. The initial value is 4.
+   * @param type                The data type of each component in the array.
+   * @param stride              Specifies the byte offset between consecutive
+   *                            generic vertex attributes. If stride is 0, the
+   *                            generic vertex attributes are understood to be
+   *                            tightly packed in the array. The initial value
+   *                            is 0.
+   * @param offset_pointer      Specifies a offset of the first component of the
+   *                            first generic vertex attribute in the array in
+   *                            the data store of the buffer currently bound to
+   *                            the GL_ARRAY_BUFFER target. The initial value
+   *                            is 0.
+   * @see glVertexAttribIPointer
+   */
   VertexAttribArrayObject& ipointer(GLuint values_per_vertex = 4,
                                     WholeDataType type = WholeDataType::Int,
                                     GLsizei stride = 0,
@@ -240,17 +308,31 @@ public:
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_ARRAY_BUFFER_BINDING);
-    gl(VertexAttribIPointer(location_, values_per_vertex, type, stride, offset_pointer));
+    gl(VertexAttribIPointer(
+      location_, values_per_vertex, type, stride, offset_pointer
+    ));
     return *this;
   }
 #endif // glVertexAttribIPointer
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribLPointer)
-  /// Sets up an attribute for double type data.
-  /** @param values_per_vertex - The dimension of the attribute data. For example is 3 for a vec3. The initial value is 4.
-    * @param stride - Specifies the byte offset between consecutive generic vertex attributes. If stride is 0, the generic vertex attributes are understood to be tightly packed in the array. The initial value is 0.
-    * @param offset_pointer - Specifies a offset of the first component of the first generic vertex attribute in the array in the data store of the buffer currently bound to the GL_ARRAY_BUFFER target. The initial value is 0.
-    * @see glVertexAttribLPointer */
+  /**
+   * @brief Sets up an attribute for double type data.
+   *
+   * @param values_per_vertex   The dimension of the attribute data. For example
+   *                            is 3 for a vec3. The initial value is 4.
+   * @param stride              Specifies the byte offset between consecutive
+   *                            generic vertex attributes. If stride is 0, the
+   *                            generic vertex attributes are understood to be
+   *                            tightly packed in the array. The initial value
+   *                            is 0.
+   * @param offset_pointer      Specifies a offset of the first component of the
+   *                            first generic vertex attribute in the array in
+   *                            the data store of the buffer currently bound to
+   *                            the GL_ARRAY_BUFFER target. The initial value
+   *                            is 0.
+   * @see glVertexAttribLPointer
+   */
   VertexAttribArrayObject& lpointer(GLuint values_per_vertex = 4,
                                     GLsizei stride = 0,
                                     const void *offset_pointer = nullptr) {
@@ -260,18 +342,31 @@ public:
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_ARRAY_BUFFER_BINDING);
-    gl(VertexAttribLPointer(location_, values_per_vertex, DataType::Double, stride, offset_pointer));
+    gl(VertexAttribLPointer(
+      location_, values_per_vertex, DataType::Double, stride, offset_pointer
+    ));
     return *this;
   }
 #endif // glVertexAttribLPointer
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribFormat)
-  /// Specify the organization of vertex arrays.
-  /** @param values_per_vertex - The number of values per vertex that are stored in the array.
-    * @param type - The type of the data stored in the array.
-    * @param normalized - Specifies whether fixed-point data values should be normalized (GL_TRUE) or converted directly as fixed-point values (GL_FALSE) when they are accessed.
-    * @param stride - Specifies the byte offset between consecutive generic vertex attributes. If stride is 0, the generic vertex attributes are understood to be tightly packed in the array. The initial value is 0.
-    * @see glVertexAttribFormat */
+  /**
+   * @brief Specify the organization of vertex arrays.
+   *
+   * @param values_per_vertex   The number of values per vertex that are stored
+   *                            in the array.
+   * @param type                The type of the data stored in the array.
+   * @param normalized          Specifies whether fixed-point data values should
+   *                            be normalized (GL_TRUE) or converted directly as
+   *                            fixed-point values (GL_FALSE) when they are
+   *                            accessed.
+   * @param stride              Specifies the byte offset between consecutive
+   *                            generic vertex attributes. If stride is 0, the
+   *                            generic vertex attributes are understood to be
+   *                            tightly packed in the array. The initial value
+   *                            is 0.
+   * @see glVertexAttribFormat
+   */
   VertexAttribArrayObject& format(GLuint values_per_vertex = 4,
                                   DataType type = DataType::Float,
                                   GLboolean normalized = false,
@@ -281,17 +376,29 @@ public:
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
-    gl(VertexAttribFormat(location_, values_per_vertex, type, normalized, stride));
+    gl(VertexAttribFormat(
+      location_, values_per_vertex, type, normalized, stride
+    ));
     return *this;
   }
 #endif // glVertexAttribFormat
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIFormat)
-  /// Specify the organization of vertex arrays. Should be used for integer values.
-  /** @param values_per_vertex - The number of values per vertex that are stored in the array.
-    * @param type - The type of the data stored in the array.
-    * @param stride - Specifies the byte offset between consecutive generic vertex attributes. If stride is 0, the generic vertex attributes are understood to be tightly packed in the array. The initial value is 0.
-    * @see glVertexAttribIFormat */
+  ///
+  /**
+   * @brief Specify the organization of vertex arrays. Should be used for
+   *        integer values.
+   *
+   * @param values_per_vertex   The number of values per vertex that are stored
+   *                            in the array.
+   * @param type                The type of the data stored in the array.
+   * @param stride              Specifies the byte offset between consecutive
+   *                            generic vertex attributes. If stride is 0, the
+   *                            generic vertex attributes are understood to be
+   *                            tightly packed in the array. The initial value
+   *                            is 0.
+   * @see glVertexAttribIFormat
+   */
   VertexAttribArrayObject& iformat(GLuint values_per_vertex = 4,
                                    WholeDataType type = WholeDataType::Int,
                                    GLsizei stride = 0) {
@@ -306,10 +413,19 @@ public:
 #endif // glVertexAttribIFormat
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribLFormat)
-  /// Specify the organization of vertex arrays. Should be used for double values.
-  /** @param values_per_vertex - The number of values per vertex that are stored in the array.
-    * @param stride - Specifies the byte offset between consecutive generic vertex attributes. If stride is 0, the generic vertex attributes are understood to be tightly packed in the array. The initial value is 0.
-    * @see glVertexAttribLFormat */
+  /**
+   * @brief Specify the organization of vertex arrays. Should be used for
+   *        double values.
+   *
+   * @param values_per_vertex   The number of values per vertex that are stored
+   *                            in the array.
+   * @param stride              Specifies the byte offset between consecutive
+   *                            generic vertex attributes. If stride is 0, the
+   *                            generic vertex attributes are understood to be
+   *                            tightly packed in the array. The initial value
+   *                            is 0.
+   * @see glVertexAttribLFormat
+   */
   VertexAttribArrayObject& lformat(GLuint values_per_vertex = 4,
                                    GLsizei stride = 0) {
     if(!inited_) {
@@ -317,7 +433,9 @@ public:
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
-    gl(VertexAttribLFormat(location_, values_per_vertex, DataType::Double, stride));
+    gl(VertexAttribLFormat(
+      location_, values_per_vertex, DataType::Double, stride
+    ));
     return *this;
   }
 #endif // glVertexAttribLFormat
@@ -351,9 +469,14 @@ public:
 #endif // glDisableVertexAttribArray
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribDivisor)
-  /// Modify the rate at which generic vertex attributes advance during instanced rendering
-  /** @param divisor - Specify the number of instances that will pass between updates of the attribute.
-    * @see glVertexAttribDivisor */
+  /**
+   * @brief Modify the rate at which generic vertex attributes advance during
+   *        instanced rendering.
+   *
+   * @param divisor Specify the number of instances that will pass between
+   *                updates of the attribute.
+   * @see glVertexAttribDivisor
+   */
   VertexAttribArrayObject& divisor(GLuint divisor) {
     if(!inited_) {
       init();
@@ -366,10 +489,17 @@ public:
 #endif // glVertexAttribDivisor
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindAttribLocation)
-  /// Associates a generic vertex attribute index with a named attribute variable
-  /** @param prog - Specifies the handle of the program object in which the association is to be made.
-    * @param identifier - Specifies a null terminated string containing the name of the vertex shader attribute variable to which index is to be bound.
-    * @see glBindAttribLocation */
+  /**
+   * @brief Associates a generic vertex attribute index with a named attribute
+   *        variable.
+   *
+   * @param prog         Specifies the handle of the program object in which the
+   *                     association is to be made.
+   * @param identifier   Specifies a null terminated string containing the name
+   *                     of the vertex shader attribute variable to which index
+   *                     is to be bound.
+   * @see glBindAttribLocation
+   */
   void bindLocation(const Program& prog, const std::string& identifier) const {
     gl(BindAttribLocation(prog.expose(), location_, identifier.c_str()));
   }
@@ -389,16 +519,25 @@ public:
 class VertexAttribArray : public VertexAttribArrayObject {
 public:
   /// You can specify the attribute slot you use for the attribute
-  VertexAttribArray(GLuint vertexAttribSlot) : VertexAttribArrayObject(vertexAttribSlot) {}
+  VertexAttribArray(GLuint vertexAttribSlot)
+    : VertexAttribArrayObject(vertexAttribSlot) {}
 
-  /// You can query the location of the attribute using the attribute's name
-  /** @param program - Specifies the program in which you want to setup an attribute.
-    * @param identifier - Specifies the attribute's name you want to setup.
-    * @see glGetAttribLocation */
+  /**
+   * @brief You can query the location of the attribute using the attribute's
+   *        name.
+   *
+   * @param program     Specifies the program in which you want to setup an
+   *                    attribute.
+   * @param identifier  Specifies the attribute's name you want to setup.
+   * @see glGetAttribLocation
+   */
   VertexAttribArray(const Program& program, const std::string& identifier) {
     location_ = gl(GetAttribLocation(program.expose(), identifier.c_str()));
     if(location_ == INVALID_LOCATION) {
-      oglwrap_debug_output.callback("Unable to get location of attribute '" + identifier + "'");
+      OGLWRAP_PRINT_ERROR(
+        "Error getting attribute location",
+        "Unable to get location of attribute '" + identifier + "'"
+      );
     }
   }
 };
@@ -420,18 +559,28 @@ class LazyVertexAttribArray : public VertexAttribArrayObject {
 
     location_ = gl(GetAttribLocation(program_.expose(), identifier_.c_str()));
     if(location_ == INVALID_LOCATION) {
-      oglwrap_debug_output.callback("Unable to get location of attribute '" + identifier_ + "'");
+      OGLWRAP_PRINT_ERROR(
+        "Error getting attribute location",
+        "Unable to get location of attribute '" + identifier_ + "'"
+      );
     }
 
     inited_ = true;
   }
 public:
-  /// Saves the details of the vertex attribute, but will only query the location at the first use.
-  /** @param program - Specifies the program in which you want to setup an attribute.
-    * @param identifier - Specifies the attribute's name you want to setup.
-    * @param isArray - Specifies if the attribute is an array.
-    * @see glGetAttribLocation */
-  LazyVertexAttribArray(const Program& program, const std::string& identifier, bool isArray = true)
+  /**
+   * @brief Saves the details of the vertex attribute, but will only query the
+   *        location at the first use.
+   *
+   * @param program     Specifies the program in which you want to setup an
+   *                    attribute.
+   * @param identifier  Specifies the attribute's name you want to setup.
+   * @param isArray     Specifies if the attribute is an array.
+   * @see glGetAttribLocation
+   */
+  LazyVertexAttribArray(const Program& program,
+                        const std::string& identifier,
+                        bool isArray = true)
     : program_(program)
     , identifier_(identifier)
     , isArray_(isArray)
@@ -439,9 +588,15 @@ public:
 
   LazyVertexAttribArray operator[](unsigned char idx) {
     if(isArray_) {
-      return LazyVertexAttribArray(program_, identifier_ + '[' + static_cast<const char>(idx + '0') + ']', isArray_);
+      return LazyVertexAttribArray(
+        program_, identifier_ +
+        '[' + static_cast<const char>(idx + '0') + ']', isArray_
+      );
     } else {
-      return LazyVertexAttribArray(program_, identifier_ + static_cast<const char>(idx + '0'), isArray_);
+      return LazyVertexAttribArray(
+        program_, identifier_ +
+        static_cast<const char>(idx + '0'), isArray_
+      );
     }
   }
 
@@ -449,9 +604,13 @@ public:
     return VertexAttribArray(program_, identifier_);
   }
 
-  /// Associates a generic vertex attribute index with a named attribute variable
-  /** @param index - Specifies the index of the generic vertex attribute to be bound.
-    * @see glBindAttribLocation */
+  /**
+   * @brief Associates a generic vertex attribute index with a named attribute
+   *        variable.
+   *
+   * @param index  Specifies the index of the generic vertex attribute to be
+   *               bound.
+   * @see glBindAttribLocation */
   void bindLocation(GLuint index) const {
     gl(BindAttribLocation(program_.expose(), index, identifier_.c_str()));
   }
@@ -462,7 +621,8 @@ public:
 // -------======{[ VertexAttribArrayObject::setup specializations ]}======-------
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribPointer)
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<GLfloat>(GLuint values_per_vertex) {
+inline VertexAttribArrayObject&
+VertexAttribArrayObject::setup<GLfloat>(GLuint values_per_vertex) {
   pointer(values_per_vertex, DataType::Float);
   return *this;
 }
@@ -470,7 +630,8 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<GLfloat>(GLuint v
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<GLbyte>(GLuint values_per_vertex) {
+inline VertexAttribArrayObject&
+VertexAttribArrayObject::setup<GLbyte>(GLuint values_per_vertex) {
   ipointer(values_per_vertex, WholeDataType::Byte);
   return *this;
 }
@@ -478,7 +639,8 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<GLbyte>(GLuint va
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<GLubyte>(GLuint values_per_vertex) {
+inline VertexAttribArrayObject&
+VertexAttribArrayObject::setup<GLubyte>(GLuint values_per_vertex) {
   ipointer(values_per_vertex, WholeDataType::UnsignedByte);
   return *this;
 }
@@ -486,7 +648,8 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<GLubyte>(GLuint v
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<GLshort>(GLuint values_per_vertex) {
+inline VertexAttribArrayObject&
+VertexAttribArrayObject::setup<GLshort>(GLuint values_per_vertex) {
   ipointer(values_per_vertex, WholeDataType::Short);
   return *this;
 }
@@ -494,7 +657,8 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<GLshort>(GLuint v
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<GLushort>(GLuint values_per_vertex) {
+inline VertexAttribArrayObject&
+VertexAttribArrayObject::setup<GLushort>(GLuint values_per_vertex) {
   ipointer(values_per_vertex, WholeDataType::UnsignedShort);
   return *this;
 }
@@ -502,7 +666,8 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<GLushort>(GLuint 
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<GLint>(GLuint values_per_vertex) {
+inline VertexAttribArrayObject&
+VertexAttribArrayObject::setup<GLint>(GLuint values_per_vertex) {
   ipointer(values_per_vertex, WholeDataType::Int);
   return *this;
 }
@@ -510,7 +675,8 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<GLint>(GLuint val
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<GLuint>(GLuint values_per_vertex) {
+inline VertexAttribArrayObject&
+VertexAttribArrayObject::setup<GLuint>(GLuint values_per_vertex) {
   ipointer(values_per_vertex, WholeDataType::UnsignedInt);
   return *this;
 }
@@ -518,7 +684,8 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<GLuint>(GLuint va
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribPointer)
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::vec2>(GLuint) {
+inline VertexAttribArrayObject&
+VertexAttribArrayObject::setup<glm::vec2>(GLuint) {
   pointer(2, DataType::Float);
   return *this;
 }
@@ -526,7 +693,8 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::vec2>(GLuint
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribLPointer)
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::dvec2>(GLuint) {
+inline VertexAttribArrayObject&
+VertexAttribArrayObject::setup<glm::dvec2>(GLuint) {
   lpointer(2);
   return *this;
 }
@@ -534,7 +702,8 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::dvec2>(GLuin
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::ivec2>(GLuint) {
+inline VertexAttribArrayObject&
+VertexAttribArrayObject::setup<glm::ivec2>(GLuint) {
   ipointer(2, WholeDataType::Int);
   return *this;
 }
@@ -542,7 +711,8 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::ivec2>(GLuin
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::uvec2>(GLuint) {
+inline VertexAttribArrayObject&
+VertexAttribArrayObject::setup<glm::uvec2>(GLuint) {
   ipointer(2, WholeDataType::UnsignedInt);
   return *this;
 }
@@ -550,7 +720,8 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::uvec2>(GLuin
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribPointer)
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::vec3>(GLuint) {
+inline VertexAttribArrayObject&
+VertexAttribArrayObject::setup<glm::vec3>(GLuint) {
   pointer(3, DataType::Float);
   return *this;
 }
@@ -558,7 +729,8 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::vec3>(GLuint
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribLPointer)
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::dvec3>(GLuint) {
+inline VertexAttribArrayObject&
+VertexAttribArrayObject::setup<glm::dvec3>(GLuint) {
   lpointer(3);
   return *this;
 }
@@ -566,7 +738,8 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::dvec3>(GLuin
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::ivec3>(GLuint) {
+inline VertexAttribArrayObject&
+VertexAttribArrayObject::setup<glm::ivec3>(GLuint) {
   ipointer(3, WholeDataType::Int);
   return *this;
 }
@@ -574,7 +747,8 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::ivec3>(GLuin
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::uvec3>(GLuint) {
+inline VertexAttribArrayObject&
+VertexAttribArrayObject::setup<glm::uvec3>(GLuint) {
   ipointer(3, WholeDataType::UnsignedInt);
   return *this;
 }
@@ -582,7 +756,8 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::uvec3>(GLuin
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribPointer)
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::vec4>(GLuint) {
+inline VertexAttribArrayObject&
+VertexAttribArrayObject::setup<glm::vec4>(GLuint) {
   pointer(4, DataType::Float);
   return *this;
 }
@@ -590,7 +765,8 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::vec4>(GLuint
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribLPointer)
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::dvec4>(GLuint) {
+inline VertexAttribArrayObject&
+VertexAttribArrayObject::setup<glm::dvec4>(GLuint) {
   lpointer(4);
   return *this;
 }
@@ -598,7 +774,8 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::dvec4>(GLuin
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::ivec4>(GLuint) {
+inline VertexAttribArrayObject&
+VertexAttribArrayObject::setup<glm::ivec4>(GLuint) {
   ipointer(4, WholeDataType::Int);
   return *this;
 }
@@ -606,7 +783,8 @@ inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::ivec4>(GLuin
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
 template<>
-inline VertexAttribArrayObject& VertexAttribArrayObject::setup<glm::uvec4>(GLuint) {
+inline VertexAttribArrayObject&
+VertexAttribArrayObject::setup<glm::uvec4>(GLuint) {
   ipointer(4, WholeDataType::UnsignedInt);
   return *this;
 }

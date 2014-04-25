@@ -278,12 +278,10 @@ public:
   * @see GL_ARRAY_BUFFER */
 typedef BufferObject<BufferType::Array> ArrayBuffer;
 
-#if OGLWRAP_INSTATIATE_TEMPLATES
+#if OGLWRAP_INSTATIATE
   template class BufferObject<BufferType::Array>;
 #else
-  #if !OGLWRAP_HEADER_ONLY
-    extern template class BufferObject<BufferType::Array>;
-  #endif
+  extern template class BufferObject<BufferType::Array>;
 #endif
 
 #endif // GL_ARRAY_BUFFER
@@ -297,12 +295,10 @@ typedef BufferObject<BufferType::Array> ArrayBuffer;
   * @see GL_ELEMENT_ARRAY_BUFFER */
 typedef BufferObject<BufferType::ElementArray> IndexBuffer;
 
-#if OGLWRAP_INSTATIATE_TEMPLATES
+#if OGLWRAP_INSTATIATE
   template class BufferObject<BufferType::ElementArray>;
 #else
-  #if !OGLWRAP_HEADER_ONLY
-    extern template class BufferObject<BufferType::ElementArray>;
-  #endif
+  extern template class BufferObject<BufferType::ElementArray>;
 #endif
 
 #endif // GL_ELEMENT_ARRAY_BUFFER
@@ -313,12 +309,10 @@ typedef BufferObject<BufferType::ElementArray> IndexBuffer;
   * @see GL_TEXTURE_BUFFER */
 typedef BufferObject<BufferType::Texture> TextureBuffer;
 
-#if OGLWRAP_INSTATIATE_TEMPLATES
+#if OGLWRAP_INSTATIATE
   template class BufferObject<BufferType::Texture>;
 #else
-  #if !OGLWRAP_HEADER_ONLY
-    extern template class BufferObject<BufferType::Texture>;
-  #endif
+  extern template class BufferObject<BufferType::Texture>;
 #endif
 
 #endif // GL_TEXTURE_BUFFER
@@ -375,12 +369,10 @@ public:
 /** @see GL_UNIFORM_BUFFER */
 typedef IndexedBufferObject<IndexedBufferType::Uniform> UniformBuffer;
 
-#if OGLWRAP_INSTATIATE_TEMPLATES
+#if OGLWRAP_INSTATIATE
   template class IndexedBufferObject<IndexedBufferType::Uniform>;
 #else
-  #if !OGLWRAP_HEADER_ONLY
-    extern template class IndexedBufferObject<IndexedBufferType::Uniform>;
-  #endif
+  extern template class IndexedBufferObject<IndexedBufferType::Uniform>;
 #endif
 
 #endif // GL_UNIFORM_BUFFER
@@ -390,12 +382,10 @@ typedef IndexedBufferObject<IndexedBufferType::Uniform> UniformBuffer;
 /** @see GL_TRANSFORM_FEEDBACK_BUFFER */
 typedef IndexedBufferObject<IndexedBufferType::TransformFeedback> TransformFeedbackBuffer;
 
-#if OGLWRAP_INSTATIATE_TEMPLATES
+#if OGLWRAP_INSTATIATE
   template class IndexedBufferObject<IndexedBufferType::TransformFeedback>;
 #else
-  #if !OGLWRAP_HEADER_ONLY
-    extern template class IndexedBufferObject<IndexedBufferType::TransformFeedback>;
-  #endif
+  extern template class IndexedBufferObject<IndexedBufferType::TransformFeedback>;
 #endif
 
 #endif // GL_TRANSFORM_FEEDBACK_BUFFER

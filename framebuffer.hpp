@@ -65,7 +65,11 @@ public:
   bool isBound() const {
     GLint currentlyBoundBuffer;
     gl(GetIntegerv(GL_RENDERBUFFER_BINDING, &currentlyBoundBuffer));
-    OGLWRAP_LAST_BIND_TARGET = "GL_RENDERBUFFER_BINDING";
+
+    #if OGLWRAP_DEBUG
+      OGLWRAP_LAST_BIND_TARGET = "GL_RENDERBUFFER_BINDING";
+    #endif
+
     return renderbuffer_ == GLuint(currentlyBoundBuffer);
   }
 

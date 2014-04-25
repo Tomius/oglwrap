@@ -18,21 +18,13 @@
 #endif
 
 /**
- * @brief Oglwrap works in header only mode by default, but with linking
- * oglwrap.cpp, it can compile and run faster.
- */
-#ifndef OGLWRAP_HEADER_ONLY
-  #define OGLWRAP_HEADER_ONLY 1
-#endif
-
-/**
  * @brief Instantiates the templates that can be used only with a few types.
  *
  * The compile time can be drastically decreased with this.
  * This also makes sure that global variables are only defined once
  */
-#ifndef OGLWRAP_INSTATIATE_TEMPLATES
-  #define OGLWRAP_INSTATIATE_TEMPLATES 0
+#ifndef OGLWRAP_INSTATIATE
+  #define OGLWRAP_INSTATIATE 0
 #endif
 
 /// A macro for internal use only
@@ -129,6 +121,15 @@
   #ifndef OGLWRAP_STOP_AFTER_X_ERRORS
     #define OGLWRAP_STOP_AFTER_X_ERRORS 5
   #endif
+#endif
+
+/**
+ * @brief You can define a default shader path, like "shaders/"
+ *
+ * Be sure to define this as a string literal, including quotes
+ */
+#ifndef OGLWRAP_DEFAULT_SHADER_PATH
+  #define OGLWRAP_DEFAULT_SHADER_PATH ""
 #endif
 
 #endif // OGLWRAP_CONFIG_HPP_

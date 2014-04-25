@@ -92,7 +92,7 @@ public:
     vao.bind();
     positions.bind();
     positions.data(sizeof(pos), pos);
-    attrib.setup<float>(3).enable();
+    attrib.setup<glm::vec3>().enable();
     vao.unbind();
   }
 

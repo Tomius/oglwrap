@@ -15,46 +15,39 @@ namespace oglwrap {
 
 namespace glObjects {
   class TransformFeedback : public glObject {
-    void constructor() const { gl(GenTransformFeedbacks(1, handle_)); }
+#if OGLWRAP_INITIALIZE_GLOBAL_GL_OBJECTS_ON_USE
+    protected: void constructor() const override
+#else
+    public: TransformFeedback()
+#endif
+    { gl(GenTransformFeedbacks(1, handle_.get())); }
   public:
-    ~TransformFeedback() { if(isDeletable() && *inited_) gl(DeleteTransformFeedbacks(1, handle_)); }
+    ~TransformFeedback() {
+      if(unique()) gl(DeleteTransformFeedbacks(1, handle_.get()));
+    }
   };
 }
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGenTransformFeedbacks) && defined(glDeleteTransformFeedbacks))
-/// A wrapper class for transform feedback.
-/** Transform Feedback is the process of altering the rendering pipeline so that primitives
-  * processed by a Vertex Shader and optionally a Geometry Shader will be written to buffer
-  * objects. This allows one to preserve the post-transform rendering state of an object and
-  * resubmit this data multiple times.
-  * @see glGenTransformFeedbacks, glDeleteTransformFeedbacks */
-class TransformFeedback : protected RefCounted {
+#if !OGLWRAP_CHECK_DEPENDENCIES \
+    || (defined(glGenTransformFeedbacks) && defined(glDeleteTransformFeedbacks))
+/**
+ * @brief A wrapper class for transform feedback.
+ *
+ * Transform Feedback is the process of altering the rendering pipeline so that
+ * primitives processed by a Vertex Shader and optionally a Geometry Shader will
+ * be written to buffer objects. This allows one to preserve the post-transform
+ * rendering state of an object and resubmit this data multiple times.
+ * @see glGenTransformFeedbacks, glDeleteTransformFeedbacks
+ */
+class TransformFeedback {
   /// The handle for the TransformFeedback
   glObjects::TransformFeedback tfb_;
-  enum TFBstate {TFB_STATE_NONE, TFB_STATE_WORKING, TFB_STATE_PAUSED} state_;
 public:
-  /// Generates a transform feedback.
-  TransformFeedback() : state_(TFB_STATE_NONE) {}
+  TransformFeedback() = default;
 
-  /// Creates a transform feedback and activates it. It will work till the variable's lifetime.
-  /** @param mode - The primitive type the TFB should use. */
-  TransformFeedback(TFB_PrimType mode) : state_(TFB_STATE_WORKING) {
-    bind();
-    begin(mode);
-  }
-
-  /// Deletes the transform feedback, if only one instance of it exists.
-  /** Also ends it if it's active. In this case it will change the currently active TFB.
-    * @see glDeleteTransformFeedbacks */
-  ~TransformFeedback() {
-    if(!tfb_.isDeletable()) {
-      return;
-    }
-    if(state_ != TFB_STATE_NONE) {
-      bind();
-      end();
-    }
-  }
+  // It doesn't make much sense to copy a TFB
+  TransformFeedback(const TransformFeedback&) = delete;
+  TransformFeedback& operator=(const TransformFeedback&) = delete;
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindTransformFeedback)
   /// Binds the transform feedback.
@@ -83,7 +76,11 @@ public:
   bool isBound() const {
     GLint currentlyBoundTFB;
     gl(GetIntegerv(GL_TRANSFORM_FEEDBACK, &currentlyBoundTFB));
-    OGLWRAP_LAST_BIND_TARGET = "GL_TRANSFORM_FEEDBACK";
+
+    #if OGLWRAP_DEBUG
+      OGLWRAP_LAST_BIND_TARGET = "GL_TRANSFORM_FEEDBACK";
+    #endif
+
     return tfb_ == GLuint(currentlyBoundTFB);
   }
 
@@ -99,7 +96,6 @@ public:
     * @see glBeginTransformFeedback */
   BIND_CHECKED void begin(TFB_PrimType mode) {
     CHECK_BINDING();
-    state_ = TFB_STATE_WORKING;
     Begin(mode);
   }
 #endif // glBeginTransformFeedback
@@ -114,40 +110,90 @@ public:
   /** @see glEndTransformFeedback */
   BIND_CHECKED void end() {
     CHECK_BINDING();
-    state_ = TFB_STATE_NONE;
     End();
   }
 #endif // glEndTransformFeedback
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glPauseTransformFeedback)
-  /// Pauses transform feedback operations on the currently active transform feedback object.
-  /** @see glPauseTransformFeedback */
+  /**
+   * @brief Pauses transform feedback operations on the currently active
+   *        transform feedback object.
+   *
+   * @see glPauseTransformFeedback
+   */
   static void Pause() {
     gl(PauseTransformFeedback());
   }
-  /// Pauses transform feedback operations on the currently active transform feedback object.
-  /** @see glPauseTransformFeedback */
+
+  /**
+   * @brief Pauses transform feedback operations on the currently active
+   *        transform feedback object.
+   *
+   * @see glPauseTransformFeedback
+   */
   BIND_CHECKED void pause() {
     CHECK_BINDING();
-    state_ = TFB_STATE_PAUSED;
     Pause();
   }
 #endif // glPauseTransformFeedback
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glResumeTransformFeedback)
-  /// Resumes transform feedback operations on the currently active transform feedback object.
-  /** @see glResumeTransformFeedback */
+  /**
+   * @brief Resumes transform feedback operations on the currently active
+   *        transform feedback object.
+   *
+   * @see glResumeTransformFeedback
+   */
   static void Resume() {
     gl(ResumeTransformFeedback());
   }
-  /// Resumes transform feedback operations on the currently active transform feedback object.
-  /** @see glResumeTransformFeedback */
+  /**
+   * @brief Resumes transform feedback operations on the currently active
+   *        transform feedback object.
+   *
+   * @see glResumeTransformFeedback
+   */
   BIND_CHECKED void resume() {
     CHECK_BINDING();
-    state_ = TFB_STATE_WORKING;
     Resume();
   }
 #endif // glResumeTransformFeedback
+};
+
+/**
+ * @brief Activates TransformFeedback for the lifetime of this variable.
+ *
+ * Assumes that no other tfb will be used during this.
+ */
+class TransformFeedbackActivator {
+  TransformFeedback tfb_;
+  bool paused_;
+public:
+  TransformFeedbackActivator(TFB_PrimType mode) : paused_(false) {
+    // Bind and start
+    tfb_.bind();
+    tfb_.begin(mode);
+  }
+
+  ~TransformFeedbackActivator() {
+    // End and unbind this
+    tfb_.end();
+    tfb_.unbind();
+  }
+
+  void pause() {
+    if(!paused_) {
+      tfb_.pause();
+      paused_ = true;
+    }
+  }
+
+  void resume() {
+    if(paused_) {
+      tfb_.resume();
+      paused_ = false;
+    }
+  }
 };
 #endif // glGenTransformFeedbacks && glDeleteTransformFeedbacks
 

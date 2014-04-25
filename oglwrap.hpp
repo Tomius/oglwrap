@@ -6,15 +6,15 @@
 #ifndef OGLWRAP_OGLWRAP_HPP_
 #define OGLWRAP_OGLWRAP_HPP_
 
- #ifdef gl
-    #undef gl
-    #warning Please don't define a 'gl' macro before including oglwrap
- #endif
+#ifdef gl
+  #undef gl
+  #warning Please don't define a 'gl' macro before including oglwrap
+#endif
 
-  #ifdef glfunc
-    #undef glfunc
-    #warning Please don't define a 'glfunc' macro before including oglwrap
- #endif
+#ifdef glfunc
+  #undef glfunc
+  #warning Please don't define a 'glfunc' macro before including oglwrap
+#endif
 
 // standard headers
 #include <map>

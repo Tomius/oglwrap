@@ -12,28 +12,21 @@
 #include <cstring>
 #include <fstream>
 #include <sstream>
+#include <functional>
 
 #include "../config.hpp"
+#include "../enums.hpp"
+#include "error_formatting.hpp"
 
 namespace oglwrap {
-
-/// The default callback function for errors. It prints the error to stderr.
-inline void defaultCallback(std::string errorMessage) {
-  std::cerr << errorMessage << std::endl;
-}
 
 #if OGLWRAP_DEBUG
 
 /// A global variable storing the last OpenGL error.
-#if OGLWRAP_INSTATIATE_TEMPLATES
-  // Yeah i know, a global variable is not a template, whatever...
-  GLenum OGLWRAP_LAST_ERROR = GL_NO_ERROR;
+#if OGLWRAP_INSTATIATE
+  GLError OGLWRAP_LAST_ERROR = GLError::NoError;
 #else
-  #if OGLWRAP_HEADER_ONLY
-    static GLenum OGLWRAP_LAST_ERROR = GL_NO_ERROR;
-  #else
-    extern GLenum OGLWRAP_LAST_ERROR;
-  #endif
+  extern GLError OGLWRAP_LAST_ERROR;
 #endif
 
 
@@ -99,16 +92,14 @@ class DebugOutput {
     }
   }
 
-public:
-  /// A pointer to the callback function that will be called everytime an oglwrap error happens.
-  /** By default it prints to stderr, but you can assign any void(*)(std::string) type function to it.
-    * Note: you can find out where the error happened inside your code, by setting a
-    * breakpoint into this function, and repeatedly stepping out until you get out
-    * into your code. It's INCREDIBLY useful! */
-  void (*callback)(std::string);
+
+  using ErrorPrintFormatter = void(ErrorMessage error);
+  std::function<ErrorPrintFormatter> error_printer{OGLWRAP_PrintError};
+  static DebugOutput instance;
+
 
   /// Loads in the list of OpenGL errors.
-  DebugOutput() : callback(defaultCallback) {
+  DebugOutput() {
     // The GLerrors.txt should be in the same folder as this file.
     // So we can use the __FILE__ macro to get the path to this file,
     // and replaces the "debugOutput.hpp" to "GLerrors.txt"
@@ -121,7 +112,8 @@ public:
     std::ifstream is(filename);
     if(!is.good()) {
       std::cerr <<
-        "Couldn't initialize DebugOutput because GLerrors.txt is missing or corrupted." << std::endl;
+        "Couldn't initialize DebugOutput because "
+        "GLerrors.txt is missing or corrupted." << std::endl;
     }
 
     // Read until EOF, or until an error occurs.
@@ -198,8 +190,7 @@ public:
     }
   }
 
-private:
-  std::string formatedFuncSignature(std::string funcSignature) {
+  static std::string formatedFuncSignature(std::string funcSignature) {
     // Ident the function a little.
     funcSignature.insert(0, "  ");
     size_t parameters_start = funcSignature.find('(');
@@ -216,21 +207,34 @@ private:
   }
 
 public:
-  /// If there was an error, notifies you about it through the callback function.
-  /** The default callback function prints the error to the stdout
-    * @param functionCall - The name of the GL function that was called.
-    * @param sstream - The stream to write the error */
-  void printError(const std::string& functionCall, std::stringstream& sstream) {
-    size_t errIdx = getErrorIndex();
-    if(errIdx == NUM_ERRORS) {
-      return;
+  static void AddErrorPrintFormatter(std::function<ErrorPrintFormatter> printf) {
+    instance.error_printer = printf;
+  }
+
+  static void PrintError(ErrorMessage error) {
+    if(instance.error_printer) {
+      instance.error_printer(error);
     }
+  }
+
+  /** @brief Returns detailed information about why could the error happen in
+    *        the specified call.
+    * @param functionCall - The function call string.
+    */
+  static std::string GetDetailedErrorInfo(const std::string& functionCall) {
+    size_t errIdx = instance.getErrorIndex();
+    if(errIdx == NUM_ERRORS) {
+      return std::string{};
+    }
+
+    std::stringstream sstream;
 
     size_t funcNameLen = functionCall.find_first_of('(');
     std::string funcName = std::string(functionCall.begin(), functionCall.begin() + funcNameLen);
 
-    if(errorMap.find(funcName) != errorMap.end() && !errorMap[funcName].errors[errIdx].empty()) {
-      ErrorInfo errinfo = errorMap[funcName];
+    if(instance.errorMap.find(funcName) != instance.errorMap.end() &&
+       !instance.errorMap[funcName].errors[errIdx].empty()) {
+      ErrorInfo errinfo = instance.errorMap[funcName];
       sstream << "The following OpenGL function: " << std::endl << std::endl;
       sstream << formatedFuncSignature(errinfo.funcSignature) << std::endl << std::endl;
       sstream << "Has generated the error because one of the following(s) were true:" << std::endl;
@@ -245,13 +249,7 @@ public:
       }
     }
 
-    sstream << std::endl;
-    size_t lineSize = strlen("---------========={[  ]}=========---------") +
-                      strlen(glErrorNames[errIdx]);
-    for(size_t i = 0; i < lineSize; i++) {
-      sstream << '-';
-    }
-    sstream << std::endl;
+    return sstream.str();
   }
 };
 
@@ -259,20 +257,22 @@ public:
 #endif // OGLWRAP_DEBUG
 
 #if !OGLWRAP_DEBUG || OGLWRAP_DISABLE_DEBUG_OUTPUT
-struct DebugOutput {
-  /// A pointer to the callback function that will be called everytime an oglwrap error happens.
-  /** By default it prints to stderr, but you can assign any void(*)(std::string) type function to it.
-    * Note: you can find out where the error happened inside your code, by setting a
-    * breakpoint into this function, and repeatedly stepping out until you get out
-    * into your code. It's INCREDIBLY useful! */
-  void (*callback)(std::string);
+class DebugOutput {
+  using ErrorPrintFormatter = void(const ErrorMessage& error);
+  static DebugOutput instance;
 
-  /// Loads in the list of OpenGL errors.
-  DebugOutput() : callback(defaultCallback) {}
+  // Loads in the list of OpenGL errors.
+  DebugOutput() : printError(OGLWRAP_PrintError) {}
+public:
+
+  static void AddErrorPrintFormatter(
+    std::function<ErrorPrintFormatter> printFormatter) {}
+
+  static void PrintError(ErrorMessage error) {}
 
   /// If there was an error, notifies you about it through the callback function.
   /** The default callback function prints the error to the stdout */
-  void printError(const std::string&, std::stringstream&) {}
+  static void GetDetailedErrorInfo(const std::string&, std::stringstream&) {}
 };
 #endif
 
