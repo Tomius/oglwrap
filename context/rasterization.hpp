@@ -24,12 +24,6 @@ public:
 		gl(FrontFace(orintation));
 	}
 
-	/// Define front- and back-facing polygons.
-	/** @see glFrontFace */
-	void operator()(FaceOrientation orintation) const {
-		FrontFace(orintation);
-	}
-
 	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FRONT_FACE)
 	/// Returns the orientation of the front facing polygons.
 	/** @see GetIntegerv, GL_FRONT_FACE */
@@ -44,12 +38,6 @@ public:
 	/** @see glCullFace */
 	static void CullFace(Face face) {
 		gl(CullFace(face));
-	}
-
-	/// Specify whether front- or back-facing facets can be culled.
-	/** @see glCullFace */
-	void operator()(Face face) const {
-		CullFace(face);
 	}
 
 	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_CULL_FACE_MODE)
@@ -70,20 +58,8 @@ public:
 
 	/// Sets the polygon rasterization mode.
 	/** @see glPolygonMode */
-	void operator()(Face face, PolyMode mode) const {
-		PolygonMode(face, mode);
-	}
-
-	/// Sets the polygon rasterization mode.
-	/** @see glPolygonMode */
 	static void PolygonMode(PolyMode mode) {
 		gl(PolygonMode(Face::FrontAndBack, mode));
-	}
-
-	/// Sets the polygon rasterization mode.
-	/** @see glPolygonMode */
-	void operator()(PolyMode mode) const {
-		PolygonMode(mode);
 	}
 
 	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_POLYGON_MODE)

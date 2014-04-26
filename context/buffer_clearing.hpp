@@ -9,6 +9,7 @@
 
 #include "../config.hpp"
 #include "../enums.hpp"
+#include "../general.hpp"
 #include "../debug/error.hpp"
 #include "../define_internal_macros.hpp"
 
@@ -69,18 +70,18 @@ public:
 	/// Clears buffers in its destructor, depending on which functions were called on it.
 	/** @see glClear */
 	class ClearBuffers {
-		GLuint buffers = 0;
+		Bitfield<BufferSelectBit> buffers;
 	public:
 		ClearBuffers& Color() {
-			buffers |= GL_COLOR_BUFFER_BIT;
+			buffers |= BufferSelectBit::ColorBuffer;
 			return *this;
 		}
 		ClearBuffers& Depth() {
-			buffers |= GL_DEPTH_BUFFER_BIT;
+			buffers |= BufferSelectBit::DepthBuffer;
 			return *this;
 		}
 		ClearBuffers& Stencil() {
-			buffers |= GL_STENCIL_BUFFER_BIT;
+			buffers |= BufferSelectBit::StencilBuffer;
 			return *this;
 		}
 		~ClearBuffers() {

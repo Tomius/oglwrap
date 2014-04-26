@@ -8,12 +8,12 @@
 
 #ifdef gl
   #undef gl
-  #warning Please don't define a 'gl' macro before including oglwrap
+  #warning Please don not define a macro named gl before including oglwrap
 #endif
 
 #ifdef glfunc
   #undef glfunc
-  #warning Please don't define a 'glfunc' macro before including oglwrap
+  #warning Please don not define a macro named glfunc before including oglwrap
 #endif
 
 // standard headers

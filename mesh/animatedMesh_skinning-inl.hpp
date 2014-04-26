@@ -258,7 +258,7 @@ inline aiNode* AnimatedMesh::findNode(aiNode* currentRoot, const std::string& na
   if(currentRoot->mName.data == name)
     return currentRoot;
 
-  for(int i = 0; i != currentRoot->mNumChildren; ++i) {
+  for(size_t i = 0; i != currentRoot->mNumChildren; ++i) {
     aiNode* children_return = findNode(currentRoot->mChildren[i], name);
     if(children_return)
       return children_return;
@@ -283,7 +283,7 @@ inline ExternalBone AnimatedMesh::markChildExternal(ExternalBone* parent, aiNode
     parent
   );
 
-  for(int i = 0; i < node->mNumChildren; ++i) {
+  for(size_t i = 0; i < node->mNumChildren; ++i) {
     ebone.child.push_back(markChildExternal(&ebone, node->mChildren[i], true));
   }
 

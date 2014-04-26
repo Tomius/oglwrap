@@ -24,23 +24,11 @@ public:
 		gl(Enable(capability));
 	}
 
-	/// Enables a capability.
-	/** @see glEnable */
-	void operator()(Capability capability) const {
-		Enable(capability);
-	}
-
 	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glEnablei)
 	/// Enables a capability for an index target.
 	/** @see glEnablei */
 	static void Enable(Capability capability, GLuint index) {
 		gl(Enablei(capability, index));
-	}
-
-	/// Enables a capability for an index target.
-	/** @see glEnablei */
-	void operator()(Capability capability, GLuint index) const {
-		Enable(capability, index);
 	}
 	#endif
 
@@ -82,12 +70,6 @@ public:
 		}
 	}
 
-	/// Enables or disables a capability.
-	/** @see glEnable, glDisable */
-	void operator()(Capability capability, bool value) const {
-		SetCapability(capability, value);
-	}
-
 	/// Enables or disables a capability for an indexet target.
 	/** @see glEnable, glDisable */
 	static void SetCapability(Capability capability, GLuint index, bool value) {
@@ -96,12 +78,6 @@ public:
 		} else {
 			Disable(capability, index);
 		}
-	}
-
-	/// Enables or disables a capability for an indexet target.
-	/** @see glEnable, glDisable */
-	void operator()(Capability capability, GLuint index, bool value) const {
-		SetCapability(capability, index, value);
 	}
 
 	/// Enables a capability, and creates a variable. When the variable goes

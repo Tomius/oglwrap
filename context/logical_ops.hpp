@@ -58,11 +58,6 @@ class LogicalOps {
     gl(LogicOp(op));
   }
 
-  /** @see LogicOp */
-  void operator()(ColorLogicOperation op) {
-    LogicOp(op);
-  }
-
   #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_LOGIC_OP)
   /**
    * @brief Returns the color logical operation.
