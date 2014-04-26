@@ -8,7 +8,7 @@ namespace oglwrap {
 
 inline void AnimatedMesh::addAnimation(const std::string& filename,
                                        const std::string& anim_name,
-                                       unsigned flags,
+                                       Bitfield<AnimFlag> flags,
                                        float speed) {
   if(anims_.canFind(anim_name)) {
     throw std::runtime_error(
@@ -64,7 +64,7 @@ inline void AnimatedMesh::setDefaultAnimation(const std::string& anim_name,
 inline void AnimatedMesh::changeAnimation(size_t anim_idx,
                                           float current_time,
                                           float transition_time,
-                                          unsigned flags,
+                                          Bitfield<AnimFlag> flags,
                                           float speed) {
   bool was_last_invalid = (last_anim_.handle == nullptr);
 
@@ -74,12 +74,12 @@ inline void AnimatedMesh::changeAnimation(size_t anim_idx,
   current_anim_.handle = anims_[anim_idx].handle;
   current_anim_name_ = anims_[anim_idx].name;
 
-  if(flags & AnimFlag::Backwards) {
+  if(flags.test(AnimFlag::Backwards)) {
     current_anim_.offset = anims_[anim_idx].end_offset;
   } else {
     current_anim_.offset = anims_[anim_idx].start_offset;
   }
-  if(flags & AnimFlag::Mirrored) {
+  if(flags.test(AnimFlag::Mirrored)) {
     current_anim_.offset *= -1;
   }
 
@@ -106,7 +106,7 @@ inline void AnimatedMesh::changeAnimation(size_t anim_idx,
 
 inline void AnimatedMesh::setCurrentAnimation(AnimParams new_anim, float current_time) {
   if((anim_meta_info_.end_of_last_anim + anim_meta_info_.transition_time) <= current_time
-      && (current_anim_.flags & AnimFlag::Interruptable)) {
+      && current_anim_.flags.test(AnimFlag::Interruptable)) {
     if(!anims_.canFind(new_anim.name)) {
       throw std::invalid_argument(
         "Tried to set current animation to '" + new_anim.name + "', "
@@ -147,7 +147,7 @@ inline void AnimatedMesh::forceCurrentAnimation(AnimParams new_anim, float curre
 }
 
 inline void AnimatedMesh::setAnimToDefault(float current_time) {
-  if(current_anim_.flags & AnimFlag::Interruptable &&
+  if(current_anim_.flags.test(AnimFlag::Interruptable) &&
      current_anim_.handle != anims_[anim_meta_info_.default_idx].handle) {
     forceAnimToDefault(current_time);
   }

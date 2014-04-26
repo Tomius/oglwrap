@@ -11,7 +11,7 @@ namespace oglwrap {
 /// Loads in the mesh from a file, and does some post-processing on it.
 /** @param filename - The name of the file to load in.
   * @param flags - The assimp post-process flags. */
-inline Mesh::Mesh(const std::string& filename, unsigned int flags)
+inline Mesh::Mesh(const std::string& filename, Bitfield<aiPostProcessSteps> flags)
   : scene_(importer_.ReadFile(
              filename.c_str(),
              flags | aiProcess_Triangulate
@@ -265,10 +265,10 @@ inline void Mesh::render() {
   if(!is_setup_positions_) {
     return;
   }
-  for(unsigned int i = 0 ; i < entries_.size(); i++) {
+  for(size_t i = 0 ; i < entries_.size(); i++) {
     entries_[i].vao.bind();
 
-    const unsigned int materialIndex = entries_[i].materialIndex;
+    const size_t materialIndex = entries_[i].materialIndex;
 
     if(textures_enabled_) {
       for(auto iter = materials_.begin(); iter != materials_.end(); iter++) {

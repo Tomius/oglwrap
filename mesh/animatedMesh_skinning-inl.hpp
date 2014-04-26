@@ -10,7 +10,7 @@ inline void AnimatedMesh::mapBones() {
   for(size_t entry = 0; entry < entries_.size(); entry++) {
     const aiMesh* pMesh = scene_->mMeshes[entry];
 
-    for(unsigned i = 0; i < pMesh->mNumBones; i++) {
+    for(size_t i = 0; i < pMesh->mNumBones; i++) {
       std::string bone_name(pMesh->mBones[i]->mName.data);
       size_t bone_index = 0;
 
@@ -47,7 +47,7 @@ inline const aiNodeAnim* AnimatedMesh::getRootBone(const aiNode* node, const aiS
     }
     return node_anim;
   } else {
-    for(unsigned i = 0; i < node->mNumChildren; i++) {
+    for(size_t i = 0; i < node->mNumChildren; i++) {
       auto childsReturn = getRootBone(node->mChildren[i], anim);
       if(childsReturn) {
         return childsReturn;
@@ -77,12 +77,12 @@ void AnimatedMesh::loadBones() {
 
     // -------======{[ Create the bone ID's and weights data ]}======-------
 
-    for(unsigned i = 0; i < pMesh->mNumBones; i++) {
+    for(size_t i = 0; i < pMesh->mNumBones; i++) {
       std::string bone_name(pMesh->mBones[i]->mName.data);
       size_t bone_index = skinning_data_.bone_mapping[bone_name];
 
-      for(unsigned j = 0; j < pMesh->mBones[i]->mNumWeights; j++) {
-        unsigned vertexID = pMesh->mBones[i]->mWeights[j].mVertexId;
+      for(size_t j = 0; j < pMesh->mBones[i]->mNumWeights; j++) {
+        size_t vertexID = pMesh->mBones[i]->mWeights[j].mVertexId;
         float weight = pMesh->mBones[i]->mWeights[j].mWeight;
         vertices[vertexID].AddBoneData(bone_index, weight);
       }

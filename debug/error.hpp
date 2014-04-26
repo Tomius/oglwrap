@@ -5,7 +5,7 @@
 #ifndef OGLWRAP_DEBUG_ERROR_HPP_
 #define OGLWRAP_DEBUG_ERROR_HPP_
 
-#include "debugOutput.hpp"
+#include "debug_output.hpp"
 #include "../context/errors.hpp"
 
 namespace oglwrap {

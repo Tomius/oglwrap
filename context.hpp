@@ -17,6 +17,9 @@
 #include "context/computing.hpp"
 #include "context/depth_test.hpp"
 #include "context/stencil_test.hpp"
+#include "context/scissor_test.hpp"
+#include "context/logical_ops.hpp"
+#include "context/pixel_ops.hpp"
 
 namespace oglwrap {
 	class Context
@@ -32,6 +35,9 @@ namespace oglwrap {
 		, public context::Computing
 		, public context::DepthTest
 		, public context::StencilTest
+		, public context::ScissorTest
+		, public context::LogicalOps
+		, public context::PixelOps
 	{ };
 }
 

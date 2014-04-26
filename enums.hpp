@@ -1492,6 +1492,165 @@ enum StencilOperation {
 }
 typedef _StencilOperation::StencilOperation StencilOperation;
 
+namespace _ColorLogicOperation {
+enum ColorLogicOperation {
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_CLEAR)
+  Clear = GL_CLEAR,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_SET)
+  Set = GL_SET,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_INVERT)
+  Invert = GL_INVERT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_NOOP)
+  Noop = GL_NOOP,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_AND)
+  And = GL_AND,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_AND_REVERSE)
+  AndReverse = GL_AND_REVERSE,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_AND_INVERTED)
+  AndInverted= GL_AND_INVERTED,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_NAND)
+  Nand = GL_NAND,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_OR)
+  Or = GL_OR,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_OR_REVERSE)
+  OrReverse = GL_OR_REVERSE,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_OR_INVERTED)
+  OrInverted = GL_OR_INVERTED,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_XOR)
+  Xor = GL_XOR,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_NOR)
+  Nor = GL_NOR,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COPY)
+  Copy = GL_COPY,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COPY_INVERTED)
+  CopyInverted = GL_COPY_INVERTED,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_EQUIV)
+  Equiv = GL_EQUIV,
+#endif
+};
+}
+typedef _ColorLogicOperation::ColorLogicOperation ColorLogicOperation;
+
+namespace _PixelStorageMode {
+enum PixelStorageMode {
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_PACK_SWAP_BYTES)
+  PackSwapBytes = GL_PACK_SWAP_BYTES,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_PACK_LSB_FIRST)
+  PackLsbFirst = GL_PACK_LSB_FIRST,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_PACK_ROW_LENGTH)
+  PackRowLength = GL_PACK_ROW_LENGTH,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_PACK_SKIP_ROWS)
+  PackSkipRows = GL_PACK_SKIP_ROWS,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_PACK_SKIP_PIXELS)
+  PackSkipPixels = GL_PACK_SKIP_PIXELS,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_PACK_ALIGNMENT)
+  PackAlignment = GL_PACK_ALIGNMENT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_PACK_IMAGE_HEIGHT)
+  PackImageHeight = GL_PACK_IMAGE_HEIGHT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_PACK_SKIP_IMAGES)
+  PackSkipImages = GL_PACK_SKIP_IMAGES,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_PACK_COMPRESSED_BLOCK_WIDTH)
+  PackCompressedBlockWidth = GL_PACK_COMPRESSED_BLOCK_WIDTH,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_PACK_COMPRESSED_BLOCK_HEIGHT)
+  PackCompressedBlockHeight = GL_PACK_COMPRESSED_BLOCK_HEIGHT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_PACK_COMPRESSED_BLOCK_DEPTH)
+  PackCompressedBlockDepth = GL_PACK_COMPRESSED_BLOCK_DEPTH,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_PACK_COMPRESSED_BLOCK_SIZE)
+  PackCompressedBlockSize = GL_PACK_COMPRESSED_BLOCK_SIZE,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNPACK_COMPRESSED_BLOCK_WIDTH)
+  UnpackCompressedBlockWidth = GL_UNPACK_COMPRESSED_BLOCK_WIDTH,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNPACK_COMPRESSED_BLOCK_HEIGHT)
+  UnpackCompressedBlockHeight = GL_UNPACK_COMPRESSED_BLOCK_HEIGHT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNPACK_COMPRESSED_BLOCK_DEPTH)
+  UnpackCompressedBlockDepth = GL_UNPACK_COMPRESSED_BLOCK_DEPTH,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNPACK_COMPRESSED_BLOCK_SIZE)
+  UnpackCompressedBlockSize = GL_UNPACK_COMPRESSED_BLOCK_SIZE,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNPACK_SWAP_BYTES)
+  UnpackSwapBytes = GL_UNPACK_SWAP_BYTES,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNPACK_LSB_FIRST)
+  UnpackLsbFirst = GL_UNPACK_LSB_FIRST,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNPACK_ROW_LENGTH)
+  UnpackRowLength = GL_UNPACK_ROW_LENGTH,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNPACK_SKIP_ROWS)
+  UnpackSkipRows = GL_UNPACK_SKIP_ROWS,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNPACK_SKIP_PIXELS)
+  UnpackSkipPixels = GL_UNPACK_SKIP_PIXELS,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNPACK_ALIGNMENT)
+  UnpackAlignment = GL_UNPACK_ALIGNMENT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNPACK_IMAGE_HEIGHT)
+  UnpackImageHeight = GL_UNPACK_IMAGE_HEIGHT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNPACK_SKIP_IMAGES)
+  UnpackSkipImages = GL_UNPACK_SKIP_IMAGES,
+#endif
+};
+}
+typedef _PixelStorageMode::PixelStorageMode PixelStorageMode;
+
+namespace _BlitFilter {
+enum BlitFilter {
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_NEAREST)
+  Nearest = GL_NEAREST,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_LINEAR)
+  Linear = GL_LINEAR,
+#endif
+};
+}
+typedef _BlitFilter::BlitFilter BlitFilter;
+
+namespace _BufferSelectBit {
+enum BufferSelectBit {
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_BUFFER_BIT)
+  ColorBuffer = GL_COLOR_BUFFER_BIT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_DEPTH_BUFFER_BIT)
+  DepthBuffer = GL_DEPTH_BUFFER_BIT,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_STENCIL_BUFFER_BIT)
+  StencilBuffer = GL_STENCIL_BUFFER_BIT,
+#endif
+};
+}
+typedef _BufferSelectBit::BufferSelectBit BufferSelectBit;
+
 } // Namespace Enums
 
 // CodeCompletions often do not support inline namespaces

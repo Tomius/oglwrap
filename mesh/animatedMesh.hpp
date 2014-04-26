@@ -39,7 +39,7 @@ public:
   /// Loads in the mesh and the skeleton for an asset, and prepares it for animation.
   /** @param filename - The name of the file.
     * @param flags - The assimp post-process flags to use while loading the mesh. */
-  AnimatedMesh(const std::string& filename, unsigned int flags);
+  AnimatedMesh(const std::string& filename, Bitfield<aiPostProcessSteps> flags);
 
 private:
   /// It shouldn't be copyable.
@@ -261,7 +261,7 @@ public:
     * @param speed - Sets the default speed of the animation. If it's 1, it will be played with the its default speed. If it's negative, it will be played backwards. */
   void addAnimation(const std::string& filename,
                     const std::string& anim_name,
-                    unsigned flags = AnimFlag::None,
+                    Bitfield<AnimFlag> flags = AnimFlag::None,
                     float speed = 1.0f);
 
   /// Sets the default animation, that will be played if you don't set to play another one.
@@ -280,7 +280,7 @@ private:
   void changeAnimation(size_t anim_idx,
                        float current_time,
                        float transition_time,
-                       unsigned flags,
+                       Bitfield<AnimFlag> flags,
                        float speed = 1.0f);
 
 public:
@@ -311,13 +311,13 @@ public:
   }
 
   /// Returns the currently running animation's AnimFlags.
-  unsigned getCurrentAnimFlags() const {
+  Bitfield<AnimFlag> getCurrentAnimFlags() const {
     return current_anim_.flags;
   }
 
   /// Returns if the currently running animation is interruptable.
   bool isInterrupable() const {
-    return (current_anim_.flags & AnimFlag::Interruptable) == AnimFlag::Interruptable;
+    return current_anim_.flags.test(AnimFlag::Interruptable);
   }
 
   /// Tries to change the current animation to the default one.

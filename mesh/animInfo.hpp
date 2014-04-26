@@ -5,6 +5,8 @@
 
 #include <memory>
 #include "../assimp.hpp"
+#include "../general.hpp"
+#include "animState.hpp"
 
 namespace oglwrap {
 
@@ -22,7 +24,7 @@ struct AnimInfo {
   std::string name;
 
   /// Default animation flag for this animation.
-  unsigned flags;
+  Bitfield<AnimFlag> flags;
 
   /// Default speed modifier.
   float speed;

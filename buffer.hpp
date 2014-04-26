@@ -233,7 +233,8 @@ public:
       * @see glMapBufferRange */
     TypedMap(GLintptr offset,
              GLsizeiptr length,
-             GLbitfield access = BufferMapAccessFlags::Read_Bit | BufferMapAccessFlags::Write_Bit) {
+             Bitfield<BufferMapAccessFlags> access =
+                {BufferMapAccessFlags::Read_Bit, BufferMapAccessFlags::Write_Bit}) {
 
       CHECK_FOR_DEFAULT_BINDING(getBindingTarget(BUFFER_TYPE));
 

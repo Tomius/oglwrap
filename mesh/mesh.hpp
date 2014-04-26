@@ -79,7 +79,7 @@ public:
   /// Loads in the mesh from a file, and does some post-processing on it.
   /** @param filename - The name of the file to load in.
     * @param flags - The assimp post-process flags. */
-  Mesh(const std::string& filename, unsigned int flags);
+  Mesh(const std::string& filename, Bitfield<aiPostProcessSteps> flags);
 
 private:
   template <class IdxType>

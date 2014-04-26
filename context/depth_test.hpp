@@ -12,6 +12,7 @@
 namespace oglwrap {
 namespace context {
 
+/// Wrapper for the DepthBuffer related operations.
 class DepthTest {
 public:
   /**

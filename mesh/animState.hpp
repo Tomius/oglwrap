@@ -7,7 +7,7 @@ namespace oglwrap {
 
 namespace _AnimFlag {
 /// Animation modifying flags.
-enum AnimFlag {
+enum AnimFlag : GLbitfield {
   /// Doesn't do anything.
   None = 0x0,
 
@@ -49,7 +49,7 @@ struct AnimationState {
   glm::vec3 offset;
 
   /// The current animation modifier flags.
-  unsigned flags;
+  Bitfield<AnimFlag> flags;
 
   /// The speed modifier
   float speed;
@@ -74,8 +74,8 @@ struct AnimParams {
   /// Specifies if the default flags should be used for this animation
   bool use_default_flags;
 
-  /// A "bitfield" of the Animation modifying flags
-  unsigned flags;
+  /// A bitfield of the Animation modifying flags
+  Bitfield<AnimFlag> flags;
 
   /// The speed multiplier
   float speed;
@@ -87,7 +87,7 @@ struct AnimParams {
     * @param speed - The speed multiplier. Uses the default anim speed if it is zero */
   AnimParams(std::string name,
              float transition_time,
-             unsigned flags,
+             Bitfield<AnimFlag> flags,
              float speed = 0.0f)
       : name(name)
       , transition_time(transition_time)

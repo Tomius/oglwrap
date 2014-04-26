@@ -125,7 +125,7 @@ inline void AnimatedMesh::updateBoneTree(float anim_time,
 
       if(node_name == skinning_data_.root_bone) {
          current_anim_.offset = glm::vec3(translation.x, 0, translation.z);
-         if(current_anim_.flags & AnimFlag::Mirrored) {
+         if(current_anim_.flags.test(AnimFlag::Mirrored)) {
             current_anim_.offset *= -1;
          }
          translationM = glm::translate(glm::mat4(), glm::vec3(0, translation.y, 0));
@@ -179,7 +179,7 @@ inline void AnimatedMesh::updateBoneTreeInTransition(float prev_anim_time,
       aiQuaternion prev_rotation, next_rotation, rotation;
       calcInterpolatedRotation(prev_rotation, prev_anim_time, prev_node_anim);
       calcInterpolatedRotation(next_rotation, next_anim_time, next_node_anim);
-      
+
       // Spherical linear interpolation, that chooses the shorter path.
       aiQuaternion::Interpolate(rotation, prev_rotation, next_rotation, factor);
       glm::mat4 rotationM = convertMatrix(rotation.GetMatrix());
@@ -191,7 +191,7 @@ inline void AnimatedMesh::updateBoneTreeInTransition(float prev_anim_time,
       glm::mat4 translationM;
       if(node_name == skinning_data_.root_bone) {
          current_anim_.offset = glm::vec3(next_translation.x, 0, next_translation.z);
-         if(current_anim_.flags & AnimFlag::Mirrored) {
+         if(current_anim_.flags.test(AnimFlag::Mirrored)) {
             current_anim_.offset *= -1;
          }
          translationM = glm::translate(glm::mat4(), glm::vec3(0, translation.y, 0));
@@ -233,12 +233,12 @@ inline void AnimatedMesh::updateBoneInfo(float time) {
                                  last_anim_.handle->mAnimations[0]->mTicksPerSecond : 24.0f;
    float last_time_in_ticks = anim_meta_info_.last_period_time * (last_anim_.speed * last_ticks_per_second);
    float last_anim_time;
-   if(last_anim_.flags & AnimFlag::Repeat) {
+   if(last_anim_.flags.test(AnimFlag::Repeat)) {
       last_anim_time = fmod(last_time_in_ticks, (float)last_anim_.handle->mAnimations[0]->mDuration);
    } else {
       last_anim_time = std::min(last_time_in_ticks, (float)last_anim_.handle->mAnimations[0]->mDuration);
    }
-   if(last_anim_.flags & AnimFlag::Backwards) {
+   if(last_anim_.flags.test(AnimFlag::Backwards)) {
       last_anim_time = (float)last_anim_.handle->mAnimations[0]->mDuration - last_anim_time;
    }
 
@@ -247,7 +247,7 @@ inline void AnimatedMesh::updateBoneInfo(float time) {
    float current_time_in_ticks =
       (time - anim_meta_info_.end_of_last_anim) * (current_anim_.speed * current_ticks_per_second);
    float current_anim_time;
-   if(current_anim_.flags & AnimFlag::Repeat) {
+   if(current_anim_.flags.test(AnimFlag::Repeat)) {
       current_anim_time = fmod(current_time_in_ticks, (float)current_anim_.handle->mAnimations[0]->mDuration);
    } else {
       if(current_time_in_ticks < (float)current_anim_.handle->mAnimations[0]->mDuration) {
@@ -259,7 +259,7 @@ inline void AnimatedMesh::updateBoneInfo(float time) {
       }
    }
 
-   if(current_anim_.flags & AnimFlag::Backwards) {
+   if(current_anim_.flags.test(AnimFlag::Backwards)) {
       current_anim_time = (float)current_anim_.handle->mAnimations[0]->mDuration - current_anim_time;
    }
 
@@ -276,19 +276,19 @@ inline void AnimatedMesh::updateBoneInfo(float time) {
    }
 
    // Start a new loop if necessary
-   if(current_anim_.flags & AnimFlag::Repeat) {
+   if(current_anim_.flags.test(AnimFlag::Repeat)) {
       unsigned loop_count = current_time_in_ticks / (float)current_anim_.handle->mAnimations[0]->mDuration;
       if(loop_count > anim_meta_info_.last_loop_count) {
-         if((current_anim_.flags & AnimFlag::MirroredRepeat) == AnimFlag::MirroredRepeat) {
+         if(current_anim_.flags.test(AnimFlag::MirroredRepeat)) {
             current_anim_.flags ^= AnimFlag::Mirrored;
             current_anim_.flags ^= AnimFlag::Backwards;
          }
-         if(current_anim_.flags & AnimFlag::Backwards) {
+         if(current_anim_.flags.test(AnimFlag::Backwards)) {
             last_anim_.offset = current_anim_.offset = anims_[current_anim_.idx].end_offset;
          } else {
             last_anim_.offset = current_anim_.offset = anims_[current_anim_.idx].start_offset;
          }
-         if(current_anim_.flags & AnimFlag::Mirrored) {
+         if(current_anim_.flags.test(AnimFlag::Mirrored)) {
             last_anim_.offset *= -1;
             current_anim_.offset *= -1;
          }

@@ -1,9 +1,9 @@
-/** @file debugOutput.hpp
+/** @file debug_output.hpp
     @brief Implements the oglwrap debug output.
 */
 
-#ifndef OGLWRAP_DEBUG_DEBUGOUTPUT_HPP_
-#define OGLWRAP_DEBUG_DEBUGOUTPUT_HPP_
+#ifndef OGLWRAP_DEBUG_DEBUG_OUTPUT_HPP_
+#define OGLWRAP_DEBUG_DEBUG_OUTPUT_HPP_
 
 #include <map>
 #include <vector>
@@ -62,7 +62,8 @@ class DebugOutput {
     std::vector<std::string> errors[NUM_ERRORS + 1];
 
     ErrorInfo() {}
-    ErrorInfo(const std::string& funcS, const std::vector<std::string> errs[]) : funcSignature(funcS) {
+    ErrorInfo(const std::string& funcS, const std::vector<std::string> errs[])
+        : funcSignature(funcS) {
       for(int i = 0; i < NUM_ERRORS + 1; i++) {
         errors[i] = errs[i];
       }
@@ -102,9 +103,9 @@ class DebugOutput {
   DebugOutput() {
     // The GLerrors.txt should be in the same folder as this file.
     // So we can use the __FILE__ macro to get the path to this file,
-    // and replaces the "debugOutput.hpp" to "GLerrors.txt"
+    // and replaces the "debug_output.hpp" to "GLerrors.txt"
     std::string filename(OGLWRAP_GET_FILENAME());
-    auto directoryPath = filename.find("debugOutput.hpp");
+    auto directoryPath = filename.find("debug_output.hpp");
     assert(directoryPath != std::string::npos); // Maybe it got renamed?
     filename.erase(directoryPath, std::string::npos);
     filename.append("GLerrors.txt");
