@@ -81,7 +81,7 @@ public:
    * @see glDispatchComputeIndirect
    * @version OpenGL 4.3
    */
-  static void DispatchComputeIndirect(GLint *indirect) {
+  static void DispatchComputeIndirect(GLintptr indirect) {
     gl(DispatchComputeIndirect(indirect));
   }
   #endif
