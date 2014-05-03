@@ -5,8 +5,9 @@
 #ifndef OGLWRAP_MESH_MESH_HPP_
 #define OGLWRAP_MESH_MESH_HPP_
 
-#include <climits>
 #include <map>
+#include <memory>
+#include <climits>
 
 #include "../config.hpp"
 #include "../general.hpp"
@@ -52,6 +53,7 @@ protected:
     bool active;
     int texUnit;
     std::vector<Texture2D> textures;
+
 
     MaterialInfo()
       : active(false), texUnit(0) {

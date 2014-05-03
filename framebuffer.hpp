@@ -5,6 +5,7 @@
 #ifndef OGLWRAP_FRAMEBUFFER_HPP_
 #define OGLWRAP_FRAMEBUFFER_HPP_
 
+#include "globjects.hpp"
 #include "textures/texture_base.hpp"
 #include "textures/texture_1D.hpp"
 #include "textures/texture_2D.hpp"
@@ -15,25 +16,13 @@
 
 namespace oglwrap {
 
-namespace glObjects {
-  class Renderbuffer : public glObject {
-#if OGLWRAP_INITIALIZE_GLOBAL_GL_OBJECTS_ON_USE
-  protected: void constructor() const override
-#else
-  public: Renderbuffer()
-#endif
-  { gl(GenRenderbuffers(1, handle_.get())); }
-  public:
-    ~Renderbuffer() { if(unique()) gl(DeleteRenderbuffers(1, handle_.get())); }
-  };
-}
-
-#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGenRenderbuffers) && defined(glDeleteRenderbuffers))
+#if !OGLWRAP_CHECK_DEPENDENCIES || \
+    (defined(glGenRenderbuffers) && defined(glDeleteRenderbuffers))
 /// A buffer that servers as a storage for a framebuffer.
 /** @see glGenRenderbuffers, glDeleteRenderbuffers */
 class Renderbuffer {
   /// The handle for the render buffer.
-  glObjects::Renderbuffer renderbuffer_;
+  globjects::Renderbuffer renderbuffer_;
 public:
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindRenderbuffer)
   /// Binds this renderbuffer.
@@ -116,24 +105,12 @@ public:
 };
 #endif // glGenRenderbuffers && glDeleteRenderbuffers
 
-namespace glObjects {
-  class Framebuffer : public glObject {
-#if OGLWRAP_INITIALIZE_GLOBAL_GL_OBJECTS_ON_USE
-  protected: void constructor() const override
-#else
-  public: Framebuffer()
-#endif
-    { gl(GenFramebuffers(1, handle_.get())); }
-  public:
-    ~Framebuffer() { if(unique()) gl(DeleteFramebuffers(1, handle_.get())); }
-  };
-}
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGenFramebuffers) && defined(glDeleteFramebuffers))
 /// A buffer that you can draw to.
 template<FramebufferType FBO_TYPE>
 class FramebufferObject {
-  glObjects::Framebuffer framebuffer_; ///< The handle for the framebuffer
+  globjects::Framebuffer framebuffer_; ///< The handle for the framebuffer
 public:
 
   /// Default constructor

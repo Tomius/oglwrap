@@ -13,6 +13,7 @@
 #include <stdexcept>
 
 #include "config.hpp"
+#include "globjects.hpp"
 #include "enums.hpp"
 #include "general.hpp"
 #include "debug/error.hpp"
@@ -111,30 +112,15 @@ public:
   }
 };
 
-// -------======{[ ShaderObject ]}======-------
-
-#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glCreateShader) && defined(glDeleteShader))
-namespace glObjects {
-  template<ShaderType shader_t>
-  class Shader : public glObject {
-#if OGLWRAP_INITIALIZE_GLOBAL_GL_OBJECTS_ON_USE
-  protected: void constructor() const override
-#else
-  public: Shader()
-#endif
-    { *handle_ = gl(CreateShader(shader_t)); }
-  public:
-    ~Shader() { if(unique()) { gl(DeleteShader(*handle_)); } }
-  };
-}
-
 // -------======{[ Shader ]}======-------
 
+#if !OGLWRAP_CHECK_DEPENDENCIES || \
+  (defined(glCreateShader) && defined(glDeleteShader))
 template<ShaderType shader_t>
 /// A GLSL shader object used to control the drawing process.
 /** @see glCreateShader, glDeleteShader */
 class Shader {
-  glObjects::Shader<shader_t> shader_; ///< The handle for the buffer.
+  globjects::Shader<shader_t> shader_; ///< The handle for the buffer.
   bool compiled_; ///< Stores if the shader is compiled.
 
   #if OGLWRAP_DEBUG
@@ -203,7 +189,11 @@ public:
   }
 #endif // glShaderSource
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glCompileShader) && defined(glGetShaderiv) && defined(glGetShaderInfoLog))
+#if !OGLWRAP_CHECK_DEPENDENCIES || ( \
+  defined(glCompileShader) && \
+  defined(glGetShaderiv) && \
+  defined(glGetShaderInfoLog) \
+)
   /// Compiles the shader code.
   /** If the compilation fails, it throws a std::runtime_error, containing the
     * compilation info as .what(). The compilation happens automatically
@@ -289,12 +279,18 @@ public:
 
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COMPUTE_SHADER)
-/// A Shader that is used for computing arbitrary information.
-/** A Compute Shader is a Shader Stage that is used entirely for computing arbitrary information.
-  * While it can do rendering, it is generally used for tasks not directly related to drawing
-  * triangles and pixels.
-  * @version It is core since OpenGL 4.3.
-  * @see GL_COMPUTE_SHADER */
+/**
+ * @brief A Shader that is used for computing arbitrary information.
+ *
+ * A Compute Shader is a Shader Stage that is used entirely for computing
+ * arbitrary information.
+ *
+ * While it can do rendering, it is generally used for tasks not directly
+ * related to drawing triangles and pixels.
+ *
+ * @version OpenGL 4.3
+ * @see GL_COMPUTE_SHADER
+ */
 typedef Shader<ShaderType::Compute> ComputeShader;
 
 #if OGLWRAP_INSTATIATE
@@ -306,13 +302,18 @@ typedef Shader<ShaderType::Compute> ComputeShader;
 #endif // GL_COMPUTE_SHADER
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_VERTEX_SHADER)
-/// A Shader that handles the processing of individual vertices.
-/** The Vertex Shader is the programmable Shader stage in the rendering pipeline that handles the
-  * processing of individual vertices. Vertex shaders are fed Vertex Attribute data, as specified
-  * from a vertex array object by a rendering command. A vertex shader receives a single vertex from
-  * the vertex stream and generates a single vertex to the output vertex stream.
-  * @version It is core since OpenGL 2.1
-  * @see GL_VERTEX_SHADER */
+/**
+ * @brief A Shader that handles the processing of individual vertices.
+ *
+ * The Vertex Shader is the programmable Shader stage in the rendering pipeline
+ * that handles the processing of individual vertices. Vertex shaders are fed
+ * Vertex Attribute data, as specified from a vertex array object by a rendering
+ * command. A vertex shader receives a single vertex from the vertex stream and
+ * generates a single vertex to the output vertex stream.
+ *
+ * @version OpenGL 2.1
+ * @see GL_VERTEX_SHADER
+ */
 typedef Shader<ShaderType::Vertex> VertexShader;
 
 #if OGLWRAP_INSTATIATE
@@ -324,12 +325,18 @@ typedef Shader<ShaderType::Vertex> VertexShader;
 #endif // GL_VERTEX_SHADER
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_GEOMETRY_SHADER)
-/// A Shader that governs the processing of Primitives.
-/** A Geometry Shader is a Shader program written in GLSL that governs the processing of Primitives.
-  * Geometry shaders reside between the Vertex Shaders (or the optional Tessellation stage) and the
-  * fixed-function Vertex Post-Processing stage. A geometry shader is optional and does not have to be used.
-  * @version It is core since OpenGL 3.2
-  * @see GL_GEOMETRY_SHADER */
+/**
+ * @brief A Shader that governs the processing of Primitives.
+ *
+ * A Geometry Shader is a Shader program written in GLSL that governs the
+ * processing of Primitives. Geometry shaders reside between the Vertex Shaders
+ * (or the optional Tessellation stage) and the fixed-function Vertex
+ * Post-Processing stage. A geometry shader is optional and does not have to
+ * be used.
+ *
+ * @version OpenGL 3.2
+ * @see GL_GEOMETRY_SHADER
+ */
 typedef Shader<ShaderType::Geometry> GeometryShader;
 
 #if OGLWRAP_INSTATIATE
@@ -341,17 +348,25 @@ typedef Shader<ShaderType::Geometry> GeometryShader;
 #endif // GL_GEOMETRY_SHADER
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_FRAGMENT_SHADER)
-/// A Shader that processes a Fragment from the rasterization process into a set of colors and a single depth value.
-/** A Fragment Shader is a user-supplied program that, when executed, will process a Fragment from the
-  * rasterization process into a set of colors and a single depth value. The fragment shader is the OpenGL
-  * pipeline stage after a primitive is rasterized. For each sample of the pixels covered by a primitive,
-  * a "fragment" is generated. Each fragment has a Window Space position, a few other values, and it contains
-  * all of the interpolated per-vertex output values from the last Vertex Processing stage. The output of a
-  * fragment shader is a depth value, a possible stencil value (unmodified by the fragment shader), and zero
-  * or more color values to be potentially written to the buffers in the current framebuffers. Fragment
-  * shaders take a single fragment as input and produce a single fragment as output.
-  * @version It is core since OpenGL 2.1
-  * @see GL_FRAGMENT_SHADER */
+/**
+ * @brief A Shader that processes a Fragment from the rasterization process
+ * into a set of colors and a single depth value.
+ *
+ * A Fragment Shader is a user-supplied program that, when executed, will
+ * process a Fragment from the rasterization process into a set of colors and a
+ * single depth value. The fragment shader is the OpenGL pipeline stage after a
+ * primitive is rasterized. For each sample of the pixels covered by a primitive,
+ * a "fragment" is generated. Each fragment has a Window Space position, a few
+ * other values, and it contains all of the interpolated per-vertex output
+ * values from the last Vertex Processing stage. The output of a fragment shader
+ * is a depth value, a possible stencil value (unmodified by the fragment shader),
+ * and zero or more color values to be potentially written to the buffers in the
+ * current framebuffers. Fragment shaders take a single fragment as input and
+ * produce a single fragment as output.
+ *
+ * @version OpenGL 2.1
+ * @see GL_FRAGMENT_SHADER
+ */
 typedef Shader<ShaderType::Fragment> FragmentShader;
 
 #if OGLWRAP_INSTATIATE
@@ -363,15 +378,22 @@ typedef Shader<ShaderType::Fragment> FragmentShader;
 #endif // GL_FRAGMENT_SHADER
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TESS_CONTROL_SHADER)
-/// A shader that controls how much tessellation a particular patch gets and also defines the size of a patch.
-/** The Tessellation Control Shader (TCS) is a Shader program written in GLSL. It sits between the Vertex
-  * Shader and the Tessellation Evaluation Shader. The TCS controls how much tessellation a particular patch
-  * gets; it also defines the size of a patch, thus allowing it to augment data. It can also filter vertex
-  * data taken from the vertex shader. The main purpose of the TCS is to feed the tessellation levels to the
-  * Tessellation primitive generator stage, as well as to feed patch data (as its output values) to the
-  * Tessellation Evaluation Shader stage.
-  * @version It is core since OpenGL 4.0.
-  * @see GL_TESS_CONTROL_SHADER */
+/**
+ * @brief A shader that controls how much tessellation a particular patch gets
+ * and also defines the size of a patch.
+ *
+ * The Tessellation Control Shader (TCS) is a Shader program written in GLSL.
+ * It sits between the Vertex Shader and the Tessellation Evaluation Shader.
+ * The TCS controls how much tessellation a particular patch gets; it also
+ * defines the size of a patch, thus allowing it to augment data. It can also
+ * filter vertex data taken from the vertex shader. The main purpose of the TCS
+ * is to feed the tessellation levels to the Tessellation primitive generator
+ * stage, as well as to feed patch data (as its output values) to the
+ * Tessellation Evaluation Shader stage.
+ *
+ * @version OpenGL 4.0
+ * @see GL_TESS_CONTROL_SHADER
+ */
 typedef Shader<ShaderType::TessControl> TessControlShader;
 
 #if OGLWRAP_INSTATIATE
@@ -383,15 +405,21 @@ typedef Shader<ShaderType::TessControl> TessControlShader;
 #endif // GL_TESS_CONTROL_SHADER
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TESS_EVALUATION_SHADER)
-/// A shader that generates vertices from the patch data.
-/** The Tessellation Evaluation Shader (TES) is a Shader program written in GLSL that takes the results
-  * of a Tessellation operation and computes the interpolated positions and other per-vertex data from them.
-  * These values are passed on to the next stage in the pipeline. The (TES) takes the abstract patch generated
-  * by the tessellation primitive generation stage, as well as the actual vertex data for the entire patch,
-  * and generates a particular vertex from it. Each TES invocation generates a single vertex. It can also take
-  * per-patch data provided by the Tessellation Control Shader.
-  * @version It is core since OpenGL 4.0.
-  * @see GL_TESS_EVALUATION_SHADER */
+/**
+ * @brief A shader that generates vertices from the patch data.
+ *
+ * The Tessellation Evaluation Shader (TES) is a Shader program written in GLSL
+ * that takes the results of a Tessellation operation and computes the
+ * interpolated positions and other per-vertex data from them. These values are
+ * passed on to the next stage in the pipeline. The (TES) takes the abstract
+ * patch generated by the tessellation primitive generation stage, as well as
+ * the actual vertex data for the entire patch, and generates a particular
+ * vertex from it. Each TES invocation generates a single vertex. It can also
+ * take per-patch data provided by the Tessellation Control Shader.
+ *
+ * @version It is core since OpenGL 4.0.
+ * @see GL_TESS_EVALUATION_SHADER
+ */
 typedef Shader<ShaderType::TessEval> TessEvalShader;
 
 #if OGLWRAP_INSTATIATE
@@ -404,32 +432,15 @@ typedef Shader<ShaderType::TessEval> TessEvalShader;
 
 #endif // glCreateShader && glDeleteShader
 
-
-
-// -------======{[ Shader Program ]}======-------
-
-#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glCreateProgram) && defined(glDeleteProgram))
-namespace glObjects {
-  class Program : public glObject {
-#if OGLWRAP_INITIALIZE_GLOBAL_GL_OBJECTS_ON_USE
-  protected: void constructor() const override
-#else
-  public: Program()
-#endif
-    { *handle_ = gl(CreateProgram()); }
-  public:
-    ~Program() { if(handle_.unique()) gl(DeleteProgram(*handle_)); }
-  };
-}
-
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDetachShader)
+#if !OGLWRAP_CHECK_DEPENDENCIES || \
+  (defined(glCreateProgram) && defined(glDeleteProgram) && defined(glDetachShader))
 /**
  * @brief The program object can combine multiple shader stages (built from
  *        shader objects) into a single, linked whole.
  * @see glCreateProgram, glDeleteProgram
  */
 class Program {
-  glObjects::Program program_; ///< The C OpenGL handle for the program.
+  globjects::Program program_; ///< The C OpenGL handle for the program.
   std::vector<GLuint> shaders_; ///< IDs of the shaders attached to the program
 
   #if OGLWRAP_DEBUG
@@ -537,7 +548,11 @@ public:
     }
   #endif
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glLinkProgram) && defined(glGetProgramiv) && defined(glGetProgramInfoLog))
+#if !OGLWRAP_CHECK_DEPENDENCIES || ( \
+  defined(glLinkProgram) &&          \
+  defined(glGetProgramiv) &&         \
+  defined(glGetProgramInfoLog)       \
+)
   /// Links the program and checks for error if OGLWRAP_DEBUG is defined.
   /** If the linking fails, it throws an
     * std::runtime_error containing the linking info.
@@ -571,7 +586,11 @@ public:
   }
 #endif // glLinkProgram && glGetProgramiv && glGetProgramInfoLog
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glValidateProgram) && defined(glGetProgramiv) && defined(glGetProgramInfoLog))
+#if !OGLWRAP_CHECK_DEPENDENCIES || ( \
+  defined(glValidateProgram) &&      \
+  defined(glGetProgramiv) &&         \
+  defined(glGetProgramInfoLog)       \
+)
   /// Validates the program if OGLWRAP_DEBUG is defined.
   /** @see glLinkProgram, glGetProgramiv, glGetProgramInfoLog */
   void validate() const {
@@ -586,10 +605,11 @@ public:
       std::unique_ptr<GLchar> strInfoLog{ new GLchar[infoLogLength + 1] };
       gl(GetProgramInfoLog(program_, infoLogLength, NULL, strInfoLog.get()));
       std::stringstream str;
-      str << "The validation of the program containing the following shaders failed: " << std::endl;
-      str << getShaderNames() << std::endl;
-      str << "This program might generate GL_INVALID_OPERATION when used for rendering" << std::endl;
-      str << "The validation info: " << strInfoLog.get();
+      str << "The validation of the program containing the "
+      "following shaders failed:\n" << getShaderNames() << std::endl;
+
+      str << "This program might generate GL_INVALID_OPERATION "
+      "when used for rendering \nThe validation info: " << strInfoLog.get();
 
       OGLWRAP_PRINT_ERROR(
         "Program validation failure",
@@ -727,8 +747,7 @@ public:
   #endif
 #endif
 
-#endif // glDetachShader
-#endif // glCreateProgram && glDeleteProgram
+#endif // glCreateProgram && glDeleteProgram && glDetachShader
 
 } // namespace oglwrap
 

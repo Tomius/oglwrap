@@ -8,24 +8,12 @@
 #include "enums.hpp"
 #include "config.hpp"
 #include "general.hpp"
+#include "globjects.hpp"
 #include "debug/error.hpp"
 #include "debug/binding.hpp"
 #include "define_internal_macros.hpp"
 
 namespace oglwrap {
-
-namespace glObjects {
-  class Buffer : public glObject {
-#if OGLWRAP_INITIALIZE_GLOBAL_GL_OBJECTS_ON_USE
-  protected: void constructor() const override
-#else
-  public: Buffer()
-#endif
-    { gl(GenBuffers(1, handle_.get())); }
-  public:
-    ~Buffer() { if(handle_.unique()) gl(DeleteBuffers(1, handle_.get())); }
-  };
-}
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGenBuffers) && defined(glDeleteBuffers))
 template<BufferType BUFFER_TYPE>
@@ -38,7 +26,7 @@ template<BufferType BUFFER_TYPE>
 class BufferObject {
 protected:
   /// The handle for the buffer.
-  glObjects::Buffer buffer_;
+  globjects::Buffer buffer_;
 public:
   /// Default constructor.
   BufferObject() {}

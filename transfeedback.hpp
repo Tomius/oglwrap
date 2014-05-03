@@ -6,27 +6,13 @@
 #define OGLWRAP_TRANSFORMFEEDBACK_HPP_
 
 #include "general.hpp"
+#include "globjects.hpp"
 #include "debug/error.hpp"
 #include "debug/binding.hpp"
 
 #include "define_internal_macros.hpp"
 
 namespace oglwrap {
-
-namespace glObjects {
-  class TransformFeedback : public glObject {
-#if OGLWRAP_INITIALIZE_GLOBAL_GL_OBJECTS_ON_USE
-    protected: void constructor() const override
-#else
-    public: TransformFeedback()
-#endif
-    { gl(GenTransformFeedbacks(1, handle_.get())); }
-  public:
-    ~TransformFeedback() {
-      if(unique()) gl(DeleteTransformFeedbacks(1, handle_.get()));
-    }
-  };
-}
 
 #if !OGLWRAP_CHECK_DEPENDENCIES \
     || (defined(glGenTransformFeedbacks) && defined(glDeleteTransformFeedbacks))
@@ -41,7 +27,7 @@ namespace glObjects {
  */
 class TransformFeedback {
   /// The handle for the TransformFeedback
-  glObjects::TransformFeedback tfb_;
+  globjects::TransformFeedback tfb_;
 public:
   TransformFeedback() = default;
 

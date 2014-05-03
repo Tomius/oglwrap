@@ -10,6 +10,7 @@
 #include "shader.hpp"
 #include "config.hpp"
 #include "general.hpp"
+#include "globjects.hpp"
 #include "debug/error.hpp"
 #include "debug/binding.hpp"
 #include "enums.hpp"
@@ -20,19 +21,6 @@
 #include "define_internal_macros.hpp"
 
 namespace oglwrap {
-
-namespace glObjects {
-  class VertexArray : public glObject {
-#if OGLWRAP_INITIALIZE_GLOBAL_GL_OBJECTS_ON_USE
-  protected: void constructor() const override
-#else
-  public: VertexArray()
-#endif
-    { gl(GenVertexArrays(1, handle_.get())); }
-  public:
-    ~VertexArray() { if(unique()) gl(DeleteVertexArrays(1, handle_.get())); }
-  };
-}
 
 // -------======{[ Vertex Array declaration ]}======-------
 
@@ -50,7 +38,7 @@ namespace glObjects {
  * @see glGenVertexArrays, glDeleteVertexArrays
  */
 class VertexArray {
-  glObjects::VertexArray vao_; ///< The handle for the VAO
+  globjects::VertexArray vao_; ///< The handle for the VAO
 public:
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindVertexArray)
   /**

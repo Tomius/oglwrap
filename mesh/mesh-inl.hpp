@@ -272,8 +272,8 @@ inline void Mesh::render() {
 
     if(textures_enabled_) {
       for(auto iter = materials_.begin(); iter != materials_.end(); iter++) {
-        auto material = iter->second;
-        if(material.active == true && materialIndex < material.textures.size()) {
+        auto& material = iter->second;
+        if(material.active == true && materialIndex < scene_->mNumMaterials) {
           material.textures[materialIndex].active(material.texUnit);
         }
         material.textures[materialIndex].bind();
@@ -288,8 +288,8 @@ inline void Mesh::render() {
 
     if(textures_enabled_) {
       for(auto iter = materials_.begin(); iter != materials_.end(); iter++) {
-        auto material = iter->second;
-        if(material.active == true && materialIndex < material.textures.size()) {
+        auto& material = iter->second;
+        if(material.active == true && materialIndex < scene_->mNumMaterials) {
           material.textures[materialIndex].active(material.texUnit);
         }
         material.textures[materialIndex].unbind();

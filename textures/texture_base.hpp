@@ -11,6 +11,7 @@
 
 #include "../config.hpp"
 #include "../general.hpp"
+#include "../globjects.hpp"
 #include "../debug/error.hpp"
 #include "../debug/binding.hpp"
 #include "../enums.hpp"
@@ -22,20 +23,6 @@
 
 namespace oglwrap {
 
-namespace glObjects {
-  class Texture : public glObject {
-#if OGLWRAP_INITIALIZE_GLOBAL_GL_OBJECTS_ON_USE
-  protected: void constructor() const override
-#else
-  public: Texture()
-#endif
-    { gl(GenTextures(1, handle_.get())); }
-  public:
-    ~Texture() { if(unique()) gl(DeleteTextures(1, handle_.get())); }
-  };
-}
-
-
 // -------======{[ TextureBase declaration ]}======-------
 
 template <TexType texture_t>
@@ -44,7 +31,7 @@ template <TexType texture_t>
   * glGenTextures, glDeleteTextures */
 class TextureBase {
 protected:
-  glObjects::Texture texture; ///< The handle for the texture.
+  globjects::Texture texture; ///< The handle for the texture.
 public:
   /// Generates an empty texture.
   TextureBase() {}
