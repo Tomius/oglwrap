@@ -1,28 +1,11 @@
 Todo list:
 
-last edited: 
-
 + General:
     - Context class.
     - Program uniforms.
     - Uniform blocks / shader storage.
     - Separable shader stages.
     - Some other 4.0+ features are still missing.
-
-+ Utilities
-    - Shapes
-        - Basic geometry shapes (e.g. torus).
-        - Random low-poly objects for testing, like animals, trees, etc.
-    - More camera styles
-        - Not only with SFML.
-    - Basic object and character mover classes.
-    - Shadowing support / predefined shaders for testing.
-
-+ Physics
-    - Built-in Inverse Kinematics support.
-    - Mesh hair simulation.
-    - Collision detection / reaction.
-    - Possibly rag-doll physics.
 
 + Documentation
     - Examples
