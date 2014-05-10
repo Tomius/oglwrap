@@ -102,20 +102,6 @@
   #define OGLWRAP_INCLUDE_EVERYTHING 0
 #endif
 
-/**
- * @brief If true, glObjects will be initialized when they are first used,
- *        rather than at their constructor. This enables using global and
- *        static glObjects, but has negative effect on performance.
- */
-#if OGLWRAP_DEBUG
-  #ifndef OGLWRAP_INITIALIZE_GL_OBJECTS_ON_FIRST_USE
-    #define OGLWRAP_INITIALIZE_GL_OBJECTS_ON_FIRST_USE 1
-  #endif
-#else
-  #ifndef OGLWRAP_INITIALIZE_GL_OBJECTS_ON_FIRST_USE
-    #define OGLWRAP_INITIALIZE_GL_OBJECTS_ON_FIRST_USE 0
-  #endif
-#endif
 
 #if OGLWRAP_DEBUG
   #ifndef OGLWRAP_STOP_AFTER_X_ERRORS
