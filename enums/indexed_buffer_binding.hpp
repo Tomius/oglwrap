@@ -1,0 +1,29 @@
+#ifndef OGLWRAP_ENUMS_INDEXED_BUFFER_BINDING_HPP_
+#define OGLWRAP_ENUMS_INDEXED_BUFFER_BINDING_HPP_
+
+#include "../config.hpp"
+
+namespace oglwrap {
+
+inline namespace enums {
+
+enum class IndexedBufferBinding : GLenum {
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_ATOMIC_COUNTER_BUFFER_BINDING)
+  AtomicCounter = GL_ATOMIC_COUNTER_BUFFER_BINDING,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_SHADER_STORAGE_BUFFER_BINDING)
+  ShaderStorage = GL_SHADER_STORAGE_BUFFER_BINDING,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TRANSFORM_FEEDBACK_BUFFER_BINDING)
+  TransformFeedback = GL_TRANSFORM_FEEDBACK_BUFFER_BINDING,
+#endif
+#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNIFORM_BUFFER_BINDING)
+  Uniform = GL_UNIFORM_BUFFER_BINDING,
+#endif
+};
+
+} // enums
+
+} // oglwrap
+
+#endif

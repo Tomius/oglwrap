@@ -10,6 +10,7 @@
 
 #include "config.hpp"
 #include "enums.hpp"
+#include "enums/shader_type.hpp"
 
 #include "define_internal_macros.hpp"
 
@@ -154,7 +155,7 @@ namespace globjects {
     template<ShaderType shader_t>
     class Shader : public glObject {
       protected: void constructor() const override {
-        *handle_ = gl(CreateShader(shader_t));
+        *handle_ = gl(CreateShader(GLenum(shader_t)));
       }
       public: ~Shader() {
         if(unique()) gl(DeleteShader(*handle_));

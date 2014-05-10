@@ -57,6 +57,15 @@ static inline std::ostream& operator<<(std::ostream& os, const glm::detail::tvec
 }
 
 template <typename T>
+/// Prints a glm vector to a given ostream.
+/** @param os - The ostream.
+  * @param v - The vector. */
+static inline std::ostream& operator<<(std::ostream& os, const glm::detail::tquat<T>& v) {
+  os << v.x << ", " << v.y << ", " << v.z << ", " << v.w;
+  return os;
+}
+
+template <typename T>
 /// Prints a glm matrix to a given ostream.
 /** @param os - The ostream.
   * @param mat - The matrix. */

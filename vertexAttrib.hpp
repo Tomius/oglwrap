@@ -15,6 +15,9 @@
 #include "debug/binding.hpp"
 #include "enums.hpp"
 
+#include "enums/data_type.hpp"
+#include "enums/whole_data_type.hpp"
+
 #include "glm/glm/glm.hpp"
 #include "glm/glm/gtc/type_ptr.hpp"
 
@@ -261,7 +264,8 @@ public:
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_ARRAY_BUFFER_BINDING);
 
     gl(VertexAttribPointer(
-      location_, values_per_vertex, type, normalized, stride, offset_pointer
+      location_, values_per_vertex, GLenum(type),
+      normalized, stride, offset_pointer
     ));
     return *this;
   }
@@ -297,7 +301,8 @@ public:
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_ARRAY_BUFFER_BINDING);
     gl(VertexAttribIPointer(
-      location_, values_per_vertex, type, stride, offset_pointer
+      location_, values_per_vertex, GLenum(type),
+      stride, offset_pointer
     ));
     return *this;
   }
@@ -331,7 +336,7 @@ public:
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_ARRAY_BUFFER_BINDING);
     gl(VertexAttribLPointer(
-      location_, values_per_vertex, DataType::Double, stride, offset_pointer
+      location_, values_per_vertex, GL_DOUBLE, stride, offset_pointer
     ));
     return *this;
   }
@@ -365,7 +370,7 @@ public:
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     gl(VertexAttribFormat(
-      location_, values_per_vertex, type, normalized, stride
+      location_, values_per_vertex, GLenum(type), normalized, stride
     ));
     return *this;
   }
@@ -395,7 +400,9 @@ public:
     }
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
-    gl(VertexAttribIFormat(location_, values_per_vertex, type, stride));
+    gl(VertexAttribIFormat(
+      location_, values_per_vertex, GLenum(type), stride
+    ));
     return *this;
   }
 #endif // glVertexAttribIFormat
@@ -422,7 +429,7 @@ public:
 
     CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     gl(VertexAttribLFormat(
-      location_, values_per_vertex, DataType::Double, stride
+      location_, values_per_vertex, GL_DOUBLE, stride
     ));
     return *this;
   }

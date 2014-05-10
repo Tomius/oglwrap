@@ -66,7 +66,7 @@ public:
   /** @see glGetIntegerv */
   bool isBound() const {
     GLint currentlyBoundTexture;
-    gl(GetIntegerv(getBindingTarget(texture_t), &currentlyBoundTexture));
+    gl(GetIntegerv(GetBindingTarget(texture_t), &currentlyBoundTexture));
     return texture == GLuint(currentlyBoundTexture);
   }
 
@@ -114,13 +114,13 @@ public:
   /// Sets the minification filter for this texture class.
   /** @param filtermode - The desired minification filter mode.
     * @see glTexParameteri, GL_TEXTURE_MIN_FILTER */
-  static void MinFilter(Enums::MinFilter filtermode) {
+  static void MinFilter(enums::MinFilter filtermode) {
     gl(TexParameteri(texture_t, GL_TEXTURE_MIN_FILTER, filtermode));
   }
   /// Sets the minification filter for this texture class.
   /** @param filtermode - The desired minification filter mode.
     * @see glTexParameteri, GL_TEXTURE_MIN_FILTER */
-  BIND_CHECKED void minFilter(Enums::MinFilter filtermode) const {
+  BIND_CHECKED void minFilter(enums::MinFilter filtermode) const {
     CHECK_BINDING();
     MinFilter(filtermode);
   }
@@ -128,13 +128,13 @@ public:
   /// Sets the magnification filter for this texture class.
   /** @param filtermode - The desired magnification filter mode.
     * @see glTexParameteri, GL_TEXTURE_MAG_FILTER */
-  static void MagFilter(Enums::MagFilter filtermode) {
+  static void MagFilter(enums::MagFilter filtermode) {
     gl(TexParameteri(texture_t, GL_TEXTURE_MAG_FILTER, filtermode));
   }
   /// Sets the magnification filter for this texture class.
   /** @param filtermode - The desired magnification filter mode.
     * @see glTexParameteri, GL_TEXTURE_MAG_FILTER */
-  BIND_CHECKED void magFilter(Enums::MagFilter filtermode) const {
+  BIND_CHECKED void magFilter(enums::MagFilter filtermode) const {
     CHECK_BINDING();
     MagFilter(filtermode);
   }

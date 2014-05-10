@@ -9,6 +9,10 @@
 #include <iostream>
 #include "error.hpp"
 #include "../enums.hpp"
+#include "../enums/buffer_type.hpp"
+#include "../enums/buffer_binding.hpp"
+#include "../enums/indexed_buffer_type.hpp"
+#include "../enums/indexed_buffer_binding.hpp"
 
 namespace oglwrap {
 
@@ -47,7 +51,7 @@ static std::string OGLWRAP_LAST_BIND_TARGET;
 
 /// Checks if the object name '0' is bound to the given target, and prints error if it is.
 /** Only if OGLWRAP_BINDCHECK is defined true
-  * @param bindTarget - The target to check. Expected to be a value returned by getBindingTarget(); */
+  * @param bindTarget - The target to check. Expected to be a value returned by GetBindingTarget(); */
 #define CHECK_FOR_DEFAULT_BINDING(bindTarget) \
   GLint __currently_bound_target; \
   glGetIntegerv(bindTarget, &__currently_bound_target); \
@@ -95,10 +99,12 @@ inline void OGLWRAP_print_default_object_is_bound_error(const char *file,
 
 /// Checks if the program is the currently active one, and if not, it returns prints out an error, and calls use on that program.
 /** @param program - The shader program to check if is active. */
-#define CHECK_ACTIVE_PROGRAM(program) \
-  if(!program.isActive()) { \
-    OGLWRAP_print_another_program_is_active_error(__FILE__, __PRETTY_FUNCTION__, __LINE__); \
-    program.use(); \
+#define CHECK_ACTIVE_PROGRAM(program)                                           \
+  if(!program.isActive()) {                                                     \
+    OGLWRAP_print_another_program_is_active_error(                              \
+      __FILE__, __PRETTY_FUNCTION__, __LINE__                                   \
+    );                                                                          \
+    program.use();                                                              \
   }
 
 /// A function used by the CHECK_ACTIVE_PROGRAM() macro
@@ -134,7 +140,7 @@ inline void OGLWRAP_print_another_program_is_active_error(const char *file,
 
 /// Checks if the object name '0' is bound to the given target, and prints error if it is.
 /** Only if OGLWRAP_BINDCHECK is defined true
-  * @param bindTarget - The target to check. Expected to be a value returned by getBindingTarget(); */
+  * @param bindTarget - The target to check. Expected to be a value returned by GetBindingTarget(); */
 #define CHECK_FOR_DEFAULT_BINDING(bindTarget)
 
 /// Checks if the object name '0' is bound to the target explicitly given by its name, and prints error if it is.
@@ -150,7 +156,7 @@ inline void OGLWRAP_print_another_program_is_active_error(const char *file,
 
 /// Returns the buffer binding point's GLenum for the given buffer target.
 /** @param buffer_t - The buffer target. */
-inline BufferBinding getBindingTarget(BufferType buffer_t) {
+inline BufferBinding GetBindingTarget(BufferType buffer_t) {
   BufferBinding target;
 
   switch(buffer_t) {
@@ -167,7 +173,7 @@ inline BufferBinding getBindingTarget(BufferType buffer_t) {
       break;
 #endif
 
-      // Note: these two do not end with _BINDING
+// Note: these two do not end with _BINDING
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COPY_READ_BUFFER)
     case BufferType::CopyRead:
       target = BufferBinding::CopyRead;
@@ -245,7 +251,7 @@ inline BufferBinding getBindingTarget(BufferType buffer_t) {
 
 /// Returns the indexed buffer binding point's GLenum for the given buffer target.
 /** @param buffer_t - The buffer target. */
-inline IndexedBufferBinding getBindingTarget(IndexedBufferType buffer_t) {
+inline IndexedBufferBinding GetBindingTarget(IndexedBufferType buffer_t) {
   IndexedBufferBinding target;
 
   switch(buffer_t) {
@@ -282,7 +288,7 @@ inline IndexedBufferBinding getBindingTarget(IndexedBufferType buffer_t) {
 
 /// Returns the framebuffer binding point's GLenum for the given framebuffer target.
 /** @param fbo_t - The framebuffer target. */
-inline FramebufferBinding getBindingTarget(FramebufferType fbo_t) {
+inline FramebufferBinding GetBindingTarget(FramebufferType fbo_t) {
   FramebufferBinding target;
 
   switch(fbo_t) {
@@ -314,7 +320,7 @@ inline FramebufferBinding getBindingTarget(FramebufferType fbo_t) {
 
 /// Returns the texture binding point's GLenum for the given texture target.
 /** @param tex_t - The texture target.*/
-inline TexBinding getBindingTarget(TexType tex_t) {
+inline TexBinding GetBindingTarget(TexType tex_t) {
   TexBinding target;
 
   switch(tex_t) {

@@ -5,8 +5,9 @@
 #ifndef OGLWRAP_BUFFER_HPP_
 #define OGLWRAP_BUFFER_HPP_
 
-#include "enums.hpp"
-#include "config.hpp"
+#include "enums/buffer_type.hpp"
+#include "enums/indexed_buffer_type.hpp"
+
 #include "general.hpp"
 #include "globjects.hpp"
 #include "debug/error.hpp"
@@ -15,7 +16,8 @@
 
 namespace oglwrap {
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGenBuffers) && defined(glDeleteBuffers))
+#if !OGLWRAP_CHECK_DEPENDENCIES \
+      || (defined(glGenBuffers) && defined(glDeleteBuffers))
 template<BufferType BUFFER_TYPE>
 /// Buffer Objects are OpenGL data stores, arrays on the server memory.
 /** Buffer Objects are OpenGL Objects that store an array
@@ -43,7 +45,7 @@ public:
   /// Binds a buffer object to its default target.
   /** @see glBindBuffer */
   void bind() const {
-    gl(BindBuffer(BUFFER_TYPE, buffer_));
+    gl(BindBuffer(GLenum(BUFFER_TYPE), buffer_));
   }
 #endif // glBindBuffer
 
@@ -51,7 +53,9 @@ public:
   /** @see glGetIntegerv */
   bool isBound() const {
     GLint currentlyBoundBuffer;
-    gl(GetIntegerv(getBindingTarget(BUFFER_TYPE), &currentlyBoundBuffer));
+    gl(GetIntegerv(
+      GLenum(GetBindingTarget(BUFFER_TYPE)), &currentlyBoundBuffer
+    ));
     return buffer_ == GLuint(currentlyBoundBuffer);
   }
 
@@ -59,7 +63,7 @@ public:
   /// Unbinds a buffer object from its default target.
   /** @see glBindBuffer */
   static void Unbind() {
-    gl(BindBuffer(BUFFER_TYPE, 0));
+    gl(BindBuffer(GLenum(BUFFER_TYPE), 0));
   }
   /// Unbinds a buffer object from its default target.
   /** @see glBindBuffer */
@@ -78,7 +82,9 @@ public:
     * @see glBufferData */
   static void Data(GLsizei size, const GLtype* data,
                    BufferUsage usage = BufferUsage::StaticDraw) {
-    gl(BufferData(BUFFER_TYPE, size, data, usage));
+    gl(BufferData(
+      GLenum(BUFFER_TYPE), size, data, GLenum(usage)
+    ));
   }
   template<typename GLtype>
   /// Creates and initializes a buffer object's data store.
@@ -105,7 +111,10 @@ public:
     * @see glBufferData */
   static void Data(const std::vector<GLtype>& data,
                    BufferUsage usage = BufferUsage::StaticDraw) {
-    gl(BufferData(BUFFER_TYPE, data.size() * sizeof(GLtype), data.data(), usage));
+    gl(BufferData(
+      GLenum(BUFFER_TYPE), data.size() * sizeof(GLtype),
+      data.data(), GLenum(usage)
+    ));
   }
   template<typename GLtype>
   /// Creates and initializes a buffer object's data store.
@@ -131,7 +140,7 @@ public:
     * @param data - Specifies a pointer to the new data that will be copied into the data store.
     * @see glBufferSubData */
   static void SubData(GLintptr offset, GLsizei size, const GLtype* data) {
-    gl(BufferSubData(BUFFER_TYPE, offset, size, data));
+    gl(BufferSubData(GLenum(BUFFER_TYPE), offset, size, GLenum(data)));
   }
   template<typename GLtype>
   /// Updates a subset of a buffer object's data store.
@@ -157,7 +166,9 @@ public:
     * @param data - Specifies a vector containing the new data that will be copied into the data store.
     * @see glBufferSubData */
   static void SubData(GLintptr offset, const std::vector<GLtype>& data) {
-    gl(BufferSubData(BUFFER_TYPE, offset, data.size() * sizeof(GLtype), data.data()));
+    gl(BufferSubData(
+      GLenum(BUFFER_TYPE), offset, data.size() * sizeof(GLtype), data.data()
+    ));
   }
   template<typename GLtype>
   /// Updates a subset of a buffer object's data store.
@@ -180,7 +191,7 @@ public:
     * @see glGetBufferParameteriv, GL_BUFFER_SIZE */
   static size_t Size() {
     GLint data;
-    gl(GetBufferParameteriv(BUFFER_TYPE, GL_BUFFER_SIZE, &data));
+    gl(GetBufferParameteriv(GLenum(BUFFER_TYPE), GL_BUFFER_SIZE, &data));
     return data;
   }
   /// A getter for the buffer's size.
@@ -208,9 +219,9 @@ public:
     /** @param access - Specifies the access policy (R, W, R/W).
       * @see glMapBuffer */
     TypedMap(BufferMapAccess access = BufferMapAccess::ReadWrite) {
-      CHECK_FOR_DEFAULT_BINDING(getBindingTarget(BUFFER_TYPE));
+      CHECK_FOR_DEFAULT_BINDING(GLenum(GetBindingTarget(BUFFER_TYPE)));
 
-      m_data = gl(MapBuffer(BUFFER_TYPE, access));
+      m_data = gl(MapBuffer(GLenum(BUFFER_TYPE), access));
       m_size = BufferObject<BUFFER_TYPE>::Size();
     }
 
@@ -224,18 +235,18 @@ public:
              Bitfield<BufferMapAccessFlags> access =
                 {BufferMapAccessFlags::Read_Bit, BufferMapAccessFlags::Write_Bit}) {
 
-      CHECK_FOR_DEFAULT_BINDING(getBindingTarget(BUFFER_TYPE));
+      CHECK_FOR_DEFAULT_BINDING(GLenum(GetBindingTarget(BUFFER_TYPE)));
 
-      m_data = gl(MapBufferRange(BUFFER_TYPE, offset, length, access));
+      m_data = gl(MapBufferRange(GLenum(BUFFER_TYPE), offset, length, access));
       m_size = BufferObject<BUFFER_TYPE>::Size();
     }
 
     /// Unmaps the buffer.
     /** @see glUnmapBuffer */
     ~TypedMap() {
-      CHECK_FOR_DEFAULT_BINDING(getBindingTarget(BUFFER_TYPE));
+      CHECK_FOR_DEFAULT_BINDING(GLenum(GetBindingTarget(BUFFER_TYPE)));
 
-      gl(UnmapBuffer(BUFFER_TYPE));
+      gl(UnmapBuffer(GLenum(BUFFER_TYPE)));
     }
 
     /// Returns the size of the mapped buffer in bytes
@@ -318,7 +329,9 @@ public:
   /** @param index - Specify the index of the binding point within the array.
     * @see glBindBufferBase */
   void bindBase(GLuint index) const {
-    gl(BindBufferBase(BUFFER_TYPE, index, BufferObject<BufferType(BUFFER_TYPE)>::buffer_));
+    gl(BindBufferBase(
+      GLenum(BUFFER_TYPE), index, BufferObject<BufferType(BUFFER_TYPE)>::buffer_
+    ));
   }
 
   /// Bind a range within a buffer object to an index.
@@ -327,22 +340,28 @@ public:
     * @param size - The amount of data in machine units that can be read from the buffet object while used as an indexed target.
     * @see glBindBufferRange */
   void bindRange(GLuint index, GLintptr offset, GLsizeiptr size) const {
-    gl(BindBufferRange(BUFFER_TYPE, index, offset, size, BufferObject<BufferType(BUFFER_TYPE)>::buffer_));
+    gl(BindBufferRange(
+      GLenum(BUFFER_TYPE), index, offset, size,
+      BufferObject<BufferType(BUFFER_TYPE)>::buffer_
+    ));
   }
 
   /// Returns if this is the currently bound buffer for an indexed target.
   /** @see glGetIntegeri_v */
   bool isBound(GLuint index) const {
     GLint currentlyBoundBuffer;
-    gl(GetIntegeri_v(getBindingTarget(BUFFER_TYPE), index, &currentlyBoundBuffer));
-    return BufferObject<BufferType(BUFFER_TYPE)>::buffer_ == GLuint(currentlyBoundBuffer);
+    gl(GetIntegeri_v(
+      GLenum(GetBindingTarget(BUFFER_TYPE)), index, &currentlyBoundBuffer
+    ));
+    return BufferObject<BufferType(BUFFER_TYPE)>::buffer_
+           == GLuint(currentlyBoundBuffer);
   }
 
   /// Unbind a buffer object from an index.
   /** @param index - Specify the index of the binding point within the array.
     * @see glBindBufferBase */
   static void UnbindBase(GLuint index) {
-    gl(BindBufferBase(BUFFER_TYPE, index, 0));
+    gl(BindBufferBase(GLenum(BUFFER_TYPE), index, 0));
   }
   /// Unbind a buffer object from an index.
   /** @param index - Specify the index of the binding point within the array.

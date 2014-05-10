@@ -136,7 +136,7 @@ public:
   /** @see glGetIntegerv */
   bool isBound() const {
     GLint currentlyBoundBuffer;
-    gl(GetIntegerv(getBindingTarget(FBO_TYPE), &currentlyBoundBuffer));
+    gl(GetIntegerv(GetBindingTarget(FBO_TYPE), &currentlyBoundBuffer));
     return framebuffer_ == GLuint(currentlyBoundBuffer);
   }
 

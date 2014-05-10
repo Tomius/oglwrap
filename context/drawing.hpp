@@ -8,6 +8,8 @@
 #include "../config.hpp"
 #include "../enums.hpp"
 #include "../debug/error.hpp"
+#include "../enums/index_type.hpp"
+
 #include "../define_internal_macros.hpp"
 
 namespace oglwrap {
@@ -42,7 +44,7 @@ public:
   static void DrawArrays(PrimitiveType type,
                          GLint first,
                          GLsizei count) {
-    gl(DrawArrays(type, first, count));
+    gl(DrawArrays(GLenum(type), first, count));
   }
 
   #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawArraysInstanced)
@@ -76,7 +78,9 @@ public:
                                   GLint first,
                                   GLsizei count,
                                   GLsizei inst_count) {
-    gl(DrawArraysInstanced(type, first, count, inst_count));
+    gl(DrawArraysInstanced(
+      GLenum(type), first, count, inst_count
+    ));
   }
   #endif
 
@@ -126,7 +130,7 @@ public:
                                               GLsizei inst_count,
                                               GLsizei base_instance) {
     gl(DrawArraysInstancedBaseInstance(
-      type, first, count, inst_count, base_instance
+      GLenum(type), first, count, inst_count, base_instance
     ));
   }
   #endif
@@ -179,7 +183,7 @@ public:
    */
   static void DrawArraysIndirect(PrimitiveType type,
                                  const void *indirect = nullptr) {
-    gl(DrawArraysIndirect(type, indirect));
+    gl(DrawArraysIndirect(GLenum(type), indirect));
   }
   #endif
 
@@ -218,7 +222,7 @@ public:
                               const GLint *first,
                               const GLsizei *count,
                               GLsizei prim_count) {
-    gl(MultiDrawArrays(type, first, count, prim_count));
+    gl(MultiDrawArrays(GLenum(type), first, count, prim_count));
   }
   #endif
 
@@ -300,7 +304,9 @@ public:
                                       const void *indirect,
                                       GLsizei draw_count,
                                       GLsizei stride) {
-    gl(MultiDrawArraysIndirect(type, indirect, draw_count, stride));
+    gl(MultiDrawArraysIndirect(
+      GLenum(type), indirect, draw_count, stride
+    ));
   }
   #endif
 
@@ -332,7 +338,7 @@ public:
   static void DrawElements(PrimitiveType type,
                            GLsizei count,
                            IndexType index_type) {
-    gl(DrawElements(type, count, index_type, nullptr));
+    gl(DrawElements(GLenum(type), count, GLenum(index_type), nullptr));
   }
 
   template <typename GLtype>
@@ -405,7 +411,9 @@ public:
                                     GLsizei count,
                                     IndexType index_type,
                                     GLsizei inst_count) {
-    gl(DrawElementsInstanced(type, count, index_type, nullptr, inst_count));
+    gl(DrawElementsInstanced(
+      GLenum(type), count, GLenum(index_type), nullptr, inst_count
+    ));
   }
 
   template <typename GLtype>
@@ -495,7 +503,7 @@ public:
                                                 GLsizei inst_count,
                                                 GLuint base_instance) {
     gl(DrawElementsInstancedBaseInstance(
-      type, count, index_type, nullptr, inst_count, base_instance
+      GLenum(type), count, GLenum(index_type), nullptr, inst_count, base_instance
     ));
   }
 
@@ -626,7 +634,9 @@ public:
                                 GLuint end,
                                 GLsizei count,
                                 IndexType index_type) {
-    gl(DrawRangeElements(type, start, end, count, index_type, nullptr));
+    gl(DrawRangeElements(
+      GLenum(type), start, end, count, GLenum(index_type), nullptr
+    ));
   }
 
   template<typename GLtype>
@@ -739,7 +749,9 @@ public:
   static void DrawElementsIndirect(PrimType type,
                                    IndexType index_type,
                                    const void* indirect = nullptr) {
-    gl(DrawElementsIndirect(type, index_type, indirect));
+    gl(DrawElementsIndirect(
+      GLenum(type), GLenum(index_type), indirect
+    ));
   }
   #endif
 
@@ -828,7 +840,9 @@ public:
                                         GLsizei draw_count,
                                         GLsizei stride = 0,
                                         const void* indirect = nullptr) {
-    gl(MultiDrawElementsIndirect(type, index_type, indirect, draw_count, stride));
+    gl(MultiDrawElementsIndirect(
+      GLenum(type), GLenum(index_type), indirect, draw_count, stride
+    ));
   }
   #endif
 
@@ -860,7 +874,9 @@ public:
                                      GLsizei count,
                                      IndexType index_type,
                                      GLint base_vertex) {
-    gl(DrawElementsBaseVertex(type, count, index_type, nullptr, base_vertex));
+    gl(DrawElementsBaseVertex(
+      GLenum(type), count, GLenum(index_type), nullptr, base_vertex
+    ));
   }
 
   template<typename GLtype>
@@ -935,7 +951,7 @@ public:
                                           IndexType index_type,
                                           GLint base_vertex) {
     gl(DrawRangeElementsBaseVertex(
-      type, start, end, count, index_type, nullptr, base_vertex
+      GLenum(type), start, end, count, GLenum(index_type), nullptr, base_vertex
     ));
   }
 
@@ -1013,7 +1029,7 @@ public:
                                               GLsizei inst_count,
                                               GLint base_vertex) {
     gl(DrawElementsInstancedBaseVertex(
-      type, count, index_type, nullptr, inst_count, base_vertex
+      GLenum(type), count, GLenum(index_type), nullptr, inst_count, base_vertex
     ));
   }
 
@@ -1089,8 +1105,8 @@ public:
                                           GLuint draw_count,
                                           const GLint *base_vertex) {
     gl(MultiDrawElementsBaseVertex(
-      type, (GLsizei*)count, index_type, nullptr,
-      draw_count, (GLint*)base_vertex
+      GLenum(type), (GLsizei*)count, GLenum(index_type),
+      nullptr, draw_count, (GLint*)base_vertex
     ));
   }
 
@@ -1177,7 +1193,8 @@ public:
                                                          GLint base_vertex,
                                                          GLuint base_instance) {
     gl(DrawElementsInstancedBaseVertexBaseInstance(
-      type, count, index_type, nullptr, inst_count, base_vertex, base_instance
+      GLenum(type), count, GLenum(index_type), nullptr,
+      inst_count, base_vertex, base_instance
     ));
   }
 
@@ -1261,26 +1278,25 @@ public:
   #endif
 };
 
-
 template<>
 inline void Drawing::DrawElements<GLubyte>(PrimitiveType type,
                                            GLsizei count,
                                            const GLubyte* indices) {
-  gl(DrawElements(type, count, DataType::UnsignedByte, indices));
+  gl(DrawElements(GLenum(type), count, GL_UNSIGNED_BYTE, indices));
 }
 
 template<>
 inline void Drawing::DrawElements<GLushort>(PrimitiveType type,
                                             GLsizei count,
                                             const GLushort* indices) {
-  gl(DrawElements(type, count, DataType::UnsignedShort, indices));
+  gl(DrawElements(GLenum(type), count, GL_UNSIGNED_SHORT, indices));
 }
 
 template<>
 inline void Drawing::DrawElements<GLuint>(PrimitiveType type,
                                           GLsizei count,
                                           const GLuint* indices) {
-  gl(DrawElements(type, count, DataType::UnsignedInt, indices));
+  gl(DrawElements(GLenum(type), count, GL_UNSIGNED_INT, indices));
 }
 
 #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsInstanced)
@@ -1290,7 +1306,7 @@ inline void Drawing::DrawElementsInstanced<GLubyte>(PrimitiveType type,
                                                     const GLubyte* indices,
                                                     GLsizei inst_count) {
   gl(DrawElementsInstanced(
-    type, count, DataType::UnsignedByte, indices, inst_count
+    GLenum(type), count, GL_UNSIGNED_BYTE, indices, inst_count
   ));
 }
 
@@ -1300,7 +1316,7 @@ inline void Drawing::DrawElementsInstanced<GLushort>(PrimitiveType type,
                                                      const GLushort* indices,
                                                      GLsizei inst_count) {
   gl(DrawElementsInstanced(
-    type, count, DataType::UnsignedShort, indices, inst_count
+    GLenum(type), count, GL_UNSIGNED_SHORT, indices, inst_count
   ));
 }
 
@@ -1310,7 +1326,7 @@ inline void Drawing::DrawElementsInstanced<GLuint>(PrimitiveType type,
                                                    const GLuint* indices,
                                                    GLsizei inst_count) {
   gl(DrawElementsInstanced(
-    type, count, DataType::UnsignedInt, indices, inst_count
+    GLenum(type), count, GL_UNSIGNED_INT, indices, inst_count
   ));
 }
 #endif
@@ -1324,7 +1340,7 @@ inline void Drawing::DrawElementsInstancedBaseInstance<GLubyte>(
                                                   GLsizei inst_count,
                                                   GLuint base_instance) {
   gl(DrawElementsInstancedBaseInstance(
-    type, count, DataType::UnsignedByte, indices, inst_count, base_instance
+    GLenum(type), count, GL_UNSIGNED_BYTE, indices, inst_count, base_instance
   ));
 }
 
@@ -1336,7 +1352,7 @@ inline void Drawing::DrawElementsInstancedBaseInstance<GLushort>(
                                                   GLsizei inst_count,
                                                   GLuint base_instance) {
   gl(DrawElementsInstancedBaseInstance(
-    type, count, DataType::UnsignedShort, indices, inst_count, base_instance
+    GLenum(type), count, GL_UNSIGNED_SHORT, indices, inst_count, base_instance
   ));
 }
 
@@ -1348,7 +1364,7 @@ inline void Drawing::DrawElementsInstancedBaseInstance<GLuint>(
                                                   GLsizei inst_count,
                                                   GLuint base_instance) {
   gl(DrawElementsInstancedBaseInstance(
-    type, count, DataType::UnsignedInt, indices, inst_count, base_instance
+    GLenum(type), count, GL_UNSIGNED_INT, indices, inst_count, base_instance
   ));
 }
 #endif
@@ -1374,7 +1390,7 @@ inline void Drawing::MultiDrawElements<GLubyte>(PrimitiveType type,
                                                 const GLubyte* const* indices,
                                                 GLsizei draw_count) {
   gl(MultiDrawElements(
-    type, count, DataType::UnsignedByte,
+    GLenum(type), count, GL_UNSIGNED_BYTE,
     OGLWRAP_POINTER_HACKER(indices), draw_count
   ));
 }
@@ -1385,7 +1401,7 @@ inline void Drawing::MultiDrawElements<GLushort>(PrimitiveType type,
                                                  const GLushort* const* indices,
                                                  GLsizei draw_count) {
   gl(MultiDrawElements(
-    type, count, DataType::UnsignedShort,
+    GLenum(type), count, GL_UNSIGNED_SHORT,
     OGLWRAP_POINTER_HACKER(indices), draw_count
   ));
 }
@@ -1396,7 +1412,7 @@ inline void Drawing::MultiDrawElements<GLuint>(PrimitiveType type,
                                                const GLuint* const* indices,
                                                GLsizei draw_count) {
   gl(MultiDrawElements(
-    type, count, DataType::UnsignedInt,
+    GLenum(type), count, GL_UNSIGNED_INT,
     OGLWRAP_POINTER_HACKER(indices), draw_count
   ));
 }
@@ -1410,7 +1426,7 @@ inline void Drawing::DrawRangeElements<GLubyte>(PrimitiveType type,
                                                 GLsizei count,
                                                 const GLubyte* indices) {
   gl(DrawRangeElements(
-    type, start, end, count, IndexType::UnsignedByte, indices
+    GLenum(type), start, end, count, GL_UNSIGNED_BYTE, indices
   ));
 }
 template<>
@@ -1420,7 +1436,7 @@ inline void Drawing::DrawRangeElements<GLushort>(PrimitiveType type,
                                                  GLsizei count,
                                                  const GLushort* indices) {
   gl(DrawRangeElements(
-    type, start, end, count, IndexType::UnsignedShort, indices
+    GLenum(type), start, end, count, GL_UNSIGNED_SHORT, indices
   ));
 }
 template<>
@@ -1430,7 +1446,7 @@ inline void Drawing::DrawRangeElements<GLuint>(PrimitiveType type,
                                                GLsizei count,
                                                const GLuint* indices) {
   gl(DrawRangeElements(
-    type, start, end, count, IndexType::UnsignedInt, indices
+    GLenum(type), start, end, count, GL_UNSIGNED_INT, indices
   ));
 }
 #endif
@@ -1442,7 +1458,8 @@ inline void Drawing::DrawElementsBaseVertex<GLubyte>(PrimType type,
                                                      const GLubyte* indices,
                                                      GLint base_vertex) {
   gl(DrawElementsBaseVertex(
-    type, count, IndexType::UnsignedByte, (void*)indices, base_vertex
+    GLenum(type), count, GL_UNSIGNED_BYTE,
+    (void*)indices, base_vertex
   ));
 }
 template<>
@@ -1451,7 +1468,8 @@ inline void Drawing::DrawElementsBaseVertex<GLushort>(PrimType type,
                                                       const GLushort* indices,
                                                       GLint base_vertex) {
   gl(DrawElementsBaseVertex(
-    type, count, IndexType::UnsignedShort, (void*)indices, base_vertex
+    GLenum(type), count, GL_UNSIGNED_SHORT,
+    (void*)indices, base_vertex
   ));
 }
 template<>
@@ -1460,7 +1478,7 @@ inline void Drawing::DrawElementsBaseVertex<GLuint>(PrimType type,
                                                     const GLuint* indices,
                                                     GLint base_vertex) {
   gl(DrawElementsBaseVertex(
-    type, count, IndexType::UnsignedInt, (void*)indices, base_vertex
+    GLenum(type), count, GL_UNSIGNED_INT, (void*)indices, base_vertex
   ));
 }
 #endif
@@ -1474,7 +1492,7 @@ inline void Drawing::DrawRangeElementsBaseVertex<GLubyte>(PrimType type,
                                                           const GLubyte* indices,
                                                           GLint base_vertex) {
   gl(DrawRangeElementsBaseVertex(
-    type, start, end, count, IndexType::UnsignedByte,
+    GLenum(type), start, end, count, GL_UNSIGNED_BYTE,
     (void*)indices, base_vertex
   ));
 }
@@ -1486,7 +1504,7 @@ inline void Drawing::DrawRangeElementsBaseVertex<GLushort>(PrimType type,
                                                           const GLushort* indices,
                                                           GLint base_vertex) {
   gl(DrawRangeElementsBaseVertex(
-    type, start, end, count, IndexType::UnsignedShort,
+    GLenum(type), start, end, count, GL_UNSIGNED_SHORT,
     (void*)indices, base_vertex
   ));
 }
@@ -1498,7 +1516,7 @@ inline void Drawing::DrawRangeElementsBaseVertex<GLuint>(PrimType type,
                                                          const GLuint* indices,
                                                          GLint base_vertex) {
   gl(DrawRangeElementsBaseVertex(
-    type, start, end, count, IndexType::UnsignedInt,
+    GLenum(type), start, end, count, GL_UNSIGNED_INT,
     (void*)indices, base_vertex
   ));
 }
@@ -1513,7 +1531,7 @@ inline void Drawing::DrawElementsInstancedBaseVertex<GLubyte>(
                                                     GLsizei inst_count,
                                                     GLint base_vertex) {
   gl(DrawElementsInstancedBaseVertex(
-    type, count, IndexType::UnsignedByte,
+    GLenum(type), count, GL_UNSIGNED_BYTE,
     (void*)indices, inst_count, base_vertex
   ));
 }
@@ -1525,7 +1543,7 @@ inline void Drawing::DrawElementsInstancedBaseVertex<GLushort>(
                                                     GLsizei inst_count,
                                                     GLint base_vertex) {
   gl(DrawElementsInstancedBaseVertex(
-    type, count, IndexType::UnsignedShort,
+    GLenum(type), count, GL_UNSIGNED_SHORT,
     (void*)indices, inst_count, base_vertex
   ));
 }
@@ -1537,7 +1555,7 @@ inline void Drawing::DrawElementsInstancedBaseVertex<GLuint>(
                                                     GLsizei inst_count,
                                                     GLint base_vertex) {
   gl(DrawElementsInstancedBaseVertex(
-    type, count, IndexType::UnsignedInt,
+    GLenum(type), count, GL_UNSIGNED_INT,
     (void*)indices, inst_count, base_vertex
   ));
 }
@@ -1552,7 +1570,7 @@ inline void Drawing::MultiDrawElementsBaseVertex<GLubyte>(
                                                   GLuint draw_count,
                                                   const GLint *base_vertex) {
   gl(MultiDrawElementsBaseVertex(
-    type, (GLsizei*)count, IndexType::UnsignedByte,
+    GLenum(type), (GLsizei*)count, GL_UNSIGNED_BYTE,
     OGLWRAP_POINTER_HACKER(indices), draw_count, (GLint*)base_vertex
   ));
 }
@@ -1564,7 +1582,7 @@ inline void Drawing::MultiDrawElementsBaseVertex<GLushort>(
                                                   GLuint draw_count,
                                                   const GLint *base_vertex) {
   gl(MultiDrawElementsBaseVertex(
-    type, (GLsizei*)count, IndexType::UnsignedShort,
+    GLenum(type), (GLsizei*)count, GL_UNSIGNED_SHORT,
     OGLWRAP_POINTER_HACKER(indices), draw_count, (GLint*)base_vertex
   ));
 }
@@ -1576,7 +1594,7 @@ inline void Drawing::MultiDrawElementsBaseVertex<GLuint>(
                                                   GLuint draw_count,
                                                   const GLint *base_vertex) {
   gl(MultiDrawElementsBaseVertex(
-    type, (GLsizei*)count, IndexType::UnsignedInt,
+    GLenum(type), (GLsizei*)count, GL_UNSIGNED_INT,
     OGLWRAP_POINTER_HACKER(indices), draw_count, (GLint*)base_vertex
   ));
 }
@@ -1592,7 +1610,7 @@ inline void Drawing::DrawElementsInstancedBaseVertexBaseInstance<GLubyte>(
                                                     GLint base_vertex,
                                                     GLuint base_instance) {
   gl(DrawElementsInstancedBaseVertexBaseInstance(
-    type, count, IndexType::UnsignedByte,
+    GLenum(type), count, GL_UNSIGNED_BYTE,
     (void*)indices, inst_count, base_vertex, base_instance
   ));
 }
@@ -1605,7 +1623,7 @@ inline void Drawing::DrawElementsInstancedBaseVertexBaseInstance<GLushort>(
                                                     GLint base_vertex,
                                                     GLuint base_instance) {
   gl(DrawElementsInstancedBaseVertexBaseInstance(
-    type, count, IndexType::UnsignedShort,
+    GLenum(type), count, GL_UNSIGNED_SHORT,
     (void*)indices, inst_count, base_vertex, base_instance
   ));
 }
@@ -1618,7 +1636,7 @@ inline void Drawing::DrawElementsInstancedBaseVertexBaseInstance<GLuint>(
                                                     GLint base_vertex,
                                                     GLuint base_instance) {
   gl(DrawElementsInstancedBaseVertexBaseInstance(
-    type, count, IndexType::UnsignedInt,
+    GLenum(type), count, GL_UNSIGNED_INT,
     (void*)indices, inst_count, base_vertex, base_instance
   ));
 }
