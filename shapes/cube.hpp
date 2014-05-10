@@ -9,7 +9,7 @@
 
 #include "../buffer.hpp"
 #include "../context.hpp"
-#include "../vertexAttrib.hpp"
+#include "../vertex_attrib.hpp"
 
 #include "../define_internal_macros.hpp"
 

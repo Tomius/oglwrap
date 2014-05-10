@@ -11,7 +11,8 @@
 namespace oglwrap {
 
 #if OGLWRAP_INSTATIATE
-  DebugOutput DebugOutput::instance;
+  DebugOutput *DebugOutput::instance;
+  bool DebugOutput::inited;
 #endif
 
 #if OGLWRAP_DEBUG

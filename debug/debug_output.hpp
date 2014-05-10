@@ -96,7 +96,13 @@ class DebugOutput {
 
   using ErrorPrintFormatter = void(ErrorMessage error);
   std::function<ErrorPrintFormatter> error_printer{OGLWRAP_PrintError};
-  static DebugOutput instance;
+
+  // The instance for this is dynamically allocated at the first use,
+  // and that memory is never freed. See the link below to understand why:
+  // http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml
+  // ?showone=Static_and_Global_Variables#Static_and_Global_Variables
+  static DebugOutput* instance;
+  static bool inited;
 
 
   /// Loads in the list of OpenGL errors.
@@ -209,12 +215,20 @@ class DebugOutput {
 
 public:
   static void AddErrorPrintFormatter(std::function<ErrorPrintFormatter> printf) {
-    instance.error_printer = printf;
+    if(!inited) {
+      instance = new DebugOutput{};
+      inited = true;
+    }
+    instance->error_printer = printf;
   }
 
   static void PrintError(ErrorMessage error) {
-    if(instance.error_printer) {
-      instance.error_printer(error);
+    if(!inited) {
+      instance = new DebugOutput{};
+      inited = true;
+    }
+    if(instance->error_printer) {
+      instance->error_printer(error);
     }
   }
 
@@ -223,7 +237,11 @@ public:
     * @param functionCall - The function call string.
     */
   static std::string GetDetailedErrorInfo(const std::string& functionCall) {
-    size_t errIdx = instance.getErrorIndex();
+    if(!inited) {
+      instance = new DebugOutput{};
+      inited = true;
+    }
+    size_t errIdx = instance->getErrorIndex();
     if(errIdx == NUM_ERRORS) {
       return std::string{};
     }
@@ -233,9 +251,9 @@ public:
     size_t funcNameLen = functionCall.find_first_of('(');
     std::string funcName = std::string(functionCall.begin(), functionCall.begin() + funcNameLen);
 
-    if(instance.errorMap.find(funcName) != instance.errorMap.end() &&
-       !instance.errorMap[funcName].errors[errIdx].empty()) {
-      ErrorInfo errinfo = instance.errorMap[funcName];
+    if(instance->errorMap.find(funcName) != instance->errorMap.end() &&
+       !instance->errorMap[funcName].errors[errIdx].empty()) {
+      ErrorInfo errinfo = instance->errorMap[funcName];
       sstream << "The following OpenGL function: " << std::endl << std::endl;
       sstream << formatedFuncSignature(errinfo.funcSignature) << std::endl << std::endl;
       sstream << "Has generated the error because one of the following(s) were true:" << std::endl;
@@ -260,7 +278,9 @@ public:
 #if !OGLWRAP_DEBUG || OGLWRAP_DISABLE_DEBUG_OUTPUT
 class DebugOutput {
   using ErrorPrintFormatter = void(const ErrorMessage& error);
-  static DebugOutput instance;
+
+  static DebugOutput* instance;
+  static bool inited;
 
   // Loads in the list of OpenGL errors.
   DebugOutput() : printError(OGLWRAP_PrintError) {}

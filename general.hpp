@@ -36,13 +36,13 @@ public:
   template<typename Iterator>
   Bitfield(const Iterator& begin, const Iterator& end) : bits_(0) {
     for(Iterator i = begin; i != end; ++i) {
-      bits_ |= *i;
+      bits_ |= static_cast<GLbitfield>(*i);
     }
   }
 
   Bitfield(const std::initializer_list<Bit>& bits) : bits_(0) {
     for(Bit b : bits) {
-      bits_ |= b;
+      bits_ |= static_cast<GLbitfield>(b);
     }
   }
 
@@ -51,7 +51,7 @@ public:
   }
 
   Bitfield operator|(Bit b) const {
-    return Bitfield{bits_ | b};
+    return Bitfield{bits_ | static_cast<GLbitfield>(b)};
   }
 
   Bitfield& operator|=(Bitfield b) {
@@ -60,7 +60,7 @@ public:
   }
 
   Bitfield& operator|=(Bit b) {
-    bits_ |= b;
+    bits_ |= static_cast<GLbitfield>(b);
     return *this;
   }
 
@@ -69,7 +69,7 @@ public:
   }
 
   Bitfield operator&(Bit b) const {
-    return Bitfield{bits_ & b};
+    return Bitfield{bits_ & static_cast<GLbitfield>(b)};
   }
 
   Bitfield& operator&=(Bitfield b) {
@@ -78,7 +78,7 @@ public:
   }
 
   Bitfield& operator&=(Bit b) {
-    bits_ &= b;
+    bits_ &= static_cast<GLbitfield>(b);
     return *this;
   }
 
@@ -87,7 +87,7 @@ public:
   }
 
   Bitfield operator^(Bit b) const {
-    return Bitfield{bits_ ^ b};
+    return Bitfield{bits_ ^ static_cast<GLbitfield>(b)};
   }
 
   Bitfield& operator^=(Bitfield b) {
@@ -96,7 +96,7 @@ public:
   }
 
   Bitfield& operator^=(Bit b) {
-    bits_ ^= b;
+    bits_ ^= static_cast<GLbitfield>(b);
     return *this;
   }
 
@@ -105,11 +105,11 @@ public:
   }
 
   bool test(Bit b) const {
-    return (bits_ & b) == b;
+    return (bits_ & static_cast<GLbitfield>(b)) == static_cast<GLbitfield>(b);
   }
 
   bool test(Bitfield b) const {
-    return (bits_ & b) == b;
+    return (bits_ & static_cast<GLbitfield>(b)) == static_cast<GLbitfield>(b);
   }
 
 };

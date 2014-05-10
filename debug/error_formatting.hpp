@@ -110,7 +110,7 @@ inline void OGLWRAP_PrintError(const ErrorMessage& error) {
 
   #if OGLWRAP_STOP_AFTER_X_ERRORS
     if(++OGLWRAP_ERRORS_NUM >= OGLWRAP_STOP_AFTER_X_ERRORS) {
-      std::cerr <<  "\nEncountered too many errors, stopping now.\n\n";
+      std::cerr <<  "\nOglwrap has encountered too many errors, stopping now.\n\n";
       std::terminate();
     }
   #endif

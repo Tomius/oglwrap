@@ -46,8 +46,7 @@
 #include "shader.hpp"
 #include "uniform.hpp"
 #include "buffer.hpp"
-#include "vertexAttrib.hpp"
-#include "global.hpp"
+#include "vertex_attrib.hpp"
 
 // Optional headers
 #if OGLWRAP_INCLUDE_EVERYTHING

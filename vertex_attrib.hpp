@@ -1,9 +1,9 @@
-/** @file vertexAttrib.hpp
+/** @file vertex_attrib.hpp
     @brief Implements the VAO and the VertexAttributeArray.
 */
 
-#ifndef OGLWRAP_VERTEXATTRIB_HPP_
-#define OGLWRAP_VERTEXATTRIB_HPP_
+#ifndef OGLWRAP_VERTEX_ATTRIB_HPP_
+#define OGLWRAP_VERTEX_ATTRIB_HPP_
 
 #include <stdexcept>
 
@@ -918,6 +918,15 @@ inline void VertexAttribArrayObject::static_setup_helper(const glm::uvec4 value)
 #endif // glGetAttribLocation
 
 } // namespace oglwrap
+
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glGetAttribLocation)
+/// A global operator that is a VertexArray constructor with nicer syntax.
+/** I think (prog | "Position") does look better than VertexAttribArray(prog, "Position") */
+inline oglwrap::LazyVertexAttribArray operator|(oglwrap::Program& prog,
+                                                const std::string& file) {
+  return oglwrap::LazyVertexAttribArray(prog, file);
+}
+#endif
 
 #include "undefine_internal_macros.hpp"
 
