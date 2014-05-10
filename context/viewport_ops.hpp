@@ -30,7 +30,7 @@ public:
 		gl(Viewport(0, 0, w, h));
 	}
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_VIEWPORT)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_VIEWPORT)
 	/// Returns the extents of the current viewport.
 	/** @see glGetIntegerv, GL_VIEWPORT */
 	static glm::ivec4 Viewport() {
@@ -40,7 +40,7 @@ public:
 	}
 	#endif
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glViewportIndexedf)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(glViewportIndexedf)
 	/// Sets the extents of the specified viewport.
 	/** @see glViewportIndexedf */
 	static void Viewport(GLuint viewport, GLfloat x, GLfloat y, GLfloat w, GLfloat h) {
@@ -48,7 +48,7 @@ public:
 	}
 	#endif
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_VIEWPORT)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_VIEWPORT)
 	/// Returns the extents of the specified viewport.
 	/** @see glGetIntegerv, GL_VIEWPORT */
 	static glm::ivec4 Viewport(GLint viewport) {
@@ -58,7 +58,7 @@ public:
 	}
 	#endif
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDepthRangef)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(glDepthRangef)
 	/// Sets the depth range of the current viewport.
 	/** @see glDepthRangef */
 	static void DepthRange(GLclampf near_z, GLclampf far_z) {
@@ -66,7 +66,7 @@ public:
 	}
 	#endif
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDepthRange)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(glDepthRange)
 	/// Sets the depth range of the current viewport.
 	/** @see glDepthRange */
 	static void DepthRange(GLclampd near_z, GLclampd far_z) {
@@ -74,7 +74,7 @@ public:
 	}
 	#endif
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_DEPTH_RANGE)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DEPTH_RANGE)
 	/// Returns the depth range of the current viewport.
 	/** @see glDepthRange */
 	static glm::dvec2 DepthRange() {
@@ -84,7 +84,7 @@ public:
 	}
 	#endif
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDepthRangeIndexed)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(glDepthRangeIndexed)
 	/// Sets the depth range of the specified viewport.
 	/** @see glDepthRangeIndexed */
 	static void DepthRange(GLint viewport, GLclampd near_z, GLclampd far_z) {
@@ -92,7 +92,7 @@ public:
 	}
 	#endif
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_DEPTH_RANGE)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DEPTH_RANGE)
 	/// Returns the depth range of the specified viewport.
 	/** @see glDepthRange */
 	static glm::dvec2 DepthRange(GLint viewport) {

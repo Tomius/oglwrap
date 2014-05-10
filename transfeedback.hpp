@@ -9,12 +9,13 @@
 #include "globjects.hpp"
 #include "debug/error.hpp"
 #include "debug/binding.hpp"
+#include "enums/basic_primitive_type.hpp"
 
 #include "define_internal_macros.hpp"
 
 namespace oglwrap {
 
-#if !OGLWRAP_CHECK_DEPENDENCIES \
+#if OGLWRAP_DEFINE_EVERYTHING \
     || (defined(glGenTransformFeedbacks) && defined(glDeleteTransformFeedbacks))
 /**
  * @brief A wrapper class for transform feedback.
@@ -35,7 +36,7 @@ public:
   TransformFeedback(const TransformFeedback&) = delete;
   TransformFeedback& operator=(const TransformFeedback&) = delete;
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindTransformFeedback)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glBindTransformFeedback)
   /// Binds the transform feedback.
   /** @see glBindTransformFeedback */
   void bind() const {
@@ -43,7 +44,7 @@ public:
   }
 #endif // glBindTransformFeedback
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindTransformFeedback)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glBindTransformFeedback)
   /// Unbinds the currently bound transform feedback.
   /** @see glBindTransformFeedback */
   static void Unbind() {
@@ -52,7 +53,7 @@ public:
   /// Unbinds the currently bound transform feedback.
   /** @see glBindTransformFeedback */
   BIND_CHECKED void unbind() const {
-    CHECK_BINDING2();
+    OGLWRAP_CHECK_BINDING2();
     Unbind();
   }
 #endif // glBindTransformFeedback
@@ -70,23 +71,23 @@ public:
     return tfb_ == GLuint(currentlyBoundTFB);
   }
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBeginTransformFeedback)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glBeginTransformFeedback)
   /// Begins the transform feedback mode.
   /** @param mode - The primitive type the TFB should use.
     * @see glBeginTransformFeedback */
-  static void Begin(TFB_PrimType mode) {
-    gl(BeginTransformFeedback(mode));
+  static void Begin(BasicPrimitiveType mode) {
+    gl(BeginTransformFeedback(GLenum(mode)));
   }
   /// Begins the transform feedback mode.
   /** @param mode - The primitive type the TFB should use.
     * @see glBeginTransformFeedback */
-  BIND_CHECKED void begin(TFB_PrimType mode) {
-    CHECK_BINDING();
+  BIND_CHECKED void begin(BasicPrimitiveType mode) {
+    OGLWRAP_CHECK_BINDING();
     Begin(mode);
   }
 #endif // glBeginTransformFeedback
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glEndTransformFeedback)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glEndTransformFeedback)
   /// Ends the transform feedback mode.
   /** @see glEndTransformFeedback */
   static void End() {
@@ -95,12 +96,12 @@ public:
   /// Ends the transform feedback mode.
   /** @see glEndTransformFeedback */
   BIND_CHECKED void end() {
-    CHECK_BINDING();
+    OGLWRAP_CHECK_BINDING();
     End();
   }
 #endif // glEndTransformFeedback
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glPauseTransformFeedback)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glPauseTransformFeedback)
   /**
    * @brief Pauses transform feedback operations on the currently active
    *        transform feedback object.
@@ -118,12 +119,12 @@ public:
    * @see glPauseTransformFeedback
    */
   BIND_CHECKED void pause() {
-    CHECK_BINDING();
+    OGLWRAP_CHECK_BINDING();
     Pause();
   }
 #endif // glPauseTransformFeedback
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glResumeTransformFeedback)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glResumeTransformFeedback)
   /**
    * @brief Resumes transform feedback operations on the currently active
    *        transform feedback object.
@@ -140,7 +141,7 @@ public:
    * @see glResumeTransformFeedback
    */
   BIND_CHECKED void resume() {
-    CHECK_BINDING();
+    OGLWRAP_CHECK_BINDING();
     Resume();
   }
 #endif // glResumeTransformFeedback
@@ -155,7 +156,7 @@ class TransformFeedbackActivator {
   TransformFeedback tfb_;
   bool paused_;
 public:
-  TransformFeedbackActivator(TFB_PrimType mode) : paused_(false) {
+  TransformFeedbackActivator(BasicPrimitiveType mode) : paused_(false) {
     // Bind and start
     tfb_.bind();
     tfb_.begin(mode);

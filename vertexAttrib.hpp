@@ -27,7 +27,7 @@ namespace oglwrap {
 
 // -------======{[ Vertex Array declaration ]}======-------
 
-#if !OGLWRAP_CHECK_DEPENDENCIES \
+#if OGLWRAP_DEFINE_EVERYTHING \
     || (defined(glGenVertexArrays) && defined(glDeleteVertexArrays))
 /**
  * @brief VAO is an object that remembers which ArrayBuffers to use for a
@@ -43,7 +43,7 @@ namespace oglwrap {
 class VertexArray {
   globjects::VertexArray vao_; ///< The handle for the VAO
 public:
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindVertexArray)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glBindVertexArray)
   /**
    * @brief Binds the Vertex Array object, so that it will be used for the
    *        further draw calls.
@@ -67,7 +67,7 @@ public:
     return vao_ == GLuint(currentlyBoundVAO);
   }
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindVertexArray)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glBindVertexArray)
   /// Unbinds the currently active VAO.
   /** @see glBindVertexArray */
   static void Unbind() {
@@ -75,11 +75,11 @@ public:
   }
 #endif
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindVertexArray)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glBindVertexArray)
   /// Unbinds the currently active VAO.
   /** @see glBindVertexArray */
   BIND_CHECKED void unbind() const {
-    CHECK_BINDING2();
+    OGLWRAP_CHECK_BINDING2();
     Unbind();
   }
 #endif
@@ -93,7 +93,7 @@ public:
 
 // -------======{[ Vertex Attribute Array ]}======-------
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGetAttribLocation)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glGetAttribLocation)
 /// Is used to set up an attribute.
 /** VertexAttribArrayObject is used to setup the way data is uploaded to
   * the vertex shader attributes (the 'in' variables in the VS).
@@ -108,13 +108,17 @@ protected:
   virtual void init() {
     inited_ = true;
   }
+
+  static constexpr GLuint kInvalidLocation = ~GLuint(0);
+
 public:
   /// Default constructor, sets the location to invalid.
-  VertexAttribArrayObject() : location_(INVALID_LOCATION), inited_(false) {}
+  VertexAttribArrayObject()
+    : location_(this->kInvalidLocation), inited_(false) {}
 
   /// You can specify the attribute slot you use for the attribute.
   VertexAttribArrayObject(GLuint vertexAttribSlot)
-  : location_(vertexAttribSlot), inited_(false) {}
+    : location_(vertexAttribSlot), inited_(false) {}
 
 private:
   template <class GLtype>
@@ -138,7 +142,7 @@ public:
       init();
     }
 
-    CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+    OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     static_setup_helper(value);
   }
 
@@ -172,7 +176,7 @@ public:
     return *this;
   }
 
-#if !OGLWRAP_CHECK_DEPENDENCIES \
+#if OGLWRAP_DEFINE_EVERYTHING \
     || (defined(glVertexAttribPointer) && defined(glVertexAttribIPointer))
   /**
    * @brief Sets up an attribute for arbitrary data type.
@@ -208,7 +212,7 @@ public:
         pointer(values_per_vertex, type, false, stride, offset_pointer);
         break;
       case DataType::Double:
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribLPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribLPointer)
         lpointer(values_per_vertex, stride, nullptr);
 #else
         throw std::runtime_error(
@@ -227,7 +231,7 @@ public:
   }
 #endif // glVertexAttribPointer && glVertexAttribIPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribPointer)
   /**
    * @brief Sets up an attribute for float type data. You can upload any data
    *        type to it, but it will be converted to float.
@@ -260,8 +264,8 @@ public:
       init();
     }
 
-    CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
-    CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_ARRAY_BUFFER_BINDING);
+    OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+    OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_ARRAY_BUFFER_BINDING);
 
     gl(VertexAttribPointer(
       location_, values_per_vertex, GLenum(type),
@@ -271,7 +275,7 @@ public:
   }
 #endif // glVertexAttribPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
   /**
    * @brief Sets up an attribute for integral type data.
    *
@@ -298,8 +302,8 @@ public:
       init();
     }
 
-    CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
-    CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_ARRAY_BUFFER_BINDING);
+    OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+    OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_ARRAY_BUFFER_BINDING);
     gl(VertexAttribIPointer(
       location_, values_per_vertex, GLenum(type),
       stride, offset_pointer
@@ -308,7 +312,7 @@ public:
   }
 #endif // glVertexAttribIPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribLPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribLPointer)
   /**
    * @brief Sets up an attribute for double type data.
    *
@@ -333,8 +337,8 @@ public:
       init();
     }
 
-    CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
-    CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_ARRAY_BUFFER_BINDING);
+    OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+    OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_ARRAY_BUFFER_BINDING);
     gl(VertexAttribLPointer(
       location_, values_per_vertex, GL_DOUBLE, stride, offset_pointer
     ));
@@ -342,7 +346,7 @@ public:
   }
 #endif // glVertexAttribLPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribFormat)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribFormat)
   /**
    * @brief Specify the organization of vertex arrays.
    *
@@ -368,7 +372,7 @@ public:
       init();
     }
 
-    CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+    OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     gl(VertexAttribFormat(
       location_, values_per_vertex, GLenum(type), normalized, stride
     ));
@@ -376,7 +380,7 @@ public:
   }
 #endif // glVertexAttribFormat
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIFormat)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIFormat)
   ///
   /**
    * @brief Specify the organization of vertex arrays. Should be used for
@@ -399,7 +403,7 @@ public:
       init();
     }
 
-    CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+    OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     gl(VertexAttribIFormat(
       location_, values_per_vertex, GLenum(type), stride
     ));
@@ -407,7 +411,7 @@ public:
   }
 #endif // glVertexAttribIFormat
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribLFormat)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribLFormat)
   /**
    * @brief Specify the organization of vertex arrays. Should be used for
    *        double values.
@@ -427,7 +431,7 @@ public:
       init();
     }
 
-    CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+    OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     gl(VertexAttribLFormat(
       location_, values_per_vertex, GL_DOUBLE, stride
     ));
@@ -435,7 +439,7 @@ public:
   }
 #endif // glVertexAttribLFormat
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glEnableVertexAttribArray)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glEnableVertexAttribArray)
   /// Enables the attribute array slot
   /** @see glEnableVertexAttribArray */
   VertexAttribArrayObject& enable() {
@@ -443,13 +447,13 @@ public:
       init();
     }
 
-    CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+    OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     gl(EnableVertexAttribArray(location_));
     return *this;
   }
 #endif // glEnableVertexAttribArray
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDisableVertexAttribArray)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glDisableVertexAttribArray)
   /// Disables the attribute array slot
   /** @see glDisableVertexAttribArray */
   VertexAttribArrayObject& disable() {
@@ -457,13 +461,13 @@ public:
       init();
     }
 
-    CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+    OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     gl(DisableVertexAttribArray(location_));
     return *this;
   }
 #endif // glDisableVertexAttribArray
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribDivisor)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribDivisor)
   /**
    * @brief Modify the rate at which generic vertex attributes advance during
    *        instanced rendering.
@@ -477,13 +481,13 @@ public:
       init();
     }
 
-    CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
+    OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     gl(VertexAttribDivisor(location_, divisor));
     return *this;
   }
 #endif // glVertexAttribDivisor
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glBindAttribLocation)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glBindAttribLocation)
   /**
    * @brief Associates a generic vertex attribute index with a named attribute
    *        variable.
@@ -528,7 +532,7 @@ public:
    */
   VertexAttribArray(const Program& program, const std::string& identifier) {
     location_ = gl(GetAttribLocation(program.expose(), identifier.c_str()));
-    if(location_ == INVALID_LOCATION) {
+    if(location_ == this->kInvalidLocation) {
       OGLWRAP_PRINT_ERROR(
         "Error getting attribute location",
         "Unable to get location of attribute '" + identifier + "'"
@@ -550,10 +554,10 @@ class LazyVertexAttribArray : public VertexAttribArrayObject {
   /// Queries the location of the attribute using the attribute's name
   /** @see glGetAttribLocation */
   void init() {
-    CHECK_ACTIVE_PROGRAM(program_);
+    OGLWRAP_CHECK_ACTIVE_PROGRAM(program_);
 
     location_ = gl(GetAttribLocation(program_.expose(), identifier_.c_str()));
-    if(location_ == INVALID_LOCATION) {
+    if(location_ == this->kInvalidLocation) {
       OGLWRAP_PRINT_ERROR(
         "Error getting attribute location",
         "Unable to get location of attribute '" + identifier_ + "'"
@@ -614,7 +618,7 @@ public:
 
 
 // -------======{[ VertexAttribArrayObject::setup specializations ]}======-------
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribPointer)
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<GLfloat>(GLuint values_per_vertex) {
@@ -623,7 +627,7 @@ VertexAttribArrayObject::setup<GLfloat>(GLuint values_per_vertex) {
 }
 #endif // glVertexAttribPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<GLbyte>(GLuint values_per_vertex) {
@@ -632,7 +636,7 @@ VertexAttribArrayObject::setup<GLbyte>(GLuint values_per_vertex) {
 }
 #endif // glVertexAttribIPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<GLubyte>(GLuint values_per_vertex) {
@@ -641,7 +645,7 @@ VertexAttribArrayObject::setup<GLubyte>(GLuint values_per_vertex) {
 }
 #endif // glVertexAttribIPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<GLshort>(GLuint values_per_vertex) {
@@ -650,7 +654,7 @@ VertexAttribArrayObject::setup<GLshort>(GLuint values_per_vertex) {
 }
 #endif // glVertexAttribIPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<GLushort>(GLuint values_per_vertex) {
@@ -659,7 +663,7 @@ VertexAttribArrayObject::setup<GLushort>(GLuint values_per_vertex) {
 }
 #endif // glVertexAttribIPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<GLint>(GLuint values_per_vertex) {
@@ -668,7 +672,7 @@ VertexAttribArrayObject::setup<GLint>(GLuint values_per_vertex) {
 }
 #endif // glVertexAttribIPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<GLuint>(GLuint values_per_vertex) {
@@ -677,7 +681,7 @@ VertexAttribArrayObject::setup<GLuint>(GLuint values_per_vertex) {
 }
 #endif // glVertexAttribIPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribPointer)
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<glm::vec2>(GLuint) {
@@ -686,7 +690,7 @@ VertexAttribArrayObject::setup<glm::vec2>(GLuint) {
 }
 #endif // glVertexAttribPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribLPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribLPointer)
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<glm::dvec2>(GLuint) {
@@ -695,7 +699,7 @@ VertexAttribArrayObject::setup<glm::dvec2>(GLuint) {
 }
 #endif // glVertexAttribLPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<glm::ivec2>(GLuint) {
@@ -704,7 +708,7 @@ VertexAttribArrayObject::setup<glm::ivec2>(GLuint) {
 }
 #endif // glVertexAttribIPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<glm::uvec2>(GLuint) {
@@ -713,7 +717,7 @@ VertexAttribArrayObject::setup<glm::uvec2>(GLuint) {
 }
 #endif // glVertexAttribIPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribPointer)
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<glm::vec3>(GLuint) {
@@ -722,7 +726,7 @@ VertexAttribArrayObject::setup<glm::vec3>(GLuint) {
 }
 #endif // glVertexAttribPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribLPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribLPointer)
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<glm::dvec3>(GLuint) {
@@ -731,7 +735,7 @@ VertexAttribArrayObject::setup<glm::dvec3>(GLuint) {
 }
 #endif // glVertexAttribLPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<glm::ivec3>(GLuint) {
@@ -740,7 +744,7 @@ VertexAttribArrayObject::setup<glm::ivec3>(GLuint) {
 }
 #endif // glVertexAttribIPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<glm::uvec3>(GLuint) {
@@ -749,7 +753,7 @@ VertexAttribArrayObject::setup<glm::uvec3>(GLuint) {
 }
 #endif // glVertexAttribIPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribPointer)
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<glm::vec4>(GLuint) {
@@ -758,7 +762,7 @@ VertexAttribArrayObject::setup<glm::vec4>(GLuint) {
 }
 #endif // glVertexAttribPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribLPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribLPointer)
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<glm::dvec4>(GLuint) {
@@ -767,7 +771,7 @@ VertexAttribArrayObject::setup<glm::dvec4>(GLuint) {
 }
 #endif // glVertexAttribLPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<glm::ivec4>(GLuint) {
@@ -776,7 +780,7 @@ VertexAttribArrayObject::setup<glm::ivec4>(GLuint) {
 }
 #endif // glVertexAttribIPointer
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribIPointer)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<glm::uvec4>(GLuint) {
@@ -789,35 +793,35 @@ VertexAttribArrayObject::setup<glm::uvec4>(GLuint) {
 // -------======{[ static setups ]}======-------
 
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttrib1f)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttrib1f)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const GLfloat value) {
   gl(VertexAttrib1f(location_, value));
 }
 #endif // glVertexAttrib1f
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttrib1s)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttrib1s)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const GLshort value) {
   gl(VertexAttrib1s(location_, value));
 }
 #endif // glVertexAttrib1s
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribL1d)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribL1d)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const GLdouble value) {
   gl(VertexAttribL1d(location_, value));
 }
 #endif // glVertexAttribL1d
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribI1i)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribI1i)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const GLint value) {
   gl(VertexAttribI1i(location_, value));
 }
 #endif // glVertexAttribI1i
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribI1ui)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribI1ui)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const GLuint value) {
   gl(VertexAttribI1ui(location_, value));
@@ -825,28 +829,28 @@ inline void VertexAttribArrayObject::static_setup_helper(const GLuint value) {
 #endif // glVertexAttribI1ui
 
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttrib2fv)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttrib2fv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::vec2 value) {
   gl(VertexAttrib2fv(location_, glm::value_ptr(value)));
 }
 #endif // glVertexAttrib2fv
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribL2dv)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribL2dv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::dvec2 value) {
   gl(VertexAttribL2dv(location_, glm::value_ptr(value)));
 }
 #endif // glVertexAttribL2dv
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribI2iv)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribI2iv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::ivec2 value) {
   gl(VertexAttribI2iv(location_, glm::value_ptr(value)));
 }
 #endif // glVertexAttribI2iv
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribI2uiv)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribI2uiv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::uvec2 value) {
   gl(VertexAttribI2uiv(location_, glm::value_ptr(value)));
@@ -854,28 +858,28 @@ inline void VertexAttribArrayObject::static_setup_helper(const glm::uvec2 value)
 #endif // glVertexAttribI2uiv
 
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttrib3fv)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttrib3fv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::vec3 value) {
   gl(VertexAttrib3fv(location_, glm::value_ptr(value)));
 }
 #endif // glVertexAttrib3fv
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribL3dv)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribL3dv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::dvec3 value) {
   gl(VertexAttribL3dv(location_, glm::value_ptr(value)));
 }
 #endif // glVertexAttribL3dv
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribI3iv)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribI3iv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::ivec3 value) {
   gl(VertexAttribI3iv(location_, glm::value_ptr(value)));
 }
 #endif // glVertexAttribI3iv
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribI3uiv)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribI3uiv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::uvec3 value) {
   gl(VertexAttribI3uiv(location_, glm::value_ptr(value)));
@@ -883,28 +887,28 @@ inline void VertexAttribArrayObject::static_setup_helper(const glm::uvec3 value)
 #endif // glVertexAttribI3uiv
 
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttrib4fv)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttrib4fv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::vec4 value) {
   gl(VertexAttrib4fv(location_, glm::value_ptr(value)));
 }
 #endif // glVertexAttrib4fv
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribL4dv)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribL4dv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::dvec4 value) {
   gl(VertexAttribL4dv(location_, glm::value_ptr(value)));
 }
 #endif // glVertexAttribL4dv
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribI4iv)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribI4iv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::ivec4 value) {
   gl(VertexAttribI4iv(location_, glm::value_ptr(value)));
 }
 #endif // glVertexAttribI4iv
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glVertexAttribI4uiv)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribI4uiv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::uvec4 value) {
   gl(VertexAttribI4uiv(location_, glm::value_ptr(value)));

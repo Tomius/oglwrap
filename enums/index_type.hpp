@@ -8,13 +8,13 @@ namespace oglwrap {
 inline namespace enums {
 
 enum class IndexType : GLenum {
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNSIGNED_BYTE)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_BYTE)
   UnsignedByte = GL_UNSIGNED_BYTE,
 #endif
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNSIGNED_SHORT)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_SHORT)
   UnsignedShort = GL_UNSIGNED_SHORT,
 #endif
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_UNSIGNED_INT)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_INT)
   UnsignedInt = GL_UNSIGNED_INT,
 #endif
 };

@@ -16,7 +16,7 @@ namespace context {
 
 class Computing {
 public:
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDispatchCompute)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glDispatchCompute)
   /**
    * @brief Launch one or more compute work groups.
    *
@@ -41,7 +41,7 @@ public:
   }
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDispatchComputeIndirect)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glDispatchComputeIndirect)
   /**
    * @brief launch one or more compute work groups using parameters stored in a
    *        buffer

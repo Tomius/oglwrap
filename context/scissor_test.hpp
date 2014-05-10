@@ -45,7 +45,7 @@ public:
     gl(Scissor(left, bottom, width, height));
   }
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glScissorIndexed)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glScissorIndexed)
   /**
    * @brief define the scissor box for a specific viewport
    *
@@ -78,7 +78,7 @@ public:
   }
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glScissorIndexedv)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glScissorIndexedv)
     /**
    * @brief define the scissor box for a specific viewport
    *
@@ -111,7 +111,7 @@ public:
   }
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glScissorArrayv)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glScissorArrayv)
   /**
    * @brief define the scissor box for multiple viewports
    *
@@ -148,7 +148,7 @@ public:
   }
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_SCISSOR_BOX)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SCISSOR_BOX)
   /**
    * Returns the extents of scissor box of the default viewport.
    * @see glGetIntegerv, GL_SCISSOR_BOX
@@ -161,7 +161,7 @@ public:
   }
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES \
+  #if OGLWRAP_DEFINE_EVERYTHING \
       || defined(GL_SCISSOR_BOX) && defined(glScissorIndexed)
   /**
    * Returns the extents of scissor box of the specified viewport.

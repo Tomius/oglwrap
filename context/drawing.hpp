@@ -47,7 +47,7 @@ public:
     gl(DrawArrays(GLenum(type), first, count));
   }
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawArraysInstanced)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawArraysInstanced)
   /**
    * @brief Draw multiples instances of a range of elements.
    *
@@ -84,7 +84,7 @@ public:
   }
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawArraysInstancedBaseInstance)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawArraysInstancedBaseInstance)
   /**
    * @brief Draw multiples instances of a range of elements from a starting
    *        instance count.
@@ -135,7 +135,7 @@ public:
   }
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawArraysIndirect)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawArraysIndirect)
   /**
    * @brief Renders primitives from array data, taking parameters from memory.
    *
@@ -187,7 +187,7 @@ public:
   }
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glMultiDrawArrays)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glMultiDrawArrays)
   /**
    * @brief Renders multiple sets of primitives from array data
    *
@@ -226,7 +226,7 @@ public:
   }
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glMultiDrawArraysIndirect)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glMultiDrawArraysIndirect)
   /**
    * @brief Renders multiple sets of primitives from array data, taking
    *        parameters from memory
@@ -376,7 +376,7 @@ public:
   }
 
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsInstanced)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawElementsInstanced)
   /**
    * @brief Draws multiple instances of a sequence of primitives from the bound
    *        element array buffers, in the order specified by the bound index buffer.
@@ -457,7 +457,7 @@ public:
   }
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsInstancedBaseInstance)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawElementsInstancedBaseInstance)
   /**
    * @brief Draws multiple instances of a sequence of primitives from the bound
    *        element array buffers, in the order specified by the bound index buffer.
@@ -558,7 +558,7 @@ public:
   }
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glMultiDrawElements)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glMultiDrawElements)
   template <typename GLtype>
   /**
    * @brief Draws multiple sets of sequences of primitives from the bound
@@ -595,7 +595,7 @@ public:
   }
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawRangeElements)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawRangeElements)
   /**
    * @brief glDrawRangeElements is a restricted form of glDrawElements, with the
    *        additional constraint that all values in the arrays count must lie
@@ -684,7 +684,7 @@ public:
   }
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsIndirect)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawElementsIndirect)
   /**
    * @brief ender indexed primitives from array data, taking parameters from memory
    *
@@ -755,7 +755,7 @@ public:
   }
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glMultiDrawElementsIndirect)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glMultiDrawElementsIndirect)
   /**
    * @brief glMultiDrawElementsIndirect: render indexed primitives from array
    *        data, taking parameters from memory
@@ -846,7 +846,7 @@ public:
   }
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsBaseVertex)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawElementsBaseVertex)
   /**
    * @brief render primitives from array data with a per-element offset
    *
@@ -915,7 +915,7 @@ public:
   }
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawRangeElementsBaseVertex)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawRangeElementsBaseVertex)
   /**
    * @brief render primitives from array data with a per-element offset
    *
@@ -998,7 +998,7 @@ public:
   }
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsInstancedBaseVertex)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawElementsInstancedBaseVertex)
   /**
    * @brief render multiple instances of a set of primitives from array data
    *        with a per-element offset
@@ -1071,7 +1071,7 @@ public:
   }
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glMultiDrawElementsBaseVertex)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glMultiDrawElementsBaseVertex)
   /**
    * @brief render multiple sets of primitives by specifying indices of array
    *        data elements and an index to apply to each index
@@ -1151,7 +1151,7 @@ public:
   }
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES \
+  #if OGLWRAP_DEFINE_EVERYTHING \
   || defined(glDrawElementsInstancedBaseVertexBaseInstance)
   /**
    * @brief render multiple instances of a set of primitives from array data
@@ -1247,7 +1247,7 @@ public:
   #endif
 
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glPrimitiveRestartIndex)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glPrimitiveRestartIndex)
   /**
    * @brief Sets the primitive restart index.
    *
@@ -1299,7 +1299,7 @@ inline void Drawing::DrawElements<GLuint>(PrimitiveType type,
   gl(DrawElements(GLenum(type), count, GL_UNSIGNED_INT, indices));
 }
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsInstanced)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawElementsInstanced)
 template<>
 inline void Drawing::DrawElementsInstanced<GLubyte>(PrimitiveType type,
                                                     GLsizei count,
@@ -1331,7 +1331,7 @@ inline void Drawing::DrawElementsInstanced<GLuint>(PrimitiveType type,
 }
 #endif
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsInstancedBaseInstance)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawElementsInstancedBaseInstance)
 template<>
 inline void Drawing::DrawElementsInstancedBaseInstance<GLubyte>(
                                                   PrimitiveType type,
@@ -1383,7 +1383,7 @@ public:
   operator U() { return U(ptr_); }
 };
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glMultiDrawElements)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glMultiDrawElements)
 template<>
 inline void Drawing::MultiDrawElements<GLubyte>(PrimitiveType type,
                                                 const GLsizei* count,
@@ -1418,7 +1418,7 @@ inline void Drawing::MultiDrawElements<GLuint>(PrimitiveType type,
 }
 #endif
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawRangeElements)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawRangeElements)
 template<>
 inline void Drawing::DrawRangeElements<GLubyte>(PrimitiveType type,
                                                 GLuint start,
@@ -1451,7 +1451,7 @@ inline void Drawing::DrawRangeElements<GLuint>(PrimitiveType type,
 }
 #endif
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsBaseVertex)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawElementsBaseVertex)
 template<>
 inline void Drawing::DrawElementsBaseVertex<GLubyte>(PrimType type,
                                                      GLsizei count,
@@ -1483,7 +1483,7 @@ inline void Drawing::DrawElementsBaseVertex<GLuint>(PrimType type,
 }
 #endif
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawRangeElementsBaseVertex)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawRangeElementsBaseVertex)
 template<>
 inline void Drawing::DrawRangeElementsBaseVertex<GLubyte>(PrimType type,
                                                           GLuint start,
@@ -1522,7 +1522,7 @@ inline void Drawing::DrawRangeElementsBaseVertex<GLuint>(PrimType type,
 }
 #endif
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsInstancedBaseVertex)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawElementsInstancedBaseVertex)
 template<>
 inline void Drawing::DrawElementsInstancedBaseVertex<GLubyte>(
                                                     PrimType type,
@@ -1561,7 +1561,7 @@ inline void Drawing::DrawElementsInstancedBaseVertex<GLuint>(
 }
 #endif
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glMultiDrawElementsBaseVertex)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glMultiDrawElementsBaseVertex)
 template<>
 inline void Drawing::MultiDrawElementsBaseVertex<GLubyte>(
                                                   PrimType type,
@@ -1600,7 +1600,7 @@ inline void Drawing::MultiDrawElementsBaseVertex<GLuint>(
 }
 #endif
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawElementsInstancedBaseVertexBaseInstance)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawElementsInstancedBaseVertexBaseInstance)
 template<>
 inline void Drawing::DrawElementsInstancedBaseVertexBaseInstance<GLubyte>(
                                                     PrimType type,

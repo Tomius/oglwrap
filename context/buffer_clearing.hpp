@@ -25,7 +25,7 @@ public:
 		gl(ClearColor(r, g, b, a));
 	}
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_CLEAR_VALUE)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_CLEAR_VALUE)
 	/// Returns the clear values for the color buffers.
 	/** @see glGetFloatv, GL_COLOR_CLEAR_VALUE */
 	static glm::vec4 GetClearColor() {
@@ -41,7 +41,7 @@ public:
 		gl(ClearDepth(d));
 	}
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_DEPTH_CLEAR_VALUE)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DEPTH_CLEAR_VALUE)
 	/// Returns the clear value for the depth buffers.
 	/** @see glGetDoublev, GL_DEPTH_CLEAR_VALUE */
 	static double GetClearDepth() {
@@ -57,7 +57,7 @@ public:
 		gl(ClearStencil(mask));
 	}
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_STENCIL_CLEAR_VALUE)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_STENCIL_CLEAR_VALUE)
 	/// Returns the clear value for the stencil buffers.
 	/** @see GetIntegerv, GL_STENCIL_CLEAR_VALUE */
 	static GLuint GetClearStencil() {

@@ -24,7 +24,7 @@ public:
 		gl(ColorMask(r, g, b, a));
 	}
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_WRITEMASK)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_WRITEMASK)
 	/// Returns the color mask.
 	/** @see glGetBooleanv, GL_COLOR_WRITEMASK */
 	static std::tuple<bool, bool, bool, bool> ColorMask() {
@@ -34,7 +34,7 @@ public:
 	}
 	#endif
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glColorMaski)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(glColorMaski)
 	/// Enables and disables writing of frame buffer color components for a particular buffer.
 	/** @see glColorMaski */
 	static void ColorMask(GLuint buffer, bool r, bool g, bool b, bool a) {
@@ -48,7 +48,7 @@ public:
 		gl(DepthMask(mask));
 	}
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_DEPTH_WRITEMASK)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DEPTH_WRITEMASK)
 	/// Returns the depth mask.
 	/** @see glGetBooleanv, GL_DEPTH_WRITEMASK */
 	static bool DepthMask() {
@@ -64,7 +64,7 @@ public:
 		gl(StencilMask(mask));
 	}
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glStencilMaskSeparate)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(glStencilMaskSeparate)
 	/// Control the front and/or back writing of individual bits in the stencil planes.
 	/** @see glStencilMaskSeparate */
 	static void StencilMask(Face face, GLuint mask) {
@@ -72,7 +72,7 @@ public:
 	}
 	#endif
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_STENCIL_WRITEMASK) && defined(GL_STENCIL_BACK_WRITEMASK)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_STENCIL_WRITEMASK) && defined(GL_STENCIL_BACK_WRITEMASK)
 	/// Returns the value of stencil write mask for the specified face.
 	/** @see glGetIntegerv, GL_STENCIL_WRITEMASK, GL_STENCIL_BACK_WRITEMASK */
 	static GLuint StencilMask(bool front_face = true) {

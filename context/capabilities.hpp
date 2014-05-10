@@ -24,7 +24,7 @@ public:
 		gl(Enable(capability));
 	}
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glEnablei)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(glEnablei)
 	/// Enables a capability for an index target.
 	/** @see glEnablei */
 	static void Enable(Capability capability, GLuint index) {
@@ -38,7 +38,7 @@ public:
 		gl(Disable(capability));
 	}
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDisablei)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(glDisablei)
 	/// Disables a capability for an index target.
 	/** @see glDisablei */
 	static void Disable(Capability capability, GLuint index) {
@@ -52,7 +52,7 @@ public:
 		return gl(IsEnabled(capability));
 	}
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glIsEnabledi)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(glIsEnabledi)
 	/// Checks if a capability is enabled for an index target.
 	/** @see glIsEnabledi */
 	static bool IsEnabled(Capability capability, GLuint index) {

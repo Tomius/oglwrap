@@ -8,6 +8,9 @@
 #include "../config.hpp"
 #include "../enums.hpp"
 #include "../general.hpp"
+#include "../enums/pixel_data_type.hpp"
+#include "../enums/pixel_data_format.hpp"
+
 #include "../define_internal_macros.hpp"
 
 namespace oglwrap {
@@ -24,7 +27,7 @@ public:
    * @version OpenGL 1.0
    */
   static void PixelStore(PixelStorageMode parameter, GLfloat value) {
-    gl(PixelStoref(parameter, value));
+    gl(PixelStoref(GLenum(parameter), value));
   }
 
   /**
@@ -35,7 +38,7 @@ public:
    * @version OpenGL 1.0
    */
   static void PixelStore(PixelStorageMode parameter, GLint value) {
-    gl(PixelStorei(parameter, value));
+    gl(PixelStorei(GLenum(parameter), value));
   }
 
   /**
@@ -45,7 +48,7 @@ public:
    */
   static void ReadPixels(GLint x, GLint y, GLsizei width, GLsizei height,
                          PixelDataFormat format, PixelDataType type, void* data) {
-    gl(ReadPixels(x, y, width, height, format, type, data));
+    gl(ReadPixels(x, y, width, height, GLenum(format), GLenum(type), data));
   }
 
   /**
@@ -58,7 +61,7 @@ public:
                               GLint dstX0, GLint dstX1, GLint dstY0, GLint dstY1,
                               Bitfield<BufferSelectBit> mask, BlitFilter filter) {
     gl(BlitFramebuffer(
-      srcX0, srcX1, srcY0, srcY1, dstX0, dstX1, dstY0, dstY1, mask, filter
+      srcX0, srcX1, srcY0, srcY1, dstX0, dstX1, dstY0, dstY1, mask, GLenum(filter)
     ));
   }
 };

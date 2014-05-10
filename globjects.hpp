@@ -62,7 +62,7 @@ namespace globjects {
 
 #if !OGLWRAP_INITIALIZE_GL_OBJECTS_ON_FIRST_USE
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || \
+  #if OGLWRAP_DEFINE_EVERYTHING || \
       (defined(glCreateShader) && defined(glDeleteShader))
     template<ShaderType shader_t>
     class Shader : public glObject {
@@ -74,7 +74,7 @@ namespace globjects {
     };
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || \
+  #if OGLWRAP_DEFINE_EVERYTHING || \
       (defined(glCreateProgram) && defined(glDeleteProgram))
     class Program : public glObject {
     public:
@@ -85,7 +85,7 @@ namespace globjects {
     };
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || \
+  #if OGLWRAP_DEFINE_EVERYTHING || \
       (defined(glGenBuffers) && defined(glDeleteBuffers))
     class Buffer : public glObject {
       public:
@@ -96,7 +96,7 @@ namespace globjects {
     };
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || \
+  #if OGLWRAP_DEFINE_EVERYTHING || \
       (defined(glGenRenderbuffers) && defined(glDeleteRenderbuffers))
     class Renderbuffer : public glObject {
       public:
@@ -107,7 +107,7 @@ namespace globjects {
     };
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || \
+  #if OGLWRAP_DEFINE_EVERYTHING || \
       (defined(glGenFramebuffers) && defined(glDeleteFramebuffers))
     class Framebuffer : public glObject {
       public:
@@ -118,7 +118,7 @@ namespace globjects {
     };
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || \
+  #if OGLWRAP_DEFINE_EVERYTHING || \
       (defined(glGenTransformFeedbacks) && defined(glDeleteTransformFeedbacks))
     class TransformFeedback : public glObject {
       public:
@@ -129,7 +129,7 @@ namespace globjects {
     };
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || \
+  #if OGLWRAP_DEFINE_EVERYTHING || \
       (defined(glGenVertexArrays) && defined(glDeleteVertexArrays))
     class VertexArray : public glObject {
       public:
@@ -150,7 +150,7 @@ namespace globjects {
 
 #else // OGLWRAP_INITIALIZE_GL_OBJECTS_ON_FIRST_USE
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || \
+  #if OGLWRAP_DEFINE_EVERYTHING || \
       (defined(glCreateShader) && defined(glDeleteShader))
     template<ShaderType shader_t>
     class Shader : public glObject {
@@ -163,7 +163,7 @@ namespace globjects {
     };
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || \
+  #if OGLWRAP_DEFINE_EVERYTHING || \
       (defined(glCreateProgram) && defined(glDeleteProgram))
     class Program : public glObject {
       protected: void constructor() const override {
@@ -177,7 +177,7 @@ namespace globjects {
     };
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || \
+  #if OGLWRAP_DEFINE_EVERYTHING || \
     (defined(glGenBuffers) && defined(glDeleteBuffers))
     class Buffer : public glObject {
       protected: void constructor() const override {
@@ -191,7 +191,7 @@ namespace globjects {
     };
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || \
+  #if OGLWRAP_DEFINE_EVERYTHING || \
     (defined(glGenRenderbuffers) && defined(glDeleteRenderbuffers))
     class Renderbuffer : public glObject {
       protected: void constructor() const override {
@@ -205,7 +205,7 @@ namespace globjects {
     };
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || \
+  #if OGLWRAP_DEFINE_EVERYTHING || \
     (defined(glGenFramebuffers) && defined(glDeleteFramebuffers))
     class Framebuffer : public glObject {
       protected: void constructor() const override {
@@ -219,7 +219,7 @@ namespace globjects {
     };
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || \
+  #if OGLWRAP_DEFINE_EVERYTHING || \
     (defined(glGenTransformFeedbacks) && defined(glDeleteTransformFeedbacks))
     class TransformFeedback : public glObject {
       protected: void constructor() const override {
@@ -233,7 +233,7 @@ namespace globjects {
     };
   #endif
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || \
+  #if OGLWRAP_DEFINE_EVERYTHING || \
     (defined(glGenVertexArrays) && defined(glDeleteVertexArrays))
     class VertexArray : public glObject {
       protected: void constructor() const override {

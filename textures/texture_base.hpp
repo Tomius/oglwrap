@@ -16,6 +16,19 @@
 #include "../debug/binding.hpp"
 #include "../enums.hpp"
 #include "../buffer.hpp"
+
+#include "../enums/wrap_mode.hpp"
+#include "../enums/min_filter.hpp"
+#include "../enums/mag_filter.hpp"
+#include "../enums/swizzle_mode.hpp"
+#include "../enums/compare_mode.hpp"
+#include "../enums/compare_func.hpp"
+#include "../enums/texture_type.hpp"
+#include "../enums/texture_binding.hpp"
+#include "../enums/pixel_data_type.hpp"
+#include "../enums/pixel_data_format.hpp"
+#include "../enums/pixel_data_internal_format.hpp"
+
 #include "../glm/glm/glm.hpp"
 #include "../glm/glm/gtc/type_ptr.hpp"
 
@@ -25,7 +38,7 @@ namespace oglwrap {
 
 // -------======{[ TextureBase declaration ]}======-------
 
-template <TexType texture_t>
+template <TextureType texture_t>
 /// This class is implementing the base functions for textures.
 /** You shouldn't use this class directly.
   * glGenTextures, glDeleteTextures */
@@ -33,32 +46,22 @@ class TextureBase {
 protected:
   globjects::Texture texture; ///< The handle for the texture.
 public:
-  /// Generates an empty texture.
-  TextureBase() {}
-
-  template <TexType another_texture_t>
-  /// Creates a copy of the texture, or casts it to another type.
-  /** Important: if you use this to change the type of the active texture,
-    * don't forget to unbind the old one, and bind the new one */
-  TextureBase(const TextureBase<another_texture_t>& srctexture)
-    : texture(srctexture.expose()) {
-  }
 
   /// Binds the texture to this texture class's target.
   /** @see glBindTexture */
   void bind() const {
-    gl(BindTexture(texture_t, texture));
+    gl(BindTexture(GLenum(texture_t), texture));
   }
 
   /// Unbinds the texture from this texture class's target.
   /** @see glBindTexture */
   static void Unbind() {
-    gl(BindTexture(texture_t, 0));
+    gl(BindTexture(GLenum(texture_t), 0));
   }
   /// Unbinds the texture from this texture class's target.
   /** @see glBindTexture */
   BIND_CHECKED void unbind() const {
-    CHECK_BINDING2();
+    OGLWRAP_CHECK_BINDING2();
     Unbind();
   }
 
@@ -66,7 +69,7 @@ public:
   /** @see glGetIntegerv */
   bool isBound() const {
     GLint currentlyBoundTexture;
-    gl(GetIntegerv(GetBindingTarget(texture_t), &currentlyBoundTexture));
+    gl(GetIntegerv(GLenum(GetBindingTarget(texture_t)), &currentlyBoundTexture));
     return texture == GLuint(currentlyBoundTexture);
   }
 
@@ -83,16 +86,16 @@ public:
     Active(texUnit);
   }
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glGenerateMipmap)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glGenerateMipmap)
   /// Generates mipmaps for the currently uploaded image to this texture class.
   /** @see glGenerateMipmap */
   static void GenerateMipmap() {
-    gl(GenerateMipmap(texture_t));
+    gl(GenerateMipmap(GLenum(texture_t)));
   }
   /// Generates mipmaps for the currently uploaded image to this texture class.
   /** @see glGenerateMipmap */
   BIND_CHECKED void generateMipmap() const {
-    CHECK_BINDING();
+    OGLWRAP_CHECK_BINDING();
     GenerateMipmap();
   }
 #endif
@@ -101,13 +104,15 @@ public:
   /** @param color - Specifies the value, the border color should be set to.
     * @see glTexParameterfv, GL_TEXTURE_BORDER_COLOR */
   static void BorderColor(glm::vec4 color) {
-    gl(TexParameterfv(texture_t, GL_TEXTURE_BORDER_COLOR, glm::value_ptr(color)));
+    gl(TexParameterfv(
+      GLenum(texture_t), GL_TEXTURE_BORDER_COLOR, glm::value_ptr(color)
+    ));
   }
   /// Sets the border color for this texture class.
   /** @param color - Specifies the value, the border color should be set to.
     * @see glTexParameterfv, GL_TEXTURE_BORDER_COLOR */
   BIND_CHECKED void borderColor(glm::vec4 color) const {
-    CHECK_BINDING();
+    OGLWRAP_CHECK_BINDING();
     BorderColor(color);
   }
 
@@ -115,13 +120,13 @@ public:
   /** @param filtermode - The desired minification filter mode.
     * @see glTexParameteri, GL_TEXTURE_MIN_FILTER */
   static void MinFilter(enums::MinFilter filtermode) {
-    gl(TexParameteri(texture_t, GL_TEXTURE_MIN_FILTER, filtermode));
+    gl(TexParameteri(GLenum(texture_t), GL_TEXTURE_MIN_FILTER, GLenum(filtermode)));
   }
   /// Sets the minification filter for this texture class.
   /** @param filtermode - The desired minification filter mode.
     * @see glTexParameteri, GL_TEXTURE_MIN_FILTER */
   BIND_CHECKED void minFilter(enums::MinFilter filtermode) const {
-    CHECK_BINDING();
+    OGLWRAP_CHECK_BINDING();
     MinFilter(filtermode);
   }
 
@@ -129,126 +134,129 @@ public:
   /** @param filtermode - The desired magnification filter mode.
     * @see glTexParameteri, GL_TEXTURE_MAG_FILTER */
   static void MagFilter(enums::MagFilter filtermode) {
-    gl(TexParameteri(texture_t, GL_TEXTURE_MAG_FILTER, filtermode));
+    gl(TexParameteri(GLenum(texture_t), GL_TEXTURE_MAG_FILTER, GLenum(filtermode)));
   }
   /// Sets the magnification filter for this texture class.
   /** @param filtermode - The desired magnification filter mode.
     * @see glTexParameteri, GL_TEXTURE_MAG_FILTER */
   BIND_CHECKED void magFilter(enums::MagFilter filtermode) const {
-    CHECK_BINDING();
+    OGLWRAP_CHECK_BINDING();
     MagFilter(filtermode);
   }
 
   /// Sets the way, OpenGL should handle if the texture coordinate's 's' (first) part is out of the [0, 1] range for this texture class.
   /** @param wrapmode - The desired wrapping mode.
     * @see glTexParameteri, GL_TEXTURE_WRAP_S */
-  static void WrapS(Wrap wrapmode) {
-    gl(TexParameteri(texture_t, GL_TEXTURE_WRAP_S, wrapmode));
+  static void WrapS(WrapMode wrapmode) {
+    gl(TexParameteri(GLenum(texture_t), GL_TEXTURE_WRAP_S, GLenum(wrapmode)));
   }
   /// Sets the way, OpenGL should handle if the texture coordinate's 's' (first) part is out of the [0, 1] range for this texture class.
   /** @param wrapmode - The desired wrapping mode.
     * @see glTexParameteri, GL_TEXTURE_WRAP_S */
-  BIND_CHECKED void wrapS(Wrap wrapmode) const {
-    CHECK_BINDING();
+  BIND_CHECKED void wrapS(WrapMode wrapmode) const {
+    OGLWRAP_CHECK_BINDING();
     WrapS(wrapmode);
   }
 
   /// Sets the way, OpenGL should handle if the texture coordinate's 't' (second) part is out of the [0, 1] range for this texture class.
   /** @param wrapmode - The desired wrapping mode.
     * @see glTexParameteri, GL_TEXTURE_WRAP_T */
-  static void WrapT(Wrap wrapmode) {
-    gl(TexParameteri(texture_t, GL_TEXTURE_WRAP_T, wrapmode));
+  static void WrapT(WrapMode wrapmode) {
+    gl(TexParameteri(GLenum(texture_t), GL_TEXTURE_WRAP_T, GLenum(wrapmode)));
   }
   /// Sets the way, OpenGL should handle if the texture coordinate's 't' (second) part is out of the [0, 1] range for this texture class.
   /** @param wrapmode - The desired wrapping mode.
     * @see glTexParameteri, GL_TEXTURE_WRAP_T */
-  BIND_CHECKED void wrapT(Wrap wrapmode) const {
-    CHECK_BINDING();
+  BIND_CHECKED void wrapT(WrapMode wrapmode) const {
+    OGLWRAP_CHECK_BINDING();
     WrapT(wrapmode);
   }
 
   /// Sets the way, OpenGL should handle if the texture coordinate's 'p' (third) part is out of the [0, 1] range for this texture class.
   /** @param wrapmode - The desired wrapping mode.
     * @see glTexParameteri, GL_TEXTURE_WRAP_R */
-  static void WrapR(Wrap wrapmode) {
-    gl(TexParameteri(texture_t, GL_TEXTURE_WRAP_R, wrapmode));
+  static void WrapP(WrapMode wrapmode) {
+    gl(TexParameteri(GLenum(texture_t), GL_TEXTURE_WRAP_R, GLenum(wrapmode)));
   }
   /// Sets the way, OpenGL should handle if the texture coordinate's 'p' (third) part is out of the [0, 1] range for this texture class.
   /** @param wrapmode - The desired wrapping mode.
     * @see glTexParameteri, GL_TEXTURE_WRAP_R */
-  BIND_CHECKED void wrapR(Wrap wrapmode) const {
-    CHECK_BINDING();
-    WrapR(wrapmode);
+  BIND_CHECKED void wrapP(WrapMode wrapmode) const {
+    OGLWRAP_CHECK_BINDING();
+    WrapP(wrapmode);
   }
 
   /// Sets what OpenGL should do if you write texture.r for a texture of this class in a shader.
   /** @param swizzleMode - The desired swizzle mode.
     * @see glTexParameteri, GL_TEXTURE_SWIZZLE_R */
-  static void SwizzleR(Swizzle swizzleMode) {
-    gl(TexParameteri(texture_t, GL_TEXTURE_SWIZZLE_R, swizzleMode));
+  static void SwizzleR(SwizzleMode swizzleMode) {
+    gl(TexParameteri(GLenum(texture_t), GL_TEXTURE_SWIZZLE_R, GLenum(swizzleMode)));
   }
   /// Sets what OpenGL should do if you write texture.r for a texture of this class in a shader.
   /** @param swizzleMode - The desired swizzle mode.
     * @see glTexParameteri, GL_TEXTURE_SWIZZLE_R */
-  BIND_CHECKED void swizzleR(Swizzle swizzleMode) const {
-    CHECK_BINDING();
+  BIND_CHECKED void swizzleR(SwizzleMode swizzleMode) const {
+    OGLWRAP_CHECK_BINDING();
     SwizzleR(swizzleMode);
   }
 
   /// Sets what OpenGL should do if you write texture.g for a texture of this class in a shader.
   /** @param swizzleMode - The desired swizzle mode.
     * @see glTexParameteri, GL_TEXTURE_SWIZZLE_G */
-  static void SwizzleG(Swizzle swizzleMode) {
-    gl(TexParameteri(texture_t, GL_TEXTURE_SWIZZLE_G, swizzleMode));
+  static void SwizzleG(SwizzleMode swizzleMode) {
+    gl(TexParameteri(GLenum(texture_t), GL_TEXTURE_SWIZZLE_G, GLenum(swizzleMode)));
   }
   /// Sets what OpenGL should do if you write texture.g for a texture of this class in a shader.
   /** @param swizzleMode - The desired swizzle mode.
     * @see glTexParameteri, GL_TEXTURE_SWIZZLE_G */
-  BIND_CHECKED void swizzleG(Swizzle swizzleMode) const {
-    CHECK_BINDING();
+  BIND_CHECKED void swizzleG(SwizzleMode swizzleMode) const {
+    OGLWRAP_CHECK_BINDING();
     SwizzleG(swizzleMode);
   }
 
   /// Sets what OpenGL should do if you write texture.b for a texture of this class in a shader.
   /** @param swizzleMode - The desired swizzle mode.
     * @see glTexParameteri, GL_TEXTURE_SWIZZLE_B */
-  static void SwizzleB(Swizzle swizzleMode) {
-    gl(TexParameteri(texture_t, GL_TEXTURE_SWIZZLE_B, swizzleMode));
+  static void SwizzleB(SwizzleMode swizzleMode) {
+    gl(TexParameteri(GLenum(texture_t), GL_TEXTURE_SWIZZLE_B, GLenum(swizzleMode)));
   }
   /// Sets what OpenGL should do if you write texture.b for a texture of this class in a shader.
   /** @param swizzleMode - The desired swizzle mode.
     * @see glTexParameteri, GL_TEXTURE_SWIZZLE_B */
-  BIND_CHECKED void swizzleB(Swizzle swizzleMode) const {
-    CHECK_BINDING();
+  BIND_CHECKED void swizzleB(SwizzleMode swizzleMode) const {
+    OGLWRAP_CHECK_BINDING();
     SwizzleB(swizzleMode);
   }
 
   /// Sets what OpenGL should do if you write texture.a for a texture of this class in a shader.
   /** @param swizzleMode - The desired swizzle mode.
     * @see glTexParameteri, GL_TEXTURE_SWIZZLE_A */
-  static void SwizzleA(Swizzle swizzleMode) {
-    gl(TexParameteri(texture_t, GL_TEXTURE_SWIZZLE_A, swizzleMode));
+  static void SwizzleA(SwizzleMode swizzleMode) {
+    gl(TexParameteri(GLenum(texture_t), GL_TEXTURE_SWIZZLE_A, GLenum(swizzleMode)));
   }
   /// Sets what OpenGL should do if you write texture.a for a texture of this class in a shader.
   /** @param swizzleMode - The desired swizzle mode.
     * @see glTexParameteri, GL_TEXTURE_SWIZZLE_A */
-  BIND_CHECKED void swizzleA(Swizzle swizzleMode) const {
-    CHECK_BINDING();
+  BIND_CHECKED void swizzleA(SwizzleMode swizzleMode) const {
+    OGLWRAP_CHECK_BINDING();
     SwizzleA(swizzleMode);
   }
 
   /// Sets what OpenGL should do if you use the swizzle operator to select either of the 4 components from a texture of this class in a shader.
   /** @param swizzleMode - The desired swizzle mode.
     * @see glTexParameteriv, GL_TEXTURE_SWIZZLE_RGBA */
-  static void SwizzleRGBA(Swizzle swizzleMode) {
-    const GLint swizzle_array[4] = {swizzleMode, swizzleMode, swizzleMode, swizzleMode};
-    gl(TexParameteriv(texture_t, GL_TEXTURE_SWIZZLE_RGBA, swizzle_array));
+  static void SwizzleRGBA(SwizzleMode swizzleMode) {
+    const GLint swizzle_array[4] = {
+      GLint(swizzleMode), GLint(swizzleMode),
+      GLint(swizzleMode), GLint(swizzleMode)
+    };
+    gl(TexParameteriv(GLenum(texture_t), GL_TEXTURE_SWIZZLE_RGBA, swizzle_array));
   }
   /// Sets what OpenGL should do if you use the swizzle operator to select either of the 4 components from a texture of this class in a shader.
   /** @param swizzleMode - The desired swizzle mode.
     * @see glTexParameteriv, GL_TEXTURE_SWIZZLE_RGBA */
-  BIND_CHECKED void swizzleRGBA(Swizzle swizzleMode) const {
-    CHECK_BINDING();
+  BIND_CHECKED void swizzleRGBA(SwizzleMode swizzleMode) const {
+    OGLWRAP_CHECK_BINDING();
     SwizzleRGBA(swizzleMode);
   }
 
@@ -257,8 +265,8 @@ public:
     * @param value - The desired anisotropy value.
     * @see glTexParameterf, GL_TEXTURE_MAX_ANISOTROPY_EXT */
   static void Anisotropy(float value) {
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_MAX_ANISOTROPY_EXT)
-    gl(TexParameterf(texture_t, GL_TEXTURE_MAX_ANISOTROPY_EXT, value));
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_MAX_ANISOTROPY_EXT)
+    gl(TexParameterf(GLenum(texture_t), GL_TEXTURE_MAX_ANISOTROPY_EXT, value));
 #endif
   }
   /// Sets the anisotropy extension to a desired value.
@@ -266,7 +274,7 @@ public:
     * @param value - The desired anisotropy value.
     * @see glTexParameterf, GL_TEXTURE_MAX_ANISOTROPY_EXT */
   BIND_CHECKED void anisotropy(float value) const {
-    CHECK_BINDING();
+    OGLWRAP_CHECK_BINDING();
     Anisotropy(value);
   }
 
@@ -274,34 +282,36 @@ public:
   /** It doesn't do anything if anisotropy is not supported
     * @see glGetFloatv, glTexParameterf, GL_TEXTURE_MAX_ANISOTROPY_EXT */
   static void MaxAnisotropy() {
-#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_TEXTURE_MAX_ANISOTROPY_EXT)
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_MAX_ANISOTROPY_EXT)
     GLfloat maxAniso = 0.0f;
     gl(GetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAniso));
-    gl(TexParameterf(texture_t, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAniso));
+    gl(TexParameterf(GLenum(texture_t), GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAniso));
 #endif // GL_TEXTURE_MAX_ANISOTROPY_EXT
   }
   /// Sets the anisotropy extension to the maximum value possible on this hardware.
   /** It doesn't do anything if anisotropy is not supported
     * @see glGetFloatv, glTexParameterf, GL_TEXTURE_MAX_ANISOTROPY_EXT */
   BIND_CHECKED void maxAnisotropy() const {
-    CHECK_BINDING();
+    OGLWRAP_CHECK_BINDING();
     MaxAnisotropy();
   }
 
-#if !OGLWRAP_CHECK_DEPENDENCIES || (defined(glGenBuffers) && defined(glDeleteBuffers) && defined(GL_TEXTURE_BUFFER))
+#if OGLWRAP_DEFINE_EVERYTHING || (defined(glGenBuffers) && defined(glDeleteBuffers) && defined(GL_TEXTURE_BUFFER))
   /// Assigns a buffer storing the texel data to the texture.
   /** @param internalFormat - Specifies the internal format of the data in the store belonging to buffer. It must be a sized, uncompressed internal format.
     * @param buffer - Specifies the name of the buffer object whose storage to attach to the active buffer texture.
     * @see glTexBuffer */
-  static void Buffer(PixelDataInternalFormat internalFormat, const TextureBuffer& buffer) {
-    gl(TexBuffer(texture_t, internalFormat, buffer.expose()));
+  static void Buffer(PixelDataInternalFormat internalFormat,
+                     const TextureBuffer& buffer) {
+    gl(TexBuffer(GLenum(texture_t), GLenum(internalFormat), buffer.expose()));
   }
   /// Assigns a buffer storing the texel data to the texture.
   /** @param internalFormat - Specifies the internal format of the data in the store belonging to buffer. It must be a sized, uncompressed internal format.
     * @param buffer - Specifies the name of the buffer object whose storage to attach to the active buffer texture.
     * @see glTexBuffer */
-  BIND_CHECKED void buffer(PixelDataInternalFormat internalFormat, const TextureBuffer& buffer) const {
-    CHECK_BINDING();
+  BIND_CHECKED void buffer(PixelDataInternalFormat internalFormat,
+                           const TextureBuffer& buffer) const {
+    OGLWRAP_CHECK_BINDING();
     Buffer(internalFormat, buffer);
   }
 #endif
@@ -309,28 +319,28 @@ public:
   /// Sets the compare mode.
   /** @param mode - The desired compare mode.
     * @see glTexParameteri, GL_TEXTURE_COMPARE_MODE */
-  static void CompareMode(CompMode mode) {
-    gl(TexParameteri(texture_t, GL_TEXTURE_COMPARE_MODE, mode));
+  static void CompareMode(enums::CompareMode mode) {
+    gl(TexParameteri(GLenum(texture_t), GL_TEXTURE_COMPARE_MODE, GLenum(mode)));
   }
   /// Sets the compare mode.
   /** @param mode - The desired compare mode.
     * @see glTexParameteri, GL_TEXTURE_COMPARE_MODE */
-  BIND_CHECKED void compareMode(CompMode mode) const {
-    CHECK_BINDING();
+  BIND_CHECKED void compareMode(enums::CompareMode mode) const {
+    OGLWRAP_CHECK_BINDING();
     CompareMode(mode);
   }
 
   /// Sets the compare function.
   /** @param func - The desired compare function.
     * @see glTexParameteri, GL_TEXTURE_COMPARE_FUNC */
-  static void CompareFunc(CompFunc func) {
-    gl(TexParameteri(texture_t, GL_TEXTURE_COMPARE_FUNC, func));
+  static void CompareFunc(enums::CompareFunc func) {
+    gl(TexParameteri(GLenum(texture_t), GL_TEXTURE_COMPARE_FUNC, GLenum(func)));
   }
   /// Sets the compare function.
   /** @param func - The desired compare function.
     * @see glTexParameteri, GL_TEXTURE_COMPARE_FUNC */
-  BIND_CHECKED void compareFunc(CompFunc func) const {
-    CHECK_BINDING();
+  BIND_CHECKED void compareFunc(enums::CompareFunc func) const {
+    OGLWRAP_CHECK_BINDING();
     CompareFunc(func);
   }
 

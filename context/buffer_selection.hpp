@@ -22,7 +22,7 @@ public:
 		gl(DrawBuffer(buffer));
 	}
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_DRAW_BUFFER)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DRAW_BUFFER)
 	/// Returns the destination color buffer for draw operations.
 	/** @see glGetIntegerv, GL_DRAW_BUFFER */
 	static ColorBuffer DrawBuffer() {
@@ -32,7 +32,7 @@ public:
 	}
 	#endif
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(glDrawBuffers)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawBuffers)
 	/// Sets the destination color buffer for draw operations.
 	/** @see glDrawBuffers */
 	static void DrawBuffers(std::vector<ColorBuffer> buffers) {
@@ -40,7 +40,7 @@ public:
 	}
 	#endif
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_DRAW_BUFFER)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DRAW_BUFFER)
 	/// Returns the destination color buffer of the specified index for draw operations.
 	/** @see glGetIntegerv, GL_DRAW_BUFFER */
 	static ColorBuffer DrawBuffers(int idx) {
@@ -56,7 +56,7 @@ public:
 		gl(ReadBuffer(buffer));
 	}
 
-	#if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_READ_BUFFER)
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_READ_BUFFER)
 	/// Returns the source color buffer for draw operations.
 	/** @see glGetIntegerv, GL_DRAW_BUFFER */
 	static ColorBuffer ReadBuffer() {

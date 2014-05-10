@@ -58,7 +58,7 @@ class LogicalOps {
     gl(LogicOp(op));
   }
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(GL_COLOR_LOGIC_OP)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_LOGIC_OP)
   /**
    * @brief Returns the color logical operation.
    * @see <a href="https://www.opengl.org/wiki/GLAPI/glGet">

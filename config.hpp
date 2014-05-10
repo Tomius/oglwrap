@@ -39,13 +39,13 @@
  *
  * By default, it's only turned on, if a GL header is included.
  */
-#ifndef OGLWRAP_CHECK_DEPENDENCIES
-  #if OGLWRAP_OPENGL_INCLUDED // If an OpenGL header is loaded.
-    #define OGLWRAP_CHECK_DEPENDENCIES 1
+#ifndef OGLWRAP_DEFINE_EVERYTHING
+  #if OGLWRAP_OPENGL_INCLUDED
+    #define OGLWRAP_DEFINE_EVERYTHING 0
   #else
-    // else all #if defined(gl*) would evaluate as false,
+    // All #if defined(gl*) would evaluate as false,
     // so better just disable dependency check
-    #define OGLWRAP_CHECK_DEPENDENCIES 0
+    #define OGLWRAP_DEFINE_EVERYTHING 1
   #endif
 #endif
 

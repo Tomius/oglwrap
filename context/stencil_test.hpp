@@ -85,7 +85,7 @@ public:
     gl(StencilFunc(func, ref, mask));
   }
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glStencilFuncSeparate)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glStencilFuncSeparate)
   /**
    * @brief set front and back function and reference value for stencil testing
    *
@@ -229,7 +229,7 @@ public:
     gl(StencilOp(sfail, dfail, dpass));
   }
 
-  #if !OGLWRAP_CHECK_DEPENDENCIES || defined(glStencilOpSeparate)
+  #if OGLWRAP_DEFINE_EVERYTHING || defined(glStencilOpSeparate)
   /**
    * @brief Set front and back stencil test actions.
    *
