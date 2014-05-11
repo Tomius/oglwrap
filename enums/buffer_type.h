@@ -1,0 +1,56 @@
+#ifndef OGLWRAP_ENUMS_BUFFER_TYPE_H_
+#define OGLWRAP_ENUMS_BUFFER_TYPE_H_
+
+#include "../config.h"
+
+namespace oglwrap {
+
+inline namespace enums {
+
+enum class BufferType : GLenum {
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ARRAY_BUFFER)
+  Array = GL_ARRAY_BUFFER,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ATOMIC_COUNTER_BUFFER)
+  AtomicCounter = GL_ATOMIC_COUNTER_BUFFER,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COPY_READ_BUFFER)
+  CopyRead = GL_COPY_READ_BUFFER,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COPY_WRITE_BUFFER)
+  CopyWrite = GL_COPY_WRITE_BUFFER,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DISPATCH_INDIRECT_BUFFER)
+  DispatchIndirect = GL_DISPATCH_INDIRECT_BUFFER,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DRAW_INDIRECT_BUFFER)
+  DrawIndirect = GL_DRAW_INDIRECT_BUFFER,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ELEMENT_ARRAY_BUFFER)
+  ElementArray = GL_ELEMENT_ARRAY_BUFFER,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PIXEL_PACK_BUFFER)
+  PixelPack = GL_PIXEL_PACK_BUFFER,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PIXEL_UNPACK_BUFFER)
+  PixelUnpack = GL_PIXEL_UNPACK_BUFFER,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SHADER_STORAGE_BUFFER)
+  ShaderStorage = GL_SHADER_STORAGE_BUFFER,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_BUFFER)
+  Texture = GL_TEXTURE_BUFFER,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRANSFORM_FEEDBACK_BUFFER)
+  TransformFeedback = GL_TRANSFORM_FEEDBACK_BUFFER,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNIFORM_BUFFER)
+  Uniform = GL_UNIFORM_BUFFER,
+#endif
+};
+
+} // enums
+
+} // oglwrap
+
+#endif

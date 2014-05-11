@@ -1,0 +1,89 @@
+#ifndef OGLWRAP_ENUMS_PIXEL_DATA_TYPE_H_
+#define OGLWRAP_ENUMS_PIXEL_DATA_TYPE_H_
+
+#include "../config.h"
+
+namespace oglwrap {
+
+inline namespace enums {
+
+enum class PixelDataType : GLenum {
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_BYTE)
+  UnsignedByte = GL_UNSIGNED_BYTE,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_BYTE)
+  Byte = GL_BYTE,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_SHORT)
+  UnsignedShort = GL_UNSIGNED_SHORT,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SHORT)
+  Short = GL_SHORT,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_INT)
+  UnsignedInt = GL_UNSIGNED_INT,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_INT)
+  Int = GL_INT,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_HALF_FLOAT)
+  HalfFloat = GL_HALF_FLOAT,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FLOAT)
+  Float = GL_FLOAT,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_BYTE_3_3_2)
+  UnsignedByte_3_3_2 = GL_UNSIGNED_BYTE_3_3_2,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_BYTE_2_3_3_REV)
+  UnsignedByte_2_3_3_Rev = GL_UNSIGNED_BYTE_2_3_3_REV,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_SHORT_5_6_5)
+  UnsignedShort_5_6_5 = GL_UNSIGNED_SHORT_5_6_5,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_SHORT_5_6_5_REV)
+  UnsignedShort_5_6_5_Rev = GL_UNSIGNED_SHORT_5_6_5_REV,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_SHORT_4_4_4_4)
+  UnsignedShort_4_4_4_4 = GL_UNSIGNED_SHORT_4_4_4_4,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_SHORT_4_4_4_4_REV)
+  UnsignedShort_4_4_4_4_Rev = GL_UNSIGNED_SHORT_4_4_4_4_REV,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_SHORT_5_5_5_1)
+  UnsignedShort_5_5_5_1 = GL_UNSIGNED_SHORT_5_5_5_1,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_SHORT_1_5_5_5_REV)
+  UnsignedShort_1_5_5_5_Rev = GL_UNSIGNED_SHORT_1_5_5_5_REV,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_INT_8_8_8_8)
+  UnsignedInt_8_8_8_8 = GL_UNSIGNED_INT_8_8_8_8,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_INT_8_8_8_8_REV)
+  UnsignedInt_8_8_8_8_Rev = GL_UNSIGNED_INT_8_8_8_8_REV,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_INT_10_10_10_2)
+  UnsignedInt_10_10_10_2 = GL_UNSIGNED_INT_10_10_10_2,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_INT_2_10_10_10_REV)
+  UnsignedInt_2_10_10_10_Rev = GL_UNSIGNED_INT_2_10_10_10_REV,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_INT_24_8)
+  UnsignedInt_24_8 = GL_UNSIGNED_INT_24_8,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_INT_10F_11F_11F_REV)
+  UnsignedInt_10f_11f_11f_Rev = GL_UNSIGNED_INT_10F_11F_11F_REV,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_INT_5_9_9_9_REV)
+  UnsignedInt_5_9_9_9_Rev = GL_UNSIGNED_INT_5_9_9_9_REV,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FLOAT_32_UNSIGNED_INT_24_8_REV)
+  Float_32UnsignedInt_24_8_Rev = GL_FLOAT_32_UNSIGNED_INT_24_8_REV,
+#endif
+};
+
+} // enums
+
+} // oglwrap
+
+#endif
