@@ -1,4 +1,4 @@
-/** @file buffer.hpp
+/** @file buffer.h
     @brief Implements wrappers around OpenGL Buffer glObject.
 */
 

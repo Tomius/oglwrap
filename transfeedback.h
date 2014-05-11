@@ -1,4 +1,4 @@
-/** @file transfeedback.hpp
+/** @file transfeedback.h
     @brief Implements transform feedback functionality.
 */
 

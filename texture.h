@@ -1,4 +1,4 @@
-/** @file texture.hpp
+/** @file texture.h
     @brief The main header for textures, including the texture related headers of the library.
 */
 

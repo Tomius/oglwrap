@@ -1,4 +1,4 @@
-/** @file globjects.hpp
+/** @file globjects.h
     @brief Implements wrappers for OpenGL objects
 */
 

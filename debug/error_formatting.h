@@ -1,4 +1,4 @@
-/** @file error.hpp
+/** @file error.h
     @brief Contains error message formatter utilites
 */
 

@@ -1,4 +1,4 @@
-/** @file rasterization.hpp
+/** @file rasterization.h
     @brief Implements OpenGL rasterization related stuff.
 */
 

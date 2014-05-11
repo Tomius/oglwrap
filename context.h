@@ -1,4 +1,4 @@
-/** @file context.hpp
+/** @file context.h
     @brief Implements OpenGL context related stuff.
 */
 

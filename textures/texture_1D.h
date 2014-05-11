@@ -1,4 +1,4 @@
-/** @file texture_1D.hpp
+/** @file texture_1D.h
     @brief Implements one-dimensional textures.
 */
 

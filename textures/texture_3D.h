@@ -1,4 +1,4 @@
-/** @file texture_3D.hpp
+/** @file texture_3D.h
     @brief Implements three-dimensional textures.
 */
 

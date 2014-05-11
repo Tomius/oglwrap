@@ -1,4 +1,4 @@
-/** @file undefine_internal_macros.hpp
+/** @file undefine_internal_macros.h
     @brief Undefines oglwrap's internal macros
 */
 

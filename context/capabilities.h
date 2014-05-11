@@ -1,4 +1,4 @@
-/** @file capabilities.hpp
+/** @file capabilities.h
     @brief Implements OpenGL capabilities related stuff.
 */
 

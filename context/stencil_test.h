@@ -1,4 +1,4 @@
-/** @file stencil_test.hpp
+/** @file stencil_test.h
     @brief Implements OpenGL stencil test related stuff.
 */
 

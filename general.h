@@ -1,4 +1,4 @@
-/** @file general.hpp
+/** @file general.h
     @brief Contains codes that are not related to OpenGL
 */
 

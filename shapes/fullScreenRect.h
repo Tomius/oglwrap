@@ -1,4 +1,4 @@
-/** @file fullScreenPic.hpp
+/** @file fullScreenPic.h
     @brief Implements a rectangle that covers the entire screen.
 */
 

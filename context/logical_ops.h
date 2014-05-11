@@ -1,4 +1,4 @@
-/** @file logical_ops.hpp
+/** @file logical_ops.h
     @brief Implements OpenGL logical operation related stuff.
 */
 

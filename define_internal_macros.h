@@ -1,4 +1,4 @@
-/** @file define_internal_macros.hpp
+/** @file define_internal_macros.h
     @brief Defines oglwrap's internal macros
 */
 

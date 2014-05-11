@@ -1,4 +1,4 @@
-/** @file texture_base.hpp
+/** @file texture_base.h
     @brief Implements the base functionality for textures.
 */
 

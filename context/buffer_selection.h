@@ -1,4 +1,4 @@
-/** @file buffer_selection.hpp
+/** @file buffer_selection.h
     @brief Implements OpenGL buffer selection related stuff.
 */
 

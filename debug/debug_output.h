@@ -1,4 +1,4 @@
-/** @file debug_output.hpp
+/** @file debug_output.h
     @brief Implements the oglwrap debug output.
 */
 

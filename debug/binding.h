@@ -1,4 +1,4 @@
-/** @file binding.hpp
+/** @file binding.h
     @brief Implements enums casts to help binding checks.
 */
 

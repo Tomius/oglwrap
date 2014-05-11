@@ -1,4 +1,4 @@
-/** @file framebuffer.hpp
+/** @file framebuffer.h
     @brief Implements a wrapper for Framebuffer objects
 */
 

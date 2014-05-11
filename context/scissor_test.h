@@ -1,4 +1,4 @@
-/** @file scissor_test.hpp
+/** @file scissor_test.h
     @brief Implements OpenGL scissor test related stuff.
 */
 

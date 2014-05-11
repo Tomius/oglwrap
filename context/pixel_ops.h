@@ -1,4 +1,4 @@
-/** @file pixel_ops.hpp
+/** @file pixel_ops.h
     @brief Implements OpenGL pixel operations related stuff.
 */
 

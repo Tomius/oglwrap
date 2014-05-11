@@ -1,4 +1,4 @@
-/** @file depth_test.hpp
+/** @file depth_test.h
     @brief Implements OpenGL depth test related stuff.
 */
 

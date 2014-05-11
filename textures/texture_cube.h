@@ -1,4 +1,4 @@
-/** @file texture_cube.hpp
+/** @file texture_cube.h
     @brief Implements two-dimensional cubeMap textures.
 */
 

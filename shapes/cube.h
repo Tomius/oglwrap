@@ -1,4 +1,4 @@
-/** @file cube.hpp
+/** @file cube.h
     @brief Implements a cube shape wrapper.
     Note: Several algorithms in this file were borrowed from oglplus.
     See https://github.com/matus-chochlik/oglplus

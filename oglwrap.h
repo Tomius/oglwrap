@@ -1,4 +1,4 @@
-/** @file oglwrap.hpp
+/** @file oglwrap.h
     @brief The main header, including the core files of the library.
     It doesn't include everything, just the main features.
 */

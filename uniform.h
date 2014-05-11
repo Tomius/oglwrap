@@ -1,4 +1,4 @@
-/** @file uniform.hpp
+/** @file uniform.h
     @brief Implements GLSL uniform uploaders.
 */
 

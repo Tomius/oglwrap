@@ -1,4 +1,4 @@
-/** @file config.hpp
+/** @file config.h
     @brief Contains macros to configure oglwrap.
 */
 

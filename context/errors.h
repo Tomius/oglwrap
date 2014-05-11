@@ -1,4 +1,4 @@
-/** @file errors.hpp
+/** @file errors.h
     @brief Implements OpenGL errors related stuff.
 */
 

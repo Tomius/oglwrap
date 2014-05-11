@@ -1,4 +1,4 @@
-/** @file shader.hpp
+/** @file shader.h
     @brief Implements GLSL shaders related classes.
 */
 

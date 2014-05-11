@@ -1,4 +1,4 @@
-/** @file computing.hpp
+/** @file computing.h
     @brief Implements OpenGL computing related stuff.
 */
 

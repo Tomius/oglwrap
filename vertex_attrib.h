@@ -1,4 +1,4 @@
-/** @file vertex_attrib.hpp
+/** @file vertex_attrib.h
     @brief Implements the VAO and the VertexAttributeArray.
 */
 

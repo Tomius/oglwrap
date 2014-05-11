@@ -1,4 +1,4 @@
-/** @file buffer_masking.hpp
+/** @file buffer_masking.h
     @brief Implements OpenGL buffer masking related stuff.
 */
 

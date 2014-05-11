@@ -1,4 +1,4 @@
-/** @file glew.hpp
+/** @file glew.h
     @brief #includes glew in a platform independent way.
 */
 

@@ -1,4 +1,4 @@
-/** @file enums.hpp
+/** @file enums.h
     @brief Contains enumeration wrappers for GLenums.
 */
 

@@ -1,4 +1,4 @@
-/** @file drawing.hpp
+/** @file drawing.h
     @brief Wrapper for primitive drawing operations.
 */
 

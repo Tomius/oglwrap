@@ -1,4 +1,4 @@
-/** @file extensions.hpp
+/** @file extensions.h
     @brief Implements OpenGL extensions related stuff.
 */
 

@@ -1,4 +1,4 @@
-/** @file buffer_clearing.hpp
+/** @file buffer_clearing.h
     @brief Implements OpenGL buffer clearing related stuff.
 */
 

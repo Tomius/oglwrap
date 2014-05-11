@@ -1,4 +1,4 @@
-/** @file viewport_ops.hpp
+/** @file viewport_ops.h
     @brief Implements OpenGL viewports related stuff.
 */
 
