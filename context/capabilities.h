@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file capabilities.h
     @brief Implements OpenGL capabilities related stuff.
 */
@@ -8,8 +10,8 @@
 #include "../glm/glm/glm.hpp"
 
 #include "../config.h"
-#include "../enums.h"
-#include "../debug/error.h"
+#include "../enums/capability.h"
+
 #include "../define_internal_macros.h"
 
 
@@ -21,42 +23,42 @@ public:
 	/// Enables a capability.
 	/** @see glEnable */
 	static void Enable(Capability capability) {
-		gl(Enable(capability));
+		gl(Enable(GLenum(capability)));
 	}
 
 	#if OGLWRAP_DEFINE_EVERYTHING || defined(glEnablei)
 	/// Enables a capability for an index target.
 	/** @see glEnablei */
 	static void Enable(Capability capability, GLuint index) {
-		gl(Enablei(capability, index));
+		gl(Enablei(GLenum(capability), index));
 	}
 	#endif
 
 	/// Disables a capability.
 	/** @see glDisable */
 	static void Disable(Capability capability) {
-		gl(Disable(capability));
+		gl(Disable(GLenum(capability)));
 	}
 
 	#if OGLWRAP_DEFINE_EVERYTHING || defined(glDisablei)
 	/// Disables a capability for an index target.
 	/** @see glDisablei */
 	static void Disable(Capability capability, GLuint index) {
-		gl(Disablei(capability, index));
+		gl(Disablei(GLenum(capability), index));
 	}
 	#endif
 
 	/// Checks if a capability is enabled.
 	/** @see glIsEnabled */
 	static bool IsEnabled(Capability capability) {
-		return gl(IsEnabled(capability));
+		return gl(IsEnabled(GLenum(capability)));
 	}
 
 	#if OGLWRAP_DEFINE_EVERYTHING || defined(glIsEnabledi)
 	/// Checks if a capability is enabled for an index target.
 	/** @see glIsEnabledi */
 	static bool IsEnabled(Capability capability, GLuint index) {
-		return gl(IsEnabledi(capability, index));
+		return gl(IsEnabledi(GLenum(capability), index));
 	}
 	#endif
 

@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 #ifndef OGLWRAP_ENUMS_BUFFER_MAP_ACCESSS_H_
 #define OGLWRAP_ENUMS_BUFFER_MAP_ACCESSS_H_
 

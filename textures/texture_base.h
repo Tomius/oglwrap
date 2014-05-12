@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file texture_base.h
     @brief Implements the base functionality for textures.
 */
@@ -10,12 +12,10 @@
 #endif
 
 #include "../config.h"
+#include "../buffer.h"
 #include "../general.h"
 #include "../globjects.h"
-#include "../debug/error.h"
 #include "../debug/binding.h"
-#include "../enums.h"
-#include "../buffer.h"
 
 #include "../enums/wrap_mode.h"
 #include "../enums/min_filter.h"

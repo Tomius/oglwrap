@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file binding.h
     @brief Implements enums casts to help binding checks.
 */
@@ -7,12 +9,10 @@
 
 #include <string>
 #include <iostream>
-#include "error.h"
-#include "../enums.h"
+
+#include "error_checking.h"
 
 namespace oglwrap {
-
-static std::string OGLWRAP_LAST_BIND_TARGET;
 
 #if OGLWRAP_BINDCHECK
 /// Calls the isBound() member function, and prints an error and calls bind() if it returns false.
@@ -58,7 +58,7 @@ static std::string OGLWRAP_LAST_BIND_TARGET;
 /** Only if OGLWRAP_BINDCHECK is defined true
   * @param bindTarget - The target to check. Expected to be an explicit OpenGL macro name. */
 #define OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(bindTarget) \
-  OGLWRAP_LAST_BIND_TARGET = #bindTarget; \
+  DebugOutput::LastUsedBindTarget() = #bindTarget; \
   GLint __currently_bound_target_for_##bindTarget; \
   glGetIntegerv(bindTarget, &__currently_bound_target_for_##bindTarget); \
   if (__currently_bound_target_for_##bindTarget == 0) \
@@ -72,8 +72,8 @@ inline void OGLWRAP_print_another_object_is_bound_error(const char *file,
     ErrorMessage {
       "BIND CHECK FAILURE",
       "The function is called through an object that is different "
-      "than the one, currently bound to " + OGLWRAP_LAST_BIND_TARGET + ".\n"
-      "Did you forget to call .bind() on the object? \n\n",
+      "than the one, currently bound to " + DebugOutput::LastUsedBindTarget() +
+      ".\nDid you forget to call .bind() on the object? \n\n",
       file, func, line
     }
   );
@@ -86,8 +86,9 @@ inline void OGLWRAP_print_default_object_is_bound_error(const char *file,
   DebugOutput::PrintError(
     ErrorMessage {
       "BIND CHECK FAILURE",
-      "The function requires an object to be bound to " + OGLWRAP_LAST_BIND_TARGET +
-      " but only the default object '0' is bound to that target.\n\n",
+      "The function requires an object to be bound to " +
+      DebugOutput::LastUsedBindTarget() + " but only the default object '0' is "
+      "bound to that target.\n\n",
       file, func, line
     }
   );
@@ -96,7 +97,7 @@ inline void OGLWRAP_print_default_object_is_bound_error(const char *file,
 /// Checks if the program is the currently active one, and if not, it returns prints out an error, and calls use on that program.
 /** @param program - The shader program to check if is active. */
 #define OGLWRAP_CHECK_ACTIVE_PROGRAM(program)                                           \
-  if (!program.isActive()) {                                                     \
+  if (!program.isActive()) {                                                    \
     OGLWRAP_print_another_program_is_active_error(                              \
       __FILE__, __PRETTY_FUNCTION__, __LINE__                                   \
     );                                                                          \

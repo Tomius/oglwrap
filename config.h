@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file config.h
     @brief Contains macros to configure oglwrap.
 */

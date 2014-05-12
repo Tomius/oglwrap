@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file texture.h
     @brief The main header for textures, including the texture related headers of the library.
 */

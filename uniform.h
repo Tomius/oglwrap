@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file uniform.h
     @brief Implements GLSL uniform uploaders.
 */
@@ -8,13 +10,12 @@
 #include <stdexcept>
 
 #include "config.h"
-#include "enums.h"
 #include "shader.h"
 
 #include "glm/glm/glm.hpp"
 #include "glm/glm/gtc/type_ptr.hpp"
 
-#include "define_internal_macros.h"
+#include "./define_internal_macros.h"
 
 namespace oglwrap {
 
@@ -125,7 +126,7 @@ public:
 
     #if OGLWRAP_DEBUG
       OGLWRAP_PRINT_IF_ERROR(
-        GL_INVALID_OPERATION,
+        ErrorType::InvalidOperation,
         "Error setting uniform value",
         "Uniform::set is called for uniform '" + identifier_ +
         "' but the uniform template parameter and the actual uniform "
@@ -154,7 +155,7 @@ public:
 
     #if OGLWRAP_DEBUG
       OGLWRAP_PRINT_IF_ERROR(
-        GL_INVALID_OPERATION,
+        ErrorType::InvalidOperation,
         "Error getting uniform value",
         "Uniform::get is called for uniform '" + identifier_ +
         "' but the uniform template parameter and the actual uniform "
@@ -227,7 +228,7 @@ public:
 
     #if OGLWRAP_DEBUG
       OGLWRAP_PRINT_IF_ERROR(
-        GL_INVALID_OPERATION,
+        ErrorType::InvalidOperation,
         "Error setting uniform value",
         "Uniform::get is called for uniform '" + identifier_ +
         "' but the uniform template parameter and the actual uniform "
@@ -256,7 +257,7 @@ public:
 
     #if OGLWRAP_DEBUG
       OGLWRAP_PRINT_IF_ERROR(
-        GL_INVALID_OPERATION,
+        ErrorType::InvalidOperation,
         "Error getting uniform value",
         "Uniform::get is called for uniform '" + identifier_ +
         "' but the uniform template parameter and the actual uniform "
@@ -339,7 +340,7 @@ public:
 
     #if OGLWRAP_DEBUG
       OGLWRAP_PRINT_IF_ERROR(
-        GL_INVALID_OPERATION,
+        ErrorType::InvalidOperation,
         "Error setting uniform location",
         "Uniform::set is called for uniform '" + identifier_ +
         "' but the uniform template parameter and the actual uniform "
@@ -392,7 +393,7 @@ public:
 
     #if OGLWRAP_DEBUG
       OGLWRAP_PRINT_IF_ERROR(
-        GL_INVALID_OPERATION,
+        ErrorType::InvalidOperation,
         "Error getting uniform location",
         "Uniform::get is called for uniform '" + identifier_ +
         "' but the uniform template parameter and the actual uniform "
@@ -774,6 +775,6 @@ inline glm::uvec4 UniformObject<glm::uvec4>::get() const {
 } // namespace oglwrap
 
 
-#include "undefine_internal_macros.h"
+#include "./undefine_internal_macros.h"
 
 #endif // OGLWRAP_UNIFORM_H_

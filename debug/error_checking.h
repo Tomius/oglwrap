@@ -1,19 +1,16 @@
-/** @file error.h
+// Copyright (c) 2014, Tamas Csala
+
+/** @file error_checking.h
     @brief Contains error handling macros
 */
 
-#ifndef OGLWRAP_DEBUG_ERROR_H_
-#define OGLWRAP_DEBUG_ERROR_H_
+#ifndef OGLWRAP_DEBUG_ERROR_CHECKING_H_
+#define OGLWRAP_DEBUG_ERROR_CHECKING_H_
 
 #include "debug_output.h"
 #include "../context/errors.h"
 
 namespace oglwrap {
-
-#if OGLWRAP_INSTATIATE
-  DebugOutput *DebugOutput::instance;
-  bool DebugOutput::inited;
-#endif
 
 #if OGLWRAP_DEBUG
 
@@ -32,7 +29,7 @@ namespace oglwrap {
  * condition equals with the last error catched by OGLWRAP_CHECK_ERROR()
  */
 #define OGLWRAP_PRINT_IF_ERROR(cond, title, message) \
-  if (OGLWRAP_LAST_ERROR == cond) { \
+  if (DebugOutput::LastError() == cond) { \
     DebugOutput::PrintError( \
       ErrorMessage{title, message, __FILE__, __PRETTY_FUNCTION__, __LINE__}  \
     ); \
@@ -74,14 +71,13 @@ inline void OGLWRAP_CheckError(const char *file,
                                const char *func,
                                int line,
                                const char* glfunc = nullptr) {
-  using namespace _GLError;
-  OGLWRAP_LAST_ERROR = context::Errors::GetError();
-  if (OGLWRAP_LAST_ERROR != NoError) {
+  DebugOutput::LastError() = context::Errors::GetError();
+  if (DebugOutput::LastError() != ErrorType::NoError) {
     std::string title;
 
-    #define OGLWRAP_CHECK_ENUM(X, Y) case X: title = Y; break;
+    #define OGLWRAP_CHECK_ENUM(X, Y) case ErrorType::X: title = Y; break;
 
-    switch(OGLWRAP_LAST_ERROR) {
+    switch (DebugOutput::LastError()) {
       OGLWRAP_CHECK_ENUM(InvalidEnum, "Invalid Enum")
       OGLWRAP_CHECK_ENUM(InvalidValue, "Invalid Value")
       OGLWRAP_CHECK_ENUM(InvalidOperation, "Invalid Operation")
@@ -112,5 +108,5 @@ inline void OGLWRAP_CheckError(const char *file,
 
 } // namespace oglwrap
 
-#endif // OGLWRAP_DEBUG_ERROR_H_
+#endif // OGLWRAP_DEBUG_ERROR_CHECKING_H_
 

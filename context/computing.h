@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file computing.h
     @brief Implements OpenGL computing related stuff.
 */
@@ -7,7 +9,6 @@
 
 #include "../config.h"
 #include "../enums.h"
-#include "../debug/error.h"
 #include "../define_internal_macros.h"
 
 

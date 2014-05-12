@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file texture_3D.h
     @brief Implements three-dimensional textures.
 */

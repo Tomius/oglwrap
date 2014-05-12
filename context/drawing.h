@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file drawing.h
     @brief Wrapper for primitive drawing operations.
 */
@@ -7,7 +9,6 @@
 
 #include "../config.h"
 #include "../enums.h"
-#include "../debug/error.h"
 #include "../enums/index_type.h"
 
 #include "../define_internal_macros.h"

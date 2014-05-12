@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file framebuffer.h
     @brief Implements a wrapper for Framebuffer objects
 */
@@ -17,7 +19,7 @@
 #include "enums/framebuffer_status.h"
 #include "enums/framebuffer_attachment.h"
 
-#include "define_internal_macros.h"
+#include "./define_internal_macros.h"
 
 namespace oglwrap {
 
@@ -61,7 +63,7 @@ public:
     gl(GetIntegerv(GL_RENDERBUFFER_BINDING, &currentlyBoundBuffer));
 
     #if OGLWRAP_DEBUG
-      OGLWRAP_LAST_BIND_TARGET = "GL_RENDERBUFFER_BINDING";
+      DebugOutput::LastUsedBindTarget() = "GL_RENDERBUFFER_BINDING";
     #endif
 
     return renderbuffer_ == GLuint(currentlyBoundBuffer);
@@ -189,7 +191,7 @@ public:
   static void Validate() {
     std::string errStr;
     GLenum status = gl(CheckFramebufferStatus(GLenum(FBO_TYPE)));
-    switch(FramebufferStatus(status)) {
+    switch (FramebufferStatus(status)) {
       case FramebufferStatus::Complete:
         return;
       case FramebufferStatus::Incomplete_Attachment:
@@ -420,7 +422,7 @@ typedef FramebufferObject<FramebufferType::Draw> Draw_Framebuffer;
 
 } // namespace oglwrap
 
-#include "undefine_internal_macros.h"
+#include "./undefine_internal_macros.h"
 
 #endif // OGLWRAP_FRAMEBUFFER_H_
 

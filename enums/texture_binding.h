@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 #ifndef OGLWRAP_ENUMS_TEXTURE_BINDING_H_
 #define OGLWRAP_ENUMS_TEXTURE_BINDING_H_
 
@@ -40,47 +42,47 @@ enum class TextureBinding : GLenum {
 inline TextureBinding GetBindingTarget(TextureType tex_t) {
   TextureBinding target;
 
-  switch(tex_t) {
+  switch (tex_t) {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_BINDING_1D)
     case TextureType::Tex1D:
       target = TextureBinding::Tex1D;
-      OGLWRAP_LAST_BIND_TARGET = "GL_TEXTURE_BINDING_1D";
+      DebugOutput::LastUsedBindTarget() = "GL_TEXTURE_BINDING_1D";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_BINDING_2D)
     case TextureType::Tex2D:
       target = TextureBinding::Tex2D;
-      OGLWRAP_LAST_BIND_TARGET = "GL_TEXTURE_BINDING_2D";
+      DebugOutput::LastUsedBindTarget() = "GL_TEXTURE_BINDING_2D";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_BINDING_3D)
     case TextureType::Tex3D:
       target = TextureBinding::Tex3D;
-      OGLWRAP_LAST_BIND_TARGET = "GL_TEXTURE_BINDING_3D";
+      DebugOutput::LastUsedBindTarget() = "GL_TEXTURE_BINDING_3D";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_BINDING_RECTANGLE)
     case TextureType::TexRect:
       target = TextureBinding::TexRect;
-      OGLWRAP_LAST_BIND_TARGET = "GL_TEXTURE_BINDING_RECTANGLE";
+      DebugOutput::LastUsedBindTarget() = "GL_TEXTURE_BINDING_RECTANGLE";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_BINDING_1D_ARRAY)
     case TextureType::Tex1DArray:
       target = TextureBinding::Tex1DArray;
-      OGLWRAP_LAST_BIND_TARGET = "GL_TEXTURE_BINDING_1D_ARRAY";
+      DebugOutput::LastUsedBindTarget() = "GL_TEXTURE_BINDING_1D_ARRAY";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_BINDING_2D_ARRAY)
     case TextureType::Tex2DArray:
       target = TextureBinding::Tex2DArray;
-      OGLWRAP_LAST_BIND_TARGET = "GL_TEXTURE_BINDING_2D_ARRAY";
+      DebugOutput::LastUsedBindTarget() = "GL_TEXTURE_BINDING_2D_ARRAY";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_BINDING_CUBE_MAP)
     case TextureType::TexCubeMap:
       target = TextureBinding::TexCubeMap;
-      OGLWRAP_LAST_BIND_TARGET = "GL_TEXTURE_BINDING_CUBE_MAP";
+      DebugOutput::LastUsedBindTarget() = "GL_TEXTURE_BINDING_CUBE_MAP";
       break;
 #endif
     default:

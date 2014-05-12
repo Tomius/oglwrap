@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file general.h
     @brief Contains codes that are not related to OpenGL
 */

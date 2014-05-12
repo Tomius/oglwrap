@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file buffer.h
     @brief Implements wrappers around OpenGL Buffer glObject.
 */
@@ -15,10 +17,9 @@
 
 #include "general.h"
 #include "globjects.h"
-#include "debug/error.h"
 #include "debug/binding.h"
 
-#include "define_internal_macros.h"
+#include "./define_internal_macros.h"
 
 namespace oglwrap {
 
@@ -410,6 +411,6 @@ typedef IndexedBufferObject<IndexedBufferType::TransformFeedback> TransformFeedb
 
 } // namespace oglwrap
 
-#include "undefine_internal_macros.h"
+#include "./undefine_internal_macros.h"
 
 #endif // OGLWRAP_BUFFER_H_

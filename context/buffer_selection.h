@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file buffer_selection.h
     @brief Implements OpenGL buffer selection related stuff.
 */
@@ -6,8 +8,7 @@
 #define OGLWRAP_CONTEXT_BUFFER_SELECTION_H_
 
 #include "../config.h"
-#include "../enums.h"
-#include "../debug/error.h"
+#include "../enums/color_buffer.h"
 #include "../define_internal_macros.h"
 
 
@@ -19,7 +20,7 @@ public:
 	/// Sets the destination color buffer for draw operations.
 	/** @see glDrawBuffer */
 	static void DrawBuffer(ColorBuffer buffer) {
-		gl(DrawBuffer(buffer));
+		gl(DrawBuffer(GLenum(buffer)));
 	}
 
 	#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DRAW_BUFFER)
@@ -36,7 +37,8 @@ public:
 	/// Sets the destination color buffer for draw operations.
 	/** @see glDrawBuffers */
 	static void DrawBuffers(std::vector<ColorBuffer> buffers) {
-		gl(DrawBuffers(buffers.size(), reinterpret_cast<const GLenum*>(buffers.data())));
+		gl(DrawBuffers(buffers.size(),
+			reinterpret_cast<const GLenum*>(buffers.data())));
 	}
 	#endif
 
@@ -53,7 +55,7 @@ public:
 	/// Sets the source color buffer for read operations.
 	/** @see glReadBuffer */
 	static void ReadBuffer(ColorBuffer buffer) {
-		gl(ReadBuffer(buffer));
+		gl(ReadBuffer(GLenum(buffer)));
 	}
 
 	#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_READ_BUFFER)

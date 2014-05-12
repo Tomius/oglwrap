@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file viewport_ops.h
     @brief Implements OpenGL viewports related stuff.
 */
@@ -9,7 +11,6 @@
 
 #include "../config.h"
 #include "../enums.h"
-#include "../debug/error.h"
 #include "../define_internal_macros.h"
 
 

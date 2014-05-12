@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file texture_2D.h
     @brief Implements two-dimensional, non-cubeMap textures.
 */

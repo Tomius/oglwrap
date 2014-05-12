@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file buffer_clearing.h
     @brief Implements OpenGL buffer clearing related stuff.
 */
@@ -10,7 +12,6 @@
 #include "../config.h"
 #include "../enums.h"
 #include "../general.h"
-#include "../debug/error.h"
 #include "../define_internal_macros.h"
 
 

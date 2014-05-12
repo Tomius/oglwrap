@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 #ifndef OGLWRAP_ENUMS_FRAMEBUFFER_BINDING_H_
 #define OGLWRAP_ENUMS_FRAMEBUFFER_BINDING_H_
 
@@ -28,23 +30,23 @@ enum class FramebufferBinding : GLenum {
 inline FramebufferBinding GetBindingTarget(FramebufferType fbo_t) {
   FramebufferBinding target;
 
-  switch(fbo_t) {
+  switch (fbo_t) {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_READ_FRAMEBUFFER_BINDING)
     case FramebufferType::Read:
       target = FramebufferBinding::Read;
-      OGLWRAP_LAST_BIND_TARGET = "GL_READ_FRAMEBUFFER_BINDING";
+      DebugOutput::LastUsedBindTarget() = "GL_READ_FRAMEBUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DRAW_FRAMEBUFFER_BINDING)
     case FramebufferType::Draw:
       target = FramebufferBinding::Draw;
-      OGLWRAP_LAST_BIND_TARGET = "GL_DRAW_FRAMEBUFFER_BINDING";
+      DebugOutput::LastUsedBindTarget() = "GL_DRAW_FRAMEBUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRAMEBUFFER_BINDING)
     case FramebufferType::Read_Draw:
       target = FramebufferBinding::Read_Draw;
-      OGLWRAP_LAST_BIND_TARGET = "GL_FRAMEBUFFER_BINDING";
+      DebugOutput::LastUsedBindTarget() = "GL_FRAMEBUFFER_BINDING";
       break;
 #endif
     default:

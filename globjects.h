@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file globjects.h
     @brief Implements wrappers for OpenGL objects
 */
@@ -9,10 +11,9 @@
 #include <memory>
 
 #include "config.h"
-#include "enums.h"
 #include "enums/shader_type.h"
 
-#include "define_internal_macros.h"
+#include "./define_internal_macros.h"
 
 namespace oglwrap {
 
@@ -125,6 +126,6 @@ class Texture : public glObject {
 
 } // namespace oglwrap
 
-#include "undefine_internal_macros.h"
+#include "./undefine_internal_macros.h"
 
 #endif // OGLWRAP_GLOBJECTS_H_

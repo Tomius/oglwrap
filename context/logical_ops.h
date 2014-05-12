@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file logical_ops.h
     @brief Implements OpenGL logical operation related stuff.
 */

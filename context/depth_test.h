@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file depth_test.h
     @brief Implements OpenGL depth test related stuff.
 */
@@ -6,7 +8,7 @@
 #define OGLWRAP_CONTEXT_DEPTH_TEST_H_
 
 #include "../config.h"
-#include "../enums.h"
+#include "../enums/compare_func.h"
 #include "../define_internal_macros.h"
 
 namespace oglwrap {
@@ -58,8 +60,8 @@ public:
    * @see glDepthFunc
    * @version OpenGL 1.0
    */
-  static void DepthFunc(CompareFunction function) {
-    gl(DepthFunc(function));
+  static void DepthFunc(CompareFunc function) {
+    gl(DepthFunc(GLenum(function)));
   }
 
   /**
@@ -67,10 +69,10 @@ public:
    * @see glGetIntegerv, GL_DEPTH_FUNC
    * @version OpenGL 1.0
    */
-  static CompareFunction DepthFunc() {
+  static CompareFunc DepthFunc() {
     GLint data;
     gl(GetIntegerv(GL_DEPTH_FUNC, &data));
-    return static_cast<CompareFunction>(data);
+    return static_cast<CompareFunc>(data);
   }
 };
 

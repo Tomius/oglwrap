@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file fullScreenPic.h
     @brief Implements a rectangle that covers the entire screen.
 */

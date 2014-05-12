@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 #ifndef OGLWRAP_ENUMS_BUFFER_BINDING_H_
 #define OGLWRAP_ENUMS_BUFFER_BINDING_H_
 
@@ -61,17 +63,17 @@ enum class BufferBinding : GLenum {
 inline BufferBinding GetBindingTarget(BufferType buffer_t) {
   BufferBinding target;
 
-  switch(buffer_t) {
+  switch (buffer_t) {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ARRAY_BUFFER_BINDING)
     case BufferType::Array:
       target = BufferBinding::Array;
-      OGLWRAP_LAST_BIND_TARGET = "GL_ARRAY_BUFFER_BINDING";
+      DebugOutput::LastUsedBindTarget() = "GL_ARRAY_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ATOMIC_COUNTER_BUFFER_BINDING)
     case BufferType::AtomicCounter:
       target = BufferBinding::AtomicCounter;
-      OGLWRAP_LAST_BIND_TARGET = "GL_ATOMIC_COUNTER_BUFFER_BINDING";
+      DebugOutput::LastUsedBindTarget() = "GL_ATOMIC_COUNTER_BUFFER_BINDING";
       break;
 #endif
 
@@ -79,69 +81,69 @@ inline BufferBinding GetBindingTarget(BufferType buffer_t) {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COPY_READ_BUFFER)
     case BufferType::CopyRead:
       target = BufferBinding::CopyRead;
-      OGLWRAP_LAST_BIND_TARGET = "GL_COPY_READ_BUFFER";
+      DebugOutput::LastUsedBindTarget() = "GL_COPY_READ_BUFFER";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COPY_WRITE_BUFFER)
     case BufferType::CopyWrite:
       target = BufferBinding::CopyWrite;
-      OGLWRAP_LAST_BIND_TARGET = "GL_COPY_WRITE_BUFFER";
+      DebugOutput::LastUsedBindTarget() = "GL_COPY_WRITE_BUFFER";
       break;
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DISPATCH_INDIRECT_BUFFER_BINDING)
     case BufferType::DispatchIndirect:
       target = BufferBinding::DispatchIndirect;
-      OGLWRAP_LAST_BIND_TARGET = "GL_DISPATCH_INDIRECT_BUFFER_BINDING";
+      DebugOutput::LastUsedBindTarget() = "GL_DISPATCH_INDIRECT_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DRAW_INDIRECT_BUFFER_BINDING)
     case BufferType::DrawIndirect:
       target = BufferBinding::DrawIndirect;
-      OGLWRAP_LAST_BIND_TARGET = "GL_DRAW_INDIRECT_BUFFER_BINDING";
+      DebugOutput::LastUsedBindTarget() = "GL_DRAW_INDIRECT_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ELEMENT_ARRAY_BUFFER_BINDING)
     case BufferType::ElementArray:
       target = BufferBinding::ElementArray;
-      OGLWRAP_LAST_BIND_TARGET = "GL_ELEMENT_ARRAY_BUFFER_BINDING";
+      DebugOutput::LastUsedBindTarget() = "GL_ELEMENT_ARRAY_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PIXEL_PACK_BUFFER_BINDING)
     case BufferType::PixelPack:
       target = BufferBinding::PixelPack;
-      OGLWRAP_LAST_BIND_TARGET = "GL_PIXEL_PACK_BUFFER_BINDING";
+      DebugOutput::LastUsedBindTarget() = "GL_PIXEL_PACK_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PIXEL_UNPACK_BUFFER_BINDING)
     case BufferType::PixelUnpack:
       target = BufferBinding::PixelUnpack;
-      OGLWRAP_LAST_BIND_TARGET = "GL_PIXEL_UNPACK_BUFFER_BINDING";
+      DebugOutput::LastUsedBindTarget() = "GL_PIXEL_UNPACK_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SHADER_STORAGE_BUFFER_BINDING)
     case BufferType::ShaderStorage:
       target = BufferBinding::ShaderStorage;
-      OGLWRAP_LAST_BIND_TARGET = "GL_SHADER_STORAGE_BUFFER_BINDING";
+      DebugOutput::LastUsedBindTarget() = "GL_SHADER_STORAGE_BUFFER_BINDING";
       break;
 #endif
       // Note: It's not BUFFER_BINDING but BINDING_BUFFER.
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_BINDING_BUFFER)
     case BufferType::Texture:
       target = BufferBinding::Texture;
-      OGLWRAP_LAST_BIND_TARGET = "GL_TEXTURE_BINDING_BUFFER";
+      DebugOutput::LastUsedBindTarget() = "GL_TEXTURE_BINDING_BUFFER";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRANSFORM_FEEDBACK_BUFFER_BINDING)
     case BufferType::TransformFeedback:
       target = BufferBinding::TransformFeedback;
-      OGLWRAP_LAST_BIND_TARGET = "GL_TRANSFORM_FEEDBACK_BUFFER_BINDING";
+      DebugOutput::LastUsedBindTarget() = "GL_TRANSFORM_FEEDBACK_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNIFORM_BUFFER_BINDING)
     case BufferType::Uniform:
       target = BufferBinding::Uniform;
-      OGLWRAP_LAST_BIND_TARGET = "GL_UNIFORM_BUFFER_BINDING";
+      DebugOutput::LastUsedBindTarget() = "GL_UNIFORM_BUFFER_BINDING";
       break;
 #endif
   }

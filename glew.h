@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file glew.h
     @brief #includes glew in a platform independent way.
 */

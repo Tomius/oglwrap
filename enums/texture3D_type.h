@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 #ifndef OGLWRAP_ENUMS_TEXTURE3D_TYPE_H_
 #define OGLWRAP_ENUMS_TEXTURE3D_TYPE_H_
 

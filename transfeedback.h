@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file transfeedback.h
     @brief Implements transform feedback functionality.
 */
@@ -7,11 +9,10 @@
 
 #include "general.h"
 #include "globjects.h"
-#include "debug/error.h"
 #include "debug/binding.h"
 #include "enums/basic_primitive_type.h"
 
-#include "define_internal_macros.h"
+#include "./define_internal_macros.h"
 
 namespace oglwrap {
 
@@ -65,7 +66,7 @@ public:
     gl(GetIntegerv(GL_TRANSFORM_FEEDBACK, &currentlyBoundTFB));
 
     #if OGLWRAP_DEBUG
-      OGLWRAP_LAST_BIND_TARGET = "GL_TRANSFORM_FEEDBACK";
+      DebugOutput::LastUsedBindTarget() = "GL_TRANSFORM_FEEDBACK";
     #endif
 
     return tfb_ == GLuint(currentlyBoundTFB);
@@ -186,7 +187,7 @@ public:
 
 } // namespace oglwrap
 
-#include "undefine_internal_macros.h"
+#include "./undefine_internal_macros.h"
 
 #endif // OGLWRAP_TRANSFORMFEEDBACK_H_
 

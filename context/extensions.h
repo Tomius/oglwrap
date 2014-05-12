@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file extensions.h
     @brief Implements OpenGL extensions related stuff.
 */

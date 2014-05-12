@@ -1,7 +1,7 @@
 // Copyright (c) 2014, Tamas Csala
 
-#ifndef OGLWRAP_ENUMS_FRAMEBUFFER_ATTACHMENT_H_
-#define OGLWRAP_ENUMS_FRAMEBUFFER_ATTACHMENT_H_
+#ifndef OGLWRAP_ENUMS_COLOR_BUFFER_H_
+#define OGLWRAP_ENUMS_COLOR_BUFFER_H_
 
 #include "../config.h"
 
@@ -9,7 +9,37 @@ namespace oglwrap {
 
 inline namespace enums {
 
-enum class FramebufferAttachment : GLenum {
+enum class ColorBuffer : GLenum {
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_NONE)
+  None = GL_NONE,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRONT_LEFT)
+  FrontLeft = GL_FRONT_LEFT,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRONT_RIGHT)
+  FrontRight = GL_FRONT_RIGHT,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_BACK_LEFT)
+  BackLeft = GL_BACK_LEFT,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_BACK_RIGHT)
+  BackRight = GL_BACK_RIGHT,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRONT)
+  Front = GL_FRONT,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_BACK)
+  Back = GL_BACK,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LEFT)
+  Left = GL_LEFT,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RIGHT)
+  Right = GL_RIGHT,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRONT_AND_BACK)
+  FrontAndBack = GL_FRONT_AND_BACK,
+#endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT0)
   Color0 = GL_COLOR_ATTACHMENT0,
 #endif
@@ -57,15 +87,6 @@ enum class FramebufferAttachment : GLenum {
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT15)
   Color15 = GL_COLOR_ATTACHMENT15,
-#endif
-#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DEPTH_ATTACHMENT)
-  Depth = GL_DEPTH_ATTACHMENT,
-#endif
-#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_STENCIL_ATTACHMENT)
-  Stencil = GL_STENCIL_ATTACHMENT,
-#endif
-#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DEPTH_STENCIL_ATTACHMENT)
-  DepthStencil = GL_DEPTH_STENCIL_ATTACHMENT,
 #endif
 };
 

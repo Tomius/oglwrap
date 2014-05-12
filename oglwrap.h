@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file oglwrap.h
     @brief The main header, including the core files of the library.
     It doesn't include everything, just the main features.
@@ -15,31 +17,6 @@
   #undef glfunc
   #warning Please don not define a macro named glfunc before including oglwrap
 #endif
-
-// standard headers
-#include <map>
-#include <cmath>
-#include <vector>
-#include <string>
-#include <cctype>
-#include <cstring>
-#include <cassert>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <stdexcept>
-
-// basic headers, required by all others below
-#include "config.h"
-#include "enums.h"
-#include "debug/error.h"
-#include "debug/binding.h"
-#include "general.h"
-
-// GLM
-#include "glm/glm/glm.hpp"
-#include "glm/glm/gtc/type_ptr.hpp"
-#include "glm/glm/gtc/matrix_transform.hpp"
 
 // Commonly used oglwrap headers
 #include "context.h"

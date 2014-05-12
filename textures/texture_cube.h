@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file texture_cube.h
     @brief Implements two-dimensional cubeMap textures.
 */
@@ -443,7 +445,7 @@ public:
   /// Returns the i-th element of the cube sides in alphabetic order.
   /** @param i - The index of the TextureCubeTarget to return */
   static TextureCubeTarget cubeFace(int i) {
-    switch(i) {
+    switch (i) {
       case 0:
         return TextureCubeTarget::PosX;
       case 1:

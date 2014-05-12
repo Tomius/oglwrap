@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file buffer_masking.h
     @brief Implements OpenGL buffer masking related stuff.
 */
@@ -8,7 +10,7 @@
 #include <tuple>
 #include "../config.h"
 #include "../enums.h"
-#include "../debug/error.h"
+#include "../enums/face.h"
 #include "../define_internal_macros.h"
 
 
@@ -29,7 +31,8 @@ public:
 	static std::tuple<bool, bool, bool, bool> ColorMask() {
 		GLboolean data[4];
 		gl(GetBooleanv(GL_COLOR_WRITEMASK, data));
-		return std::tuple<bool, bool, bool, bool>(data[0], data[1], data[2], data[3]);
+		return std::tuple<bool, bool, bool, bool>(
+							data[0], data[1], data[2], data[3]);
 	}
 	#endif
 
@@ -67,7 +70,7 @@ public:
 	/// Control the front and/or back writing of individual bits in the stencil planes.
 	/** @see glStencilMaskSeparate */
 	static void StencilMask(Face face, GLuint mask) {
-		gl(StencilMaskSeparate(face, mask));
+		gl(StencilMaskSeparate(GLenum(face), mask));
 	}
 	#endif
 

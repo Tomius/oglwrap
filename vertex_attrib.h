@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file vertex_attrib.h
     @brief Implements the VAO and the VertexAttributeArray.
 */
@@ -11,9 +13,7 @@
 #include "config.h"
 #include "general.h"
 #include "globjects.h"
-#include "debug/error.h"
 #include "debug/binding.h"
-#include "enums.h"
 
 #include "enums/data_type.h"
 #include "enums/whole_data_type.h"
@@ -21,7 +21,7 @@
 #include "glm/glm/glm.hpp"
 #include "glm/glm/gtc/type_ptr.hpp"
 
-#include "define_internal_macros.h"
+#include "./define_internal_macros.h"
 
 namespace oglwrap {
 
@@ -61,7 +61,7 @@ public:
     gl(GetIntegerv(GL_VERTEX_ARRAY_BINDING, &currentlyBoundVAO));
 
     #if OGLWRAP_DEBUG
-      OGLWRAP_LAST_BIND_TARGET = "GL_VERTEX_ARRAY_BINDING";
+      DebugOutput::LastUsedBindTarget() = "GL_VERTEX_ARRAY_BINDING";
     #endif
 
     return vao_ == GLuint(currentlyBoundVAO);
@@ -205,7 +205,7 @@ public:
                                 DataType type,
                                 GLsizei stride = 0,
                                 const void *offset_pointer = nullptr) {
-    switch(type) {
+    switch (type) {
       case DataType::Float:
       case DataType::HalfFloat:
       case DataType::Fixed:
@@ -928,6 +928,6 @@ inline oglwrap::LazyVertexAttribArray operator|(oglwrap::Program& prog,
 }
 #endif
 
-#include "undefine_internal_macros.h"
+#include "./undefine_internal_macros.h"
 
 #endif // OGLWRAP_VERTEXATTRIB_H_

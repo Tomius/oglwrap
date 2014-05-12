@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file error.h
     @brief Contains error message formatter utilites
 */

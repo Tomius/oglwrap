@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
@@ -7,7 +9,7 @@ public class Generate_GLerrors {
 		try {
 			int div_depth = 1;
 
-			while(div_depth > 0) {
+			while (div_depth > 0) {
 				if (pos + 6 > line.length()) {
 					line.append(br.readLine());
 				}
@@ -31,7 +33,7 @@ public class Generate_GLerrors {
 									  String id) {
 		String current_string = new String();
 		int start_pos = -1;
-    	while((start_pos = line.indexOf(id, start_pos + 1)) > 0) {
+    	while ((start_pos = line.indexOf(id, start_pos + 1)) > 0) {
     		start_pos = line.indexOf('>', start_pos + id.length() + 1);
     		StringBuilder sb = new StringBuilder(line);
     		// It might also need to read in more to the string,

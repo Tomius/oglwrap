@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file stencil_test.h
     @brief Implements OpenGL stencil test related stuff.
 */
@@ -7,6 +9,8 @@
 
 #include "../config.h"
 #include "../enums.h"
+#include "../enums/face.h"
+#include "../enums/compare_func.h"
 #include "../define_internal_macros.h"
 
 namespace oglwrap {
@@ -52,21 +56,21 @@ public:
    *
    * The following values are accepted by func​:
    *
-   * CompareFunction::Never​
+   * CompareFunc::Never​
    *   Always fails.
-   * CompareFunction::Less
+   * CompareFunc::Less
    *   Passes if ( ref​ & mask​ ) < ( stencil & mask​ ).
-   * CompareFunction::LEqual​
+   * CompareFunc::LEqual​
    *   Passes if ( ref​ & mask​ ) <= ( stencil & mask​ ).
-   * CompareFunction::Greater​
+   * CompareFunc::Greater​
    *   Passes if ( ref​ & mask​ ) > ( stencil & mask​ ).
-   * CompareFunction::GEqual
+   * CompareFunc::GEqual
    *   Passes if ( ref​ & mask​ ) >= ( stencil & mask​ ).
-   * CompareFunction::Equal
+   * CompareFunc::Equal
    *   Passes if ( ref​ & mask​ ) = ( stencil & mask​ ).
-   * CompareFunction::NotEqual​
+   * CompareFunc::NotEqual​
    *   Passes if ( ref​ & mask​ ) != ( stencil & mask​ ).
-   * CompareFunction::Always
+   * CompareFunc::Always
    *   Always passes.
    *
    * @param func Specifies the test function.
@@ -79,10 +83,10 @@ public:
    * @see glStencilFunc
    * @version OpenGL 1.0
    */
-  static void StencilFunc(CompareFunction func,
+  static void StencilFunc(CompareFunc func,
                           GLint ref=GLint(0),
                           GLuint mask=~GLuint(0)) {
-    gl(StencilFunc(func, ref, mask));
+    gl(StencilFunc(GLenum(func), ref, mask));
   }
 
   #if OGLWRAP_DEFINE_EVERYTHING || defined(glStencilFuncSeparate)
@@ -124,21 +128,21 @@ public:
    *
    * The following values are accepted by func​:
    *
-   * CompareFunction::Never​
+   * CompareFunc::Never​
    *   Always fails.
-   * CompareFunction::Less
+   * CompareFunc::Less
    *   Passes if ( ref​ & mask​ ) < ( stencil & mask​ ).
-   * CompareFunction::LEqual​
+   * CompareFunc::LEqual​
    *   Passes if ( ref​ & mask​ ) <= ( stencil & mask​ ).
-   * CompareFunction::Greater​
+   * CompareFunc::Greater​
    *   Passes if ( ref​ & mask​ ) > ( stencil & mask​ ).
-   * CompareFunction::GEqual
+   * CompareFunc::GEqual
    *   Passes if ( ref​ & mask​ ) >= ( stencil & mask​ ).
-   * CompareFunction::Equal
+   * CompareFunc::Equal
    *   Passes if ( ref​ & mask​ ) = ( stencil & mask​ ).
-   * CompareFunction::NotEqual​
+   * CompareFunc::NotEqual​
    *   Passes if ( ref​ & mask​ ) != ( stencil & mask​ ).
-   * CompareFunction::Always
+   * CompareFunc::Always
    *   Always passes.
    *
    * @param face Specifies whether front and/or back stencil state is updated.
@@ -153,10 +157,10 @@ public:
    * @version OpenGL 2.0
    */
   static void StencilFuncSeparate(Face face,
-                                  CompareFunction func,
+                                  CompareFunc func,
                                   GLint ref=GLint(0),
                                   GLuint mask=~GLuint(0)) {
-    gl(StencilFuncSeparate(face, func, ref, mask));
+    gl(StencilFuncSeparate(GLenum(face), GLenum(func), ref, mask));
   }
   #endif
 
@@ -226,7 +230,7 @@ public:
   static void StencilOp(StencilOperation sfail = StencilOperation::Keep,
                         StencilOperation dfail = StencilOperation::Keep,
                         StencilOperation dpass = StencilOperation::Keep) {
-    gl(StencilOp(sfail, dfail, dpass));
+    gl(StencilOp(GLenum(sfail), GLenum(dfail), GLenum(dpass)));
   }
 
   #if OGLWRAP_DEFINE_EVERYTHING || defined(glStencilOpSeparate)
@@ -300,7 +304,8 @@ public:
                                 StencilOperation sfail = StencilOperation::Keep,
                                 StencilOperation dfail = StencilOperation::Keep,
                                 StencilOperation dpass = StencilOperation::Keep) {
-    gl(StencilOpSeparate(face, sfail, dfail, dpass));
+    gl(StencilOpSeparate(GLenum(face), GLenum(sfail),
+                         GLenum(dfail), GLenum(dpass)));
   }
   #endif
 
@@ -310,14 +315,14 @@ public:
    * @see glGetIntegerv, GL_STENCIL_FUNC, GL_STENCIL_BACK_FUNC
    * @version OpenGL 1.0
    */
-  static CompareFunction StencilFunc(bool backface = false) {
+  static CompareFunc StencilFunc(bool backface = false) {
     GLint data;
     if (backface) {
       gl(GetIntegerv(GL_STENCIL_FUNC, &data));
     } else {
       gl(GetIntegerv(GL_STENCIL_BACK_FUNC, &data));
     }
-    return static_cast<CompareFunction>(data);
+    return static_cast<CompareFunc>(data);
   }
 
   /**

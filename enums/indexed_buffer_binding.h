@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 #ifndef OGLWRAP_ENUMS_INDEXED_BUFFER_BINDING_H_
 #define OGLWRAP_ENUMS_INDEXED_BUFFER_BINDING_H_
 
@@ -31,29 +33,29 @@ enum class IndexedBufferBinding : GLenum {
 inline IndexedBufferBinding GetBindingTarget(IndexedBufferType buffer_t) {
   IndexedBufferBinding target;
 
-  switch(buffer_t) {
+  switch (buffer_t) {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ATOMIC_COUNTER_BUFFER_BINDING)
     case IndexedBufferType::AtomicCounter:
       target = IndexedBufferBinding::AtomicCounter;
-      OGLWRAP_LAST_BIND_TARGET = "GL_ATOMIC_COUNTER_BUFFER_BINDING";
+      DebugOutput::LastUsedBindTarget() = "GL_ATOMIC_COUNTER_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SHADER_STORAGE_BUFFER_BINDING)
     case IndexedBufferType::ShaderStorage:
       target = IndexedBufferBinding::ShaderStorage;
-      OGLWRAP_LAST_BIND_TARGET = "GL_SHADER_STORAGE_BUFFER_BINDING";
+      DebugOutput::LastUsedBindTarget() = "GL_SHADER_STORAGE_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRANSFORM_FEEDBACK_BUFFER_BINDING)
     case IndexedBufferType::TransformFeedback:
       target = IndexedBufferBinding::TransformFeedback;
-      OGLWRAP_LAST_BIND_TARGET = "GL_TRANSFORM_FEEDBACK_BUFFER_BINDING";
+      DebugOutput::LastUsedBindTarget() = "GL_TRANSFORM_FEEDBACK_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNIFORM_BUFFER_BINDING)
     case IndexedBufferType::Uniform:
       target = IndexedBufferBinding::Uniform;
-      OGLWRAP_LAST_BIND_TARGET = "GL_UNIFORM_BUFFER_BINDING";
+      DebugOutput::LastUsedBindTarget() = "GL_UNIFORM_BUFFER_BINDING";
       break;
 #endif
   }

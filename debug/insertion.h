@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 #ifndef OGLWRAP_DEBUG_INSERTION_H_
 #define OGLWRAP_DEBUG_INSERTION_H_
 

@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file debug_output.h
     @brief Implements the oglwrap debug output.
 */
@@ -15,20 +17,12 @@
 #include <functional>
 
 #include "../config.h"
-#include "../enums.h"
+#include "../enums/error_type.h"
 #include "error_formatting.h"
 
 namespace oglwrap {
 
 #if OGLWRAP_DEBUG
-
-/// A global variable storing the last OpenGL error.
-#if OGLWRAP_INSTATIATE
-  GLError OGLWRAP_LAST_ERROR = GLError::NoError;
-#else
-  extern GLError OGLWRAP_LAST_ERROR;
-#endif
-
 
 #if !OGLWRAP_DISABLE_DEBUG_OUTPUT
 #define OGLWRAP_GET_FILENAME() __FILE__
@@ -73,7 +67,7 @@ class DebugOutput {
   std::map<std::string, ErrorInfo> errorMap;
 
   glError_t getErrorIndex() const {
-    switch(OGLWRAP_LAST_ERROR) {
+    switch (GLenum(last_error)) {
       case GL_INVALID_ENUM:
         return INVALID_ENUM;
       case GL_INVALID_VALUE:
@@ -97,13 +91,14 @@ class DebugOutput {
   using ErrorPrintFormatter = void(ErrorMessage error);
   std::function<ErrorPrintFormatter> error_printer{OGLWRAP_PrintError};
 
-  // The instance for this is dynamically allocated at the first use,
+  // These static variables are dynamically allocated at the first use,
   // and that memory is never freed. See the link below to understand why:
   // http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml
   // ?showone=Static_and_Global_Variables#Static_and_Global_Variables
-  static DebugOutput* instance;
-  static bool inited;
-
+  static DebugOutput *instance;
+  static std::string *last_used_bind_target;
+  // static enum is ok, it has trivial constructor and destructor
+  static ErrorType last_error;
 
   /// Loads in the list of OpenGL errors.
   DebugOutput() {
@@ -124,13 +119,13 @@ class DebugOutput {
     }
 
     // Read until EOF, or until an error occurs.
-    while(is.good()) {
+    while (is.good()) {
       std::string func, funcSignature;
       std::vector<std::string> errors[NUM_ERRORS + 1];
       std::string buffer, buffer2;
 
       // Get lines until the first one that's not empty.
-      while(getline(is, funcSignature) && funcSignature.empty());
+      while (getline(is, funcSignature) && funcSignature.empty());
 
       size_t end_pos = funcSignature.find('(');
       size_t start_pos = funcSignature.rfind(' ', end_pos) + 1;
@@ -138,7 +133,7 @@ class DebugOutput {
 
 
       // Get the error messages
-      while(getline(is, buffer) && !buffer.empty()) {
+      while (getline(is, buffer) && !buffer.empty()) {
 
         std::stringstream strstream(buffer);
         strstream >> buffer2;
@@ -197,7 +192,7 @@ class DebugOutput {
     }
   }
 
-  static std::string formatedFuncSignature(std::string funcSignature) {
+  static std::string FormatedFuncSignature(std::string funcSignature) {
     // Ident the function a little.
     funcSignature.insert(0, "  ");
     size_t parameters_start = funcSignature.find('(');
@@ -206,7 +201,7 @@ class DebugOutput {
     endl_plus_tabulation[0] = '\n';
 
     size_t param_pos = parameters_start;
-    while((param_pos = funcSignature.find(',', param_pos + 1)) != std::string::npos) {
+    while ((param_pos = funcSignature.find(',', param_pos + 1)) != std::string::npos) {
       funcSignature.insert(param_pos + 1, endl_plus_tabulation);
     }
 
@@ -215,17 +210,15 @@ class DebugOutput {
 
 public:
   static void AddErrorPrintFormatter(std::function<ErrorPrintFormatter> printf) {
-    if (!inited) {
+    if (!instance) {
       instance = new DebugOutput{};
-      inited = true;
     }
     instance->error_printer = printf;
   }
 
   static void PrintError(ErrorMessage error) {
-    if (!inited) {
+    if (!instance) {
       instance = new DebugOutput{};
-      inited = true;
     }
     if (instance->error_printer) {
       instance->error_printer(error);
@@ -237,9 +230,8 @@ public:
     * @param functionCall - The function call string.
     */
   static std::string GetDetailedErrorInfo(const std::string& functionCall) {
-    if (!inited) {
+    if (!instance) {
       instance = new DebugOutput{};
-      inited = true;
     }
     size_t errIdx = instance->getErrorIndex();
     if (errIdx == NUM_ERRORS) {
@@ -255,7 +247,7 @@ public:
        !instance->errorMap[funcName].errors[errIdx].empty()) {
       ErrorInfo errinfo = instance->errorMap[funcName];
       sstream << "The following OpenGL function: " << std::endl << std::endl;
-      sstream << formatedFuncSignature(errinfo.funcSignature) << std::endl << std::endl;
+      sstream << FormatedFuncSignature(errinfo.funcSignature) << std::endl << std::endl;
       sstream << "Has generated the error because one of the following(s) were true:" << std::endl;
       for (size_t i = 0; i != errinfo.errors[errIdx].size(); ++i) {
         sstream << errinfo.errors[errIdx][i] << std::endl;
@@ -270,6 +262,17 @@ public:
 
     return sstream.str();
   }
+
+  static std::string& LastUsedBindTarget() {
+    if(!last_used_bind_target) {
+      last_used_bind_target = new std::string{};
+    }
+    return *last_used_bind_target;
+  }
+
+  static ErrorType& LastError() {
+    return last_error;
+  }
 };
 
 #endif // !OGLWRAP_DISABLE_DEBUG_OUTPUT
@@ -279,8 +282,9 @@ public:
 class DebugOutput {
   using ErrorPrintFormatter = void(const ErrorMessage& error);
 
-  static DebugOutput* instance;
-  static bool inited;
+  static DebugOutput *instance;
+  static std::string *last_used_bind_target;
+  static ErrorType last_error;
 
   // Loads in the list of OpenGL errors.
   DebugOutput() : printError(OGLWRAP_PrintError) {}
@@ -294,7 +298,24 @@ public:
   /// If there was an error, notifies you about it through the callback function.
   /** The default callback function prints the error to the stdout */
   static void GetDetailedErrorInfo(const std::string&, std::stringstream&) {}
+
+  static std::string& LastUsedBindTarget() {
+    if(!last_used_bind_target) {
+      last_used_bind_target = new std::string{};
+    }
+    return *last_used_bind_target;
+  }
+
+  static ErrorType& LastError() {
+    return last_error;
+  }
 };
+#endif
+
+#if OGLWRAP_INSTATIATE
+  DebugOutput *DebugOutput::instance;
+  std::string *DebugOutput::last_used_bind_target;
+  ErrorType DebugOutput::last_error;
 #endif
 
 } // namespace oglwrap

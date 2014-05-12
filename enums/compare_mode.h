@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 #ifndef OGLWRAP_ENUMS_COMPARE_MODE_H_
 #define OGLWRAP_ENUMS_COMPARE_MODE_H_
 

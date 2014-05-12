@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file shader.h
     @brief Implements GLSL shaders related classes.
 */
@@ -5,21 +7,19 @@
 #ifndef OGLWRAP_SHADER_H_
 #define OGLWRAP_SHADER_H_
 
+#include <cstring>
 #include <string>
 #include <memory>
 #include <fstream>
 #include <sstream>
-#include <cstring>
 #include <stdexcept>
 
-#include "config.h"
-#include "globjects.h"
-#include "enums.h"
-#include "general.h"
-#include "debug/error.h"
+#include "./config.h"
+#include "./globjects.h"
+#include "./general.h"
 #include "debug/binding.h"
 
-#include "define_internal_macros.h"
+#include "./define_internal_macros.h"
 
 namespace oglwrap {
 
@@ -218,7 +218,7 @@ public:
       gl(GetShaderInfoLog(shader_, infoLogLength, nullptr, strInfoLog.get()));
 
       const char * strShaderType = nullptr;
-      switch(shader_t) {
+      switch (shader_t) {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPUTE_SHADER)
         case ShaderType::Compute:
           strShaderType = "compute";
@@ -654,7 +654,7 @@ public:
     gl(GetIntegerv(GL_CURRENT_PROGRAM, &currentProgram));
 
     #if OGLWRAP_DEBUG
-      OGLWRAP_LAST_BIND_TARGET = "GL_CURRENT_PROGRAM";
+      DebugOutput::LastUsedBindTarget() = "GL_CURRENT_PROGRAM";
     #endif
 
     return program_ == GLuint(currentProgram);
@@ -751,6 +751,6 @@ public:
 
 } // namespace oglwrap
 
-#include "undefine_internal_macros.h"
+#include "./undefine_internal_macros.h"
 
 #endif // OGLWRAP_SHADER_H_

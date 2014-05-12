@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 #ifndef OGLWRAP_ENUMS_TEXTURE_CUBE_TARGET_H_
 #define OGLWRAP_ENUMS_TEXTURE_CUBE_TARGET_H_
 

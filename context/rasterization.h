@@ -1,3 +1,5 @@
+// Copyright (c) 2014, Tamas Csala
+
 /** @file rasterization.h
     @brief Implements OpenGL rasterization related stuff.
 */
@@ -9,7 +11,7 @@
 
 #include "../config.h"
 #include "../enums.h"
-#include "../debug/error.h"
+#include "../enums/face.h"
 #include "../define_internal_macros.h"
 
 
@@ -37,7 +39,7 @@ public:
 	/// Specify whether front- or back-facing facets can be culled.
 	/** @see glCullFace */
 	static void CullFace(Face face) {
-		gl(CullFace(face));
+		gl(CullFace(GLenum(face)));
 	}
 
 	#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_CULL_FACE_MODE)
@@ -53,13 +55,13 @@ public:
 	/// Sets the polygon rasterization mode.
 	/** @see glPolygonMode */
 	static void PolygonMode(Face face, PolyMode mode) {
-		gl(PolygonMode(face, mode));
+		gl(PolygonMode(GLenum(face), GLenum(mode)));
 	}
 
 	/// Sets the polygon rasterization mode.
 	/** @see glPolygonMode */
 	static void PolygonMode(PolyMode mode) {
-		gl(PolygonMode(Face::FrontAndBack, mode));
+		gl(PolygonMode(GLenum(Face::FrontAndBack), GLenum(mode)));
 	}
 
 	#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_POLYGON_MODE)
