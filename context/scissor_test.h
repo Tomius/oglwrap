@@ -8,7 +8,6 @@
 #define OGLWRAP_CONTEXT_SCISSOR_TEST_H_
 
 #include "../config.h"
-#include "../enums.h"
 #include "../glm/glm/glm.hpp"
 
 #include "../define_internal_macros.h"

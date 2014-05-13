@@ -10,8 +10,10 @@
 #include "../glm/glm/glm.hpp"
 
 #include "../config.h"
-#include "../enums.h"
 #include "../enums/face.h"
+#include "../enums/face_orientation.h"
+#include "../enums/poly_mode.h"
+#include "../enums/provoke_mode.h"
 #include "../define_internal_macros.h"
 
 
@@ -23,7 +25,7 @@ public:
 	/// Define front- and back-facing polygons.
 	/** @see glFrontFace */
 	static void FrontFace(FaceOrientation orintation) {
-		gl(FrontFace(orintation));
+		gl(FrontFace(GLenum(orintation)));
 	}
 
 	#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRONT_FACE)
@@ -80,7 +82,8 @@ public:
 		gl(PolygonOffset(factor, units));
 	}
 
-	#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_POLYGON_OFFSET_FACTOR) && defined(GL_POLYGON_OFFSET_UNITS)
+	#if OGLWRAP_DEFINE_EVERYTHING \
+			|| defined(GL_POLYGON_OFFSET_FACTOR) && defined(GL_POLYGON_OFFSET_UNITS)
 	/// Returns the scale and units used to calculate depth values.
 	/** @see GetFloatv, GL_POLYGON_OFFSET_FACTOR, GL_POLYGON_OFFSET_UNITS */
 	static glm::vec2 PolygonOffset() {
@@ -123,7 +126,8 @@ public:
 	}
 	#endif
 
-	#if OGLWRAP_DEFINE_EVERYTHING || defined(glPointParameterf) && defined(GL_POINT_FADE_THRESHOLD_SIZE)
+	#if OGLWRAP_DEFINE_EVERYTHING \
+		|| defined(glPointParameterf) && defined(GL_POINT_FADE_THRESHOLD_SIZE)
 	/// Specifies the threshold value to which point sizes are clamped if they exceed the specified value.
 	/** @see glPointParameterf GL_POINT_FADE_THRESHOLD_SIZE */
 	static void PointFadeThresholdSize(GLfloat width) {
@@ -145,7 +149,7 @@ public:
 	/// Specify the vertex to be used as the source of data for flat shaded varyings.
 	/** @see glProvokingVertex */
 	static void ProvokingVertex(ProvokeMode mode) {
-		gl(ProvokingVertex(mode));
+		gl(ProvokingVertex(GLenum(mode)));
 	}
 	#endif
 
@@ -179,7 +183,8 @@ public:
 	}
 	#endif
 
-	#if OGLWRAP_DEFINE_EVERYTHING || defined(glGetMultisample) && defined(GL_SAMPLE_POSITION)
+	#if OGLWRAP_DEFINE_EVERYTHING \
+		|| defined(glGetMultisample) && defined(GL_SAMPLE_POSITION)
 	/// Returns the location of a sample.
 	/** @see glGetMultisample, GL_SAMPLE_POSITION */
 	static glm::vec2 SamplePosition(GLuint index) {

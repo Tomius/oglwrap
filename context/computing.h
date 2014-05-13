@@ -8,7 +8,6 @@
 #define OGLWRAP_CONTEXT_COMPUTING_H_
 
 #include "../config.h"
-#include "../enums.h"
 #include "../define_internal_macros.h"
 
 

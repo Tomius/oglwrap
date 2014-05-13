@@ -10,10 +10,10 @@
 #include "../glm/glm/glm.hpp"
 
 #include "../config.h"
-#include "../enums.h"
 #include "../general.h"
-#include "../define_internal_macros.h"
+#include "../enums/buffer_select_bit.h"
 
+#include "../define_internal_macros.h"
 
 namespace oglwrap {
 namespace context {

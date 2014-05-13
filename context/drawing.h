@@ -8,8 +8,8 @@
 #define OGLWRAP_CONTEXT_DRAWING_H_
 
 #include "../config.h"
-#include "../enums.h"
 #include "../enums/index_type.h"
+#include "../enums/primitive_type.h"
 
 #include "../define_internal_macros.h"
 
@@ -42,7 +42,7 @@ public:
    * @see glDrawArrays
    * @version OpenGL 1.1
    */
-  static void DrawArrays(PrimitiveType type,
+  static void DrawArrays(PrimType type,
                          GLint first,
                          GLsizei count) {
     gl(DrawArrays(GLenum(type), first, count));
@@ -75,7 +75,7 @@ public:
    * @see glDrawArraysInstanced
    * @version OpenGL 3.1
    */
-  static void DrawArraysInstanced(PrimitiveType type,
+  static void DrawArraysInstanced(PrimType type,
                                   GLint first,
                                   GLsizei count,
                                   GLsizei inst_count) {
@@ -125,7 +125,7 @@ public:
    * @see glDrawArraysInstancedBaseInstance
    * @version OpenGL 4.2
    */
-  static void DrawArraysInstancedBaseInstance(PrimitiveType type,
+  static void DrawArraysInstancedBaseInstance(PrimType type,
                                               GLint first,
                                               GLsizei count,
                                               GLsizei inst_count,
@@ -182,7 +182,7 @@ public:
    * @see glDrawArraysIndirect
    * @version OpenGL 4.0
    */
-  static void DrawArraysIndirect(PrimitiveType type,
+  static void DrawArraysIndirect(PrimType type,
                                  const void *indirect = nullptr) {
     gl(DrawArraysIndirect(GLenum(type), indirect));
   }
@@ -219,7 +219,7 @@ public:
    * @see glMultiDrawArrays
    * @version OpenGL 1.4
    */
-  static void MultiDrawArrays(PrimitiveType type,
+  static void MultiDrawArrays(PrimType type,
                               const GLint *first,
                               const GLsizei *count,
                               GLsizei prim_count) {
@@ -301,7 +301,7 @@ public:
    * @see glMultiDrawArraysIndirect
    * @version OpenGL 4.3
    */
-  static void MultiDrawArraysIndirect(PrimitiveType type,
+  static void MultiDrawArraysIndirect(PrimType type,
                                       const void *indirect,
                                       GLsizei draw_count,
                                       GLsizei stride) {
@@ -336,7 +336,7 @@ public:
    * @see glDrawElements
    * @version OpenGL 1.1
    */
-  static void DrawElements(PrimitiveType type,
+  static void DrawElements(PrimType type,
                            GLsizei count,
                            IndexType index_type) {
     gl(DrawElements(GLenum(type), count, GLenum(index_type), nullptr));
@@ -368,7 +368,7 @@ public:
    * @see glDrawElements
    * @version OpenGL 1.1
    */
-  static void DrawElements(PrimitiveType type,
+  static void DrawElements(PrimType type,
                            GLsizei count,
                            const GLtype* indices) {
     static_assert((sizeof(GLtype), false),
@@ -408,7 +408,7 @@ public:
    * @see glDrawElementsInstanced
    * @version OpenGL 3.1
    */
-  static void DrawElementsInstanced(PrimitiveType type,
+  static void DrawElementsInstanced(PrimType type,
                                     GLsizei count,
                                     IndexType index_type,
                                     GLsizei inst_count) {
@@ -448,7 +448,7 @@ public:
    * @see glDrawElementsInstanced
    * @version OpenGL 3.1
    */
-  static void DrawElementsInstanced(PrimitiveType type,
+  static void DrawElementsInstanced(PrimType type,
                                     GLsizei count,
                                     const GLtype* indices,
                                     GLsizei inst_count) {
@@ -498,7 +498,7 @@ public:
    * @see glDrawElementsInstancedBaseInstance
    * @version OpenGL 4.2
    */
-  static void DrawElementsInstancedBaseInstance(PrimitiveType type,
+  static void DrawElementsInstancedBaseInstance(PrimType type,
                                                 GLsizei count,
                                                 IndexType index_type,
                                                 GLsizei inst_count,
@@ -548,7 +548,7 @@ public:
    * @see glDrawElementsInstancedBaseInstance
    * @version OpenGL 4.2
    */
-  static void DrawElementsInstancedBaseInstance(PrimitiveType type,
+  static void DrawElementsInstancedBaseInstance(PrimType type,
                                                 GLsizei count,
                                                 const GLtype* indices,
                                                 GLsizei inst_count,
@@ -586,7 +586,7 @@ public:
    * @see glMultiDrawElements
    * @version OpenGL 1.4
    */
-  static void MultiDrawElements(PrimitiveType type,
+  static void MultiDrawElements(PrimType type,
                                 const GLsizei* count,
                                 const GLtype* const* indices,
                                 GLsizei draw_count) {
@@ -630,7 +630,7 @@ public:
    * @see glDrawRangeElements
    * @version OpenGL 1.2
    */
-  static void DrawRangeElements(PrimitiveType type,
+  static void DrawRangeElements(PrimType type,
                                 GLuint start,
                                 GLuint end,
                                 GLsizei count,
@@ -674,7 +674,7 @@ public:
    * @see glDrawRangeElements
    * @version OpenGL 1.2
    */
-  static void DrawRangeElements(PrimitiveType type,
+  static void DrawRangeElements(PrimType type,
                                 GLuint start,
                                 GLuint end,
                                 GLsizei count,
@@ -1134,7 +1134,8 @@ public:
    * @param count       Points to an array of the elements counts.
    * @param indices     Points to an array of draw_count​ values, where each value
    *                    is a byte offset (cast to a pointer type) into the buffer
-   *                    bound to GL_ELEMENT_ARRAY_BUFFER​ to start reading indices from.
+   *                    bound to GL_ELEMENT_ARRAY_BUFFER​ to start reading indices
+   *                    from.
    * @param draw_count  Specifies the size of the count array.
    * @param base_vertex Specifies a pointer to the location where the base
    *                    vertices are stored.
@@ -1188,11 +1189,11 @@ public:
    * @version OpenGL 4.2
    */
   static void DrawElementsInstancedBaseVertexBaseInstance(PrimType type,
-                                                         GLsizei count,
-                                                         IndexType index_type,
-                                                         GLsizei inst_count,
-                                                         GLint base_vertex,
-                                                         GLuint base_instance) {
+                                                          GLsizei count,
+                                                          IndexType index_type,
+                                                          GLsizei inst_count,
+                                                          GLint base_vertex,
+                                                          GLuint base_instance) {
     gl(DrawElementsInstancedBaseVertexBaseInstance(
       GLenum(type), count, GLenum(index_type), nullptr,
       inst_count, base_vertex, base_instance
@@ -1280,21 +1281,21 @@ public:
 };
 
 template<>
-inline void Drawing::DrawElements<GLubyte>(PrimitiveType type,
+inline void Drawing::DrawElements<GLubyte>(PrimType type,
                                            GLsizei count,
                                            const GLubyte* indices) {
   gl(DrawElements(GLenum(type), count, GL_UNSIGNED_BYTE, indices));
 }
 
 template<>
-inline void Drawing::DrawElements<GLushort>(PrimitiveType type,
+inline void Drawing::DrawElements<GLushort>(PrimType type,
                                             GLsizei count,
                                             const GLushort* indices) {
   gl(DrawElements(GLenum(type), count, GL_UNSIGNED_SHORT, indices));
 }
 
 template<>
-inline void Drawing::DrawElements<GLuint>(PrimitiveType type,
+inline void Drawing::DrawElements<GLuint>(PrimType type,
                                           GLsizei count,
                                           const GLuint* indices) {
   gl(DrawElements(GLenum(type), count, GL_UNSIGNED_INT, indices));
@@ -1302,7 +1303,7 @@ inline void Drawing::DrawElements<GLuint>(PrimitiveType type,
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawElementsInstanced)
 template<>
-inline void Drawing::DrawElementsInstanced<GLubyte>(PrimitiveType type,
+inline void Drawing::DrawElementsInstanced<GLubyte>(PrimType type,
                                                     GLsizei count,
                                                     const GLubyte* indices,
                                                     GLsizei inst_count) {
@@ -1312,7 +1313,7 @@ inline void Drawing::DrawElementsInstanced<GLubyte>(PrimitiveType type,
 }
 
 template<>
-inline void Drawing::DrawElementsInstanced<GLushort>(PrimitiveType type,
+inline void Drawing::DrawElementsInstanced<GLushort>(PrimType type,
                                                      GLsizei count,
                                                      const GLushort* indices,
                                                      GLsizei inst_count) {
@@ -1322,7 +1323,7 @@ inline void Drawing::DrawElementsInstanced<GLushort>(PrimitiveType type,
 }
 
 template<>
-inline void Drawing::DrawElementsInstanced<GLuint>(PrimitiveType type,
+inline void Drawing::DrawElementsInstanced<GLuint>(PrimType type,
                                                    GLsizei count,
                                                    const GLuint* indices,
                                                    GLsizei inst_count) {
@@ -1335,7 +1336,7 @@ inline void Drawing::DrawElementsInstanced<GLuint>(PrimitiveType type,
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawElementsInstancedBaseInstance)
 template<>
 inline void Drawing::DrawElementsInstancedBaseInstance<GLubyte>(
-                                                  PrimitiveType type,
+                                                  PrimType type,
                                                   GLsizei count,
                                                   const GLubyte* indices,
                                                   GLsizei inst_count,
@@ -1347,7 +1348,7 @@ inline void Drawing::DrawElementsInstancedBaseInstance<GLubyte>(
 
 template<>
 inline void Drawing::DrawElementsInstancedBaseInstance<GLushort>(
-                                                  PrimitiveType type,
+                                                  PrimType type,
                                                   GLsizei count,
                                                   const GLushort* indices,
                                                   GLsizei inst_count,
@@ -1359,7 +1360,7 @@ inline void Drawing::DrawElementsInstancedBaseInstance<GLushort>(
 
 template<>
 inline void Drawing::DrawElementsInstancedBaseInstance<GLuint>(
-                                                  PrimitiveType type,
+                                                  PrimType type,
                                                   GLsizei count,
                                                   const GLuint* indices,
                                                   GLsizei inst_count,
@@ -1386,7 +1387,7 @@ public:
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glMultiDrawElements)
 template<>
-inline void Drawing::MultiDrawElements<GLubyte>(PrimitiveType type,
+inline void Drawing::MultiDrawElements<GLubyte>(PrimType type,
                                                 const GLsizei* count,
                                                 const GLubyte* const* indices,
                                                 GLsizei draw_count) {
@@ -1397,7 +1398,7 @@ inline void Drawing::MultiDrawElements<GLubyte>(PrimitiveType type,
 }
 
 template<>
-inline void Drawing::MultiDrawElements<GLushort>(PrimitiveType type,
+inline void Drawing::MultiDrawElements<GLushort>(PrimType type,
                                                  const GLsizei* count,
                                                  const GLushort* const* indices,
                                                  GLsizei draw_count) {
@@ -1408,7 +1409,7 @@ inline void Drawing::MultiDrawElements<GLushort>(PrimitiveType type,
 }
 
 template<>
-inline void Drawing::MultiDrawElements<GLuint>(PrimitiveType type,
+inline void Drawing::MultiDrawElements<GLuint>(PrimType type,
                                                const GLsizei* count,
                                                const GLuint* const* indices,
                                                GLsizei draw_count) {
@@ -1421,7 +1422,7 @@ inline void Drawing::MultiDrawElements<GLuint>(PrimitiveType type,
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawRangeElements)
 template<>
-inline void Drawing::DrawRangeElements<GLubyte>(PrimitiveType type,
+inline void Drawing::DrawRangeElements<GLubyte>(PrimType type,
                                                 GLuint start,
                                                 GLuint end,
                                                 GLsizei count,
@@ -1431,7 +1432,7 @@ inline void Drawing::DrawRangeElements<GLubyte>(PrimitiveType type,
   ));
 }
 template<>
-inline void Drawing::DrawRangeElements<GLushort>(PrimitiveType type,
+inline void Drawing::DrawRangeElements<GLushort>(PrimType type,
                                                  GLuint start,
                                                  GLuint end,
                                                  GLsizei count,
@@ -1441,7 +1442,7 @@ inline void Drawing::DrawRangeElements<GLushort>(PrimitiveType type,
   ));
 }
 template<>
-inline void Drawing::DrawRangeElements<GLuint>(PrimitiveType type,
+inline void Drawing::DrawRangeElements<GLuint>(PrimType type,
                                                GLuint start,
                                                GLuint end,
                                                GLsizei count,

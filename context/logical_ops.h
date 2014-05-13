@@ -8,7 +8,8 @@
 #define OGLWRAP_CONTEXT_LOGICAL_OPS_H_
 
 #include "../config.h"
-#include "../enums.h"
+#include "../enums/color_logic_operation.h"
+
 #include "../define_internal_macros.h"
 
 namespace oglwrap {
@@ -57,7 +58,7 @@ class LogicalOps {
    * @version OpenGL 1.0
    */
   static void LogicOp(ColorLogicOperation op) {
-    gl(LogicOp(op));
+    gl(LogicOp(GLenum(op)));
   }
 
   #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_LOGIC_OP)

@@ -8,10 +8,12 @@
 #define OGLWRAP_CONTEXT_PIXEL_OPS_H_
 
 #include "../config.h"
-#include "../enums.h"
 #include "../general.h"
+#include "../enums/blit_filter.h"
 #include "../enums/pixel_data_type.h"
 #include "../enums/pixel_data_format.h"
+#include "../enums/pixel_storage_mode.h"
+#include "../enums/buffer_select_bit.h"
 
 #include "../define_internal_macros.h"
 

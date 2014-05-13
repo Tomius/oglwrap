@@ -10,7 +10,6 @@
 #include "../glm/glm/glm.hpp"
 
 #include "../config.h"
-#include "../enums.h"
 #include "../define_internal_macros.h"
 
 

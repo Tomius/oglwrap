@@ -8,9 +8,9 @@
 #define OGLWRAP_CONTEXT_STENCIL_TEST_H_
 
 #include "../config.h"
-#include "../enums.h"
 #include "../enums/face.h"
 #include "../enums/compare_func.h"
+#include "../enums/stencil_operation.h"
 #include "../define_internal_macros.h"
 
 namespace oglwrap {
