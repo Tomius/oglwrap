@@ -22,6 +22,7 @@
 #include "context/scissor_test.h"
 #include "context/logical_ops.h"
 #include "context/pixel_ops.h"
+#include "context/blending.h"
 
 namespace oglwrap {
 	class Context
@@ -40,6 +41,7 @@ namespace oglwrap {
 		, public context::ScissorTest
 		, public context::LogicalOps
 		, public context::PixelOps
+		, public context::Blending
 	{ };
 }
 
