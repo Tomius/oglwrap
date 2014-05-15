@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file stencil_test.h
-    @brief Implements OpenGL stencil test related stuff.
-*/
-
 #ifndef OGLWRAP_CONTEXT_STENCIL_TEST_H_
 #define OGLWRAP_CONTEXT_STENCIL_TEST_H_
 

@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file extensions.h
-    @brief Implements OpenGL extensions related stuff.
-*/
-
 #ifndef OGLWRAP_CONTEXT_EXTENSIONS_H_
 #define OGLWRAP_CONTEXT_EXTENSIONS_H_
 

@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file rasterization.h
-    @brief Implements OpenGL rasterization related stuff.
-*/
-
 #ifndef OGLWRAP_CONTEXT_RASTERIZATION_H_
 #define OGLWRAP_CONTEXT_RASTERIZATION_H_
 

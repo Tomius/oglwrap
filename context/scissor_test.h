@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file scissor_test.h
-    @brief Implements OpenGL scissor test related stuff.
-*/
-
 #ifndef OGLWRAP_CONTEXT_SCISSOR_TEST_H_
 #define OGLWRAP_CONTEXT_SCISSOR_TEST_H_
 

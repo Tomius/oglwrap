@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file computing.h
-    @brief Implements OpenGL computing related stuff.
-*/
-
 #ifndef OGLWRAP_CONTEXT_COMPUTING_H_
 #define OGLWRAP_CONTEXT_COMPUTING_H_
 

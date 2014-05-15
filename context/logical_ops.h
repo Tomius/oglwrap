@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file logical_ops.h
-    @brief Implements OpenGL logical operation related stuff.
-*/
-
 #ifndef OGLWRAP_CONTEXT_LOGICAL_OPS_H_
 #define OGLWRAP_CONTEXT_LOGICAL_OPS_H_
 

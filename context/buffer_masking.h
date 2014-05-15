@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file buffer_masking.h
-    @brief Implements OpenGL buffer masking related stuff.
-*/
-
 #ifndef OGLWRAP_CONTEXT_BUFFER_MASKING_H_
 #define OGLWRAP_CONTEXT_BUFFER_MASKING_H_
 

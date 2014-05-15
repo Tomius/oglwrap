@@ -23,6 +23,7 @@
 #include "context/logical_ops.h"
 #include "context/pixel_ops.h"
 #include "context/blending.h"
+#include "context/synchronization.h"
 
 namespace oglwrap {
 	class Context
@@ -42,6 +43,7 @@ namespace oglwrap {
 		, public context::LogicalOps
 		, public context::PixelOps
 		, public context::Blending
+		, public context::Synchronization
 	{ };
 }
 

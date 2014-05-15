@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file buffer_clearing.h
-    @brief Implements OpenGL buffer clearing related stuff.
-*/
-
 #ifndef OGLWRAP_CONTEXT_BUFFER_CLEARING_H_
 #define OGLWRAP_CONTEXT_BUFFER_CLEARING_H_
 

@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file pixel_ops.h
-    @brief Implements OpenGL pixel operations related stuff.
-*/
-
 #ifndef OGLWRAP_CONTEXT_BLENDING_H_
 #define OGLWRAP_CONTEXT_BLENDING_H_
 

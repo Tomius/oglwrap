@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file buffer_selection.h
-    @brief Implements OpenGL buffer selection related stuff.
-*/
-
 #ifndef OGLWRAP_CONTEXT_BUFFER_SELECTION_H_
 #define OGLWRAP_CONTEXT_BUFFER_SELECTION_H_
 

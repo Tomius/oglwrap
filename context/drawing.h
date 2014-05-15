@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file drawing.h
-    @brief Wrapper for primitive drawing operations.
-*/
-
 #ifndef OGLWRAP_CONTEXT_DRAWING_H_
 #define OGLWRAP_CONTEXT_DRAWING_H_
 

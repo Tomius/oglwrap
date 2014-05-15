@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file capabilities.h
-    @brief Implements OpenGL capabilities related stuff.
-*/
-
 #ifndef OGLWRAP_CONTEXT_CAPABILITIES_H_
 #define OGLWRAP_CONTEXT_CAPABILITIES_H_
 

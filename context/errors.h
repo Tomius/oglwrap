@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file errors.h
-    @brief Implements OpenGL errors related stuff.
-*/
-
 #ifndef OGLWRAP_CONTEXT_ERRORS_H_
 #define OGLWRAP_CONTEXT_ERRORS_H_
 
