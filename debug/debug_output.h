@@ -312,7 +312,7 @@ public:
 };
 #endif
 
-#if OGLWRAP_INSTATIATE
+#if OGLWRAP_INSTANTIATE
   DebugOutput *DebugOutput::instance;
   std::string *DebugOutput::last_used_bind_target;
   ErrorType DebugOutput::last_error;

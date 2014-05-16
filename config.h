@@ -25,8 +25,8 @@
  * The compile time can be drastically decreased with this.
  * This also makes sure that global variables are only defined once
  */
-#ifndef OGLWRAP_INSTATIATE
-  #define OGLWRAP_INSTATIATE 0
+#ifndef OGLWRAP_INSTANTIATE
+  #define OGLWRAP_INSTANTIATE 0
 #endif
 
 /// A macro for internal use only

@@ -747,7 +747,7 @@ inline glm::uvec4 UniformObject<glm::uvec4>::get() const {
 #endif // glGetUniformuiv
 
 // Explicit instantiate just the common ones.
-#if OGLWRAP_INSTATIATE
+#if OGLWRAP_INSTANTIATE
   template class Uniform<GLint>;
   template class Uniform<glm::vec3>;
   template class Uniform<glm::vec4>;

@@ -68,6 +68,7 @@ public:
 		}
 	}
 
+	#if OGLWRAP_DEFINE_EVERYTHING || defined(glEnablei) && defined(glDisablei)
 	/// Enables or disables a capability for an indexet target.
 	/** @see glEnable, glDisable */
 	static void SetCapability(Capability capability, GLuint index, bool value) {
@@ -77,6 +78,7 @@ public:
 			Disable(capability, index);
 		}
 	}
+	#endif
 
 	/// Enables a capability, and creates a variable. When the variable goes
 	/// out of the scope, sets the capability back to its old value.

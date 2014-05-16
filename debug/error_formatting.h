@@ -54,7 +54,7 @@ inline void OGLWRAP_PrintStackTrace(std::ostream& os) {
 }
 
 #if OGLWRAP_STOP_AFTER_X_ERRORS
-  #if OGLWRAP_INSTATIATE
+  #if OGLWRAP_INSTANTIATE
     int OGLWRAP_ERRORS_NUM = 0;
   #else
     extern int OGLWRAP_ERRORS_NUM;

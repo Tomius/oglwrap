@@ -293,7 +293,7 @@ public:
  */
 typedef Shader<ShaderType::Compute> ComputeShader;
 
-#if OGLWRAP_INSTATIATE
+#if OGLWRAP_INSTANTIATE
   template class Shader<ShaderType::Compute>;
 #else
   extern template class Shader<ShaderType::Compute>;
@@ -316,7 +316,7 @@ typedef Shader<ShaderType::Compute> ComputeShader;
  */
 typedef Shader<ShaderType::Vertex> VertexShader;
 
-#if OGLWRAP_INSTATIATE
+#if OGLWRAP_INSTANTIATE
   template class Shader<ShaderType::Vertex>;
 #else
   extern template class Shader<ShaderType::Vertex>;
@@ -339,7 +339,7 @@ typedef Shader<ShaderType::Vertex> VertexShader;
  */
 typedef Shader<ShaderType::Geometry> GeometryShader;
 
-#if OGLWRAP_INSTATIATE
+#if OGLWRAP_INSTANTIATE
   template class Shader<ShaderType::Geometry>;
 #else
   extern template class Shader<ShaderType::Geometry>;
@@ -369,7 +369,7 @@ typedef Shader<ShaderType::Geometry> GeometryShader;
  */
 typedef Shader<ShaderType::Fragment> FragmentShader;
 
-#if OGLWRAP_INSTATIATE
+#if OGLWRAP_INSTANTIATE
   template class Shader<ShaderType::Fragment>;
 #else
   extern template class Shader<ShaderType::Fragment>;
@@ -396,7 +396,7 @@ typedef Shader<ShaderType::Fragment> FragmentShader;
  */
 typedef Shader<ShaderType::TessControl> TessControlShader;
 
-#if OGLWRAP_INSTATIATE
+#if OGLWRAP_INSTANTIATE
   template class Shader<ShaderType::TessControl>;
 #else
   extern template class Shader<ShaderType::TessControl>;
@@ -422,7 +422,7 @@ typedef Shader<ShaderType::TessControl> TessControlShader;
  */
 typedef Shader<ShaderType::TessEval> TessEvalShader;
 
-#if OGLWRAP_INSTATIATE
+#if OGLWRAP_INSTANTIATE
   template class Shader<ShaderType::TessEval>;
 #else
   extern template class Shader<ShaderType::TessEval>;
@@ -668,7 +668,7 @@ public:
 
 // Explicit template instantiation (is ugly, but makes compilation a lot faster)
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glAttachShader)
-  #if OGLWRAP_INSTATIATE
+  #if OGLWRAP_INSTANTIATE
     #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPUTE_SHADER)
       template void Program::attachShader(ComputeShader&);
       template void Program::attachShader(const ComputeShader&);

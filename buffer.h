@@ -286,7 +286,7 @@ public:
   * @see GL_ARRAY_BUFFER */
 typedef BufferObject<BufferType::Array> ArrayBuffer;
 
-#if OGLWRAP_INSTATIATE
+#if OGLWRAP_INSTANTIATE
   template class BufferObject<BufferType::Array>;
 #else
   extern template class BufferObject<BufferType::Array>;
@@ -303,7 +303,7 @@ typedef BufferObject<BufferType::Array> ArrayBuffer;
   * @see GL_ELEMENT_ARRAY_BUFFER */
 typedef BufferObject<BufferType::ElementArray> IndexBuffer;
 
-#if OGLWRAP_INSTATIATE
+#if OGLWRAP_INSTANTIATE
   template class BufferObject<BufferType::ElementArray>;
 #else
   extern template class BufferObject<BufferType::ElementArray>;
@@ -317,7 +317,7 @@ typedef BufferObject<BufferType::ElementArray> IndexBuffer;
   * @see GL_TEXTURE_BUFFER */
 typedef BufferObject<BufferType::Texture> TextureBuffer;
 
-#if OGLWRAP_INSTATIATE
+#if OGLWRAP_INSTANTIATE
   template class BufferObject<BufferType::Texture>;
 #else
   extern template class BufferObject<BufferType::Texture>;
@@ -385,7 +385,7 @@ public:
 /** @see GL_UNIFORM_BUFFER */
 typedef IndexedBufferObject<IndexedBufferType::Uniform> UniformBuffer;
 
-#if OGLWRAP_INSTATIATE
+#if OGLWRAP_INSTANTIATE
   template class IndexedBufferObject<IndexedBufferType::Uniform>;
 #else
   extern template class IndexedBufferObject<IndexedBufferType::Uniform>;
@@ -398,7 +398,7 @@ typedef IndexedBufferObject<IndexedBufferType::Uniform> UniformBuffer;
 /** @see GL_TRANSFORM_FEEDBACK_BUFFER */
 typedef IndexedBufferObject<IndexedBufferType::TransformFeedback> TransformFeedbackBuffer;
 
-#if OGLWRAP_INSTATIATE
+#if OGLWRAP_INSTANTIATE
   template class IndexedBufferObject<IndexedBufferType::TransformFeedback>;
 #else
   extern template class IndexedBufferObject<IndexedBufferType::TransformFeedback>;
