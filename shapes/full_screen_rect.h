@@ -4,8 +4,8 @@
     @brief Implements a rectangle that covers the entire screen.
 */
 
-#ifndef OGLWRAP_SHAPES_FULLSCREENRECT_H_
-#define OGLWRAP_SHAPES_FULLSCREENRECT_H_
+#ifndef OGLWRAP_SHAPES_FULL_SCREEN_RECT_H_
+#define OGLWRAP_SHAPES_FULL_SCREEN_RECT_H_
 
 #include "../buffer.h"
 #include "../context.h"
@@ -35,7 +35,8 @@ public:
   void setupPositions(VertexAttribArray attrib) {
 
     if (is_setup_positions_) {
-      std::logic_error("FullScreenRectangle::setup_position is called multiply times on the same object");
+      std::logic_error("FullScreenRectangle::setup_position is called "
+                       "multiply times on the same object");
     } else {
       is_setup_positions_ = true;
     }
@@ -58,10 +59,11 @@ public:
   /** Uploads the vertex normals data to an attribute array, and sets it up for use.
     * Calling this function changes the currently active VAO and ArrayBuffer. */
   /// @param attrib - The attribute array to use as destination.
-  void setupTexCoords(VertexAttribArray attrib) {
+  void setupTexCoords(VertexAttribArray attrib, bool upside_down = false) {
 
     if (is_setup_texcoords_) {
-      std::logic_error("FullScreenRectangle::setupTexCoords is called multiply times on the same object");
+      std::logic_error("FullScreenRectangle::setupTexCoords is called "
+                       "multiply times on the same object");
     } else {
       is_setup_texcoords_ = true;
     }
@@ -73,9 +75,16 @@ public:
       {1.0f, 1.0f}
     };
 
+    const float rev_coords[4][2] = {
+      {0.0f, 1.0f},
+      {0.0f, 0.0f},
+      {1.0f, 1.0f},
+      {1.0f, 0.0f}
+    };
+
     vao.bind();
     texcoords.bind();
-    texcoords.data(sizeof(coords), coords);
+    texcoords.data(sizeof(coords), upside_down ? rev_coords : coords);
     attrib.setup<glm::vec2>().enable();
     vao.unbind();
   }
