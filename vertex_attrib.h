@@ -49,7 +49,7 @@ public:
    *        further draw calls.
    * @see glBindVertexArray
    */
-  void bind() {
+  void bind() const {
     gl(BindVertexArray(vao_));
   }
 #endif
