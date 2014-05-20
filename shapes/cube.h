@@ -223,8 +223,8 @@ public:
   }
 
   /// Returns the face winding of the cube created by this class.
-  GLenum faceWinding() const {
-    return GL_CW;
+  FaceOrientation faceWinding() const {
+    return FaceOrientation::CW;
   }
 
   /// Returns the center of the cube's bounding sphere

@@ -151,7 +151,7 @@ public:
     * @return The current value of the uniform.
     * @see glUniform* */
   GLtype get() const {
-    GLtype val = glfunc(this->get());
+    GLtype val = glfunc(UniformObject<GLtype>::get());
 
     #if OGLWRAP_DEBUG
       OGLWRAP_PRINT_IF_ERROR(
@@ -253,7 +253,7 @@ public:
     * @return The current value of the uniform.
     * @see glUniform* */
   GLtype get() const {
-    GLtype val = glfunc(this->get());
+    GLtype val = glfunc(UniformObject<GLtype>::get());
 
     #if OGLWRAP_DEBUG
       OGLWRAP_PRINT_IF_ERROR(
@@ -389,7 +389,7 @@ public:
       firstCall_ = false;
     }
 
-    GLtype val = glfunc(this->get());
+    GLtype val = glfunc(UniformObject<GLtype>::get());
 
     #if OGLWRAP_DEBUG
       OGLWRAP_PRINT_IF_ERROR(
@@ -411,7 +411,7 @@ public:
     * @return The current value of the uniform.
     * @see glUniform* */
   operator GLtype() {
-    return get();
+    return LazyUniform::get();
   }
 
   /// Is used to set an element of a uniform array.
