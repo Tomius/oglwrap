@@ -37,11 +37,12 @@ protected:
   UniformObject(Program& program, GLuint location = kInvalidLocation)
     : location_(location), program_(program) { }
 
+public:
   /// Sets the uniform to a GLtype variable's value.
   /** It finds the appropriate glUniform* using template specialization.
     * @param value - The value to set the uniform.
     * @see glUniform* */
-  void set(const GLtype& value) { // See the specializations at the end of this file.
+  virtual void set(const GLtype& value) { // See the specializations at the end of this file.
     static_assert((sizeof(GLtype), false),
       "Trying to set a uniform to a value that is not an OpenGL type."
     );
@@ -61,7 +62,7 @@ protected:
     * If it is called with not an OpenGL type, it throws std::invalid_argument.
     * @return The current value of the uniform.
     * @see glUniform* */
-  GLtype get() const {
+  virtual GLtype get() {
     static_assert((sizeof(GLtype), false),
       "Trying to get a uniform to a value that is not an OpenGL type."
     );
@@ -72,11 +73,10 @@ protected:
     * If it is called with not an OpenGL type, it throws std::invalid_argument.
     * @return The current value of the uniform.
     * @see glUniform* */
-  operator GLtype() const {
+  operator GLtype() {
     return get();
   }
 
-public:
   /// Returns the C OpenGL handle for the uniform's location.
   GLuint expose() const {
     return location_;
@@ -121,7 +121,7 @@ public:
   /** It throws std::invalid_argument if it is an unrecognized type.
     * @param value - Specifies the new value to be used for the uniform variable.
     * @see glUniform* */
-  void set(const GLtype& value) {
+  virtual void set(const GLtype& value) override {
     glfunc(UniformObject<GLtype>::set(value));
 
     #if OGLWRAP_DEBUG
@@ -150,7 +150,7 @@ public:
     * If it is called with not an OpenGL type, it throws std::invalid_argument.
     * @return The current value of the uniform.
     * @see glUniform* */
-  GLtype get() const {
+  virtual GLtype get() override {
     GLtype val = glfunc(UniformObject<GLtype>::get());
 
     #if OGLWRAP_DEBUG
@@ -173,7 +173,7 @@ public:
     * If it is called with not an OpenGL type, it throws std::invalid_argument.
     * @return The current value of the uniform.
     * @see glUniform* */
-  operator GLtype() const {
+  operator GLtype() {
     return get();
   }
 };
@@ -223,7 +223,7 @@ public:
   /** It throws std::invalid_argument if it is an unrecognized type.
     * @param value - Specifies the new value to be used for the uniform variable.
     * @see glUniform* */
-  void set(const GLtype& value) {
+  virtual void set(const GLtype& value) override {
     glfunc(UniformObject<GLtype>::set(value));
 
     #if OGLWRAP_DEBUG
@@ -252,7 +252,7 @@ public:
     * If it is called with not an OpenGL type, it throws std::invalid_argument.
     * @return The current value of the uniform.
     * @see glUniform* */
-  GLtype get() const {
+  virtual GLtype get() override {
     GLtype val = glfunc(UniformObject<GLtype>::get());
 
     #if OGLWRAP_DEBUG
@@ -274,7 +274,7 @@ public:
     * If it is called with not an OpenGL type, it throws std::invalid_argument.
     * @return The current value of the uniform.
     * @see glUniform* */
-  operator GLtype() const {
+  operator GLtype() {
     return get();
   }
 };
@@ -313,7 +313,7 @@ public:
     * It writes to stderr if it was unable to get it.
     * At every call it sets the uniform to the specified value.
     * @param value - Specifies the new value to be used for the uniform variable. */
-  void set(const GLtype& value) {
+  virtual void set(const GLtype& value) override {
     OGLWRAP_CHECK_ACTIVE_PROGRAM(this->program_);
 
     // Get the uniform's location only at the first set call.
@@ -365,7 +365,7 @@ public:
     * If it is called with not an OpenGL type, it throws std::invalid_argument.
     * @return The current value of the uniform.
     * @see glUniform* */
-  GLtype get() {
+   GLtype get() {
     OGLWRAP_CHECK_ACTIVE_PROGRAM(this->program_);
 
     // Get the uniform's location only at the first set call.
@@ -411,7 +411,7 @@ public:
     * @return The current value of the uniform.
     * @see glUniform* */
   operator GLtype() {
-    return LazyUniform::get();
+    return get();
   }
 
   /// Is used to set an element of a uniform array.
@@ -586,49 +586,49 @@ inline void UniformObject<glm::dmat4>::set(const glm::dmat4& mat) {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glGetUniformfv)
 template<>
-inline GLfloat UniformObject<GLfloat>::get() const {
+inline GLfloat UniformObject<GLfloat>::get() {
   GLfloat value;
   glGetUniformfv(program_.expose(), location_, &value);
   return value;
 }
 
 template<>
-inline glm::vec2 UniformObject<glm::vec2>::get() const {
+inline glm::vec2 UniformObject<glm::vec2>::get() {
   glm::vec2 value;
   glGetUniformfv(program_.expose(), location_, glm::value_ptr(value));
   return value;
 }
 
 template<>
-inline glm::vec3 UniformObject<glm::vec3>::get() const {
+inline glm::vec3 UniformObject<glm::vec3>::get() {
   glm::vec3 value;
   glGetUniformfv(program_.expose(), location_, glm::value_ptr(value));
   return value;
 }
 
 template<>
-inline glm::vec4 UniformObject<glm::vec4>::get() const {
+inline glm::vec4 UniformObject<glm::vec4>::get() {
   glm::vec4 value;
   glGetUniformfv(program_.expose(), location_, glm::value_ptr(value));
   return value;
 }
 
 template<>
-inline glm::mat2 UniformObject<glm::mat2>::get() const {
+inline glm::mat2 UniformObject<glm::mat2>::get() {
   glm::mat2 value;
   glGetUniformfv(program_.expose(), location_, glm::value_ptr(value));
   return value;
 }
 
 template<>
-inline glm::mat3 UniformObject<glm::mat3>::get() const {
+inline glm::mat3 UniformObject<glm::mat3>::get() {
   glm::mat3 value;
   glGetUniformfv(program_.expose(), location_, glm::value_ptr(value));
   return value;
 }
 
 template<>
-inline glm::mat4 UniformObject<glm::mat4>::get() const {
+inline glm::mat4 UniformObject<glm::mat4>::get() {
   glm::mat4 value;
   glGetUniformfv(program_.expose(), location_, glm::value_ptr(value));
   return value;
@@ -637,49 +637,49 @@ inline glm::mat4 UniformObject<glm::mat4>::get() const {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glGetUniformdv)
 template<>
-inline GLdouble UniformObject<GLdouble>::get() const {
+inline GLdouble UniformObject<GLdouble>::get() {
   GLdouble value;
   glGetUniformdv(program_.expose(), location_, &value);
   return value;
 }
 
 template<>
-inline glm::dvec2 UniformObject<glm::dvec2>::get() const {
+inline glm::dvec2 UniformObject<glm::dvec2>::get() {
   glm::dvec2 value;
   glGetUniformdv(program_.expose(), location_, glm::value_ptr(value));
   return value;
 }
 
 template<>
-inline glm::dvec3 UniformObject<glm::dvec3>::get() const {
+inline glm::dvec3 UniformObject<glm::dvec3>::get() {
   glm::dvec3 value;
   glGetUniformdv(program_.expose(), location_, glm::value_ptr(value));
   return value;
 }
 
 template<>
-inline glm::dvec4 UniformObject<glm::dvec4>::get() const {
+inline glm::dvec4 UniformObject<glm::dvec4>::get() {
   glm::dvec4 value;
   glGetUniformdv(program_.expose(), location_, glm::value_ptr(value));
   return value;
 }
 
 template<>
-inline glm::dmat2 UniformObject<glm::dmat2>::get() const {
+inline glm::dmat2 UniformObject<glm::dmat2>::get() {
   glm::dmat2 value;
   glGetUniformdv(program_.expose(), location_, glm::value_ptr(value));
   return value;
 }
 
 template<>
-inline glm::dmat3 UniformObject<glm::dmat3>::get() const {
+inline glm::dmat3 UniformObject<glm::dmat3>::get() {
   glm::dmat3 value;
   glGetUniformdv(program_.expose(), location_, glm::value_ptr(value));
   return value;
 }
 
 template<>
-inline glm::dmat4 UniformObject<glm::dmat4>::get() const {
+inline glm::dmat4 UniformObject<glm::dmat4>::get() {
   glm::dmat4 value;
   glGetUniformdv(program_.expose(), location_, glm::value_ptr(value));
   return value;
@@ -688,28 +688,28 @@ inline glm::dmat4 UniformObject<glm::dmat4>::get() const {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glGetUniformiv)
 template<>
-inline GLint UniformObject<GLint>::get() const {
+inline GLint UniformObject<GLint>::get() {
   GLint value;
   glGetUniformiv(program_.expose(), location_, &value);
   return value;
 }
 
 template<>
-inline glm::ivec2 UniformObject<glm::ivec2>::get() const {
+inline glm::ivec2 UniformObject<glm::ivec2>::get() {
   glm::ivec2 value;
   glGetUniformiv(program_.expose(), location_, glm::value_ptr(value));
   return value;
 }
 
 template<>
-inline glm::ivec3 UniformObject<glm::ivec3>::get() const {
+inline glm::ivec3 UniformObject<glm::ivec3>::get() {
   glm::ivec3 value;
   glGetUniformiv(program_.expose(), location_, glm::value_ptr(value));
   return value;
 }
 
 template<>
-inline glm::ivec4 UniformObject<glm::ivec4>::get() const {
+inline glm::ivec4 UniformObject<glm::ivec4>::get() {
   glm::ivec4 value;
   glGetUniformiv(program_.expose(), location_, glm::value_ptr(value));
   return value;
@@ -718,28 +718,28 @@ inline glm::ivec4 UniformObject<glm::ivec4>::get() const {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glGetUniformuiv)
 template<>
-inline GLuint UniformObject<GLuint>::get() const {
+inline GLuint UniformObject<GLuint>::get() {
   GLuint value;
   glGetUniformuiv(program_.expose(), location_, &value);
   return value;
 }
 
 template<>
-inline glm::uvec2 UniformObject<glm::uvec2>::get() const {
+inline glm::uvec2 UniformObject<glm::uvec2>::get() {
   glm::uvec2 value;
   glGetUniformuiv(program_.expose(), location_, glm::value_ptr(value));
   return value;
 }
 
 template<>
-inline glm::uvec3 UniformObject<glm::uvec3>::get() const {
+inline glm::uvec3 UniformObject<glm::uvec3>::get() {
   glm::uvec3 value;
   glGetUniformuiv(program_.expose(), location_, glm::value_ptr(value));
   return value;
 }
 
 template<>
-inline glm::uvec4 UniformObject<glm::uvec4>::get() const {
+inline glm::uvec4 UniformObject<glm::uvec4>::get() {
   glm::uvec4 value;
   glGetUniformuiv(program_.expose(), location_, glm::value_ptr(value));
   return value;
