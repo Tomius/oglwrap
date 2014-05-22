@@ -11,13 +11,13 @@ inline namespace enums {
 
 enum class BlendEquation : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FUNC_ADD)
-  ADD = GL_FUNC_ADD,
+  FuncAdd = GL_FUNC_ADD,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FUNC_SUBTRACT)
-  Subtract = GL_FUNC_SUBTRACT,
+  FuncSubtract = GL_FUNC_SUBTRACT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FUNC_REVERSE_SUBTRACT)
-  ReverseSubtract = GL_FUNC_REVERSE_SUBTRACT,
+  FuncReverseSubtract = GL_FUNC_REVERSE_SUBTRACT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_MIN)
   Min = GL_MIN,

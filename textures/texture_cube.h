@@ -21,7 +21,7 @@ namespace oglwrap {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_CUBE_MAP)
 /// A set of 6 2D textures, that is used to be sampled with 3D direction vectors.
 /** @see GL_TEXTURE_CUBE_MAP */
-class TextureCube : public TextureBase<TextureType::TexCubeMap> {
+class TextureCube : public TextureBase<TextureType::TextureCubeMap> {
 public:
   /// Uploads one a base image for one side of the cube.
   /** @param target - Specifies which one of the six sides of the cube to use as target.
@@ -447,17 +447,17 @@ public:
   static TextureCubeTarget cubeFace(int i) {
     switch (i) {
       case 0:
-        return TextureCubeTarget::PosX;
+        return TextureCubeTarget::TextureCubeMapPositiveX;
       case 1:
-        return TextureCubeTarget::NegX;
+        return TextureCubeTarget::TextureCubeMapNegativeX;
       case 2:
-        return TextureCubeTarget::PosY;
+        return TextureCubeTarget::TextureCubeMapPositiveY;
       case 3:
-        return TextureCubeTarget::NegY;
+        return TextureCubeTarget::TextureCubeMapNegativeY;
       case 4:
-        return TextureCubeTarget::PosZ;
+        return TextureCubeTarget::TextureCubeMapPositiveZ;
       case 5:
-        return TextureCubeTarget::NegZ;
+        return TextureCubeTarget::TextureCubeMapNegativeZ;
       default:
         throw std::invalid_argument("CubeFace argument must be between 0 and 5");
     }
@@ -503,10 +503,10 @@ public:
 
       Upload(
         target,
-        PixelDataInternalFormat::SRGBA8,
+        PixelDataInternalFormat::Rgba8,
         image.columns(),
         image.rows(),
-        PixelDataFormat::RGBA,
+        PixelDataFormat::Rgba,
         PixelDataType::UnsignedByte,
         blob.data()
       );
@@ -545,10 +545,10 @@ public:
 
       Upload(
         cubeFace(faceID),
-        PixelDataInternalFormat::SRGBA8,
+        PixelDataInternalFormat::Rgba8,
         image.columns(),
         image.rows(),
-        PixelDataFormat::RGBA,
+        PixelDataFormat::Rgba,
         PixelDataType::UnsignedByte,
         blob.data()
       );

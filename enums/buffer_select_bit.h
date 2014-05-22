@@ -11,13 +11,13 @@ inline namespace enums {
 
 enum class BufferSelectBit : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_BUFFER_BIT)
-  ColorBuffer = GL_COLOR_BUFFER_BIT,
+  ColorBufferBit = GL_COLOR_BUFFER_BIT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DEPTH_BUFFER_BIT)
-  DepthBuffer = GL_DEPTH_BUFFER_BIT,
+  DepthBufferBit = GL_DEPTH_BUFFER_BIT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_STENCIL_BUFFER_BIT)
-  StencilBuffer = GL_STENCIL_BUFFER_BIT,
+  StencilBufferBit = GL_STENCIL_BUFFER_BIT,
 #endif
 };
 

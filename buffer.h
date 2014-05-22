@@ -102,7 +102,7 @@ public:
   BIND_CHECKED void data(GLsizei size, const GLtype* data,
                          BufferUsage usage = BufferUsage::StaticDraw) const {
     OGLWRAP_CHECK_BINDING();
-    if (BUFFER_TYPE == BufferType::Array) {
+    if (BUFFER_TYPE == BufferType::ArrayBuffer) {
       OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     }
 
@@ -131,7 +131,7 @@ public:
   BIND_CHECKED void data(const std::vector<GLtype>& data,
                          BufferUsage usage = BufferUsage::StaticDraw) const {
     OGLWRAP_CHECK_BINDING();
-    if (BUFFER_TYPE == BufferType::Array) {
+    if (BUFFER_TYPE == BufferType::ArrayBuffer) {
       OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     }
 
@@ -157,7 +157,7 @@ public:
     * @see glBufferSubData */
   BIND_CHECKED void subData(GLintptr offset, GLsizei size, const GLtype* data) const {
     OGLWRAP_CHECK_BINDING();
-    if (BUFFER_TYPE == BufferType::Array) {
+    if (BUFFER_TYPE == BufferType::ArrayBuffer) {
       OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     }
 
@@ -184,7 +184,7 @@ public:
     * @see glBufferSubData */
   BIND_CHECKED void subData(GLintptr offset, const std::vector<GLtype>& data) const {
     OGLWRAP_CHECK_BINDING();
-    if (BUFFER_TYPE == BufferType::Array) {
+    if (BUFFER_TYPE == BufferType::ArrayBuffer) {
       OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
     }
 
@@ -241,7 +241,7 @@ public:
     TypedMap(GLintptr offset,
              GLsizeiptr length,
              Bitfield<BufferMapAccessFlags> access =
-                {BufferMapAccessFlags::Read_Bit, BufferMapAccessFlags::Write_Bit}) {
+                {BufferMapAccessFlags::MapReadBit, BufferMapAccessFlags::MapWriteBit}) {
 
       OGLWRAP_CHECK_FOR_DEFAULT_BINDING(GLenum(GetBindingTarget(BUFFER_TYPE)));
 
@@ -284,12 +284,12 @@ public:
 /** The buffer will be used as a source for vertex data,
   * but only when VertexAttribArray::Pointer​ is called.
   * @see GL_ARRAY_BUFFER */
-typedef BufferObject<BufferType::Array> ArrayBuffer;
+typedef BufferObject<BufferType::ArrayBuffer> ArrayBuffer;
 
 #if OGLWRAP_INSTANTIATE
-  template class BufferObject<BufferType::Array>;
+  template class BufferObject<BufferType::ArrayBuffer>;
 #else
-  extern template class BufferObject<BufferType::Array>;
+  extern template class BufferObject<BufferType::ArrayBuffer>;
 #endif
 
 #endif // GL_ARRAY_BUFFER
@@ -301,12 +301,12 @@ typedef BufferObject<BufferType::Array> ArrayBuffer;
   * taken from the buffer object. Note that this binding target is part of a Vertex Array Objects state, so a
   * VAO must be bound before binding a buffer here.
   * @see GL_ELEMENT_ARRAY_BUFFER */
-typedef BufferObject<BufferType::ElementArray> IndexBuffer;
+typedef BufferObject<BufferType::ElementArrayBuffer> IndexBuffer;
 
 #if OGLWRAP_INSTANTIATE
-  template class BufferObject<BufferType::ElementArray>;
+  template class BufferObject<BufferType::ElementArrayBuffer>;
 #else
-  extern template class BufferObject<BufferType::ElementArray>;
+  extern template class BufferObject<BufferType::ElementArrayBuffer>;
 #endif
 
 #endif // GL_ELEMENT_ARRAY_BUFFER
@@ -315,12 +315,12 @@ typedef BufferObject<BufferType::ElementArray> IndexBuffer;
 /// A Buffer that stores texture pixels.
 /** This buffer has no special semantics, it is intended to use as a buffer object for Buffer Textures.
   * @see GL_TEXTURE_BUFFER */
-typedef BufferObject<BufferType::Texture> TextureBuffer;
+typedef BufferObject<BufferType::TextureBuffer> TextureBuffer;
 
 #if OGLWRAP_INSTANTIATE
-  template class BufferObject<BufferType::Texture>;
+  template class BufferObject<BufferType::TextureBuffer>;
 #else
-  extern template class BufferObject<BufferType::Texture>;
+  extern template class BufferObject<BufferType::TextureBuffer>;
 #endif
 
 #endif // GL_TEXTURE_BUFFER
@@ -383,12 +383,12 @@ public:
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNIFORM_BUFFER)
 /// An indexed buffer binding for buffers used as storage for uniform blocks.
 /** @see GL_UNIFORM_BUFFER */
-typedef IndexedBufferObject<IndexedBufferType::Uniform> UniformBuffer;
+typedef IndexedBufferObject<IndexedBufferType::UniformBuffer> UniformBuffer;
 
 #if OGLWRAP_INSTANTIATE
-  template class IndexedBufferObject<IndexedBufferType::Uniform>;
+  template class IndexedBufferObject<IndexedBufferType::UniformBuffer>;
 #else
-  extern template class IndexedBufferObject<IndexedBufferType::Uniform>;
+  extern template class IndexedBufferObject<IndexedBufferType::UniformBuffer>;
 #endif
 
 #endif // GL_UNIFORM_BUFFER
@@ -396,12 +396,12 @@ typedef IndexedBufferObject<IndexedBufferType::Uniform> UniformBuffer;
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRANSFORM_FEEDBACK_BUFFER)
 /// An indexed buffer binding for buffers used in Transform Feedback operations.
 /** @see GL_TRANSFORM_FEEDBACK_BUFFER */
-typedef IndexedBufferObject<IndexedBufferType::TransformFeedback> TransformFeedbackBuffer;
+typedef IndexedBufferObject<IndexedBufferType::TransformFeedbackBuffer> TransformFeedbackBuffer;
 
 #if OGLWRAP_INSTANTIATE
-  template class IndexedBufferObject<IndexedBufferType::TransformFeedback>;
+  template class IndexedBufferObject<IndexedBufferType::TransformFeedbackBuffer>;
 #else
-  extern template class IndexedBufferObject<IndexedBufferType::TransformFeedback>;
+  extern template class IndexedBufferObject<IndexedBufferType::TransformFeedbackBuffer>;
 #endif
 
 #endif // GL_TRANSFORM_FEEDBACK_BUFFER

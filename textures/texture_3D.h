@@ -406,13 +406,13 @@ public:
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_3D)
 /// Three-dimensional texture.
 /** @see GL_TEXTURE_3D */
-typedef Texture3DBase<Texture3DType::Tex3D> Texture3D;
+typedef Texture3DBase<Texture3DType::Texture3D> Texture3D;
 #endif // GL_TEXTURE_3D
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_2D_ARRAY)
 /// An array of two dimensional textures
 /** @see GL_TEXTURE_2D_ARRAY */
-typedef Texture3DBase<Texture3DType::Tex2DArray> Texture2DArray;
+typedef Texture3DBase<Texture3DType::Texture2DArray> Texture2DArray;
 #endif // GL_TEXTURE_2D_ARRAY
 
 #endif // GL_TEXTURE_3D

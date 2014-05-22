@@ -17,7 +17,7 @@ namespace oglwrap {
 
 /// A one dimensional texture class
 /** @see GL_TEXTURE_1D */
-class Texture1D : public TextureBase<TextureType::Tex1D> {
+class Texture1D : public TextureBase<TextureType::Texture1D> {
 public:
   /// Uploads the base image.
   /** @param internalFormat - Specifies the number, order, and size of the color components in the texture.

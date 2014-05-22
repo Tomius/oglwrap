@@ -1,7 +1,7 @@
 // Copyright (c) 2014, Tamas Csala
 
-#ifndef OGLWRAP_ENUMS_PRIMITVE_TYPE_H_
-#define OGLWRAP_ENUMS_PRIMITVE_TYPE_H_
+#ifndef OGLWRAP_ENUMS_PRIMITIVE_TYPE_H_
+#define OGLWRAP_ENUMS_PRIMITIVE_TYPE_H_
 
 #include "../config.h"
 
@@ -47,7 +47,6 @@ enum class PrimitiveType : GLenum {
   Patches = GL_PATCHES,
 #endif
 };
-using PrimType = PrimitiveType;
 
 } // enums
 

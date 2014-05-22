@@ -1,7 +1,7 @@
 // Copyright (c) 2014, Tamas Csala
 
-#ifndef OGLWRAP_ENUMS_INDEX_DATA_TYPE_H_
-#define OGLWRAP_ENUMS_INDEX_DATA_TYPE_H_
+#ifndef OGLWRAP_ENUMS_INDEX_TYPE_H_
+#define OGLWRAP_ENUMS_INDEX_TYPE_H_
 
 #include "../config.h"
 

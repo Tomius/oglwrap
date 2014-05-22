@@ -53,7 +53,7 @@ enum class Capability : GLenum {
   PolygonOffsetLine = GL_POLYGON_OFFSET_LINE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_POLYGON_OFFSET_POINT)
-  PolgonOffsetPoint = GL_POLYGON_OFFSET_POINT,
+  PolygonOffsetPoint = GL_POLYGON_OFFSET_POINT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_POLYGON_SMOOTH)
   PolygonSmooth = GL_POLYGON_SMOOTH,

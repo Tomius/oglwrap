@@ -29,7 +29,7 @@ enum class ColorLogicOperation : GLenum {
   AndReverse = GL_AND_REVERSE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_AND_INVERTED)
-  AndInverted= GL_AND_INVERTED,
+  AndInverted = GL_AND_INVERTED,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_NAND)
   Nand = GL_NAND,

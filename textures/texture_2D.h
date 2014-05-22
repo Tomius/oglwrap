@@ -431,10 +431,10 @@ public:
       image.write(&blob, formatString);
 
       Upload(
-        PixelDataInternalFormat::SRGBA8,
+        PixelDataInternalFormat::Rgba8,
         image.columns(),
         image.rows(),
-        PixelDataFormat::RGBA,
+        PixelDataFormat::Rgba,
         PixelDataType::UnsignedByte,
         blob.data()
       );
@@ -456,7 +456,7 @@ public:
 
 /// The most commonly used two-dimensional texture type.
 /** @see GL_TEXTURE_2D */
-typedef Texture2DBase<Texture2DType::Tex2D> Texture2D;
+typedef Texture2DBase<Texture2DType::Texture2D> Texture2D;
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_RECTANGLE)
 /// A rectangle texture is a texture that contains a single 2D image with no mipmaps.
@@ -464,13 +464,13 @@ typedef Texture2DBase<Texture2DType::Tex2D> Texture2D;
   * this texture must be texel values (floating-point), representing texels within the
   * texture, rather than normalized texture coordinates.
   * @see GL_TEXTURE_RECTANGLE */
-typedef Texture2DBase<Texture2DType::TexRect> TextureRect;
+typedef Texture2DBase<Texture2DType::TextureRectangle> TextureRect;
 #endif // GL_TEXTURE_RECTANGLE
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_1D_ARRAY)
 /// An array of one-dimensional textures.
 /** @see GL_TEXTURE_1D_ARRAY */
-typedef Texture2DBase<Texture2DType::Tex1DArray> Texture1DArray;
+typedef Texture2DBase<Texture2DType::Texture1DArray> Texture1DArray;
 #endif // GL_TEXTURE_1D_ARRAY
 
 } // namespace oglwrap

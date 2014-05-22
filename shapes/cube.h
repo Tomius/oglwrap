@@ -51,7 +51,8 @@ public:
   void setupPositions(VertexAttribArray attrib) {
 
     if (is_setup_positions_) {
-      throw std::logic_error("Cube::setup_position is called multiply times on the same object");
+      throw std::logic_error("Cube::setup_position is called multiply "
+                             "times on the same object");
     } else {
       is_setup_positions_ = true;
     }
@@ -105,7 +106,8 @@ public:
   void setupNormals(VertexAttribArray attrib) {
 
     if (is_setup_normals_) {
-      std::logic_error("Cube::setupNormals is called multiply times on the same object");
+      throw std::logic_error("Cube::setupNormals is called multiply "
+                             "times on the same object");
     } else {
       is_setup_normals_ = true;
     }
@@ -143,7 +145,8 @@ public:
   void setupTexCoords(VertexAttribArray attrib) {
 
     if (is_setup_texcoords_) {
-      std::logic_error("Cube::setupTexCoords is called multiply times on the same object");
+      throw std::logic_error("Cube::setupTexCoords is called multiply "
+                             "times on the same object");
     } else {
       is_setup_texcoords_ = true;
     }
@@ -181,7 +184,8 @@ public:
     * @param attrib - The attribute array to use as destination. */
   void setupTangents(VertexAttribArray attrib) {
     if (is_setup_tangents) {
-      std::logic_error("Cube::setupTangents is called multiply times on the same object");
+      throw std::logic_error("Cube::setupTangents is called multiply "
+                             "times on the same object");
     } else {
       is_setup_tangents = true;
     }
@@ -224,7 +228,7 @@ public:
 
   /// Returns the face winding of the cube created by this class.
   FaceOrientation faceWinding() const {
-    return FaceOrientation::CW;
+    return FaceOrientation::Cw;
   }
 
   /// Returns the center of the cube's bounding sphere

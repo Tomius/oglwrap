@@ -10,6 +10,9 @@
 #include "../define_internal_macros.h"
 
 namespace oglwrap {
+
+using PrimType = PrimitiveType;
+
 namespace context {
 
 /// Wrapper for primitive drawing operations

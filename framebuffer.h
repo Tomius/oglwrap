@@ -192,31 +192,31 @@ public:
     std::string errStr;
     GLenum status = gl(CheckFramebufferStatus(GLenum(FBO_TYPE)));
     switch (FramebufferStatus(status)) {
-      case FramebufferStatus::Complete:
+      case FramebufferStatus::FramebufferComplete:
         return;
-      case FramebufferStatus::Incomplete_Attachment:
+      case FramebufferStatus::FramebufferIncompleteAttachment:
         errStr = "One or more framebuffer attachment points are incomplete.";
         break;
-      case FramebufferStatus::Incomplete_MissingAttachment:
+      case FramebufferStatus::FramebufferIncompleteMissingAttachment:
         errStr = "The framebuffer does not have at least one image attached to it.";
         break;
-      case FramebufferStatus::Incomplete_DrawBuffer:
+      case FramebufferStatus::FramebufferIncompleteDrawBuffer:
         errStr = "The value of GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE is GL_NONE for "
                  "any color attachment point(s) named by GL_DRAW_BUFFERi.";
         break;
-      case FramebufferStatus::Incomplete_ReadBuffer:
+      case FramebufferStatus::FramebufferIncompleteReadBuffer:
         errStr = "The GL_READ_BUFFER is not GL_NONE and the value of GL_FRAMEBUFFER_"
                  "ATTACHMENT_OBJECT_TYPE is GL_NONE for the color attachment point "
                  "named by GL_READ_BUFFER.";
         break;
-      case FramebufferStatus::Unsupported:
+      case FramebufferStatus::FramebufferUnsupported:
         errStr = "The combination of internal formats of the attached images violates an "
                  "implementation-dependent set of restrictions.";
         break;
-      case FramebufferStatus::Undefined:
+      case FramebufferStatus::FramebufferUndefined:
         errStr = "The currently bound framebuffer does not exist.";
         break;
-      case FramebufferStatus::Incomplete_Multisample:
+      case FramebufferStatus::FramebufferIncompleteMultisample:
         errStr = "One of the followings happened: \n"
                  "-  The value of GL_RENDERBUFFER_SAMPLES is not the same for all attached "
                  "renderbuffers; if the value of GL_TEXTURE_SAMPLES is the not same for all "
@@ -228,7 +228,7 @@ public:
                  "and textures, the value of GL_TEXTURE_FIXED_SAMPLE_LOCATIONS is not GL_TRUE "
                  "for all attached textures.";
         break;
-      case FramebufferStatus::Incomplete_LayerTargets:
+      case FramebufferStatus::FramebufferIncompleteLayerTargets:
         errStr = "One or more framebuffer attachment is layered, and any populated attachment "
                  "is not layered, or if all populated color attachments are not from textures "
                  "of the same target.";
@@ -414,9 +414,9 @@ public:
   }
 }; // class Framebuffer
 
-typedef FramebufferObject<FramebufferType::Read_Draw> Framebuffer;
-typedef FramebufferObject<FramebufferType::Read> Read_Framebuffer;
-typedef FramebufferObject<FramebufferType::Draw> Draw_Framebuffer;
+typedef FramebufferObject<FramebufferType::Framebuffer> Framebuffer;
+typedef FramebufferObject<FramebufferType::ReadFramebuffer> ReadFramebuffer;
+typedef FramebufferObject<FramebufferType::DrawFramebuffer> DrawFramebuffer;
 
 #endif // glGenFramebuffers && glDeleteFramebuffers
 

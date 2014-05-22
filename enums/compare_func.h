@@ -11,10 +11,10 @@ inline namespace enums {
 
 enum class CompareFunc : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LEQUAL)
-  LEqual = GL_LEQUAL,
+  Lequal = GL_LEQUAL,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_GEQUAL)
-  GEqual = GL_GEQUAL,
+  Gequal = GL_GEQUAL,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LESS)
   Less = GL_LESS,
@@ -26,7 +26,7 @@ enum class CompareFunc : GLenum {
   Equal = GL_EQUAL,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_NOTEQUAL)
-  NotEqual = GL_NOTEQUAL,
+  Notequal = GL_NOTEQUAL,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ALWAYS)
   Always = GL_ALWAYS,

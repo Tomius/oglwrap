@@ -9,7 +9,7 @@ namespace oglwrap {
 
 inline namespace enums {
 
-enum PixelDataFormat {
+enum class PixelDataFormat : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_STENCIL_INDEX)
   StencilIndex = GL_STENCIL_INDEX,
 #endif
@@ -29,43 +29,43 @@ enum PixelDataFormat {
   Blue = GL_BLUE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RG)
-  RG = GL_RG,
+  Rg = GL_RG,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB)
-  RGB = GL_RGB,
+  Rgb = GL_RGB,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA)
-  RGBA = GL_RGBA,
+  Rgba = GL_RGBA,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_BGR)
-  BGR = GL_BGR,
+  Bgr = GL_BGR,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_BGRA)
-  BGRA = GL_BGRA,
+  Bgra = GL_BGRA,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RED_INTEGER)
-  Red_Integer = GL_RED_INTEGER,
+  RedInteger = GL_RED_INTEGER,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_GREEN_INTEGER)
-  Green_Integer = GL_GREEN_INTEGER,
+  GreenInteger = GL_GREEN_INTEGER,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_BLUE_INTEGER)
-  Blue_Integer = GL_BLUE_INTEGER,
+  BlueInteger = GL_BLUE_INTEGER,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RG_INTEGER)
-  RG_Integer = GL_RG_INTEGER,
+  RgInteger = GL_RG_INTEGER,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB_INTEGER)
-  RGB_Integer = GL_RGB_INTEGER,
+  RgbInteger = GL_RGB_INTEGER,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA_INTEGER)
-  RGBA_Integer = GL_RGBA_INTEGER,
+  RgbaInteger = GL_RGBA_INTEGER,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_BGR_INTEGER)
-  BGR_Integer = GL_BGR_INTEGER,
+  BgrInteger = GL_BGR_INTEGER,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_BGRA_INTEGER)
-  BGRA_Integer = GL_BGRA_INTEGER,
+  BgraInteger = GL_BGRA_INTEGER,
 #endif
 };
 

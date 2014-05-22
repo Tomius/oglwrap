@@ -70,15 +70,15 @@ public:
 		Bitfield<BufferSelectBit> buffers;
 	public:
 		ClearBuffers& Color() {
-			buffers |= BufferSelectBit::ColorBuffer;
+			buffers |= BufferSelectBit::ColorBufferBit;
 			return *this;
 		}
 		ClearBuffers& Depth() {
-			buffers |= BufferSelectBit::DepthBuffer;
+			buffers |= BufferSelectBit::DepthBufferBit;
 			return *this;
 		}
 		ClearBuffers& Stencil() {
-			buffers |= BufferSelectBit::StencilBuffer;
+			buffers |= BufferSelectBit::StencilBufferBit;
 			return *this;
 		}
 		~ClearBuffers() {

@@ -11,10 +11,10 @@ inline namespace enums {
 
 enum class FaceOrientation : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_CW)
-  CW = GL_CW,
+  Cw = GL_CW,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_CCW)
-  CCW = GL_CCW,
+  Ccw = GL_CCW,
 #endif
 };
 

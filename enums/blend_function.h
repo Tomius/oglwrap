@@ -50,7 +50,7 @@ enum class BlendFunction : GLenum {
   ConstantAlpha = GL_CONSTANT_ALPHA,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ONE_MINUS_CONSTANT_ALPHA)
-  OneMinusConstantAplha = GL_ONE_MINUS_CONSTANT_ALPHA,
+  OneMinusConstantAlpha = GL_ONE_MINUS_CONSTANT_ALPHA,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SRC_ALPHA_SATURATE)
   SrcAlphaSaturate = GL_SRC_ALPHA_SATURATE,
@@ -58,8 +58,8 @@ enum class BlendFunction : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SRC1_COLOR)
   Src1Color = GL_SRC1_COLOR,
 #endif
-#if OGLWRAP_DEFINE_EVERYTHING || defined(ONE_MINUS_SRC1_COLOR)
-  OneMinusSrc1Color = ONE_MINUS_SRC1_COLOR,
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ONE_MINUS_SRC1_COLOR)
+  OneMinusSrc1Color = GL_ONE_MINUS_SRC1_COLOR,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SRC1_ALPHA)
   Src1Alpha = GL_SRC1_ALPHA,

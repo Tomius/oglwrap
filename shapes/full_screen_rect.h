@@ -33,10 +33,9 @@ public:
     * Calling this function changes the currently active VAO and ArrayBuffer. */
   /// @param attrib - The attribute array to use as destination.
   void setupPositions(VertexAttribArray attrib) {
-
     if (is_setup_positions_) {
-      std::logic_error("FullScreenRectangle::setup_position is called "
-                       "multiply times on the same object");
+      throw std::logic_error("FullScreenRectangle::setup_position is called "
+                             "multiply times on the same object");
     } else {
       is_setup_positions_ = true;
     }
@@ -60,10 +59,9 @@ public:
     * Calling this function changes the currently active VAO and ArrayBuffer. */
   /// @param attrib - The attribute array to use as destination.
   void setupTexCoords(VertexAttribArray attrib, bool upside_down = false) {
-
     if (is_setup_texcoords_) {
-      std::logic_error("FullScreenRectangle::setupTexCoords is called "
-                       "multiply times on the same object");
+      throw std::logic_error("FullScreenRectangle::setupTexCoords is called "
+                             "multiply times on the same object");
     } else {
       is_setup_texcoords_ = true;
     }
@@ -101,8 +99,8 @@ public:
   }
 
   /// Returns the face winding of the cube created by this class.
-  GLenum faceWinding() const {
-    return GL_CW;
+  FaceOrientation faceWinding() const {
+    return FaceOrientation::Cw;
   }
 };
 

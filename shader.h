@@ -220,32 +220,32 @@ public:
       const char * strShaderType = nullptr;
       switch (shader_t) {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPUTE_SHADER)
-        case ShaderType::Compute:
+        case ShaderType::ComputeShader:
           strShaderType = "compute";
           break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_VERTEX_SHADER)
-        case ShaderType::Vertex:
+        case ShaderType::VertexShader:
           strShaderType = "vertex";
           break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_GEOMETRY_SHADER)
-        case ShaderType::Geometry:
+        case ShaderType::GeometryShader:
           strShaderType = "geometry";
           break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRAGMENT_SHADER)
-        case ShaderType::Fragment:
+        case ShaderType::FragmentShader:
           strShaderType = "fragment";
           break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TESS_CONTROL_SHADER)
-        case ShaderType::TessControl:
+        case ShaderType::TessControlShader:
           strShaderType = "tessellation control";
           break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TESS_EVALUATION_SHADER)
-        case ShaderType::TessEval:
+        case ShaderType::TessEvaluationShader:
           strShaderType = "tessellation evaluation";
           break;
 #endif
@@ -314,12 +314,12 @@ typedef Shader<ShaderType::Compute> ComputeShader;
  * @version OpenGL 2.1
  * @see GL_VERTEX_SHADER
  */
-typedef Shader<ShaderType::Vertex> VertexShader;
+typedef Shader<ShaderType::VertexShader> VertexShader;
 
 #if OGLWRAP_INSTANTIATE
-  template class Shader<ShaderType::Vertex>;
+  template class Shader<ShaderType::VertexShader>;
 #else
-  extern template class Shader<ShaderType::Vertex>;
+  extern template class Shader<ShaderType::VertexShader>;
 #endif
 
 #endif // GL_VERTEX_SHADER
@@ -337,12 +337,12 @@ typedef Shader<ShaderType::Vertex> VertexShader;
  * @version OpenGL 3.2
  * @see GL_GEOMETRY_SHADER
  */
-typedef Shader<ShaderType::Geometry> GeometryShader;
+typedef Shader<ShaderType::GeometryShader> GeometryShader;
 
 #if OGLWRAP_INSTANTIATE
-  template class Shader<ShaderType::Geometry>;
+  template class Shader<ShaderType::GeometryShader>;
 #else
-  extern template class Shader<ShaderType::Geometry>;
+  extern template class Shader<ShaderType::GeometryShader>;
 #endif
 
 #endif // GL_GEOMETRY_SHADER
@@ -367,12 +367,12 @@ typedef Shader<ShaderType::Geometry> GeometryShader;
  * @version OpenGL 2.1
  * @see GL_FRAGMENT_SHADER
  */
-typedef Shader<ShaderType::Fragment> FragmentShader;
+typedef Shader<ShaderType::FragmentShader> FragmentShader;
 
 #if OGLWRAP_INSTANTIATE
-  template class Shader<ShaderType::Fragment>;
+  template class Shader<ShaderType::FragmentShader>;
 #else
-  extern template class Shader<ShaderType::Fragment>;
+  extern template class Shader<ShaderType::FragmentShader>;
 #endif
 
 #endif // GL_FRAGMENT_SHADER
@@ -394,12 +394,12 @@ typedef Shader<ShaderType::Fragment> FragmentShader;
  * @version OpenGL 4.0
  * @see GL_TESS_CONTROL_SHADER
  */
-typedef Shader<ShaderType::TessControl> TessControlShader;
+typedef Shader<ShaderType::TessControlShader> TessControlShader;
 
 #if OGLWRAP_INSTANTIATE
-  template class Shader<ShaderType::TessControl>;
+  template class Shader<ShaderType::TessControlShader>;
 #else
-  extern template class Shader<ShaderType::TessControl>;
+  extern template class Shader<ShaderType::TessControlShader>;
 #endif
 
 #endif // GL_TESS_CONTROL_SHADER
@@ -420,12 +420,12 @@ typedef Shader<ShaderType::TessControl> TessControlShader;
  * @version It is core since OpenGL 4.0.
  * @see GL_TESS_EVALUATION_SHADER
  */
-typedef Shader<ShaderType::TessEval> TessEvalShader;
+typedef Shader<ShaderType::TessEvaluationShader> TessEvaluationShader;
 
 #if OGLWRAP_INSTANTIATE
-  template class Shader<ShaderType::TessEval>;
+  template class Shader<ShaderType::TessEvaluationShader>;
 #else
-  extern template class Shader<ShaderType::TessEval>;
+  extern template class Shader<ShaderType::TessEvaluationShader>;
 #endif
 
 #endif // GL_TESS_EVALUATION_SHADER
@@ -700,49 +700,47 @@ public:
       template Program& Program::operator<<(const TessControlShader&);
     #endif
     #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TESS_EVALUATION_SHADER)
-      template void Program::attachShader(TessEvalShader&);
-      template void Program::attachShader(const TessEvalShader&);
-      template Program& Program::operator<<(TessEvalShader&);
-      template Program& Program::operator<<(const TessEvalShader&);
+      template void Program::attachShader(TessEvaluationShader&);
+      template void Program::attachShader(const TessEvaluationShader&);
+      template Program& Program::operator<<(TessEvaluationShader&);
+      template Program& Program::operator<<(const TessEvaluationShader&);
     #endif
   #else
-    #if !OGLWRAP_HEADER_ONLY
-      #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPUTE_SHADER)
-        extern template void Program::attachShader(ComputeShader&);
-        extern template void Program::attachShader(const ComputeShader&);
-        extern template Program& Program::operator<<(ComputeShader&);
-        extern template Program& Program::operator<<(const ComputeShader&);
-      #endif
-      #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_VERTEX_SHADER)
-        extern template void Program::attachShader(VertexShader&);
-        extern template void Program::attachShader(const VertexShader&);
-        extern template Program& Program::operator<<(VertexShader&);
-        extern template Program& Program::operator<<(const VertexShader&);
-      #endif
-      #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRAGMENT_SHADER)
-        extern template void Program::attachShader(FragmentShader&);
-        extern template void Program::attachShader(const FragmentShader&);
-        extern template Program& Program::operator<<(FragmentShader&);
-        extern template Program& Program::operator<<(const FragmentShader&);
-      #endif
-      #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_GEOMETRY_SHADER)
-        extern template void Program::attachShader(GeometryShader&);
-        extern template void Program::attachShader(const GeometryShader&);
-        extern template Program& Program::operator<<(GeometryShader&);
-        extern template Program& Program::operator<<(const GeometryShader&);
-      #endif
-      #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TESS_CONTROL_SHADER)
-        extern template void Program::attachShader(TessControlShader&);
-        extern template void Program::attachShader(const TessControlShader&);
-        extern template Program& Program::operator<<(TessControlShader&);
-        extern template Program& Program::operator<<(const TessControlShader&);
-      #endif
-      #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TESS_EVALUATION_SHADER)
-        extern template void Program::attachShader(TessEvalShader&);
-        extern template void Program::attachShader(const TessEvalShader&);
-        extern template Program& Program::operator<<(TessEvalShader&);
-        extern template Program& Program::operator<<(const TessEvalShader&);
-      #endif
+    #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPUTE_SHADER)
+      extern template void Program::attachShader(ComputeShader&);
+      extern template void Program::attachShader(const ComputeShader&);
+      extern template Program& Program::operator<<(ComputeShader&);
+      extern template Program& Program::operator<<(const ComputeShader&);
+    #endif
+    #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_VERTEX_SHADER)
+      extern template void Program::attachShader(VertexShader&);
+      extern template void Program::attachShader(const VertexShader&);
+      extern template Program& Program::operator<<(VertexShader&);
+      extern template Program& Program::operator<<(const VertexShader&);
+    #endif
+    #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRAGMENT_SHADER)
+      extern template void Program::attachShader(FragmentShader&);
+      extern template void Program::attachShader(const FragmentShader&);
+      extern template Program& Program::operator<<(FragmentShader&);
+      extern template Program& Program::operator<<(const FragmentShader&);
+    #endif
+    #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_GEOMETRY_SHADER)
+      extern template void Program::attachShader(GeometryShader&);
+      extern template void Program::attachShader(const GeometryShader&);
+      extern template Program& Program::operator<<(GeometryShader&);
+      extern template Program& Program::operator<<(const GeometryShader&);
+    #endif
+    #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TESS_CONTROL_SHADER)
+      extern template void Program::attachShader(TessControlShader&);
+      extern template void Program::attachShader(const TessControlShader&);
+      extern template Program& Program::operator<<(TessControlShader&);
+      extern template Program& Program::operator<<(const TessControlShader&);
+    #endif
+    #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TESS_EVALUATION_SHADER)
+      extern template void Program::attachShader(TessEvaluationShader&);
+      extern template void Program::attachShader(const TessEvaluationShader&);
+      extern template Program& Program::operator<<(TessEvaluationShader&);
+      extern template Program& Program::operator<<(const TessEvaluationShader&);
     #endif
   #endif
 #endif
