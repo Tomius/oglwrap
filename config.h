@@ -107,7 +107,7 @@
 
 #if OGLWRAP_DEBUG
   #ifndef OGLWRAP_STOP_AFTER_X_ERRORS
-    #define OGLWRAP_STOP_AFTER_X_ERRORS 5
+    #define OGLWRAP_STOP_AFTER_X_ERRORS 10
   #endif
 #endif
 
