@@ -98,10 +98,12 @@ inline void OGLWRAP_CheckError(const char *file,
   }
 }
 #else
-  #define OGLWRAP_PRINT_ERROR(cond, text)
+  #define OGLWRAP_CHECKED_GLFUNCTION(func) func;
+  #define OGLWRAP_PRINT_IF_ERROR(cond, title, message)
+  #define OGLWRAP_PRINT_ERROR(title, message)
+  #define OGLWRAP_PRINT_FATAL_ERROR(title, message)
   #define OGLWRAP_CHECK_ERROR()
   #define OGLWRAP_CHECK_ERROR_NAMED(glfunc)
-  #define OGLWRAP_CHECKED_FUNCTION(func) func;
 #endif
 
 #define OGLWRAP_CHECKED_FUNCTION(func) OGLWRAP_CHECKED_GLFUNCTION(gl##func)

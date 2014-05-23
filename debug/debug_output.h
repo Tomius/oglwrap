@@ -287,7 +287,7 @@ class DebugOutput {
   static ErrorType last_error;
 
   // Loads in the list of OpenGL errors.
-  DebugOutput() : printError(OGLWRAP_PrintError) {}
+  DebugOutput() {}
 public:
 
   static void AddErrorPrintFormatter(

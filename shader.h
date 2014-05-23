@@ -206,7 +206,7 @@ public:
     gl(CompileShader(shader_));
     compiled_ = true;
 
-    #ifdef OGLWRAP_DEBUG
+    #if OGLWRAP_DEBUG
     // Get compilation status
     GLint status;
     gl(GetShaderiv(shader_, GL_COMPILE_STATUS, &status));
@@ -561,7 +561,7 @@ public:
     gl(LinkProgram(program_));
     *linked_ = true;
 
-    #ifdef OGLWRAP_DEBUG
+    #if OGLWRAP_DEBUG
     GLint status;
     gl(GetProgramiv(program_, GL_LINK_STATUS, &status));
     if (status == GL_FALSE) {
@@ -594,7 +594,7 @@ public:
   /// Validates the program if OGLWRAP_DEBUG is defined.
   /** @see glLinkProgram, glGetProgramiv, glGetProgramInfoLog */
   void validate() const {
-    #ifdef OGLWRAP_DEBUG
+    #if OGLWRAP_DEBUG
     GLint status;
     gl(ValidateProgram(program_));
     gl(GetProgramiv(program_, GL_VALIDATE_STATUS, &status));
