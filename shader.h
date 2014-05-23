@@ -291,12 +291,12 @@ public:
  * @version OpenGL 4.3
  * @see GL_COMPUTE_SHADER
  */
-typedef Shader<ShaderType::Compute> ComputeShader;
+typedef Shader<ShaderType::ComputeShader> ComputeShader;
 
 #if OGLWRAP_INSTANTIATE
-  template class Shader<ShaderType::Compute>;
+  template class Shader<ShaderType::ComputeShader>;
 #else
-  extern template class Shader<ShaderType::Compute>;
+  extern template class Shader<ShaderType::ComputeShader>;
 #endif
 
 #endif // GL_COMPUTE_SHADER
