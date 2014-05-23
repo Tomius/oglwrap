@@ -424,14 +424,19 @@ public:
     * @param formatString - Specifies the number and order of components to be read.
     * @see glTexImage2D */
   static void LoadTexture(const std::string& file,
-                          const std::string& formatString = "RGBA") {
+                          std::string formatString = "SRGBA") {
     try {
+      bool srgb = formatString[0] == 'S';
+      if(srgb) {
+        formatString = formatString.substr(1);
+      }
+
       Magick::Image image = Magick::Image(file);
       Magick::Blob blob;
       image.write(&blob, formatString);
 
       Upload(
-        PixelDataInternalFormat::Rgba8,
+        srgb ? PixelDataInternalFormat::Srgb8Alpha8 : PixelDataInternalFormat::Rgba8,
         image.columns(),
         image.rows(),
         PixelDataFormat::Rgba,
@@ -447,7 +452,7 @@ public:
     * @param formatString - Specifies the number and order of components to be read.
     * @see glTexImage2D */
   BIND_CHECKED void loadTexture(const std::string& file,
-                                const std::string& formatString = "RGBA") const {
+                                const std::string& formatString = "SRGBA") const {
     OGLWRAP_CHECK_BINDING();
     LoadTexture(file, formatString);
   }

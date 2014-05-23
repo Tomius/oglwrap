@@ -25,8 +25,14 @@ enum class PixelDataInternalFormat : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB)
   Rgb = GL_RGB,
 #endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SRGB)
+  Srgb = GL_SRGB,
+#endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA)
   Rgba = GL_RGBA,
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SRGB_ALPHA)
+  SrgbAlpha = GL_SRGB_ALPHA,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_R8)
   R8 = GL_R8,

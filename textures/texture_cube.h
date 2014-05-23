@@ -32,15 +32,13 @@ public:
     * @param type - Specifies the data type of the pixel data.
     * @param data - Specifies a pointer to the image data in memory.
     * @see glTexImage2D */
-  static void Upload(
-    TextureCubeTarget target,
-    PixelDataInternalFormat internalFormat,
-    GLsizei width,
-    GLsizei height,
-    PixelDataFormat format,
-    PixelDataType type,
-    const void *data
-  ) {
+  static void Upload(TextureCubeTarget target,
+                     PixelDataInternalFormat internalFormat,
+                     GLsizei width,
+                     GLsizei height,
+                     PixelDataFormat format,
+                     PixelDataType type,
+                     const void *data) {
     gl(TexImage2D(
       GLenum(target), 0, GLenum(internalFormat), width, height,
       0, GLenum(format), GLenum(type), data
@@ -55,15 +53,13 @@ public:
     * @param type - Specifies the data type of the pixel data.
     * @param data - Specifies a pointer to the image data in memory.
     * @see glTexImage2D */
-  BIND_CHECKED void upload(
-    TextureCubeTarget target,
-    PixelDataInternalFormat internalFormat,
-    GLsizei width,
-    GLsizei height,
-    PixelDataFormat format,
-    PixelDataType type,
-    const void *data
-  ) const {
+  BIND_CHECKED void upload(TextureCubeTarget target,
+                           PixelDataInternalFormat internalFormat,
+                           GLsizei width,
+                           GLsizei height,
+                           PixelDataFormat format,
+                           PixelDataType type,
+                           const void *data) const {
     OGLWRAP_CHECK_BINDING();
     Upload(target, internalFormat, width, height, format, type, data);
   }
@@ -78,16 +74,14 @@ public:
     * @param type - Specifies the data type of the pixel data.
     * @param data - Specifies a pointer to the image data in memory.
     * @see glTexImage2D */
-  static void UploadMipmap(
-    TextureCubeTarget target,
-    GLint level,
-    PixelDataInternalFormat internalFormat,
-    GLsizei width,
-    GLsizei height,
-    PixelDataFormat format,
-    PixelDataType type,
-    const void *data
-  ) {
+  static void UploadMipmap(TextureCubeTarget target,
+                           GLint level,
+                           PixelDataInternalFormat internalFormat,
+                           GLsizei width,
+                           GLsizei height,
+                           PixelDataFormat format,
+                           PixelDataType type,
+                           const void *data) {
     gl(TexImage2D(
       GLenum(target), level, GLenum(internalFormat), width, height,
       0, GLenum(format), GLenum(type), data
@@ -103,16 +97,14 @@ public:
     * @param type - Specifies the data type of the pixel data.
     * @param data - Specifies a pointer to the image data in memory.
     * @see glTexImage2D */
-  BIND_CHECKED void uploadMipmap(
-    TextureCubeTarget target,
-    GLint level,
-    PixelDataInternalFormat internalFormat,
-    GLsizei width,
-    GLsizei height,
-    PixelDataFormat format,
-    PixelDataType type,
-    const void *data
-  ) const {
+  BIND_CHECKED void uploadMipmap(TextureCubeTarget target,
+                                 GLint level,
+                                 PixelDataInternalFormat internalFormat,
+                                 GLsizei width,
+                                 GLsizei height,
+                                 PixelDataFormat format,
+                                 PixelDataType type,
+                                 const void *data) const {
     OGLWRAP_CHECK_BINDING();
     UploadMipmap(target, level, internalFormat, width, height, format, type, data);
   }
@@ -126,16 +118,14 @@ public:
     * @param type - Specifies the data type of the pixel data.
     * @param data - Specifies a pointer to the image data in memory.
     * @see glTexSubImage2D */
-  static void SubUpload(
-    TextureCubeTarget target,
-    GLint xOffset,
-    GLint yOffset,
-    GLsizei width,
-    GLsizei height,
-    PixelDataFormat format,
-    PixelDataType type,
-    const void *data
-  ) {
+  static void SubUpload(TextureCubeTarget target,
+                        GLint xOffset,
+                        GLint yOffset,
+                        GLsizei width,
+                        GLsizei height,
+                        PixelDataFormat format,
+                        PixelDataType type,
+                        const void *data) {
     gl(TexSubImage2D(
       GLenum(target), 0, xOffset, yOffset, width, height,
       GLenum(format), GLenum(type), data
@@ -149,16 +139,14 @@ public:
     * @param type - Specifies the data type of the pixel data.
     * @param data - Specifies a pointer to the image data in memory.
     * @see glTexSubImage2D */
-  BIND_CHECKED void subUpload(
-    TextureCubeTarget target,
-    GLint xOffset,
-    GLint yOffset,
-    GLsizei width,
-    GLsizei height,
-    PixelDataFormat format,
-    PixelDataType type,
-    const void *data
-  ) const {
+  BIND_CHECKED void subUpload(TextureCubeTarget target,
+                              GLint xOffset,
+                              GLint yOffset,
+                              GLsizei width,
+                              GLsizei height,
+                              PixelDataFormat format,
+                              PixelDataType type,
+                              const void *data) const {
     OGLWRAP_CHECK_BINDING();
     SubUpload(target, xOffset, yOffset, width, height, format, type, data);
   }
@@ -172,17 +160,15 @@ public:
     * @param type - Specifies the data type of the pixel data.
     * @param data - Specifies a pointer to the image data in memory.
     * @see glTexSubImage2D */
-  static void SubUploadMipmap(
-    TextureCubeTarget target,
-    GLint level,
-    GLint xOffset,
-    GLint yOffset,
-    GLsizei width,
-    GLsizei height,
-    PixelDataFormat format,
-    PixelDataType type,
-    const void *data
-  ) {
+  static void SubUploadMipmap(TextureCubeTarget target,
+                              GLint level,
+                              GLint xOffset,
+                              GLint yOffset,
+                              GLsizei width,
+                              GLsizei height,
+                              PixelDataFormat format,
+                              PixelDataType type,
+                              const void *data) {
     gl(TexSubImage2D(
       GLenum(target), level, xOffset, yOffset,
       width, height, GLenum(format), GLenum(type), data
@@ -197,17 +183,15 @@ public:
     * @param type - Specifies the data type of the pixel data.
     * @param data - Specifies a pointer to the image data in memory.
     * @see glTexSubImage2D */
-  BIND_CHECKED void subUploadMipmap(
-    TextureCubeTarget target,
-    GLint level,
-    GLint xOffset,
-    GLint yOffset,
-    GLsizei width,
-    GLsizei height,
-    PixelDataFormat format,
-    PixelDataType type,
-    const void *data
-  ) const {
+  BIND_CHECKED void subUploadMipmap(TextureCubeTarget target,
+                                    GLint level,
+                                    GLint xOffset,
+                                    GLint yOffset,
+                                    GLsizei width,
+                                    GLsizei height,
+                                    PixelDataFormat format,
+                                    PixelDataType type,
+                                    const void *data) const {
     OGLWRAP_CHECK_BINDING();
     SubUploadMipmap(
       target, level, xOffset, yOffset, width, height, format, type, data
@@ -221,13 +205,11 @@ public:
     * @param internalFormat - Specifies the sized internal format to be used to store texture image data.
     * @param width - Specifies the width of the texture, in texels.
     * @param height - Specifies the height of the texture, in texels. */
-  static void Storage(
-    TextureCubeTarget target,
-    GLsizei levels,
-    GLenum internalFormat,
-    GLsizei width,
-    GLsizei height
-  ) {
+  static void Storage(TextureCubeTarget target,
+                      GLsizei levels,
+                      GLenum internalFormat,
+                      GLsizei width,
+                      GLsizei height) {
     gl(TexStorage2D(
       GLenum(target), levels, GLenum(internalFormat), width, height
     ));
@@ -238,13 +220,11 @@ public:
     * @param internalFormat - Specifies the sized internal format to be used to store texture image data.
     * @param width - Specifies the width of the texture, in texels.
     * @param height - Specifies the height of the texture, in texels. */
-  BIND_CHECKED void storage(
-    TextureCubeTarget target,
-    GLsizei levels,
-    GLenum internalFormat,
-    GLsizei width,
-    GLsizei height
-  ) const {
+  BIND_CHECKED void storage(TextureCubeTarget target,
+                            GLsizei levels,
+                            GLenum internalFormat,
+                            GLsizei width,
+                            GLsizei height) const {
     OGLWRAP_CHECK_BINDING();
     Storage(target, levels, internalFormat, width, height);
   }
@@ -256,14 +236,12 @@ public:
     * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     * @param width/height - Specifies the width/height of the texture to copy.
     * @see glCopyTexImage2D */
-  static void Copy(
-    TextureCubeTarget target,
-    PixelDataInternalFormat internalFormat,
-    GLint x,
-    GLint y,
-    GLsizei width,
-    GLsizei height
-  ) {
+  static void Copy(TextureCubeTarget target,
+                   PixelDataInternalFormat internalFormat,
+                   GLint x,
+                   GLint y,
+                   GLsizei width,
+                   GLsizei height) {
     gl(CopyTexImage2D(
       GLenum(target), 0, GLenum(internalFormat), x, y, width, height, 0
     ));
@@ -274,14 +252,12 @@ public:
     * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     * @param width/height - Specifies the width/height of the texture to copy.
     * @see glCopyTexImage2D */
-  BIND_CHECKED void copy(
-    TextureCubeTarget target,
-    PixelDataInternalFormat internalFormat,
-    GLint x,
-    GLint y,
-    GLsizei width,
-    GLsizei height
-  ) const {
+  BIND_CHECKED void copy(TextureCubeTarget target,
+                         PixelDataInternalFormat internalFormat,
+                         GLint x,
+                         GLint y,
+                         GLsizei width,
+                         GLsizei height) const {
     OGLWRAP_CHECK_BINDING();
     Copy(target, internalFormat, x, y, width, height);
   }
@@ -293,15 +269,13 @@ public:
     * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     * @param width/height - Specifies the width/height of the texture to copy.
     * @see glCopyTexImage2D */
-  static void CopyMipmap(
-    TextureCubeTarget target,
-    GLint level,
-    PixelDataInternalFormat internalFormat,
-    GLint x,
-    GLint y,
-    GLsizei width,
-    GLsizei height
-  ) {
+  static void CopyMipmap(TextureCubeTarget target,
+                         GLint level,
+                         PixelDataInternalFormat internalFormat,
+                         GLint x,
+                         GLint y,
+                         GLsizei width,
+                         GLsizei height) {
     gl(CopyTexImage2D(
       GLenum(target), level, GLenum(internalFormat), x, y, width, height, 0
     ));
@@ -313,15 +287,13 @@ public:
     * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     * @param width/height - Specifies the width/height of the texture to copy.
     * @see glCopyTexImage2D */
-  BIND_CHECKED void copyMipmap(
-    TextureCubeTarget target,
-    GLint level,
-    PixelDataInternalFormat internalFormat,
-    GLint x,
-    GLint y,
-    GLsizei width,
-    GLsizei height
-  ) const {
+  BIND_CHECKED void copyMipmap(TextureCubeTarget target,
+                               GLint level,
+                               PixelDataInternalFormat internalFormat,
+                               GLint x,
+                               GLint y,
+                               GLsizei width,
+                               GLsizei height) const {
     OGLWRAP_CHECK_BINDING();
     CopyMipmap(target, level, internalFormat, x, y, width, height);
   }
@@ -332,15 +304,13 @@ public:
     * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     * @param width/height - Specifies the width/height of the texture to copy.
     * @see glCopyTexSubImage2D */
-  static void CopySub(
-    TextureCubeTarget target,
-    GLint xOffset,
-    GLint yOffset,
-    GLint x,
-    GLint y,
-    GLsizei width,
-    GLsizei height
-  ) {
+  static void CopySub(TextureCubeTarget target,
+                      GLint xOffset,
+                      GLint yOffset,
+                      GLint x,
+                      GLint y,
+                      GLsizei width,
+                      GLsizei height) {
     gl(CopyTexSubImage2D(
       GLenum(target), 0, xOffset, yOffset, x, y, width, height
     ));
@@ -351,15 +321,13 @@ public:
     * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     * @param width/height - Specifies the width/height of the texture to copy.
     * @see glCopyTexSubImage2D */
-  BIND_CHECKED void copySub(
-    TextureCubeTarget target,
-    GLint xOffset,
-    GLint yOffset,
-    GLint x,
-    GLint y,
-    GLsizei width,
-    GLsizei height
-  ) const {
+  BIND_CHECKED void copySub(TextureCubeTarget target,
+                            GLint xOffset,
+                            GLint yOffset,
+                            GLint x,
+                            GLint y,
+                            GLsizei width,
+                            GLsizei height) const {
     OGLWRAP_CHECK_BINDING();
     CopySub(target, xOffset, yOffset, x, y, width, height);
   }
@@ -371,16 +339,14 @@ public:
     * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     * @param width/height - Specifies the width/height of the texture to copy.
     * @see glCopyTexSubImage2D */
-  static void CopySubMipmap(
-    TextureCubeTarget target,
-    GLint level,
-    GLint xOffset,
-    GLint yOffset,
-    GLint x,
-    GLint y,
-    GLsizei width,
-    GLsizei height
-  ) {
+  static void CopySubMipmap(TextureCubeTarget target,
+                            GLint level,
+                            GLint xOffset,
+                            GLint yOffset,
+                            GLint x,
+                            GLint y,
+                            GLsizei width,
+                            GLsizei height) {
     gl(CopyTexSubImage2D(
       GLenum(target), level, xOffset, yOffset, x, y, width, height
     ));
@@ -392,16 +358,14 @@ public:
     * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     * @param width/height - Specifies the width/height of the texture to copy.
     * @see glCopyTexSubImage2D */
-  BIND_CHECKED void copySubMipmap(
-    TextureCubeTarget target,
-    GLint level,
-    GLint xOffset,
-    GLint yOffset,
-    GLint x,
-    GLint y,
-    GLsizei width,
-    GLsizei height
-  ) const {
+  BIND_CHECKED void copySubMipmap(TextureCubeTarget target,
+                                  GLint level,
+                                  GLint xOffset,
+                                  GLint yOffset,
+                                  GLint x,
+                                  GLint y,
+                                  GLsizei width,
+                                  GLsizei height) const {
     OGLWRAP_CHECK_BINDING();
     CopySubMipmap(target, level, xOffset, yOffset, x, y, width, height);
   }
@@ -491,19 +455,21 @@ public:
     * @param file - Path to the image file.
     * @param formatString - Specifies the number and order of components to be read.
     * @see glTexImage2D */
-  static void LoadTexture(
-    TextureCubeTarget target,
-    const std::string& file,
-    const std::string& formatString = "RGBA"
-  ) {
+  static void LoadTexture(TextureCubeTarget target, const std::string& file,
+                          std::string formatString = "SRGBA") {
     try {
+      bool srgb = formatString[0] == 'S';
+      if(srgb) {
+        formatString = formatString.substr(1);
+      }
+
       Magick::Image image = Magick::Image(file);
       Magick::Blob blob;
       image.write(&blob, formatString);
 
       Upload(
         target,
-        PixelDataInternalFormat::Rgba8,
+        srgb ? PixelDataInternalFormat::Srgb8Alpha8 : PixelDataInternalFormat::Rgba8,
         image.columns(),
         image.rows(),
         PixelDataFormat::Rgba,
@@ -519,11 +485,8 @@ public:
     * @param file - Path to the image file.
     * @param formatString - Specifies the number and order of components to be read.
     * @see glTexImage2D */
-  BIND_CHECKED void loadTexture(
-    TextureCubeTarget target,
-    const std::string& file,
-    const std::string& formatString = "RGBA"
-  ) const {
+  BIND_CHECKED void loadTexture(TextureCubeTarget target, const std::string& file,
+                                const std::string& formatString = "SRGBA") const {
     OGLWRAP_CHECK_BINDING();
     LoadTexture(target, file, formatString);
   }
@@ -533,19 +496,21 @@ public:
     * @param file - Path to the image file.
     * @param formatString - Specifies the number and order of components to be read.
     * @see glTexImage2D */
-  static void LoadTexture(
-    GLuint faceID,
-    const std::string& file,
-    const std::string& formatString = "RGBA"
-  ) {
+  static void LoadTexture(GLuint faceID, const std::string& file,
+                          std::string formatString = "SRGBA") {
     try {
+      bool srgb = formatString[0] == 'S';
+      if(srgb) {
+        formatString = formatString.substr(1);
+      }
+
       Magick::Image image = Magick::Image(file);
       Magick::Blob blob;
       image.write(&blob, formatString);
 
       Upload(
         cubeFace(faceID),
-        PixelDataInternalFormat::Rgba8,
+        srgb ? PixelDataInternalFormat::Srgb8Alpha8 : PixelDataInternalFormat::Rgba8,
         image.columns(),
         image.rows(),
         PixelDataFormat::Rgba,
@@ -564,7 +529,7 @@ public:
   BIND_CHECKED void loadTexture(
     GLuint faceID,
     const std::string& file,
-    const std::string& formatString = "RGBA"
+    const std::string& formatString = "SRGBA"
   ) const {
     OGLWRAP_CHECK_BINDING();
     LoadTexture(faceID, file, formatString);
