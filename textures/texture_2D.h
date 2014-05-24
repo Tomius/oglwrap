@@ -421,40 +421,66 @@ public:
 #if OGLWRAP_USE_IMAGEMAGICK
   /// Loads in, and uploads an image from a file using Magick++.
   /** @param file - Path to the image file.
-    * @param formatString - Specifies the number and order of components to be read.
+    * @param format_string - Specifies the number and order of components to be read.
     * @see glTexImage2D */
   static void LoadTexture(const std::string& file,
-                          std::string formatString = "SRGBA") {
+                          std::string format_string = "CSRGBA") {
     try {
-      bool srgb = formatString[0] == 'S';
-      if(srgb) {
-        formatString = formatString.substr(1);
+      bool srgb{false}, compressed{false};
+      size_t s_pos = format_string.find('S');
+      if(s_pos != std::string::npos) {
+        srgb = true;
+        format_string.erase(format_string.begin() + s_pos);
+      }
+      size_t c_pos = format_string.find('C');
+      if(c_pos != std::string::npos) {
+        compressed = true;
+        format_string.erase(format_string.begin() + c_pos);
       }
 
       Magick::Image image = Magick::Image(file);
       Magick::Blob blob;
-      image.write(&blob, formatString);
+      image.write(&blob, format_string);
+
+      using InternalFormat = PixelDataInternalFormat;
+      InternalFormat internal_format =
+        srgb ? (compressed ? InternalFormat::CompressedSrgbAlpha :
+                             InternalFormat::Srgb8Alpha8) :
+               (compressed ? InternalFormat::CompressedRgba :
+                             InternalFormat::Rgba8);
+
+      bool bad_alignment = (image.columns() * format_string.length()) % 4 != 0;
+      GLint unpack_aligment;
+
+      if(bad_alignment) {
+        gl(GetIntegerv(GL_UNPACK_ALIGNMENT, &unpack_aligment));
+        gl(PixelStorei(GL_UNPACK_ALIGNMENT, 1));
+      }
 
       Upload(
-        srgb ? PixelDataInternalFormat::Srgb8Alpha8 : PixelDataInternalFormat::Rgba8,
+        internal_format,
         image.columns(),
         image.rows(),
         PixelDataFormat::Rgba,
         PixelDataType::UnsignedByte,
         blob.data()
       );
+
+      if(bad_alignment) {
+        gl(PixelStorei(GL_UNPACK_ALIGNMENT, unpack_aligment));
+      }
     } catch(Magick::Error& Error) {
       std::cerr << "Error loading texture: " << Error.what() << std::endl;
     }
   }
   /// Loads in, and uploads an image from a file using Magick++.
   /** @param file - Path to the image file.
-    * @param formatString - Specifies the number and order of components to be read.
+    * @param format_string - Specifies the number and order of components to be read.
     * @see glTexImage2D */
   BIND_CHECKED void loadTexture(const std::string& file,
-                                const std::string& formatString = "SRGBA") const {
+                                const std::string& format_string = "CSRGBA") const {
     OGLWRAP_CHECK_BINDING();
-    LoadTexture(file, formatString);
+    LoadTexture(file, format_string);
   }
 #endif
 };

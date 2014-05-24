@@ -453,29 +453,55 @@ public:
   /// Loads in, and uploads an image for one side of the cube from a file using Magick++.
   /** @param target - Specifies which one of the six sides of the cube to use as target.
     * @param file - Path to the image file.
-    * @param formatString - Specifies the number and order of components to be read.
+    * @param format_string - Specifies the number and order of components to be read.
     * @see glTexImage2D */
   static void LoadTexture(TextureCubeTarget target, const std::string& file,
-                          std::string formatString = "SRGBA") {
+                          std::string format_string = "CSRGBA") {
     try {
-      bool srgb = formatString[0] == 'S';
-      if(srgb) {
-        formatString = formatString.substr(1);
+      bool srgb{false}, compressed{false};
+      size_t s_pos = format_string.find('S');
+      if(s_pos != std::string::npos) {
+        srgb = true;
+        format_string.erase(format_string.begin() + s_pos);
+      }
+      size_t c_pos = format_string.find('C');
+      if(c_pos != std::string::npos) {
+        compressed = true;
+        format_string.erase(format_string.begin() + c_pos);
       }
 
       Magick::Image image = Magick::Image(file);
       Magick::Blob blob;
-      image.write(&blob, formatString);
+      image.write(&blob, format_string);
+
+      using InternalFormat = PixelDataInternalFormat;
+      InternalFormat internal_format =
+        srgb ? (compressed ? InternalFormat::CompressedSrgbAlpha :
+                             InternalFormat::Srgb8Alpha8) :
+               (compressed ? InternalFormat::CompressedRgba :
+                             InternalFormat::Rgba8);
+
+      bool bad_alignment = (image.columns() * format_string.length()) % 4 != 0;
+      GLint unpack_aligment;
+
+      if(bad_alignment) {
+        gl(GetIntegerv(GL_UNPACK_ALIGNMENT, &unpack_aligment));
+        gl(PixelStorei(GL_UNPACK_ALIGNMENT, 1));
+      }
 
       Upload(
         target,
-        srgb ? PixelDataInternalFormat::Srgb8Alpha8 : PixelDataInternalFormat::Rgba8,
+        internal_format,
         image.columns(),
         image.rows(),
         PixelDataFormat::Rgba,
         PixelDataType::UnsignedByte,
         blob.data()
       );
+
+      if(bad_alignment) {
+        gl(PixelStorei(GL_UNPACK_ALIGNMENT, unpack_aligment));
+      }
     } catch(Magick::Error& Error) {
       std::cerr << "Error loading texture: " << Error.what() << std::endl;
     }
@@ -483,56 +509,32 @@ public:
   /// Loads in, and uploads an image for one side of the cube from a file using Magick++.
   /** @param target - Specifies which one of the six sides of the cube to use as target.
     * @param file - Path to the image file.
-    * @param formatString - Specifies the number and order of components to be read.
+    * @param format_string - Specifies the number and order of components to be read.
     * @see glTexImage2D */
   BIND_CHECKED void loadTexture(TextureCubeTarget target, const std::string& file,
-                                const std::string& formatString = "SRGBA") const {
+                                const std::string& format_string = "CSRGBA") const {
     OGLWRAP_CHECK_BINDING();
-    LoadTexture(target, file, formatString);
+    LoadTexture(target, file, format_string);
   }
 
   /// Loads in, and uploads an image for one side of the cube from a file using Magick++.
   /** @param faceID - Specifies the index of the side to upload. It is usefully to upload all six sides in a for loop.
     * @param file - Path to the image file.
-    * @param formatString - Specifies the number and order of components to be read.
+    * @param format_string - Specifies the number and order of components to be read.
     * @see glTexImage2D */
   static void LoadTexture(GLuint faceID, const std::string& file,
-                          std::string formatString = "SRGBA") {
-    try {
-      bool srgb = formatString[0] == 'S';
-      if(srgb) {
-        formatString = formatString.substr(1);
-      }
-
-      Magick::Image image = Magick::Image(file);
-      Magick::Blob blob;
-      image.write(&blob, formatString);
-
-      Upload(
-        cubeFace(faceID),
-        srgb ? PixelDataInternalFormat::Srgb8Alpha8 : PixelDataInternalFormat::Rgba8,
-        image.columns(),
-        image.rows(),
-        PixelDataFormat::Rgba,
-        PixelDataType::UnsignedByte,
-        blob.data()
-      );
-    } catch(Magick::Error& Error) {
-      std::cerr << "Error loading texture: " << Error.what() << std::endl;
-    }
+                          std::string format_string = "CSRGBA") {
+    LoadTexture(cubeFace(faceID), file, format_string);
   }
   /// Loads in, and uploads an image for one side of the cube from a file using Magick++.
   /** @param faceID - Specifies the index of the side to upload. It is usefully to upload all six sides in a for loop.
     * @param file - Path to the image file.
-    * @param formatString - Specifies the number and order of components to be read.
+    * @param format_string - Specifies the number and order of components to be read.
     * @see glTexImage2D */
-  BIND_CHECKED void loadTexture(
-    GLuint faceID,
-    const std::string& file,
-    const std::string& formatString = "SRGBA"
-  ) const {
+  BIND_CHECKED void loadTexture(GLuint faceID, const std::string& file,
+                                const std::string& format_string = "CSRGBA") const {
     OGLWRAP_CHECK_BINDING();
-    LoadTexture(faceID, file, formatString);
+    LoadTexture(faceID, file, format_string);
   }
 #endif
 }; // End of TextureCube definition
