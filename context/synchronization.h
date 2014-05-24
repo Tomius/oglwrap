@@ -12,7 +12,6 @@
 namespace oglwrap {
 namespace context {
 
-/// Wrapper for blending operations.
 class Synchronization {
 public:
   #if OGLWRAP_DEFINE_EVERYTHING || defined(glMemoryBarrier)

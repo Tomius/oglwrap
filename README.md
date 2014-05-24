@@ -12,7 +12,7 @@ Features:
 * Header only, platform-independent
 * No need to configure it per machine (but you might want some configuration using macros per projects)
 * Has full code-completion support
-* Type-safe enums instead GLenum (so you get compile time errors in oglwrap, where you would get a GL_INVALID_ENUM runtime in C OpenGL)
+* Type-safe enums instead GLenum (so you can say goodbye to GL_INVALID_ENUM forever).
 * Has bind-checking. This means that you'll get warnings if forget to bind some OpenGL object before you use it:
 ```
 oglwrap::Texture2D tex;
@@ -49,7 +49,8 @@ Also note, that you can't bind the texture to a wrong target, and you can't
 specify an invalid border value. Also its more explicit, that you are uploading the base texture, not a mipmap (you can use tex.uploadMipmap() for that)
 * Lots of debug info if you do something invalid. For example the following code:
 ```
-gl.DrawArrays(PrimitiveType::Triangles, 0, -1);
+using gl = oglwrap::Context;
+gl::DrawArrays(PrimitiveType::Triangles, 0, -1);
 ```
 Results this output:
 ```
