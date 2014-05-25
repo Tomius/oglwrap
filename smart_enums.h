@@ -29,7 +29,9 @@
 #include "./enums/swizzle_mode.h"
 #include "./enums/wrap_mode.h"
 #include "./enums/buffer_usage.h"
+#include "./enums/hint_target.h"
 #include "./enums/face_orientation.h"
+#include "./enums/hint_option.h"
 #include "./enums/memory_barrier_bit.h"
 #include "./enums/buffer_type.h"
 #include "./enums/compare_mode.h"
@@ -626,6 +628,13 @@ public:
   static DitherEnum Dither;
 #endif
 
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DONT_CARE)
+  struct DontCareEnum {
+    constexpr operator HintOption() const { return HintOption(GL_DONT_CARE); }
+  };
+  static DontCareEnum DontCare;
+#endif
+
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DOUBLE)
   struct DoubleEnum {
     constexpr operator DataType() const { return DataType(GL_DOUBLE); }
@@ -710,6 +719,13 @@ public:
   static EquivEnum Equiv;
 #endif
 
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FASTEST)
+  struct FastestEnum {
+    constexpr operator HintOption() const { return HintOption(GL_FASTEST); }
+  };
+  static FastestEnum Fastest;
+#endif
+
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FILL)
   struct FillEnum {
     constexpr operator PolyMode() const { return PolyMode(GL_FILL); }
@@ -751,6 +767,13 @@ public:
     constexpr operator ShaderType() const { return ShaderType(GL_FRAGMENT_SHADER); }
   };
   static FragmentShaderEnum FragmentShader;
+#endif
+
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRAGMENT_SHADER_DERIVATIVE_HINT)
+  struct FragmentShaderDerivativeHintEnum {
+    constexpr operator HintTarget() const { return HintTarget(GL_FRAGMENT_SHADER_DERIVATIVE_HINT); }
+  };
+  static FragmentShaderDerivativeHintEnum FragmentShaderDerivativeHint;
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRAMEBUFFER)
@@ -1085,6 +1108,13 @@ public:
   static LineSmoothEnum LineSmooth;
 #endif
 
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LINE_SMOOTH_HINT)
+  struct LineSmoothHintEnum {
+    constexpr operator HintTarget() const { return HintTarget(GL_LINE_SMOOTH_HINT); }
+  };
+  static LineSmoothHintEnum LineSmoothHint;
+#endif
+
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LINE_STRIP)
   struct LineStripEnum {
     constexpr operator PrimitiveType() const { return PrimitiveType(GL_LINE_STRIP); }
@@ -1218,6 +1248,13 @@ public:
     constexpr operator CompareFunc() const { return CompareFunc(GL_NEVER); }
   };
   static NeverEnum Never;
+#endif
+
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_NICEST)
+  struct NicestEnum {
+    constexpr operator HintOption() const { return HintOption(GL_NICEST); }
+  };
+  static NicestEnum Nicest;
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_NONE)
@@ -1501,6 +1538,13 @@ public:
     constexpr operator Capability() const { return Capability(GL_POLYGON_SMOOTH); }
   };
   static PolygonSmoothEnum PolygonSmooth;
+#endif
+
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_POLYGON_SMOOTH_HINT)
+  struct PolygonSmoothHintEnum {
+    constexpr operator HintTarget() const { return HintTarget(GL_POLYGON_SMOOTH_HINT); }
+  };
+  static PolygonSmoothHintEnum PolygonSmoothHint;
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PRIMITIVE_RESTART)
@@ -2355,6 +2399,13 @@ public:
   static TextureBufferEnum TextureBuffer;
 #endif
 
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_COMPRESSION_HINT)
+  struct TextureCompressionHintEnum {
+    constexpr operator HintTarget() const { return HintTarget(GL_TEXTURE_COMPRESSION_HINT); }
+  };
+  static TextureCompressionHintEnum TextureCompressionHint;
+#endif
+
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_CUBE_MAP)
   struct TextureCubeMapEnum {
     constexpr operator TextureType() const { return TextureType(GL_TEXTURE_CUBE_MAP); }
@@ -2793,6 +2844,9 @@ public:
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB9_E5)
   SmartEnums::Rgb9E5Enum SmartEnums::Rgb9E5;
 #endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_CONSTANT_COLOR)
+  SmartEnums::ConstantColorEnum SmartEnums::ConstantColor;
+#endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA32UI)
   SmartEnums::Rgba32UiEnum SmartEnums::Rgba32Ui;
 #endif
@@ -2936,6 +2990,9 @@ public:
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_SHORT_4_4_4_4)
   SmartEnums::UnsignedShort4444Enum SmartEnums::UnsignedShort4444;
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRAGMENT_SHADER_DERIVATIVE_HINT)
+  SmartEnums::FragmentShaderDerivativeHintEnum SmartEnums::FragmentShaderDerivativeHint;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DEBUG_OUTPUT)
   SmartEnums::DebugOutputEnum SmartEnums::DebugOutput;
@@ -3138,6 +3195,9 @@ public:
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_BUFFER_BIT)
   SmartEnums::ColorBufferBitEnum SmartEnums::ColorBufferBit;
 #endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DONT_CARE)
+  SmartEnums::DontCareEnum SmartEnums::DontCare;
+#endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_XOR)
   SmartEnums::XorEnum SmartEnums::Xor;
 #endif
@@ -3309,6 +3369,9 @@ public:
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT8)
   SmartEnums::ColorAttachment8Enum SmartEnums::ColorAttachment8;
 #endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LINE_SMOOTH_HINT)
+  SmartEnums::LineSmoothHintEnum SmartEnums::LineSmoothHint;
+#endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_CLAMP_TO_EDGE)
   SmartEnums::ClampToEdgeEnum SmartEnums::ClampToEdge;
 #endif
@@ -3357,8 +3420,8 @@ public:
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RG16_SNORM)
   SmartEnums::Rg16SnormEnum SmartEnums::Rg16Snorm;
 #endif
-#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_MAP_COHERENT_BIT)
-  SmartEnums::MapCoherentBitEnum SmartEnums::MapCoherentBit;
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPARE_REF_TO_TEXTURE)
+  SmartEnums::CompareRefToTextureEnum SmartEnums::CompareRefToTexture;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE)
   SmartEnums::FramebufferIncompleteMultisampleEnum SmartEnums::FramebufferIncompleteMultisample;
@@ -3422,6 +3485,9 @@ public:
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_POINTS)
   SmartEnums::PointsEnum SmartEnums::Points;
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FASTEST)
+  SmartEnums::FastestEnum SmartEnums::Fastest;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PACK_IMAGE_HEIGHT)
   SmartEnums::PackImageHeightEnum SmartEnums::PackImageHeight;
@@ -3527,6 +3593,9 @@ public:
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_STREAM_DRAW)
   SmartEnums::StreamDrawEnum SmartEnums::StreamDraw;
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_POLYGON_SMOOTH_HINT)
+  SmartEnums::PolygonSmoothHintEnum SmartEnums::PolygonSmoothHint;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_BUFFER_UPDATE_BARRIER_BIT)
   SmartEnums::BufferUpdateBarrierBitEnum SmartEnums::BufferUpdateBarrierBit;
@@ -3678,8 +3747,8 @@ public:
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_POLYGON_SMOOTH)
   SmartEnums::PolygonSmoothEnum SmartEnums::PolygonSmooth;
 #endif
-#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPARE_REF_TO_TEXTURE)
-  SmartEnums::CompareRefToTextureEnum SmartEnums::CompareRefToTexture;
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_MAP_COHERENT_BIT)
+  SmartEnums::MapCoherentBitEnum SmartEnums::MapCoherentBit;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_INCR)
   SmartEnums::IncrEnum SmartEnums::Incr;
@@ -3720,8 +3789,8 @@ public:
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_STACK_OVERFLOW)
   SmartEnums::StackOverflowEnum SmartEnums::StackOverflow;
 #endif
-#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_CONSTANT_COLOR)
-  SmartEnums::ConstantColorEnum SmartEnums::ConstantColor;
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_COMPRESSION_HINT)
+  SmartEnums::TextureCompressionHintEnum SmartEnums::TextureCompressionHint;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA32F)
   SmartEnums::Rgba32FEnum SmartEnums::Rgba32F;
@@ -3827,6 +3896,9 @@ public:
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_BYTE)
   SmartEnums::UnsignedByteEnum SmartEnums::UnsignedByte;
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_NICEST)
+  SmartEnums::NicestEnum SmartEnums::Nicest;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNIFORM_BARRIER_BIT)
   SmartEnums::UniformBarrierBitEnum SmartEnums::UniformBarrierBit;

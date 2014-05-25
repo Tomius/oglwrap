@@ -24,6 +24,7 @@
 #include "context/pixel_ops.h"
 #include "context/blending.h"
 #include "context/synchronization.h"
+#include "context/hints.h"
 
 namespace oglwrap {
 class Context
@@ -44,6 +45,7 @@ class Context
 	, public context::PixelOps
 	, public context::Blending
 	, public context::Synchronization
+	, public context::Hints
 { };
 }
 
