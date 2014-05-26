@@ -71,7 +71,7 @@ inline void OGLWRAP_CheckError(const char *file,
                                const char *func,
                                int line,
                                const char* glfunc = nullptr) {
-  DebugOutput::LastError() = context::Errors::GetError();
+  DebugOutput::LastError() = context::GetError();
   if (DebugOutput::LastError() != ErrorType::NoError) {
     std::string title;
 

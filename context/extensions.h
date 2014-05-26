@@ -3,17 +3,15 @@
 #ifndef OGLWRAP_CONTEXT_EXTENSIONS_H_
 #define OGLWRAP_CONTEXT_EXTENSIONS_H_
 
+#include <cstring>
 #include "../config.h"
-#include <string.h>
+
+#include "../define_internal_macros.h"
 
 namespace oglwrap {
-namespace context {
-
-class Extensions {
-public:
 
 // See http://www.opengl.org/archives/resources/features/OGLextensions
-static bool IsExtensionSupported(const char *extension) {
+inline bool IsExtensionSupported(const char *extension) {
   const GLubyte *extensions = NULL;
   const GLubyte *start;
 
@@ -25,7 +23,7 @@ static bool IsExtensionSupported(const char *extension) {
   if (where || *extension == '\0')
     return false;
 
-  extensions = glGetString(GL_EXTENSIONS);
+  extensions = gl(GetString(GL_EXTENSIONS));
 
   /* It takes a bit of care to be fool-proof about parsing the
      OpenGL extensions string. Don't be fooled by sub-strings,
@@ -50,9 +48,7 @@ static bool IsExtensionSupported(const char *extension) {
   return false;
 }
 
-};
+} // namespace oglwrap
 
-}
-}
-
+#include "../undefine_internal_macros.h"
 #endif

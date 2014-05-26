@@ -60,7 +60,9 @@ def WriteEnums(enum_dict, out):
     enum = CamelCase(gl_enum[3:])
     out.write('  struct ' + enum + 'Enum {\n')
     for enum_class in enum_dict[gl_enum]:
-      out.write('    constexpr operator ' + enum_class + '() const { return ' + enum_class + '(' + gl_enum + '); }\n')
+      out.write('    constexpr operator enums::' + enum_class +
+                '() const { return enums::' + enum_class + '(' +
+                gl_enum + '); }\n')
     out.write('  };\n')
     out.write('  static ' + enum + 'Enum ' + enum + ';\n')
     out.write('#endif\n\n')

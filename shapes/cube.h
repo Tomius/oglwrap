@@ -221,7 +221,7 @@ public:
   void render() {
     if (is_setup_positions_) {
       vao.bind();
-      Context::DrawArrays(PrimType::Triangles, 0, 108 * sizeof(float));
+      DrawArrays(PrimType::Triangles, 0, 108 * sizeof(float));
       vao.unbind();
     }
   }

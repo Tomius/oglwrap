@@ -6,17 +6,13 @@
 #include "../enums/error_type.h"
 
 namespace oglwrap {
-namespace context {
 
-class Errors {
-public:
-	/// Returns the last OpenGL error.
-	/** @see glGetError */
-	static ErrorType GetError() {
-		return static_cast<ErrorType>(glGetError());
-	}
-};
+/// Returns the last OpenGL error.
+/** @see glGetError */
+inline ErrorType GetError() {
+	return static_cast<ErrorType>(glGetError());
+}
 
-}
-}
+} // namespace oglwrap
+
 #endif

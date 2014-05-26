@@ -26,27 +26,4 @@
 #include "context/synchronization.h"
 #include "context/hints.h"
 
-namespace oglwrap {
-class Context
-	: public context::Capabilities
-	, public context::Errors
-	, public context::ViewportOps
-	, public context::BufferSelection
-	, public context::BufferMasking
-	, public context::BufferClearing
-	, public context::Rasterization
-	, public context::Drawing
-	, public context::Extensions
-	, public context::Computing
-	, public context::DepthTest
-	, public context::StencilTest
-	, public context::ScissorTest
-	, public context::LogicalOps
-	, public context::PixelOps
-	, public context::Blending
-	, public context::Synchronization
-	, public context::Hints
-{ };
-}
-
 #endif // OGLWRAP_CONTEXT_CAPABILITIES_H_

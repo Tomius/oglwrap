@@ -10,34 +10,30 @@
 #include "../define_internal_macros.h"
 
 namespace oglwrap {
-namespace context {
 
-class Hints {
-public:
-  /**
-   * Selects a hint option for a target.
-   *
-   * @see glHint
-   * @version OpenGL 1.0
-   */
-  static void Hint(HintTarget target, HintOption option) {
-    gl(Hint(GLenum(target), GLenum(option)));
-  }
+/**
+ * Selects a hint option for a target.
+ *
+ * @see glHint
+ * @version OpenGL 1.0
+ */
+inline void Hint(HintTarget target, HintOption option) {
+  gl(Hint(GLenum(target), GLenum(option)));
+}
 
-  /**
-   * Queries the current hint for a target.
-   *
-   * @see glHint
-   * @version OpenGL 1.0
-   */
-  static HintOption Hint(HintTarget target) {
-    GLint data;
-    gl(GetIntegerv(GLenum(target), &data));
-    return HintOption(data);
-  }
-};
+/**
+ * Queries the current hint for a target.
+ *
+ * @see glHint
+ * @version OpenGL 1.0
+ */
+inline HintOption Hint(HintTarget target) {
+  GLint data;
+  gl(GetIntegerv(GLenum(target), &data));
+  return HintOption(data);
 }
-}
+
+} // namespace oglwrap
 
 #include "../undefine_internal_macros.h"
 

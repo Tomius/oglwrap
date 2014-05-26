@@ -93,7 +93,7 @@ public:
   void render() {
     if (is_setup_positions_) {
       vao.bind();
-      Context::DrawArrays(PrimType::TriangleStrip, 0, 4);
+      DrawArrays(PrimType::TriangleStrip, 0, 4);
       vao.unbind();
     }
   }
