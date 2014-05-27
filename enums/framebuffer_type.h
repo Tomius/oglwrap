@@ -5,24 +5,23 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class FramebufferType : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_READ_FRAMEBUFFER)
-  ReadFramebuffer = GL_READ_FRAMEBUFFER,
+  kReadFramebuffer = GL_READ_FRAMEBUFFER,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DRAW_FRAMEBUFFER)
-  DrawFramebuffer = GL_DRAW_FRAMEBUFFER,
+  kDrawFramebuffer = GL_DRAW_FRAMEBUFFER,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRAMEBUFFER)
-  Framebuffer = GL_FRAMEBUFFER,
+  kFramebuffer = GL_FRAMEBUFFER,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

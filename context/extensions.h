@@ -8,7 +8,7 @@
 
 #include "../define_internal_macros.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 // See http://www.opengl.org/archives/resources/features/OGLextensions
 inline bool IsExtensionSupported(const char *extension) {

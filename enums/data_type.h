@@ -5,45 +5,44 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class DataType : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_BYTE)
-  Byte = GL_BYTE,
+  kByte = GL_BYTE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SHORT)
-  Short = GL_SHORT,
+  kShort = GL_SHORT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_INT)
-  Int = GL_INT,
+  kInt = GL_INT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FIXED)
-  Fixed = GL_FIXED,
+  kFixed = GL_FIXED,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FLOAT)
-  Float = GL_FLOAT,
+  kFloat = GL_FLOAT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_HALF_FLOAT)
-  HalfFloat = GL_HALF_FLOAT,
+  kHalfFloat = GL_HALF_FLOAT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DOUBLE)
-  Double = GL_DOUBLE,
+  kDouble = GL_DOUBLE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_BYTE)
-  UnsignedByte = GL_UNSIGNED_BYTE,
+  kUnsignedByte = GL_UNSIGNED_BYTE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_SHORT)
-  UnsignedShort = GL_UNSIGNED_SHORT,
+  kUnsignedShort = GL_UNSIGNED_SHORT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_INT)
-  UnsignedInt = GL_UNSIGNED_INT,
+  kUnsignedInt = GL_UNSIGNED_INT,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

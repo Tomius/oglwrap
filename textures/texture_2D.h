@@ -12,7 +12,7 @@
 
 #include "../define_internal_macros.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 // -------======{[ 2D Textures' declaration ]}======-------
 
@@ -444,10 +444,10 @@ public:
 
       using InternalFormat = PixelDataInternalFormat;
       InternalFormat internal_format =
-        srgb ? (compressed ? InternalFormat::CompressedSrgbAlpha :
-                             InternalFormat::Srgb8Alpha8) :
-               (compressed ? InternalFormat::CompressedRgba :
-                             InternalFormat::Rgba8);
+        srgb ? (compressed ? InternalFormat::kCompressedSrgbAlpha :
+                             InternalFormat::kSrgb8Alpha8) :
+               (compressed ? InternalFormat::kCompressedRgba :
+                             InternalFormat::kRgba8);
 
       bool bad_alignment = (image.columns() * format_string.length()) % 4 != 0;
       GLint unpack_aligment;
@@ -461,8 +461,8 @@ public:
         internal_format,
         image.columns(),
         image.rows(),
-        PixelDataFormat::Rgba,
-        PixelDataType::UnsignedByte,
+        PixelDataFormat::kRgba,
+        PixelDataType::kUnsignedByte,
         blob.data()
       );
 
@@ -487,7 +487,7 @@ public:
 
 /// The most commonly used two-dimensional texture type.
 /** @see GL_TEXTURE_2D */
-typedef Texture2DBase<Texture2DType::Texture2D> Texture2D;
+typedef Texture2DBase<Texture2DType::kTexture2D> Texture2D;
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_RECTANGLE)
 /// A rectangle texture is a texture that contains a single 2D image with no mipmaps.
@@ -495,13 +495,13 @@ typedef Texture2DBase<Texture2DType::Texture2D> Texture2D;
   * this texture must be texel values (floating-point), representing texels within the
   * texture, rather than normalized texture coordinates.
   * @see GL_TEXTURE_RECTANGLE */
-typedef Texture2DBase<Texture2DType::TextureRectangle> TextureRect;
+typedef Texture2DBase<Texture2DType::kTextureRectangle> TextureRect;
 #endif // GL_TEXTURE_RECTANGLE
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_1D_ARRAY)
 /// An array of one-dimensional textures.
 /** @see GL_TEXTURE_1D_ARRAY */
-typedef Texture2DBase<Texture2DType::Texture1DArray> Texture1DArray;
+typedef Texture2DBase<Texture2DType::kTexture1DArray> Texture1DArray;
 #endif // GL_TEXTURE_1D_ARRAY
 
 } // namespace oglwrap

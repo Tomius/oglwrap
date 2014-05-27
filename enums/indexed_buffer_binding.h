@@ -7,52 +7,51 @@
 #include "../debug/binding.h"
 #include "indexed_buffer_type.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class IndexedBufferBinding : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ATOMIC_COUNTER_BUFFER_BINDING)
-  AtomicCounterBufferBinding = GL_ATOMIC_COUNTER_BUFFER_BINDING,
+  kAtomicCounterBufferBinding = GL_ATOMIC_COUNTER_BUFFER_BINDING,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SHADER_STORAGE_BUFFER_BINDING)
-  ShaderStorageBufferBinding = GL_SHADER_STORAGE_BUFFER_BINDING,
+  kShaderStorageBufferBinding = GL_SHADER_STORAGE_BUFFER_BINDING,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRANSFORM_FEEDBACK_BUFFER_BINDING)
-  TransformFeedbackBufferBinding = GL_TRANSFORM_FEEDBACK_BUFFER_BINDING,
+  kTransformFeedbackBufferBinding = GL_TRANSFORM_FEEDBACK_BUFFER_BINDING,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNIFORM_BUFFER_BINDING)
-  UniformBufferBinding = GL_UNIFORM_BUFFER_BINDING,
+  kUniformBufferBinding = GL_UNIFORM_BUFFER_BINDING,
 #endif
 };
 
-} // enums
+} // namespace enums
 
 inline IndexedBufferBinding GetBindingTarget(IndexedBufferType type) {
   IndexedBufferBinding target;
 
   switch (type) {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ATOMIC_COUNTER_BUFFER_BINDING) && defined(GL_ATOMIC_COUNTER_BUFFER)
-    case IndexedBufferType::AtomicCounterBuffer:
-      target = IndexedBufferBinding::AtomicCounterBufferBinding;
+    case IndexedBufferType::kAtomicCounterBuffer:
+      target = IndexedBufferBinding::kAtomicCounterBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_ATOMIC_COUNTER_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SHADER_STORAGE_BUFFER_BINDING) && defined(GL_SHADER_STORAGE_BUFFER)
-    case IndexedBufferType::ShaderStorageBuffer:
-      target = IndexedBufferBinding::ShaderStorageBufferBinding;
+    case IndexedBufferType::kShaderStorageBuffer:
+      target = IndexedBufferBinding::kShaderStorageBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_SHADER_STORAGE_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRANSFORM_FEEDBACK_BUFFER_BINDING) && defined(GL_TRANSFORM_FEEDBACK_BUFFER)
-    case IndexedBufferType::TransformFeedbackBuffer:
-      target = IndexedBufferBinding::TransformFeedbackBufferBinding;
+    case IndexedBufferType::kTransformFeedbackBuffer:
+      target = IndexedBufferBinding::kTransformFeedbackBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_TRANSFORM_FEEDBACK_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNIFORM_BUFFER_BINDING) && defined(GL_UNIFORM_BUFFER)
-    case IndexedBufferType::UniformBuffer:
-      target = IndexedBufferBinding::UniformBufferBinding;
+    case IndexedBufferType::kUniformBuffer:
+      target = IndexedBufferBinding::kUniformBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_UNIFORM_BUFFER_BINDING";
       break;
 #endif
@@ -61,6 +60,6 @@ inline IndexedBufferBinding GetBindingTarget(IndexedBufferType type) {
  return target;
 }
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

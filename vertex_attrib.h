@@ -23,7 +23,7 @@
 
 #include "./define_internal_macros.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 // -------======{[ Vertex Array declaration ]}======-------
 
@@ -206,12 +206,12 @@ public:
                                 GLsizei stride = 0,
                                 const void *offset_pointer = nullptr) {
     switch (type) {
-      case DataType::Float:
-      case DataType::HalfFloat:
-      case DataType::Fixed:
+      case DataType::kFloat:
+      case DataType::kHalfFloat:
+      case DataType::kFixed:
         pointer(values_per_vertex, type, false, stride, offset_pointer);
         break;
-      case DataType::Double:
+      case DataType::kDouble:
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribLPointer)
         lpointer(values_per_vertex, stride, nullptr);
 #else
@@ -256,7 +256,7 @@ public:
    * @see glVertexAttribPointer
    */
   VertexAttribArrayObject& pointer(GLuint values_per_vertex = 4,
-                                   DataType type = DataType::Float,
+                                   DataType type = DataType::kFloat,
                                    bool normalized = false,
                                    GLsizei stride = 0,
                                    const void *offset_pointer = nullptr) {
@@ -295,7 +295,7 @@ public:
    * @see glVertexAttribIPointer
    */
   VertexAttribArrayObject& ipointer(GLuint values_per_vertex = 4,
-                                    WholeDataType type = WholeDataType::Int,
+                                    WholeDataType type = WholeDataType::kInt,
                                     GLsizei stride = 0,
                                     const void *offset_pointer = nullptr) {
     if (!inited_) {
@@ -365,7 +365,7 @@ public:
    * @see glVertexAttribFormat
    */
   VertexAttribArrayObject& format(GLuint values_per_vertex = 4,
-                                  DataType type = DataType::Float,
+                                  DataType type = DataType::kFloat,
                                   GLboolean normalized = false,
                                   GLsizei stride = 0) {
     if (!inited_) {
@@ -397,7 +397,7 @@ public:
    * @see glVertexAttribIFormat
    */
   VertexAttribArrayObject& iformat(GLuint values_per_vertex = 4,
-                                   WholeDataType type = WholeDataType::Int,
+                                   WholeDataType type = WholeDataType::kInt,
                                    GLsizei stride = 0) {
     if (!inited_) {
       init();
@@ -622,7 +622,7 @@ public:
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<GLfloat>(GLuint values_per_vertex) {
-  pointer(values_per_vertex, DataType::Float);
+  pointer(values_per_vertex, DataType::kFloat);
   return *this;
 }
 #endif // glVertexAttribPointer
@@ -631,7 +631,7 @@ VertexAttribArrayObject::setup<GLfloat>(GLuint values_per_vertex) {
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<GLbyte>(GLuint values_per_vertex) {
-  ipointer(values_per_vertex, WholeDataType::Byte);
+  ipointer(values_per_vertex, WholeDataType::kByte);
   return *this;
 }
 #endif // glVertexAttribIPointer
@@ -640,7 +640,7 @@ VertexAttribArrayObject::setup<GLbyte>(GLuint values_per_vertex) {
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<GLubyte>(GLuint values_per_vertex) {
-  ipointer(values_per_vertex, WholeDataType::UnsignedByte);
+  ipointer(values_per_vertex, WholeDataType::kUnsignedByte);
   return *this;
 }
 #endif // glVertexAttribIPointer
@@ -649,7 +649,7 @@ VertexAttribArrayObject::setup<GLubyte>(GLuint values_per_vertex) {
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<GLshort>(GLuint values_per_vertex) {
-  ipointer(values_per_vertex, WholeDataType::Short);
+  ipointer(values_per_vertex, WholeDataType::kShort);
   return *this;
 }
 #endif // glVertexAttribIPointer
@@ -658,7 +658,7 @@ VertexAttribArrayObject::setup<GLshort>(GLuint values_per_vertex) {
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<GLushort>(GLuint values_per_vertex) {
-  ipointer(values_per_vertex, WholeDataType::UnsignedShort);
+  ipointer(values_per_vertex, WholeDataType::kUnsignedShort);
   return *this;
 }
 #endif // glVertexAttribIPointer
@@ -667,7 +667,7 @@ VertexAttribArrayObject::setup<GLushort>(GLuint values_per_vertex) {
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<GLint>(GLuint values_per_vertex) {
-  ipointer(values_per_vertex, WholeDataType::Int);
+  ipointer(values_per_vertex, WholeDataType::kInt);
   return *this;
 }
 #endif // glVertexAttribIPointer
@@ -676,7 +676,7 @@ VertexAttribArrayObject::setup<GLint>(GLuint values_per_vertex) {
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<GLuint>(GLuint values_per_vertex) {
-  ipointer(values_per_vertex, WholeDataType::UnsignedInt);
+  ipointer(values_per_vertex, WholeDataType::kUnsignedInt);
   return *this;
 }
 #endif // glVertexAttribIPointer
@@ -685,7 +685,7 @@ VertexAttribArrayObject::setup<GLuint>(GLuint values_per_vertex) {
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<glm::vec2>(GLuint) {
-  pointer(2, DataType::Float);
+  pointer(2, DataType::kFloat);
   return *this;
 }
 #endif // glVertexAttribPointer
@@ -703,7 +703,7 @@ VertexAttribArrayObject::setup<glm::dvec2>(GLuint) {
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<glm::ivec2>(GLuint) {
-  ipointer(2, WholeDataType::Int);
+  ipointer(2, WholeDataType::kInt);
   return *this;
 }
 #endif // glVertexAttribIPointer
@@ -712,7 +712,7 @@ VertexAttribArrayObject::setup<glm::ivec2>(GLuint) {
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<glm::uvec2>(GLuint) {
-  ipointer(2, WholeDataType::UnsignedInt);
+  ipointer(2, WholeDataType::kUnsignedInt);
   return *this;
 }
 #endif // glVertexAttribIPointer
@@ -721,7 +721,7 @@ VertexAttribArrayObject::setup<glm::uvec2>(GLuint) {
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<glm::vec3>(GLuint) {
-  pointer(3, DataType::Float);
+  pointer(3, DataType::kFloat);
   return *this;
 }
 #endif // glVertexAttribPointer
@@ -739,7 +739,7 @@ VertexAttribArrayObject::setup<glm::dvec3>(GLuint) {
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<glm::ivec3>(GLuint) {
-  ipointer(3, WholeDataType::Int);
+  ipointer(3, WholeDataType::kInt);
   return *this;
 }
 #endif // glVertexAttribIPointer
@@ -748,7 +748,7 @@ VertexAttribArrayObject::setup<glm::ivec3>(GLuint) {
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<glm::uvec3>(GLuint) {
-  ipointer(3, WholeDataType::UnsignedInt);
+  ipointer(3, WholeDataType::kUnsignedInt);
   return *this;
 }
 #endif // glVertexAttribIPointer
@@ -757,7 +757,7 @@ VertexAttribArrayObject::setup<glm::uvec3>(GLuint) {
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<glm::vec4>(GLuint) {
-  pointer(4, DataType::Float);
+  pointer(4, DataType::kFloat);
   return *this;
 }
 #endif // glVertexAttribPointer
@@ -775,7 +775,7 @@ VertexAttribArrayObject::setup<glm::dvec4>(GLuint) {
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<glm::ivec4>(GLuint) {
-  ipointer(4, WholeDataType::Int);
+  ipointer(4, WholeDataType::kInt);
   return *this;
 }
 #endif // glVertexAttribIPointer
@@ -784,7 +784,7 @@ VertexAttribArrayObject::setup<glm::ivec4>(GLuint) {
 template<>
 inline VertexAttribArrayObject&
 VertexAttribArrayObject::setup<glm::uvec4>(GLuint) {
-  ipointer(4, WholeDataType::UnsignedInt);
+  ipointer(4, WholeDataType::kUnsignedInt);
   return *this;
 }
 #endif // glVertexAttribIPointer
@@ -915,18 +915,16 @@ inline void VertexAttribArrayObject::static_setup_helper(const glm::uvec4 value)
 }
 #endif // glVertexAttribI4uiv
 
+/// A global operator that is a VertexArray constructor with nicer syntax.
+/** I think (prog | "Position") does look better than VertexAttribArray(prog, "Position") */
+inline LazyVertexAttribArray operator|(const Program& prog,
+                                       const std::string& file) {
+  return LazyVertexAttribArray(prog, file);
+}
+
 #endif // glGetAttribLocation
 
 } // namespace oglwrap
-
-#if OGLWRAP_DEFINE_EVERYTHING || defined(glGetAttribLocation)
-/// A global operator that is a VertexArray constructor with nicer syntax.
-/** I think (prog | "Position") does look better than VertexAttribArray(prog, "Position") */
-inline oglwrap::LazyVertexAttribArray operator|(const oglwrap::Program& prog,
-                                                const std::string& file) {
-  return oglwrap::LazyVertexAttribArray(prog, file);
-}
-#endif
 
 #include "./undefine_internal_macros.h"
 

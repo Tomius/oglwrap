@@ -5,24 +5,23 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class BufferMapAccess : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_READ_ONLY)
-  ReadOnly = GL_READ_ONLY,
+  kReadOnly = GL_READ_ONLY,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_WRITE_ONLY)
-  WriteOnly = GL_WRITE_ONLY,
+  kWriteOnly = GL_WRITE_ONLY,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_READ_WRITE)
-  ReadWrite = GL_READ_WRITE,
+  kReadWrite = GL_READ_WRITE,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

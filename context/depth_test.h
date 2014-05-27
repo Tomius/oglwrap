@@ -7,7 +7,7 @@
 #include "../enums/compare_func.h"
 #include "../define_internal_macros.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 /**
  * @brief Specify the function used for depth buffer comparisons

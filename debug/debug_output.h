@@ -20,7 +20,7 @@
 #include "../enums/error_type.h"
 #include "error_formatting.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 #if OGLWRAP_DEBUG
 

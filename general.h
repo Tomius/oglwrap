@@ -13,7 +13,7 @@
 
 #include "config.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 /// A template to convert an angle value from degrees to radians
 template<class T>

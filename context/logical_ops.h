@@ -8,7 +8,7 @@
 
 #include "../define_internal_macros.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 /**
  * @brief specify a logical pixel operation for rendering

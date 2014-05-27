@@ -12,7 +12,7 @@
 
 #include "../define_internal_macros.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 // -------======{[ 3D Textures' declaration ]}======-------
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_3D)
@@ -34,19 +34,11 @@ public:
     * @param type - Specifies the data type of the pixel data.
     * @param data - Specifies a pointer to the image data in memory.
     * @see glTexImage3D */
-  static void Upload(
-    PixelDataInternalFormat internalFormat,
-    GLsizei width,
-    GLsizei height,
-    GLsizei depth,
-    PixelDataFormat format,
-    PixelDataType type,
-    const void *data
-  ) {
-    gl(TexImage3D(
-      GLenum(texture_t), 0, GLenum(internalFormat), width, height, depth,
-      0, GLenum(format), GLenum(type), data
-    ));
+  static void Upload(PixelDataInternalFormat internalFormat, GLsizei width,
+                     GLsizei height, GLsizei depth, PixelDataFormat format,
+                     PixelDataType type, const void *data) {
+    gl(TexImage3D(GLenum(texture_t), 0, GLenum(internalFormat), width, height,
+                  depth, 0, GLenum(format), GLenum(type), data));
   }
   /// Uploads the base image.
   /** @param internalFormat - Specifies the number, order, and size of the color components in the texture.
@@ -57,15 +49,10 @@ public:
     * @param type - Specifies the data type of the pixel data.
     * @param data - Specifies a pointer to the image data in memory.
     * @see glTexImage3D */
-  BIND_CHECKED void upload(
-    PixelDataInternalFormat internalFormat,
-    GLsizei width,
-    GLsizei height,
-    GLsizei depth,
-    PixelDataFormat format,
-    PixelDataType type,
-    const void *data
-  ) const {
+  BIND_CHECKED void upload(PixelDataInternalFormat internalFormat,
+                           GLsizei width, GLsizei height, GLsizei depth,
+                           PixelDataFormat format, PixelDataType type,
+                           const void *data) const {
     OGLWRAP_CHECK_BINDING();
     Upload(internalFormat, width, height, depth, format, type, data);
   }
@@ -82,20 +69,12 @@ public:
     * @param type - Specifies the data type of the pixel data.
     * @param data - Specifies a pointer to the image data in memory.
     * @see glTexImage3D */
-  static void UploadMipmap(
-    GLint level,
-    PixelDataInternalFormat internalFormat,
-    GLsizei width,
-    GLsizei height,
-    GLsizei depth,
-    PixelDataFormat format,
-    PixelDataType type,
-    const void *data
-  ) {
-    gl(TexImage3D(
-      GLenum(texture_t), level, GLenum(internalFormat), width, height, depth,
-      0, GLenum(format), GLenum(type), data
-    ));
+  static void UploadMipmap(GLint level, PixelDataInternalFormat internalFormat,
+                           GLsizei width, GLsizei height, GLsizei depth,
+                           PixelDataFormat format, PixelDataType type,
+                           const void *data) {
+    gl(TexImage3D(GLenum(texture_t), level, GLenum(internalFormat), width,
+                  height, depth, 0, GLenum(format), GLenum(type), data));
   }
   /// Uploads a mipmap of the image.
   /** @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
@@ -107,16 +86,11 @@ public:
     * @param type - Specifies the data type of the pixel data.
     * @param data - Specifies a pointer to the image data in memory.
     * @see glTexImage3D */
-  BIND_CHECKED void uploadMipmap(
-    GLint level,
-    PixelDataInternalFormat internalFormat,
-    GLsizei width,
-    GLsizei height,
-    GLsizei depth,
-    PixelDataFormat format,
-    PixelDataType type,
-    const void *data
-  ) const {
+  BIND_CHECKED void uploadMipmap(GLint level,
+                                 PixelDataInternalFormat internalFormat,
+                                 GLsizei width, GLsizei height, GLsizei depth,
+                                 PixelDataFormat format, PixelDataType type,
+                                 const void *data) const {
     OGLWRAP_CHECK_BINDING();
     UploadMipmap(level, internalFormat, width, height, depth, format, type, data);
   }
@@ -130,21 +104,12 @@ public:
     * @param type - Specifies the data type of the pixel data.
     * @param data - Specifies a pointer to the image data in memory.
     * @see glTexSubImage3D */
-  static void SubUpload(
-    GLint xOffset,
-    GLint yOffset,
-    GLint zOffset,
-    GLsizei width,
-    GLsizei height,
-    GLsizei depth,
-    PixelDataFormat format,
-    PixelDataType type,
-    const void *data
-  ) {
-    gl(TexSubImage3D(
-      GLenum(texture_t), 0, xOffset, yOffset, zOffset, width, height, depth,
-      GLenum(format), GLenum(type), data
-    ));
+  static void SubUpload(GLint xOffset, GLint yOffset, GLint zOffset,
+                        GLsizei width, GLsizei height, GLsizei depth,
+                        PixelDataFormat format, PixelDataType type,
+                        const void *data) {
+    gl(TexSubImage3D(GLenum(texture_t), 0, xOffset, yOffset, zOffset, width,
+                     height, depth, GLenum(format), GLenum(type), data));
   }
   /// Updates a part of the base image.
   /** @param xOffset/yOffset/zOffset - Specifies a texel offset in the x/y/z direction within the texture array.
@@ -153,17 +118,10 @@ public:
     * @param type - Specifies the data type of the pixel data.
     * @param data - Specifies a pointer to the image data in memory.
     * @see glTexSubImage3D */
-  BIND_CHECKED void subUpload(
-    GLint xOffset,
-    GLint yOffset,
-    GLint zOffset,
-    GLsizei width,
-    GLsizei height,
-    GLsizei depth,
-    PixelDataFormat format,
-    PixelDataType type,
-    const void *data
-  ) const {
+  BIND_CHECKED void subUpload(GLint xOffset, GLint yOffset, GLint zOffset,
+                              GLsizei width, GLsizei height, GLsizei depth,
+                              PixelDataFormat format, PixelDataType type,
+                              const void *data) const {
     OGLWRAP_CHECK_BINDING();
     SubUpload(xOffset, yOffset, zOffset, width, height, depth, format, type, data);
   }
@@ -178,22 +136,12 @@ public:
     * @param type - Specifies the data type of the pixel data.
     * @param data - Specifies a pointer to the image data in memory.
     * @see glTexSubImage3D */
-  static void SubUploadMipmap(
-    GLint level,
-    GLint xOffset,
-    GLint yOffset,
-    GLint zOffset,
-    GLsizei width,
-    GLsizei height,
-    GLsizei depth,
-    PixelDataFormat format,
-    PixelDataType type,
-    const void *data
-  ) {
-    gl(TexSubImage3D(
-      GLenum(texture_t), level, xOffset, yOffset, zOffset, width, height, depth,
-      GLenum(format), GLenum(type), data
-    ));
+  static void SubUploadMipmap(GLint level, GLint xOffset, GLint yOffset,
+                              GLint zOffset, GLsizei width, GLsizei height,
+                              GLsizei depth, PixelDataFormat format,
+                              PixelDataType type, const void *data) {
+    gl(TexSubImage3D(GLenum(texture_t), level, xOffset, yOffset, zOffset, width,
+                     height, depth, GLenum(format), GLenum(type), data));
   }
   /// Updates a part of a mipmap image.
   /** @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
@@ -203,22 +151,13 @@ public:
     * @param type - Specifies the data type of the pixel data.
     * @param data - Specifies a pointer to the image data in memory.
     * @see glTexSubImage3D */
-  BIND_CHECKED void subUploadMipmap(
-    GLint level,
-    GLint xOffset,
-    GLint yOffset,
-    GLint zOffset,
-    GLsizei width,
-    GLsizei height,
-    GLsizei depth,
-    PixelDataFormat format,
-    PixelDataType type,
-    const void *data
-  ) const {
+  BIND_CHECKED void subUploadMipmap(GLint level, GLint xOffset, GLint yOffset,
+                                    GLint zOffset, GLsizei width, GLsizei height,
+                                    GLsizei depth, PixelDataFormat format,
+                                    PixelDataType type, const void *data) const {
     OGLWRAP_CHECK_BINDING();
-    SubUploadMipmap(
-      level, xOffset, yOffset, zOffset, width, height, depth, format, type, data
-    );
+    SubUploadMipmap(level, xOffset, yOffset, zOffset, width, height, depth,
+                    format, type, data);
   }
 #endif // glTexSubImage3D
 
@@ -228,33 +167,19 @@ public:
     * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     * @param width/height - Specifies the width/height of the texture to copy.
     * @see glCopyTexSubImage3D */
-  static void CopySub(
-    GLint xOffset,
-    GLint yOffset,
-    GLint zOffset,
-    GLint x,
-    GLint y,
-    GLsizei width,
-    GLsizei height
-  ) {
-    gl(CopyTexSubImage3D(
-      GLenum(texture_t), 0, xOffset, yOffset, zOffset, x, y, width, height
-    ));
+  static void CopySub(GLint xOffset, GLint yOffset, GLint zOffset, GLint x,
+                      GLint y, GLsizei width, GLsizei height) {
+    gl(CopyTexSubImage3D(GLenum(texture_t), 0, xOffset, yOffset, zOffset, x, y,
+                         width, height));
   }
   /// Copies pixels from the current GL_READ_BUFFER and updates part of the base mipmap of this texture with them.
   /** @param xOffset/yOffset/zOffset - Specifies the texel offset in the x/y/z direction within the destination texture array.
     * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     * @param width/height - Specifies the width/height of the texture to copy.
     * @see glCopyTexSubImage3D */
-  BIND_CHECKED void copySub(
-    GLint xOffset,
-    GLint yOffset,
-    GLint zOffset,
-    GLint x,
-    GLint y,
-    GLsizei width,
-    GLsizei height
-  ) const {
+  BIND_CHECKED void copySub(GLint xOffset, GLint yOffset, GLint zOffset,
+                            GLint x, GLint y, GLsizei width,
+                            GLsizei height) const {
     OGLWRAP_CHECK_BINDING();
     CopySub(xOffset, yOffset, zOffset, x, y, width, height);
   }
@@ -267,19 +192,11 @@ public:
     * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     * @param width/height - Specifies the width/height of the texture to copy.
     * @see glCopyTexSubImage3D */
-  static void CopySubMipmap(
-    GLint level,
-    GLint xOffset,
-    GLint yOffset,
-    GLint zOffset,
-    GLint x,
-    GLint y,
-    GLsizei width,
-    GLsizei height
-  ) {
-    gl(CopyTexSubImage3D(
-      GLenum(texture_t), level, xOffset, yOffset, zOffset, x, y, width, height
-    ));
+  static void CopySubMipmap(GLint level, GLint xOffset, GLint yOffset,
+                            GLint zOffset, GLint x, GLint y, GLsizei width,
+                            GLsizei height) {
+    gl(CopyTexSubImage3D(GLenum(texture_t), level, xOffset, yOffset, zOffset, x,
+                         y, width, height));
   }
   /// Copies pixels from the current GL_READ_BUFFER and updates part of a mipmap of this texture.
   /** @param level - Specifies the level-of-detail number. Level 0 is the base image level. Level n is the nth mipmap reduction image.
@@ -287,16 +204,9 @@ public:
     * @param x, y - Specify the window coordinates of the left corner of the row of pixels to be copied.
     * @param width/height - Specifies the width/height of the texture to copy.
     * @see glCopyTexSubImage3D */
-  BIND_CHECKED void copySubMipmap(
-    GLint level,
-    GLint xOffset,
-    GLint yOffset,
-    GLint zOffset,
-    GLint x,
-    GLint y,
-    GLsizei width,
-    GLsizei height
-  ) const {
+  BIND_CHECKED void copySubMipmap(GLint level, GLint xOffset, GLint yOffset,
+                                  GLint zOffset, GLint x, GLint y, GLsizei width,
+                                  GLsizei height) const {
     OGLWRAP_CHECK_BINDING();
     CopySubMipmap(level, xOffset, yOffset, zOffset, x, y, width, height);
   }
@@ -309,14 +219,10 @@ public:
     * @param width - Specifies the width of the texture, in texels.
     * @param height - Specifies the height of the texture, in texels.
     * @param depth - Specifies the depth of the texture, in texels. */
-  static void Storage(GLsizei levels,
-                      GLenum internalFormat,
-                      GLsizei width,
-                      GLsizei height,
-                      GLsizei depth) {
-    gl(TexStorage3D(
-      GLenum(texture_t), levels, GLenum(internalFormat), width, height, depth
-    ));
+  static void Storage(GLsizei levels, PixelDataInternalFormat internalFormat,
+                      GLsizei width, GLsizei height, GLsizei depth) {
+    gl(TexStorage3D(GLenum(texture_t), levels, GLenum(internalFormat), width,
+                    height, depth));
   }
   /// Simultaneously specify storage for all levels of a three-dimensional, two-dimensional array or cube-map array texture.
   /** @param levels - Specify the number of texture levels.
@@ -324,13 +230,8 @@ public:
     * @param width - Specifies the width of the texture, in texels.
     * @param height - Specifies the height of the texture, in texels.
     * @param depth - Specifies the depth of the texture, in texels. */
-  BIND_CHECKED void storage(
-    GLsizei levels,
-    GLenum internalFormat,
-    GLsizei width,
-    GLsizei height,
-    GLsizei depth
-  ) const {
+  BIND_CHECKED void storage(GLsizei levels, PixelDataInternalFormat internalFormat,
+                            GLsizei width, GLsizei height, GLsizei depth) const {
     OGLWRAP_CHECK_BINDING();
     Storage(levels, internalFormat, width, height, depth);
   }
@@ -406,13 +307,13 @@ public:
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_3D)
 /// Three-dimensional texture.
 /** @see GL_TEXTURE_3D */
-typedef Texture3DBase<Texture3DType::Texture3D> Texture3D;
+typedef Texture3DBase<Texture3DType::kTexture3D> Texture3D;
 #endif // GL_TEXTURE_3D
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_2D_ARRAY)
 /// An array of two dimensional textures
 /** @see GL_TEXTURE_2D_ARRAY */
-typedef Texture3DBase<Texture3DType::Texture2DArray> Texture2DArray;
+typedef Texture3DBase<Texture3DType::kTexture2DArray> Texture2DArray;
 #endif // GL_TEXTURE_2D_ARRAY
 
 #endif // GL_TEXTURE_3D

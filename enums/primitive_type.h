@@ -5,51 +5,50 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class PrimitiveType : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_POINTS)
-  Points = GL_POINTS,
+  kPoints = GL_POINTS,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LINES)
-  Lines = GL_LINES,
+  kLines = GL_LINES,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LINE_STRIP)
-  LineStrip = GL_LINE_STRIP,
+  kLineStrip = GL_LINE_STRIP,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LINE_LOOP)
-  LineLoop = GL_LINE_LOOP,
+  kLineLoop = GL_LINE_LOOP,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRIANGLES)
-  Triangles = GL_TRIANGLES,
+  kTriangles = GL_TRIANGLES,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRIANGLE_STRIP)
-  TriangleStrip = GL_TRIANGLE_STRIP,
+  kTriangleStrip = GL_TRIANGLE_STRIP,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRIANGLE_FAN)
-  TriangleFan = GL_TRIANGLE_FAN,
+  kTriangleFan = GL_TRIANGLE_FAN,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LINES_ADJACENCY)
-  LinesAdjacency = GL_LINES_ADJACENCY,
+  kLinesAdjacency = GL_LINES_ADJACENCY,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LINE_STRIP_ADJACENCY)
-  LineStripAdjacency = GL_LINE_STRIP_ADJACENCY,
+  kLineStripAdjacency = GL_LINE_STRIP_ADJACENCY,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRIANGLES_ADJACENCY)
-  TrianglesAdjacency = GL_TRIANGLES_ADJACENCY,
+  kTrianglesAdjacency = GL_TRIANGLES_ADJACENCY,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRIANGLE_STRIP_ADJACENCY)
-  TriangleStripAdjacency = GL_TRIANGLE_STRIP_ADJACENCY,
+  kTriangleStripAdjacency = GL_TRIANGLE_STRIP_ADJACENCY,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PATCHES)
-  Patches = GL_PATCHES,
+  kPatches = GL_PATCHES,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

@@ -5,21 +5,20 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class CompareMode : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_NONE)
-  None = GL_NONE,
+  kNone = GL_NONE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPARE_REF_TO_TEXTURE)
-  CompareRefToTexture = GL_COMPARE_REF_TO_TEXTURE,
+  kCompareRefToTexture = GL_COMPARE_REF_TO_TEXTURE,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

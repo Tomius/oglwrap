@@ -5,33 +5,32 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class MinFilter : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_NEAREST)
-  Nearest = GL_NEAREST,
+  kNearest = GL_NEAREST,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LINEAR)
-  Linear = GL_LINEAR,
+  kLinear = GL_LINEAR,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_NEAREST_MIPMAP_NEAREST)
-  NearestMipmapNearest = GL_NEAREST_MIPMAP_NEAREST,
+  kNearestMipmapNearest = GL_NEAREST_MIPMAP_NEAREST,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_NEAREST_MIPMAP_LINEAR)
-  NearestMipmapLinear = GL_NEAREST_MIPMAP_LINEAR,
+  kNearestMipmapLinear = GL_NEAREST_MIPMAP_LINEAR,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LINEAR_MIPMAP_NEAREST)
-  LinearMipmapNearest = GL_LINEAR_MIPMAP_NEAREST,
+  kLinearMipmapNearest = GL_LINEAR_MIPMAP_NEAREST,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LINEAR_MIPMAP_LINEAR)
-  LinearMipmapLinear = GL_LINEAR_MIPMAP_LINEAR,
+  kLinearMipmapLinear = GL_LINEAR_MIPMAP_LINEAR,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

@@ -5,93 +5,92 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class ColorBuffer : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_NONE)
-  None = GL_NONE,
+  kNone = GL_NONE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRONT_LEFT)
-  FrontLeft = GL_FRONT_LEFT,
+  kFrontLeft = GL_FRONT_LEFT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRONT_RIGHT)
-  FrontRight = GL_FRONT_RIGHT,
+  kFrontRight = GL_FRONT_RIGHT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_BACK_LEFT)
-  BackLeft = GL_BACK_LEFT,
+  kBackLeft = GL_BACK_LEFT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_BACK_RIGHT)
-  BackRight = GL_BACK_RIGHT,
+  kBackRight = GL_BACK_RIGHT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRONT)
-  Front = GL_FRONT,
+  kFront = GL_FRONT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_BACK)
-  Back = GL_BACK,
+  kBack = GL_BACK,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LEFT)
-  Left = GL_LEFT,
+  kLeft = GL_LEFT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RIGHT)
-  Right = GL_RIGHT,
+  kRight = GL_RIGHT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRONT_AND_BACK)
-  FrontAndBack = GL_FRONT_AND_BACK,
+  kFrontAndBack = GL_FRONT_AND_BACK,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT0)
-  ColorAttachment0 = GL_COLOR_ATTACHMENT0,
+  kColorAttachment0 = GL_COLOR_ATTACHMENT0,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT1)
-  ColorAttachment1 = GL_COLOR_ATTACHMENT1,
+  kColorAttachment1 = GL_COLOR_ATTACHMENT1,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT2)
-  ColorAttachment2 = GL_COLOR_ATTACHMENT2,
+  kColorAttachment2 = GL_COLOR_ATTACHMENT2,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT3)
-  ColorAttachment3 = GL_COLOR_ATTACHMENT3,
+  kColorAttachment3 = GL_COLOR_ATTACHMENT3,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT4)
-  ColorAttachment4 = GL_COLOR_ATTACHMENT4,
+  kColorAttachment4 = GL_COLOR_ATTACHMENT4,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT5)
-  ColorAttachment5 = GL_COLOR_ATTACHMENT5,
+  kColorAttachment5 = GL_COLOR_ATTACHMENT5,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT6)
-  ColorAttachment6 = GL_COLOR_ATTACHMENT6,
+  kColorAttachment6 = GL_COLOR_ATTACHMENT6,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT7)
-  ColorAttachment7 = GL_COLOR_ATTACHMENT7,
+  kColorAttachment7 = GL_COLOR_ATTACHMENT7,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT8)
-  ColorAttachment8 = GL_COLOR_ATTACHMENT8,
+  kColorAttachment8 = GL_COLOR_ATTACHMENT8,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT9)
-  ColorAttachment9 = GL_COLOR_ATTACHMENT9,
+  kColorAttachment9 = GL_COLOR_ATTACHMENT9,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT10)
-  ColorAttachment10 = GL_COLOR_ATTACHMENT10,
+  kColorAttachment10 = GL_COLOR_ATTACHMENT10,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT11)
-  ColorAttachment11 = GL_COLOR_ATTACHMENT11,
+  kColorAttachment11 = GL_COLOR_ATTACHMENT11,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT12)
-  ColorAttachment12 = GL_COLOR_ATTACHMENT12,
+  kColorAttachment12 = GL_COLOR_ATTACHMENT12,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT13)
-  ColorAttachment13 = GL_COLOR_ATTACHMENT13,
+  kColorAttachment13 = GL_COLOR_ATTACHMENT13,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT14)
-  ColorAttachment14 = GL_COLOR_ATTACHMENT14,
+  kColorAttachment14 = GL_COLOR_ATTACHMENT14,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT15)
-  ColorAttachment15 = GL_COLOR_ATTACHMENT15,
+  kColorAttachment15 = GL_COLOR_ATTACHMENT15,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

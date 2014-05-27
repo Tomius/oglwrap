@@ -5,33 +5,32 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class TextureCubeTarget : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_CUBE_MAP_POSITIVE_X)
-  TextureCubeMapPositiveX = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+  kTextureCubeMapPositiveX = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_CUBE_MAP_NEGATIVE_X)
-  TextureCubeMapNegativeX = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+  kTextureCubeMapNegativeX = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_CUBE_MAP_POSITIVE_Y)
-  TextureCubeMapPositiveY = GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+  kTextureCubeMapPositiveY = GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y)
-  TextureCubeMapNegativeY = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+  kTextureCubeMapNegativeY = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_CUBE_MAP_POSITIVE_Z)
-  TextureCubeMapPositiveZ = GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+  kTextureCubeMapPositiveZ = GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z)
-  TextureCubeMapNegativeZ = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
+  kTextureCubeMapNegativeZ = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

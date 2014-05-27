@@ -6,7 +6,7 @@
 #include "../config.h"
 #include "../define_internal_macros.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glDispatchCompute)
 /**

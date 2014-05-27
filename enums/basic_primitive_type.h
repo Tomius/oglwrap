@@ -5,24 +5,23 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class BasicPrimitiveType : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRIANGLES)
-  Triangles = GL_TRIANGLES,
+  kTriangles = GL_TRIANGLES,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LINES)
-  Lines = GL_LINES,
+  kLines = GL_LINES,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_POINTS)
-  Points = GL_POINTS,
+  kPoints = GL_POINTS,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

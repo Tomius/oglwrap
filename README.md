@@ -15,14 +15,14 @@ Features:
 * Type-safe enums instead GLenum (so you can say goodbye to GL_INVALID_ENUM forever).
 * Has bind-checking. This means that you'll get warnings if forget to bind some OpenGL object before you use it:
 ```
-oglwrap::Texture2D tex;
+gl::Texture2D tex;
 tex.loadImage("image.png"); // Causes bind-check error because tex isn't bound.
 ```
 Or this:
 ```
 std::vector<glm::vec3> vertices_vector;
 // ... upload data to the vertices_vector
-oglwrap::ArrayBuffer buffer0, buffer1;
+gl::ArrayBuffer buffer0, buffer1;
 buffer0.bind();
 buffer1.data(vertices_vector); // Causes bind-check error because buffer0 is bound, but the function is called through buffer1.
 ```
@@ -32,7 +32,12 @@ buffer1.data(vertices_vector); // Causes bind-check error because buffer0 is bou
 ```
 Texture2D tex;
 tex.bind();
-tex.upload(PixelDataInternalFormat::RGBA, 32, 32, PixelDataFormat::RGBA, PixelDataType::UnsignedByte, nullptr);
+tex.upload(gl::kRgba, 32, 32, gl::kRgba, gl::kUnsignedByte, nullptr);
+tex.generateMipmap();
+tex.minFilter(gl::kLinearMipmapLinear);
+tex.magFilter(gl::kLinear);
+tex.wrapS(gl::kRepeat);
+tex.wrapT(gl::kRepeat);
 ```
 Versus:
 ```
@@ -40,16 +45,35 @@ GLuint tex;
 glGenTextures(1, &tex);
 glBindTexture(GL_TEXTURE_2D, tex);
 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+glGenerateMipmap(GL_TEXTURE_2D);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
 // ...
 glDeleteTextures(1, tex);
 ```
-Note how much the enum class names affect the readability of the code. In the C OpenGL its hard to know, whats the purpose of the first and second GL_RGBA. In the oglwrap implementation, its obvious for the reader.
+
+Notice that if you write a wrong enum for a function, for ex:
+```
+tex.magFilter(gl::kLinearMipmapLinear);
+```
+You get a compile time error:
+```
+Error - no viable conversion from 'const smart_enums::LinearMipmapLinearEnum' to 'enums::MagFilter'
+```
+While with C OpenGL, the error would only at pop runtime, as a GL_INVALID_ENUM.
 
 Also note, that you can't bind the texture to a wrong target, and you can't
-specify an invalid border value. Also its more explicit, that you are uploading the base texture, not a mipmap (you can use tex.uploadMipmap() for that)
-* Lots of debug info if you do something invalid. For example the following code:
+specify an invalid border value. Also its more explicit, that you are uploading the base texture, not a mipmap (you can use tex.uploadMipmap() for that). Oh, and you can't forget about deleting the textures, because RAII
+does that for you (even if an exception is thrown). And should I remind you,
+that if you compile with OGLWRAP_DEBUG turned on, you get explicit warning
+if you forget to call tex.bind(); and even if you do forget, oglwrap will bind
+it for you, and your code will still work. And you get all this stuff with zero runtime overhead for a release build.
+
+* Lots of runtime debug info if you do something invalid that can't be caught compile-time. For example the following code:
 ```
-using gl = oglwrap::Context;
 gl::DrawArrays(PrimitiveType::Triangles, 0, -1);
 ```
 Results this output:
@@ -57,7 +81,7 @@ Results this output:
 ---------========={[ Invalid Value ]}=========---------
 
 Caused by glDrawArrays(GLenum(type), first, count)
-In function: static void oglwrap::context::Drawing::DrawArrays(PrimitiveType, GLint, GLsizei);
+In function: static void gl::context::Drawing::DrawArrays(PrimitiveType, GLint, GLsizei);
 In 'include/oglwrap/context/drawing.h' at line 47
 
 Stack trace:

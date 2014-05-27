@@ -5,99 +5,98 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class Capability : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_BLEND)
-  Blend = GL_BLEND,
+  kBlend = GL_BLEND,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_CLIP_DISTANCE)
-  ClipDistance = GL_CLIP_DISTANCE,
+  kClipDistance = GL_CLIP_DISTANCE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_LOGIC_OP)
-  ColorLogicOp = GL_COLOR_LOGIC_OP,
+  kColorLogicOp = GL_COLOR_LOGIC_OP,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_CULL_FACE)
-  CullFace = GL_CULL_FACE,
+  kCullFace = GL_CULL_FACE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DEBUG_OUTPUT)
-  DebugOutput = GL_DEBUG_OUTPUT,
+  kDebugOutput = GL_DEBUG_OUTPUT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DEBUG_OUTPUT_SYNCHRONOUS)
-  DebugOutputSynchronous = GL_DEBUG_OUTPUT_SYNCHRONOUS,
+  kDebugOutputSynchronous = GL_DEBUG_OUTPUT_SYNCHRONOUS,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DEPTH_CLAMP)
-  DepthClamp = GL_DEPTH_CLAMP,
+  kDepthClamp = GL_DEPTH_CLAMP,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DEPTH_TEST)
-  DepthTest = GL_DEPTH_TEST,
+  kDepthTest = GL_DEPTH_TEST,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DITHER)
-  Dither = GL_DITHER,
+  kDither = GL_DITHER,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRAMEBUFFER_SRGB)
-  FramebufferSrgb = GL_FRAMEBUFFER_SRGB,
+  kFramebufferSrgb = GL_FRAMEBUFFER_SRGB,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LINE_SMOOTH)
-  LineSmooth = GL_LINE_SMOOTH,
+  kLineSmooth = GL_LINE_SMOOTH,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_MULTISAMPLE)
-  Multisample = GL_MULTISAMPLE,
+  kMultisample = GL_MULTISAMPLE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_POLYGON_OFFSET_FILL)
-  PolygonOffsetFill = GL_POLYGON_OFFSET_FILL,
+  kPolygonOffsetFill = GL_POLYGON_OFFSET_FILL,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_POLYGON_OFFSET_LINE)
-  PolygonOffsetLine = GL_POLYGON_OFFSET_LINE,
+  kPolygonOffsetLine = GL_POLYGON_OFFSET_LINE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_POLYGON_OFFSET_POINT)
-  PolygonOffsetPoint = GL_POLYGON_OFFSET_POINT,
+  kPolygonOffsetPoint = GL_POLYGON_OFFSET_POINT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_POLYGON_SMOOTH)
-  PolygonSmooth = GL_POLYGON_SMOOTH,
+  kPolygonSmooth = GL_POLYGON_SMOOTH,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PRIMITIVE_RESTART)
-  PrimitiveRestart = GL_PRIMITIVE_RESTART,
+  kPrimitiveRestart = GL_PRIMITIVE_RESTART,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PRIMITIVE_RESTART_FIXED_INDEX)
-  PrimitiveRestartFixedIndex = GL_PRIMITIVE_RESTART_FIXED_INDEX,
+  kPrimitiveRestartFixedIndex = GL_PRIMITIVE_RESTART_FIXED_INDEX,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RASTERIZER_DISCARD)
-  RasterizerDiscard = GL_RASTERIZER_DISCARD,
+  kRasterizerDiscard = GL_RASTERIZER_DISCARD,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SAMPLE_ALPHA_TO_COVERAGE)
-  SampleAlphaToCoverage = GL_SAMPLE_ALPHA_TO_COVERAGE,
+  kSampleAlphaToCoverage = GL_SAMPLE_ALPHA_TO_COVERAGE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SAMPLE_ALPHA_TO_ONE)
-  SampleAlphaToOne = GL_SAMPLE_ALPHA_TO_ONE,
+  kSampleAlphaToOne = GL_SAMPLE_ALPHA_TO_ONE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SAMPLE_COVERAGE)
-  SampleCoverage = GL_SAMPLE_COVERAGE,
+  kSampleCoverage = GL_SAMPLE_COVERAGE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SAMPLE_SHADING)
-  SampleShading = GL_SAMPLE_SHADING,
+  kSampleShading = GL_SAMPLE_SHADING,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SAMPLE_MASK)
-  SampleMask = GL_SAMPLE_MASK,
+  kSampleMask = GL_SAMPLE_MASK,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SCISSOR_TEST)
-  ScissorTest = GL_SCISSOR_TEST,
+  kScissorTest = GL_SCISSOR_TEST,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_STENCIL_TEST)
-  StencilTest = GL_STENCIL_TEST,
+  kStencilTest = GL_STENCIL_TEST,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_CUBE_MAP_SEAMLESS)
-  TextureCubeMapSeamless = GL_TEXTURE_CUBE_MAP_SEAMLESS,
+  kTextureCubeMapSeamless = GL_TEXTURE_CUBE_MAP_SEAMLESS,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PROGRAM_POINT_SIZE)
-  ProgramPointSize = GL_PROGRAM_POINT_SIZE,
+  kProgramPointSize = GL_PROGRAM_POINT_SIZE,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

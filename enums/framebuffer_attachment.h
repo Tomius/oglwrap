@@ -5,72 +5,71 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class FramebufferAttachment : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT0)
-  ColorAttachment0 = GL_COLOR_ATTACHMENT0,
+  kColorAttachment0 = GL_COLOR_ATTACHMENT0,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT1)
-  ColorAttachment1 = GL_COLOR_ATTACHMENT1,
+  kColorAttachment1 = GL_COLOR_ATTACHMENT1,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT2)
-  ColorAttachment2 = GL_COLOR_ATTACHMENT2,
+  kColorAttachment2 = GL_COLOR_ATTACHMENT2,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT3)
-  ColorAttachment3 = GL_COLOR_ATTACHMENT3,
+  kColorAttachment3 = GL_COLOR_ATTACHMENT3,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT4)
-  ColorAttachment4 = GL_COLOR_ATTACHMENT4,
+  kColorAttachment4 = GL_COLOR_ATTACHMENT4,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT5)
-  ColorAttachment5 = GL_COLOR_ATTACHMENT5,
+  kColorAttachment5 = GL_COLOR_ATTACHMENT5,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT6)
-  ColorAttachment6 = GL_COLOR_ATTACHMENT6,
+  kColorAttachment6 = GL_COLOR_ATTACHMENT6,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT7)
-  ColorAttachment7 = GL_COLOR_ATTACHMENT7,
+  kColorAttachment7 = GL_COLOR_ATTACHMENT7,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT8)
-  ColorAttachment8 = GL_COLOR_ATTACHMENT8,
+  kColorAttachment8 = GL_COLOR_ATTACHMENT8,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT9)
-  ColorAttachment9 = GL_COLOR_ATTACHMENT9,
+  kColorAttachment9 = GL_COLOR_ATTACHMENT9,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT10)
-  ColorAttachment10 = GL_COLOR_ATTACHMENT10,
+  kColorAttachment10 = GL_COLOR_ATTACHMENT10,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT11)
-  ColorAttachment11 = GL_COLOR_ATTACHMENT11,
+  kColorAttachment11 = GL_COLOR_ATTACHMENT11,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT12)
-  ColorAttachment12 = GL_COLOR_ATTACHMENT12,
+  kColorAttachment12 = GL_COLOR_ATTACHMENT12,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT13)
-  ColorAttachment13 = GL_COLOR_ATTACHMENT13,
+  kColorAttachment13 = GL_COLOR_ATTACHMENT13,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT14)
-  ColorAttachment14 = GL_COLOR_ATTACHMENT14,
+  kColorAttachment14 = GL_COLOR_ATTACHMENT14,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT15)
-  ColorAttachment15 = GL_COLOR_ATTACHMENT15,
+  kColorAttachment15 = GL_COLOR_ATTACHMENT15,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DEPTH_ATTACHMENT)
-  DepthAttachment = GL_DEPTH_ATTACHMENT,
+  kDepthAttachment = GL_DEPTH_ATTACHMENT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_STENCIL_ATTACHMENT)
-  StencilAttachment = GL_STENCIL_ATTACHMENT,
+  kStencilAttachment = GL_STENCIL_ATTACHMENT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DEPTH_STENCIL_ATTACHMENT)
-  DepthStencilAttachment = GL_DEPTH_STENCIL_ATTACHMENT,
+  kDepthStencilAttachment = GL_DEPTH_STENCIL_ATTACHMENT,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

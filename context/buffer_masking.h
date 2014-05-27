@@ -8,7 +8,7 @@
 #include "../enums/face.h"
 #include "../define_internal_macros.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 /// Enables and disables writing of frame buffer color components.
 /** @see glColorMask */

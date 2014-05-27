@@ -5,27 +5,26 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class IndexedBufferType : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ATOMIC_COUNTER_BUFFER)
-  AtomicCounterBuffer = GL_ATOMIC_COUNTER_BUFFER,
+  kAtomicCounterBuffer = GL_ATOMIC_COUNTER_BUFFER,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SHADER_STORAGE_BUFFER)
-  ShaderStorageBuffer = GL_SHADER_STORAGE_BUFFER,
+  kShaderStorageBuffer = GL_SHADER_STORAGE_BUFFER,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRANSFORM_FEEDBACK_BUFFER)
-  TransformFeedbackBuffer = GL_TRANSFORM_FEEDBACK_BUFFER,
+  kTransformFeedbackBuffer = GL_TRANSFORM_FEEDBACK_BUFFER,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNIFORM_BUFFER)
-  UniformBuffer = GL_UNIFORM_BUFFER,
+  kUniformBuffer = GL_UNIFORM_BUFFER,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

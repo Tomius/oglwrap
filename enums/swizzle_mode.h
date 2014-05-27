@@ -5,33 +5,32 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class SwizzleMode : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RED)
-  Red = GL_RED,
+  kRed = GL_RED,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_GREEN)
-  Green = GL_GREEN,
+  kGreen = GL_GREEN,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_BLUE)
-  Blue = GL_BLUE,
+  kBlue = GL_BLUE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ALPHA)
-  Alpha = GL_ALPHA,
+  kAlpha = GL_ALPHA,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ZERO)
-  Zero = GL_ZERO,
+  kZero = GL_ZERO,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ONE)
-  One = GL_ONE,
+  kOne = GL_ONE,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

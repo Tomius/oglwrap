@@ -5,7 +5,7 @@
 
 #include "../enums/error_type.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 /// Returns the last OpenGL error.
 /** @see glGetError */

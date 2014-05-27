@@ -5,21 +5,20 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class ProvokeMode : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FIRST_VERTEX_CONVENTION)
-  FirstVertexConvention = GL_FIRST_VERTEX_CONVENTION,
+  kFirstVertexConvention = GL_FIRST_VERTEX_CONVENTION,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LAST_VERTEX_CONVENTION)
-  LastVertexConvention = GL_LAST_VERTEX_CONVENTION,
+  kLastVertexConvention = GL_LAST_VERTEX_CONVENTION,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

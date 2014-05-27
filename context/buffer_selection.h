@@ -7,7 +7,7 @@
 #include "../enums/color_buffer.h"
 #include "../define_internal_macros.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 /// Sets the destination color buffer for draw operations.
 /** @see glDrawBuffer */

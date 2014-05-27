@@ -5,24 +5,23 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class IndexType : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_BYTE)
-  UnsignedByte = GL_UNSIGNED_BYTE,
+  kUnsignedByte = GL_UNSIGNED_BYTE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_SHORT)
-  UnsignedShort = GL_UNSIGNED_SHORT,
+  kUnsignedShort = GL_UNSIGNED_SHORT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_INT)
-  UnsignedInt = GL_UNSIGNED_INT,
+  kUnsignedInt = GL_UNSIGNED_INT,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

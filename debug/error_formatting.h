@@ -16,7 +16,7 @@
 #include <iostream>
 #include <stdexcept>
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 /**
  * @brief Cuts the [with: ... part of the pretty func (not quite useful with

@@ -18,24 +18,18 @@ def WriteHeader(file_list, out):
       out.write('#include "' + path + '"\n')
   out.write("""#include "./define_internal_macros.h"
 
-namespace oglwrap {
-
-class SmartEnums {
-public:
+namespace OGLWRAP_NAMESPACE_NAME {
+inline namespace enums {
+namespace smart_enums {
 
 """)
 
-def WriteFooter(enum_dict, out):
-  out.write('\n};\n\n')
-  out.write('#if OGLWRAP_INSTANTIATE\n')
-  for gl_enum in enum_dict:
-    out.write('#if OGLWRAP_DEFINE_EVERYTHING || defined(' + gl_enum + ')\n')
-    enum = CamelCase(gl_enum[3:])
-    out.write('  SmartEnums::' + enum + 'Enum SmartEnums::' + enum + ';\n')
-    out.write('#endif\n')
-  out.write('#endif\n\n')
-  out.write("""} // oglwrap
-
+def WriteFooter(enum_dict, out, instances):
+  out.write('} // namespace smart_enums\n\n')
+  out.write(instances)
+  out.write("""
+} // namespace enums
+} // namespace oglwrap
 
 #include "./undefine_internal_macros.h"
 
@@ -55,17 +49,21 @@ def CreateEnumDictionary(enum_dict, file_list):
           enum_dict[enum] = [enum_class_name]
 
 def WriteEnums(enum_dict, out):
+  instances = ""
   for gl_enum in sorted(enum_dict.keys()):
-    out.write('#if OGLWRAP_DEFINE_EVERYTHING || defined(' + gl_enum + ')\n')
+    ifdef = '#if OGLWRAP_DEFINE_EVERYTHING || defined(' + gl_enum + ')\n'
+    out.write(ifdef)
     enum = CamelCase(gl_enum[3:])
-    out.write('  struct ' + enum + 'Enum {\n')
+    out.write('struct ' + enum + 'Enum {\n')
+    out.write('  constexpr ' + enum + 'Enum() { }\n')
     for enum_class in enum_dict[gl_enum]:
-      out.write('    constexpr operator enums::' + enum_class +
-                '() const { return enums::' + enum_class + '(' +
-                gl_enum + '); }\n')
-    out.write('  };\n')
-    out.write('  static ' + enum + 'Enum ' + enum + ';\n')
+      out.write('  constexpr operator ' + enum_class +
+                '() const { return ' + enum_class + '(' + gl_enum + '); }\n')
+    out.write('};\n')
     out.write('#endif\n\n')
+    instances += ifdef + '  constexpr smart_enums::' + enum + 'Enum k' + enum + ';\n#endif\n'
+  return instances
+
 
 # __main()__
 #
@@ -74,5 +72,5 @@ out = open('../../smart_enums.h', 'w')
 WriteHeader(file_list, out)
 enum_dict = {}
 CreateEnumDictionary(enum_dict, file_list)
-WriteEnums(enum_dict, out)
-WriteFooter(enum_dict, out)
+instances = WriteEnums(enum_dict, out)
+WriteFooter(enum_dict, out, instances)

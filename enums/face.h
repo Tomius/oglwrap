@@ -5,24 +5,23 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class Face : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRONT)
-  Front = GL_FRONT,
+  kFront = GL_FRONT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_BACK)
-  Back = GL_BACK,
+  kBack = GL_BACK,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRONT_AND_BACK)
-  FrontAndBack = GL_FRONT_AND_BACK,
+  kFrontAndBack = GL_FRONT_AND_BACK,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

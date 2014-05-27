@@ -12,7 +12,7 @@
 
 #include "error_checking.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 #if OGLWRAP_BINDCHECK
 /// Calls the isBound() member function, and prints an error and calls bind() if it returns false.

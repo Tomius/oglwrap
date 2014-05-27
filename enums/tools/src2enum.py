@@ -16,8 +16,7 @@ def WriteEnum(file_name, file_base_name, out, is_binding):
     out.write('#include "../debug/binding.h"\n')
     out.write('#include "' + file_name.replace('binding.txt', 'type.h') + '"\n')
   out.write("""
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class """)
@@ -26,12 +25,12 @@ enum class """)
   for line in open('../src/' + file_name):
     enum = line[:-1]
     out.write('#if OGLWRAP_DEFINE_EVERYTHING || defined(' + enum + ')\n')
-    out.write('  ' + CamelCase(enum[3:]) + ' = ' + enum + ',\n')
+    out.write('  k' + CamelCase(enum[3:]) + ' = ' + enum + ',\n')
     out.write('#endif\n')
 
   out.write("""};
 
-} // enums
+} // namespace enums
 
 """)
 
@@ -57,15 +56,15 @@ def HandleBindingEnumFile(file_name, file_base_name, out):
     target_enum = target_lines[line_num][:-1]
     out.write('#if OGLWRAP_DEFINE_EVERYTHING || defined(' + binding_enum +
               ') && defined(' + target_enum + ')\n')
-    out.write('    case ' + target + '::' + CamelCase(target_enum[3:]) + ':\n')
-    out.write('      target = ' + binding + '::' + CamelCase(binding_enum[3:]) + ';\n')
+    out.write('    case ' + target + '::k' + CamelCase(target_enum[3:]) + ':\n')
+    out.write('      target = ' + binding + '::k' + CamelCase(binding_enum[3:]) + ';\n')
     out.write('      DebugOutput::LastUsedBindTarget() = "' + binding_enum + '";\n')
     out.write('      break;\n')
     out.write('#endif\n')
   out.write('  }\n\n return target;\n}\n\n')
 
 def EndFile(out):
-  out.write("""} // oglwrap
+  out.write("""} // namespace oglwrap
 
 #endif
 """)

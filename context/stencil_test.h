@@ -9,7 +9,7 @@
 #include "../enums/stencil_operation.h"
 #include "../define_internal_macros.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 /**
  * @brief set front and back function and reference value for stencil testing
@@ -224,9 +224,9 @@ inline void StencilFuncSeparate(Face face,
  *              the depth test pass, or when the stencil test passes and
  *              either there is no depth buffer or depth testing is not enabled.
  */
-inline void StencilOp(StencilOperation sfail = StencilOperation::Keep,
-                      StencilOperation dfail = StencilOperation::Keep,
-                      StencilOperation dpass = StencilOperation::Keep) {
+inline void StencilOp(StencilOperation sfail = StencilOperation::kKeep,
+                      StencilOperation dfail = StencilOperation::kKeep,
+                      StencilOperation dpass = StencilOperation::kKeep) {
   gl(StencilOp(GLenum(sfail), GLenum(dfail), GLenum(dpass)));
 }
 
@@ -302,9 +302,9 @@ inline void StencilOp(StencilOperation sfail = StencilOperation::Keep,
  * @version OpenGL 2.0
  */
 inline void StencilOpSeparate(Face face,
-                              StencilOperation sfail = StencilOperation::Keep,
-                              StencilOperation dfail = StencilOperation::Keep,
-                              StencilOperation dpass = StencilOperation::Keep) {
+                              StencilOperation sfail = StencilOperation::kKeep,
+                              StencilOperation dfail = StencilOperation::kKeep,
+                              StencilOperation dpass = StencilOperation::kKeep) {
   gl(StencilOpSeparate(GLenum(face), GLenum(sfail),
                        GLenum(dfail), GLenum(dpass)));
 }

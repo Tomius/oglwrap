@@ -13,7 +13,7 @@
 
 #include "../define_internal_macros.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 /// Class providing vertex attributes and instructions for rendering of a cube.
 class FullScreenRectangle {
@@ -93,14 +93,14 @@ public:
   void render() {
     if (is_setup_positions_) {
       vao.bind();
-      DrawArrays(PrimType::TriangleStrip, 0, 4);
+      DrawArrays(PrimType::kTriangleStrip, 0, 4);
       vao.unbind();
     }
   }
 
   /// Returns the face winding of the cube created by this class.
   FaceOrientation faceWinding() const {
-    return FaceOrientation::Cw;
+    return FaceOrientation::kCw;
   }
 };
 

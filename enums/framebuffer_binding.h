@@ -7,43 +7,42 @@
 #include "../debug/binding.h"
 #include "framebuffer_type.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class FramebufferBinding : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_READ_FRAMEBUFFER_BINDING)
-  ReadFramebufferBinding = GL_READ_FRAMEBUFFER_BINDING,
+  kReadFramebufferBinding = GL_READ_FRAMEBUFFER_BINDING,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DRAW_FRAMEBUFFER_BINDING)
-  DrawFramebufferBinding = GL_DRAW_FRAMEBUFFER_BINDING,
+  kDrawFramebufferBinding = GL_DRAW_FRAMEBUFFER_BINDING,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRAMEBUFFER_BINDING)
-  FramebufferBinding = GL_FRAMEBUFFER_BINDING,
+  kFramebufferBinding = GL_FRAMEBUFFER_BINDING,
 #endif
 };
 
-} // enums
+} // namespace enums
 
 inline FramebufferBinding GetBindingTarget(FramebufferType type) {
   FramebufferBinding target;
 
   switch (type) {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_READ_FRAMEBUFFER_BINDING) && defined(GL_READ_FRAMEBUFFER)
-    case FramebufferType::ReadFramebuffer:
-      target = FramebufferBinding::ReadFramebufferBinding;
+    case FramebufferType::kReadFramebuffer:
+      target = FramebufferBinding::kReadFramebufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_READ_FRAMEBUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DRAW_FRAMEBUFFER_BINDING) && defined(GL_DRAW_FRAMEBUFFER)
-    case FramebufferType::DrawFramebuffer:
-      target = FramebufferBinding::DrawFramebufferBinding;
+    case FramebufferType::kDrawFramebuffer:
+      target = FramebufferBinding::kDrawFramebufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_DRAW_FRAMEBUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRAMEBUFFER_BINDING) && defined(GL_FRAMEBUFFER)
-    case FramebufferType::Framebuffer:
-      target = FramebufferBinding::FramebufferBinding;
+    case FramebufferType::kFramebuffer:
+      target = FramebufferBinding::kFramebufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_FRAMEBUFFER_BINDING";
       break;
 #endif
@@ -52,6 +51,6 @@ inline FramebufferBinding GetBindingTarget(FramebufferType type) {
  return target;
 }
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

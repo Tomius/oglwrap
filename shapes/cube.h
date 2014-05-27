@@ -15,7 +15,7 @@
 
 #include "../define_internal_macros.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 /// Class providing vertex attributes and instructions for rendering of a cube.
 class Cube {
@@ -221,14 +221,14 @@ public:
   void render() {
     if (is_setup_positions_) {
       vao.bind();
-      DrawArrays(PrimType::Triangles, 0, 108 * sizeof(float));
+      DrawArrays(PrimType::kTriangles, 0, 108 * sizeof(float));
       vao.unbind();
     }
   }
 
   /// Returns the face winding of the cube created by this class.
   FaceOrientation faceWinding() const {
-    return FaceOrientation::Cw;
+    return FaceOrientation::kCw;
   }
 
   /// Returns the center of the cube's bounding sphere

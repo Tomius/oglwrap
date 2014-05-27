@@ -7,133 +7,132 @@
 #include "../debug/binding.h"
 #include "buffer_type.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class BufferBinding : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ARRAY_BUFFER_BINDING)
-  ArrayBufferBinding = GL_ARRAY_BUFFER_BINDING,
+  kArrayBufferBinding = GL_ARRAY_BUFFER_BINDING,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ATOMIC_COUNTER_BUFFER_BINDING)
-  AtomicCounterBufferBinding = GL_ATOMIC_COUNTER_BUFFER_BINDING,
+  kAtomicCounterBufferBinding = GL_ATOMIC_COUNTER_BUFFER_BINDING,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COPY_READ_BUFFER)
-  CopyReadBuffer = GL_COPY_READ_BUFFER,
+  kCopyReadBuffer = GL_COPY_READ_BUFFER,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COPY_WRITE_BUFFER)
-  CopyWriteBuffer = GL_COPY_WRITE_BUFFER,
+  kCopyWriteBuffer = GL_COPY_WRITE_BUFFER,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DISPATCH_INDIRECT_BUFFER_BINDING)
-  DispatchIndirectBufferBinding = GL_DISPATCH_INDIRECT_BUFFER_BINDING,
+  kDispatchIndirectBufferBinding = GL_DISPATCH_INDIRECT_BUFFER_BINDING,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DRAW_INDIRECT_BUFFER_BINDING)
-  DrawIndirectBufferBinding = GL_DRAW_INDIRECT_BUFFER_BINDING,
+  kDrawIndirectBufferBinding = GL_DRAW_INDIRECT_BUFFER_BINDING,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ELEMENT_ARRAY_BUFFER_BINDING)
-  ElementArrayBufferBinding = GL_ELEMENT_ARRAY_BUFFER_BINDING,
+  kElementArrayBufferBinding = GL_ELEMENT_ARRAY_BUFFER_BINDING,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PIXEL_PACK_BUFFER_BINDING)
-  PixelPackBufferBinding = GL_PIXEL_PACK_BUFFER_BINDING,
+  kPixelPackBufferBinding = GL_PIXEL_PACK_BUFFER_BINDING,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PIXEL_UNPACK_BUFFER_BINDING)
-  PixelUnpackBufferBinding = GL_PIXEL_UNPACK_BUFFER_BINDING,
+  kPixelUnpackBufferBinding = GL_PIXEL_UNPACK_BUFFER_BINDING,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SHADER_STORAGE_BUFFER_BINDING)
-  ShaderStorageBufferBinding = GL_SHADER_STORAGE_BUFFER_BINDING,
+  kShaderStorageBufferBinding = GL_SHADER_STORAGE_BUFFER_BINDING,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_BINDING_BUFFER)
-  TextureBindingBuffer = GL_TEXTURE_BINDING_BUFFER,
+  kTextureBindingBuffer = GL_TEXTURE_BINDING_BUFFER,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRANSFORM_FEEDBACK_BUFFER_BINDING)
-  TransformFeedbackBufferBinding = GL_TRANSFORM_FEEDBACK_BUFFER_BINDING,
+  kTransformFeedbackBufferBinding = GL_TRANSFORM_FEEDBACK_BUFFER_BINDING,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNIFORM_BUFFER_BINDING)
-  UniformBufferBinding = GL_UNIFORM_BUFFER_BINDING,
+  kUniformBufferBinding = GL_UNIFORM_BUFFER_BINDING,
 #endif
 };
 
-} // enums
+} // namespace enums
 
 inline BufferBinding GetBindingTarget(BufferType type) {
   BufferBinding target;
 
   switch (type) {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ARRAY_BUFFER_BINDING) && defined(GL_ARRAY_BUFFER)
-    case BufferType::ArrayBuffer:
-      target = BufferBinding::ArrayBufferBinding;
+    case BufferType::kArrayBuffer:
+      target = BufferBinding::kArrayBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_ARRAY_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ATOMIC_COUNTER_BUFFER_BINDING) && defined(GL_ATOMIC_COUNTER_BUFFER)
-    case BufferType::AtomicCounterBuffer:
-      target = BufferBinding::AtomicCounterBufferBinding;
+    case BufferType::kAtomicCounterBuffer:
+      target = BufferBinding::kAtomicCounterBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_ATOMIC_COUNTER_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COPY_READ_BUFFER) && defined(GL_COPY_READ_BUFFER)
-    case BufferType::CopyReadBuffer:
-      target = BufferBinding::CopyReadBuffer;
+    case BufferType::kCopyReadBuffer:
+      target = BufferBinding::kCopyReadBuffer;
       DebugOutput::LastUsedBindTarget() = "GL_COPY_READ_BUFFER";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COPY_WRITE_BUFFER) && defined(GL_COPY_WRITE_BUFFER)
-    case BufferType::CopyWriteBuffer:
-      target = BufferBinding::CopyWriteBuffer;
+    case BufferType::kCopyWriteBuffer:
+      target = BufferBinding::kCopyWriteBuffer;
       DebugOutput::LastUsedBindTarget() = "GL_COPY_WRITE_BUFFER";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DISPATCH_INDIRECT_BUFFER_BINDING) && defined(GL_DISPATCH_INDIRECT_BUFFER)
-    case BufferType::DispatchIndirectBuffer:
-      target = BufferBinding::DispatchIndirectBufferBinding;
+    case BufferType::kDispatchIndirectBuffer:
+      target = BufferBinding::kDispatchIndirectBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_DISPATCH_INDIRECT_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DRAW_INDIRECT_BUFFER_BINDING) && defined(GL_DRAW_INDIRECT_BUFFER)
-    case BufferType::DrawIndirectBuffer:
-      target = BufferBinding::DrawIndirectBufferBinding;
+    case BufferType::kDrawIndirectBuffer:
+      target = BufferBinding::kDrawIndirectBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_DRAW_INDIRECT_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ELEMENT_ARRAY_BUFFER_BINDING) && defined(GL_ELEMENT_ARRAY_BUFFER)
-    case BufferType::ElementArrayBuffer:
-      target = BufferBinding::ElementArrayBufferBinding;
+    case BufferType::kElementArrayBuffer:
+      target = BufferBinding::kElementArrayBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_ELEMENT_ARRAY_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PIXEL_PACK_BUFFER_BINDING) && defined(GL_PIXEL_PACK_BUFFER)
-    case BufferType::PixelPackBuffer:
-      target = BufferBinding::PixelPackBufferBinding;
+    case BufferType::kPixelPackBuffer:
+      target = BufferBinding::kPixelPackBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_PIXEL_PACK_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PIXEL_UNPACK_BUFFER_BINDING) && defined(GL_PIXEL_UNPACK_BUFFER)
-    case BufferType::PixelUnpackBuffer:
-      target = BufferBinding::PixelUnpackBufferBinding;
+    case BufferType::kPixelUnpackBuffer:
+      target = BufferBinding::kPixelUnpackBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_PIXEL_UNPACK_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SHADER_STORAGE_BUFFER_BINDING) && defined(GL_SHADER_STORAGE_BUFFER)
-    case BufferType::ShaderStorageBuffer:
-      target = BufferBinding::ShaderStorageBufferBinding;
+    case BufferType::kShaderStorageBuffer:
+      target = BufferBinding::kShaderStorageBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_SHADER_STORAGE_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_BINDING_BUFFER) && defined(GL_TEXTURE_BUFFER)
-    case BufferType::TextureBuffer:
-      target = BufferBinding::TextureBindingBuffer;
+    case BufferType::kTextureBuffer:
+      target = BufferBinding::kTextureBindingBuffer;
       DebugOutput::LastUsedBindTarget() = "GL_TEXTURE_BINDING_BUFFER";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRANSFORM_FEEDBACK_BUFFER_BINDING) && defined(GL_TRANSFORM_FEEDBACK_BUFFER)
-    case BufferType::TransformFeedbackBuffer:
-      target = BufferBinding::TransformFeedbackBufferBinding;
+    case BufferType::kTransformFeedbackBuffer:
+      target = BufferBinding::kTransformFeedbackBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_TRANSFORM_FEEDBACK_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNIFORM_BUFFER_BINDING) && defined(GL_UNIFORM_BUFFER)
-    case BufferType::UniformBuffer:
-      target = BufferBinding::UniformBufferBinding;
+    case BufferType::kUniformBuffer:
+      target = BufferBinding::kUniformBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_UNIFORM_BUFFER_BINDING";
       break;
 #endif
@@ -142,6 +141,6 @@ inline BufferBinding GetBindingTarget(BufferType type) {
  return target;
 }
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

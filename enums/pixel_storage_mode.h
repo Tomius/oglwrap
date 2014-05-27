@@ -5,87 +5,86 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class PixelStorageMode : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PACK_SWAP_BYTES)
-  PackSwapBytes = GL_PACK_SWAP_BYTES,
+  kPackSwapBytes = GL_PACK_SWAP_BYTES,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PACK_LSB_FIRST)
-  PackLsbFirst = GL_PACK_LSB_FIRST,
+  kPackLsbFirst = GL_PACK_LSB_FIRST,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PACK_ROW_LENGTH)
-  PackRowLength = GL_PACK_ROW_LENGTH,
+  kPackRowLength = GL_PACK_ROW_LENGTH,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PACK_SKIP_ROWS)
-  PackSkipRows = GL_PACK_SKIP_ROWS,
+  kPackSkipRows = GL_PACK_SKIP_ROWS,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PACK_SKIP_PIXELS)
-  PackSkipPixels = GL_PACK_SKIP_PIXELS,
+  kPackSkipPixels = GL_PACK_SKIP_PIXELS,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PACK_ALIGNMENT)
-  PackAlignment = GL_PACK_ALIGNMENT,
+  kPackAlignment = GL_PACK_ALIGNMENT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PACK_IMAGE_HEIGHT)
-  PackImageHeight = GL_PACK_IMAGE_HEIGHT,
+  kPackImageHeight = GL_PACK_IMAGE_HEIGHT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PACK_SKIP_IMAGES)
-  PackSkipImages = GL_PACK_SKIP_IMAGES,
+  kPackSkipImages = GL_PACK_SKIP_IMAGES,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PACK_COMPRESSED_BLOCK_WIDTH)
-  PackCompressedBlockWidth = GL_PACK_COMPRESSED_BLOCK_WIDTH,
+  kPackCompressedBlockWidth = GL_PACK_COMPRESSED_BLOCK_WIDTH,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PACK_COMPRESSED_BLOCK_HEIGHT)
-  PackCompressedBlockHeight = GL_PACK_COMPRESSED_BLOCK_HEIGHT,
+  kPackCompressedBlockHeight = GL_PACK_COMPRESSED_BLOCK_HEIGHT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PACK_COMPRESSED_BLOCK_DEPTH)
-  PackCompressedBlockDepth = GL_PACK_COMPRESSED_BLOCK_DEPTH,
+  kPackCompressedBlockDepth = GL_PACK_COMPRESSED_BLOCK_DEPTH,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PACK_COMPRESSED_BLOCK_SIZE)
-  PackCompressedBlockSize = GL_PACK_COMPRESSED_BLOCK_SIZE,
+  kPackCompressedBlockSize = GL_PACK_COMPRESSED_BLOCK_SIZE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNPACK_COMPRESSED_BLOCK_WIDTH)
-  UnpackCompressedBlockWidth = GL_UNPACK_COMPRESSED_BLOCK_WIDTH,
+  kUnpackCompressedBlockWidth = GL_UNPACK_COMPRESSED_BLOCK_WIDTH,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNPACK_COMPRESSED_BLOCK_HEIGHT)
-  UnpackCompressedBlockHeight = GL_UNPACK_COMPRESSED_BLOCK_HEIGHT,
+  kUnpackCompressedBlockHeight = GL_UNPACK_COMPRESSED_BLOCK_HEIGHT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNPACK_COMPRESSED_BLOCK_DEPTH)
-  UnpackCompressedBlockDepth = GL_UNPACK_COMPRESSED_BLOCK_DEPTH,
+  kUnpackCompressedBlockDepth = GL_UNPACK_COMPRESSED_BLOCK_DEPTH,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNPACK_COMPRESSED_BLOCK_SIZE)
-  UnpackCompressedBlockSize = GL_UNPACK_COMPRESSED_BLOCK_SIZE,
+  kUnpackCompressedBlockSize = GL_UNPACK_COMPRESSED_BLOCK_SIZE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNPACK_SWAP_BYTES)
-  UnpackSwapBytes = GL_UNPACK_SWAP_BYTES,
+  kUnpackSwapBytes = GL_UNPACK_SWAP_BYTES,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNPACK_LSB_FIRST)
-  UnpackLsbFirst = GL_UNPACK_LSB_FIRST,
+  kUnpackLsbFirst = GL_UNPACK_LSB_FIRST,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNPACK_ROW_LENGTH)
-  UnpackRowLength = GL_UNPACK_ROW_LENGTH,
+  kUnpackRowLength = GL_UNPACK_ROW_LENGTH,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNPACK_SKIP_ROWS)
-  UnpackSkipRows = GL_UNPACK_SKIP_ROWS,
+  kUnpackSkipRows = GL_UNPACK_SKIP_ROWS,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNPACK_SKIP_PIXELS)
-  UnpackSkipPixels = GL_UNPACK_SKIP_PIXELS,
+  kUnpackSkipPixels = GL_UNPACK_SKIP_PIXELS,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNPACK_ALIGNMENT)
-  UnpackAlignment = GL_UNPACK_ALIGNMENT,
+  kUnpackAlignment = GL_UNPACK_ALIGNMENT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNPACK_IMAGE_HEIGHT)
-  UnpackImageHeight = GL_UNPACK_IMAGE_HEIGHT,
+  kUnpackImageHeight = GL_UNPACK_IMAGE_HEIGHT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNPACK_SKIP_IMAGES)
-  UnpackSkipImages = GL_UNPACK_SKIP_IMAGES,
+  kUnpackSkipImages = GL_UNPACK_SKIP_IMAGES,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

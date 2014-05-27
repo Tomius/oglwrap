@@ -5,39 +5,38 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class BufferMapAccessFlags : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_MAP_READ_BIT)
-  MapReadBit = GL_MAP_READ_BIT,
+  kMapReadBit = GL_MAP_READ_BIT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_MAP_WRITE_BIT)
-  MapWriteBit = GL_MAP_WRITE_BIT,
+  kMapWriteBit = GL_MAP_WRITE_BIT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_MAP_INVALIDATE_RANGE_BIT)
-  MapInvalidateRangeBit = GL_MAP_INVALIDATE_RANGE_BIT,
+  kMapInvalidateRangeBit = GL_MAP_INVALIDATE_RANGE_BIT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_MAP_INVALIDATE_BUFFER_BIT)
-  MapInvalidateBufferBit = GL_MAP_INVALIDATE_BUFFER_BIT,
+  kMapInvalidateBufferBit = GL_MAP_INVALIDATE_BUFFER_BIT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_MAP_FLUSH_EXPLICIT_BIT)
-  MapFlushExplicitBit = GL_MAP_FLUSH_EXPLICIT_BIT,
+  kMapFlushExplicitBit = GL_MAP_FLUSH_EXPLICIT_BIT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_MAP_UNSYNCHRONIZED_BIT)
-  MapUnsynchronizedBit = GL_MAP_UNSYNCHRONIZED_BIT,
+  kMapUnsynchronizedBit = GL_MAP_UNSYNCHRONIZED_BIT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_MAP_PERSISTENT_BIT)
-  MapPersistentBit = GL_MAP_PERSISTENT_BIT,
+  kMapPersistentBit = GL_MAP_PERSISTENT_BIT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_MAP_COHERENT_BIT)
-  MapCoherentBit = GL_MAP_COHERENT_BIT,
+  kMapCoherentBit = GL_MAP_COHERENT_BIT,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

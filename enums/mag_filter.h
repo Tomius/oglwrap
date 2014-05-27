@@ -5,21 +5,20 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class MagFilter : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_NEAREST)
-  Nearest = GL_NEAREST,
+  kNearest = GL_NEAREST,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LINEAR)
-  Linear = GL_LINEAR,
+  kLinear = GL_LINEAR,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

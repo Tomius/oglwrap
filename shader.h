@@ -21,9 +21,9 @@
 
 #include "./define_internal_macros.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
-// -------======{[ ShaderStorage ]}======-------
+// -------======{[ ShaderSource ]}======-------
 
 /**
  * @brief A class that can load shader sources in from files, and do some
@@ -220,32 +220,32 @@ public:
       const char * strShaderType = nullptr;
       switch (shader_t) {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPUTE_SHADER)
-        case ShaderType::ComputeShader:
+        case ShaderType::kComputeShader:
           strShaderType = "compute";
           break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_VERTEX_SHADER)
-        case ShaderType::VertexShader:
+        case ShaderType::kVertexShader:
           strShaderType = "vertex";
           break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_GEOMETRY_SHADER)
-        case ShaderType::GeometryShader:
+        case ShaderType::kGeometryShader:
           strShaderType = "geometry";
           break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRAGMENT_SHADER)
-        case ShaderType::FragmentShader:
+        case ShaderType::kFragmentShader:
           strShaderType = "fragment";
           break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TESS_CONTROL_SHADER)
-        case ShaderType::TessControlShader:
+        case ShaderType::kTessControlShader:
           strShaderType = "tessellation control";
           break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TESS_EVALUATION_SHADER)
-        case ShaderType::TessEvaluationShader:
+        case ShaderType::kTessEvaluationShader:
           strShaderType = "tessellation evaluation";
           break;
 #endif
@@ -314,12 +314,12 @@ typedef Shader<ShaderType::ComputeShader> ComputeShader;
  * @version OpenGL 2.1
  * @see GL_VERTEX_SHADER
  */
-typedef Shader<ShaderType::VertexShader> VertexShader;
+typedef Shader<ShaderType::kVertexShader> VertexShader;
 
 #if OGLWRAP_INSTANTIATE
-  template class Shader<ShaderType::VertexShader>;
+  template class Shader<ShaderType::kVertexShader>;
 #else
-  extern template class Shader<ShaderType::VertexShader>;
+  extern template class Shader<ShaderType::kVertexShader>;
 #endif
 
 #endif // GL_VERTEX_SHADER
@@ -337,12 +337,12 @@ typedef Shader<ShaderType::VertexShader> VertexShader;
  * @version OpenGL 3.2
  * @see GL_GEOMETRY_SHADER
  */
-typedef Shader<ShaderType::GeometryShader> GeometryShader;
+typedef Shader<ShaderType::kGeometryShader> GeometryShader;
 
 #if OGLWRAP_INSTANTIATE
-  template class Shader<ShaderType::GeometryShader>;
+  template class Shader<ShaderType::kGeometryShader>;
 #else
-  extern template class Shader<ShaderType::GeometryShader>;
+  extern template class Shader<ShaderType::kGeometryShader>;
 #endif
 
 #endif // GL_GEOMETRY_SHADER
@@ -367,12 +367,12 @@ typedef Shader<ShaderType::GeometryShader> GeometryShader;
  * @version OpenGL 2.1
  * @see GL_FRAGMENT_SHADER
  */
-typedef Shader<ShaderType::FragmentShader> FragmentShader;
+typedef Shader<ShaderType::kFragmentShader> FragmentShader;
 
 #if OGLWRAP_INSTANTIATE
-  template class Shader<ShaderType::FragmentShader>;
+  template class Shader<ShaderType::kFragmentShader>;
 #else
-  extern template class Shader<ShaderType::FragmentShader>;
+  extern template class Shader<ShaderType::kFragmentShader>;
 #endif
 
 #endif // GL_FRAGMENT_SHADER
@@ -394,12 +394,12 @@ typedef Shader<ShaderType::FragmentShader> FragmentShader;
  * @version OpenGL 4.0
  * @see GL_TESS_CONTROL_SHADER
  */
-typedef Shader<ShaderType::TessControlShader> TessControlShader;
+typedef Shader<ShaderType::kTessControlShader> TessControlShader;
 
 #if OGLWRAP_INSTANTIATE
-  template class Shader<ShaderType::TessControlShader>;
+  template class Shader<ShaderType::kTessControlShader>;
 #else
-  extern template class Shader<ShaderType::TessControlShader>;
+  extern template class Shader<ShaderType::kTessControlShader>;
 #endif
 
 #endif // GL_TESS_CONTROL_SHADER
@@ -420,12 +420,12 @@ typedef Shader<ShaderType::TessControlShader> TessControlShader;
  * @version It is core since OpenGL 4.0.
  * @see GL_TESS_EVALUATION_SHADER
  */
-typedef Shader<ShaderType::TessEvaluationShader> TessEvaluationShader;
+typedef Shader<ShaderType::kTessEvaluationShader> TessEvaluationShader;
 
 #if OGLWRAP_INSTANTIATE
-  template class Shader<ShaderType::TessEvaluationShader>;
+  template class Shader<ShaderType::kTessEvaluationShader>;
 #else
-  extern template class Shader<ShaderType::TessEvaluationShader>;
+  extern template class Shader<ShaderType::kTessEvaluationShader>;
 #endif
 
 #endif // GL_TESS_EVALUATION_SHADER

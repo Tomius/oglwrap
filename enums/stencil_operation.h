@@ -5,39 +5,38 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class StencilOperation : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_KEEP)
-  Keep = GL_KEEP,
+  kKeep = GL_KEEP,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ZERO)
-  Zero = GL_ZERO,
+  kZero = GL_ZERO,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_REPLACE)
-  Replace = GL_REPLACE,
+  kReplace = GL_REPLACE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_INCR)
-  Incr = GL_INCR,
+  kIncr = GL_INCR,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DECR)
-  Decr = GL_DECR,
+  kDecr = GL_DECR,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_INVERT)
-  Invert = GL_INVERT,
+  kInvert = GL_INVERT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_INCR_WRAP)
-  IncrWrap = GL_INCR_WRAP,
+  kIncrWrap = GL_INCR_WRAP,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DECR_WRAP)
-  DecrWrap = GL_DECR_WRAP,
+  kDecrWrap = GL_DECR_WRAP,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

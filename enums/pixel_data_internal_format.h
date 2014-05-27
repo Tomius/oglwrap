@@ -5,258 +5,257 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class PixelDataInternalFormat : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DEPTH_COMPONENT)
-  DepthComponent = GL_DEPTH_COMPONENT,
+  kDepthComponent = GL_DEPTH_COMPONENT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DEPTH_STENCIL)
-  DepthStencil = GL_DEPTH_STENCIL,
+  kDepthStencil = GL_DEPTH_STENCIL,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RED)
-  Red = GL_RED,
+  kRed = GL_RED,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RG)
-  Rg = GL_RG,
+  kRg = GL_RG,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB)
-  Rgb = GL_RGB,
+  kRgb = GL_RGB,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SRGB)
-  Srgb = GL_SRGB,
+  kSrgb = GL_SRGB,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA)
-  Rgba = GL_RGBA,
+  kRgba = GL_RGBA,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SRGB_ALPHA)
-  SrgbAlpha = GL_SRGB_ALPHA,
+  kSrgbAlpha = GL_SRGB_ALPHA,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_R8)
-  R8 = GL_R8,
+  kR8 = GL_R8,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_R8_SNORM)
-  R8Snorm = GL_R8_SNORM,
+  kR8Snorm = GL_R8_SNORM,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_R16)
-  R16 = GL_R16,
+  kR16 = GL_R16,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_R16_SNORM)
-  R16Snorm = GL_R16_SNORM,
+  kR16Snorm = GL_R16_SNORM,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RG8)
-  Rg8 = GL_RG8,
+  kRg8 = GL_RG8,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RG8_SNORM)
-  Rg8Snorm = GL_RG8_SNORM,
+  kRg8Snorm = GL_RG8_SNORM,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RG16)
-  Rg16 = GL_RG16,
+  kRg16 = GL_RG16,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RG16_SNORM)
-  Rg16Snorm = GL_RG16_SNORM,
+  kRg16Snorm = GL_RG16_SNORM,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_R3_G3_B2)
-  R3G3B2 = GL_R3_G3_B2,
+  kR3G3B2 = GL_R3_G3_B2,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB4)
-  Rgb4 = GL_RGB4,
+  kRgb4 = GL_RGB4,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB5)
-  Rgb5 = GL_RGB5,
+  kRgb5 = GL_RGB5,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB8)
-  Rgb8 = GL_RGB8,
+  kRgb8 = GL_RGB8,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB8_SNORM)
-  Rgb8Snorm = GL_RGB8_SNORM,
+  kRgb8Snorm = GL_RGB8_SNORM,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB10)
-  Rgb10 = GL_RGB10,
+  kRgb10 = GL_RGB10,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB12)
-  Rgb12 = GL_RGB12,
+  kRgb12 = GL_RGB12,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB16)
-  Rgb16 = GL_RGB16,
+  kRgb16 = GL_RGB16,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB16_SNORM)
-  Rgb16Snorm = GL_RGB16_SNORM,
+  kRgb16Snorm = GL_RGB16_SNORM,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA2)
-  Rgba2 = GL_RGBA2,
+  kRgba2 = GL_RGBA2,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA4)
-  Rgba4 = GL_RGBA4,
+  kRgba4 = GL_RGBA4,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB5_A1)
-  Rgb5A1 = GL_RGB5_A1,
+  kRgb5A1 = GL_RGB5_A1,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA8)
-  Rgba8 = GL_RGBA8,
+  kRgba8 = GL_RGBA8,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA8_SNORM)
-  Rgba8Snorm = GL_RGBA8_SNORM,
+  kRgba8Snorm = GL_RGBA8_SNORM,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB10_A2)
-  Rgb10A2 = GL_RGB10_A2,
+  kRgb10A2 = GL_RGB10_A2,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB10_A2UI)
-  Rgb10A2Ui = GL_RGB10_A2UI,
+  kRgb10A2Ui = GL_RGB10_A2UI,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA12)
-  Rgba12 = GL_RGBA12,
+  kRgba12 = GL_RGBA12,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA16)
-  Rgba16 = GL_RGBA16,
+  kRgba16 = GL_RGBA16,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA16_SNORM)
-  Rgba16Snorm = GL_RGBA16_SNORM,
+  kRgba16Snorm = GL_RGBA16_SNORM,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SRGB8)
-  Srgb8 = GL_SRGB8,
+  kSrgb8 = GL_SRGB8,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SRGB8_ALPHA8)
-  Srgb8Alpha8 = GL_SRGB8_ALPHA8,
+  kSrgb8Alpha8 = GL_SRGB8_ALPHA8,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_R16F)
-  R16F = GL_R16F,
+  kR16F = GL_R16F,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RG16F)
-  Rg16F = GL_RG16F,
+  kRg16F = GL_RG16F,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB16F)
-  Rgb16F = GL_RGB16F,
+  kRgb16F = GL_RGB16F,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA16F)
-  Rgba16F = GL_RGBA16F,
+  kRgba16F = GL_RGBA16F,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_R32F)
-  R32F = GL_R32F,
+  kR32F = GL_R32F,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RG32F)
-  Rg32F = GL_RG32F,
+  kRg32F = GL_RG32F,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB32F)
-  Rgb32F = GL_RGB32F,
+  kRgb32F = GL_RGB32F,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA32F)
-  Rgba32F = GL_RGBA32F,
+  kRgba32F = GL_RGBA32F,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_R11F_G11F_B10F)
-  R11FG11FB10F = GL_R11F_G11F_B10F,
+  kR11FG11FB10F = GL_R11F_G11F_B10F,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB9_E5)
-  Rgb9E5 = GL_RGB9_E5,
+  kRgb9E5 = GL_RGB9_E5,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_R8I)
-  R8I = GL_R8I,
+  kR8I = GL_R8I,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_R8UI)
-  R8Ui = GL_R8UI,
+  kR8Ui = GL_R8UI,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_R16I)
-  R16I = GL_R16I,
+  kR16I = GL_R16I,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_R16UI)
-  R16Ui = GL_R16UI,
+  kR16Ui = GL_R16UI,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_R32I)
-  R32I = GL_R32I,
+  kR32I = GL_R32I,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_R32UI)
-  R32Ui = GL_R32UI,
+  kR32Ui = GL_R32UI,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RG8I)
-  Rg8I = GL_RG8I,
+  kRg8I = GL_RG8I,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RG8UI)
-  Rg8Ui = GL_RG8UI,
+  kRg8Ui = GL_RG8UI,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RG16I)
-  Rg16I = GL_RG16I,
+  kRg16I = GL_RG16I,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RG16UI)
-  Rg16Ui = GL_RG16UI,
+  kRg16Ui = GL_RG16UI,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RG32I)
-  Rg32I = GL_RG32I,
+  kRg32I = GL_RG32I,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RG32UI)
-  Rg32Ui = GL_RG32UI,
+  kRg32Ui = GL_RG32UI,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB8I)
-  Rgb8I = GL_RGB8I,
+  kRgb8I = GL_RGB8I,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB8UI)
-  Rgb8Ui = GL_RGB8UI,
+  kRgb8Ui = GL_RGB8UI,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB16I)
-  Rgb16I = GL_RGB16I,
+  kRgb16I = GL_RGB16I,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB16UI)
-  Rgb16Ui = GL_RGB16UI,
+  kRgb16Ui = GL_RGB16UI,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB32I)
-  Rgb32I = GL_RGB32I,
+  kRgb32I = GL_RGB32I,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB32UI)
-  Rgb32Ui = GL_RGB32UI,
+  kRgb32Ui = GL_RGB32UI,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA8I)
-  Rgba8I = GL_RGBA8I,
+  kRgba8I = GL_RGBA8I,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA8UI)
-  Rgba8Ui = GL_RGBA8UI,
+  kRgba8Ui = GL_RGBA8UI,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA16I)
-  Rgba16I = GL_RGBA16I,
+  kRgba16I = GL_RGBA16I,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA16UI)
-  Rgba16Ui = GL_RGBA16UI,
+  kRgba16Ui = GL_RGBA16UI,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA32I)
-  Rgba32I = GL_RGBA32I,
+  kRgba32I = GL_RGBA32I,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA32UI)
-  Rgba32Ui = GL_RGBA32UI,
+  kRgba32Ui = GL_RGBA32UI,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPRESSED_RED)
-  CompressedRed = GL_COMPRESSED_RED,
+  kCompressedRed = GL_COMPRESSED_RED,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPRESSED_RG)
-  CompressedRg = GL_COMPRESSED_RG,
+  kCompressedRg = GL_COMPRESSED_RG,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPRESSED_RGB)
-  CompressedRgb = GL_COMPRESSED_RGB,
+  kCompressedRgb = GL_COMPRESSED_RGB,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPRESSED_RGBA)
-  CompressedRgba = GL_COMPRESSED_RGBA,
+  kCompressedRgba = GL_COMPRESSED_RGBA,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPRESSED_SRGB)
-  CompressedSrgb = GL_COMPRESSED_SRGB,
+  kCompressedSrgb = GL_COMPRESSED_SRGB,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPRESSED_SRGB_ALPHA)
-  CompressedSrgbAlpha = GL_COMPRESSED_SRGB_ALPHA,
+  kCompressedSrgbAlpha = GL_COMPRESSED_SRGB_ALPHA,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPRESSED_RED_RGTC1)
-  CompressedRedRgtc1 = GL_COMPRESSED_RED_RGTC1,
+  kCompressedRedRgtc1 = GL_COMPRESSED_RED_RGTC1,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPRESSED_SIGNED_RED_RGTC1)
-  CompressedSignedRedRgtc1 = GL_COMPRESSED_SIGNED_RED_RGTC1,
+  kCompressedSignedRedRgtc1 = GL_COMPRESSED_SIGNED_RED_RGTC1,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPRESSED_RG_RGTC2)
-  CompressedRgRgtc2 = GL_COMPRESSED_RG_RGTC2,
+  kCompressedRgRgtc2 = GL_COMPRESSED_RG_RGTC2,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPRESSED_SIGNED_RG_RGTC2)
-  CompressedSignedRgRgtc2 = GL_COMPRESSED_SIGNED_RG_RGTC2,
+  kCompressedSignedRgRgtc2 = GL_COMPRESSED_SIGNED_RG_RGTC2,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

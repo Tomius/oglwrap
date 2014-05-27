@@ -5,24 +5,23 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class PolyMode : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_POINT)
-  Point = GL_POINT,
+  kPoint = GL_POINT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LINE)
-  Line = GL_LINE,
+  kLine = GL_LINE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FILL)
-  Fill = GL_FILL,
+  kFill = GL_FILL,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

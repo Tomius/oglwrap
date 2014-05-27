@@ -12,7 +12,7 @@
 #include "../enums/provoke_mode.h"
 #include "../define_internal_macros.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 /// Define front- and back-facing polygons.
 /** @see glFrontFace */
@@ -55,7 +55,7 @@ inline void PolygonMode(Face face, PolyMode mode) {
 /// Sets the polygon rasterization mode.
 /** @see glPolygonMode */
 inline void PolygonMode(PolyMode mode) {
-	gl(PolygonMode(GLenum(Face::FrontAndBack), GLenum(mode)));
+	gl(PolygonMode(GLenum(Face::kFrontAndBack), GLenum(mode)));
 }
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_POLYGON_MODE)

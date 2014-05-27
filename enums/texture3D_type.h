@@ -5,21 +5,20 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class Texture3DType : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_3D)
-  Texture3D = GL_TEXTURE_3D,
+  kTexture3D = GL_TEXTURE_3D,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_2D_ARRAY)
-  Texture2DArray = GL_TEXTURE_2D_ARRAY,
+  kTexture2DArray = GL_TEXTURE_2D_ARRAY,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

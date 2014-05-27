@@ -15,7 +15,7 @@
 
 #include "./define_internal_macros.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 /// A class for managing OpenGL resources.
 class glObject {

@@ -5,24 +5,23 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class HintOption : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FASTEST)
-  Fastest = GL_FASTEST,
+  kFastest = GL_FASTEST,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_NICEST)
-  Nicest = GL_NICEST,
+  kNicest = GL_NICEST,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DONT_CARE)
-  DontCare = GL_DONT_CARE,
+  kDontCare = GL_DONT_CARE,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

@@ -5,24 +5,23 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class BufferSelectBit : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_BUFFER_BIT)
-  ColorBufferBit = GL_COLOR_BUFFER_BIT,
+  kColorBufferBit = GL_COLOR_BUFFER_BIT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DEPTH_BUFFER_BIT)
-  DepthBufferBit = GL_DEPTH_BUFFER_BIT,
+  kDepthBufferBit = GL_DEPTH_BUFFER_BIT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_STENCIL_BUFFER_BIT)
-  StencilBufferBit = GL_STENCIL_BUFFER_BIT,
+  kStencilBufferBit = GL_STENCIL_BUFFER_BIT,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

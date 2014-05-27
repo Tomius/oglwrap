@@ -5,63 +5,62 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class ColorLogicOperation : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_CLEAR)
-  Clear = GL_CLEAR,
+  kClear = GL_CLEAR,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SET)
-  Set = GL_SET,
+  kSet = GL_SET,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_INVERT)
-  Invert = GL_INVERT,
+  kInvert = GL_INVERT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_NOOP)
-  Noop = GL_NOOP,
+  kNoop = GL_NOOP,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_AND)
-  And = GL_AND,
+  kAnd = GL_AND,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_AND_REVERSE)
-  AndReverse = GL_AND_REVERSE,
+  kAndReverse = GL_AND_REVERSE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_AND_INVERTED)
-  AndInverted = GL_AND_INVERTED,
+  kAndInverted = GL_AND_INVERTED,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_NAND)
-  Nand = GL_NAND,
+  kNand = GL_NAND,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_OR)
-  Or = GL_OR,
+  kOr = GL_OR,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_OR_REVERSE)
-  OrReverse = GL_OR_REVERSE,
+  kOrReverse = GL_OR_REVERSE,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_OR_INVERTED)
-  OrInverted = GL_OR_INVERTED,
+  kOrInverted = GL_OR_INVERTED,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_XOR)
-  Xor = GL_XOR,
+  kXor = GL_XOR,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_NOR)
-  Nor = GL_NOR,
+  kNor = GL_NOR,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COPY)
-  Copy = GL_COPY,
+  kCopy = GL_COPY,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COPY_INVERTED)
-  CopyInverted = GL_COPY_INVERTED,
+  kCopyInverted = GL_COPY_INVERTED,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_EQUIV)
-  Equiv = GL_EQUIV,
+  kEquiv = GL_EQUIV,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

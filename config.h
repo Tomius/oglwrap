@@ -120,4 +120,9 @@
   #define OGLWRAP_DEFAULT_SHADER_PATH ""
 #endif
 
+/// You can specify the oglwrap's namespace name.
+#ifndef OGLWRAP_NAMESPACE_NAME
+  #define OGLWRAP_NAMESPACE_NAME gl
+#endif
+
 #endif // OGLWRAP_CONFIG_H_

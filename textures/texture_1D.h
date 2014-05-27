@@ -11,13 +11,13 @@
 
 #include "../define_internal_macros.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 // -------======{[ Texture1D declaration ]}======-------
 
 /// A one dimensional texture class
 /** @see GL_TEXTURE_1D */
-class Texture1D : public TextureBase<TextureType::Texture1D> {
+class Texture1D : public TextureBase<TextureType::kTexture1D> {
 public:
   /// Uploads the base image.
   /** @param internalFormat - Specifies the number, order, and size of the color components in the texture.

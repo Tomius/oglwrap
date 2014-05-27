@@ -10,7 +10,7 @@
 #include "debug_output.h"
 #include "../context/errors.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 #if OGLWRAP_DEBUG
 
@@ -56,7 +56,7 @@ namespace oglwrap {
  * @see glGetError
  */
 #define OGLWRAP_CHECK_ERROR() \
-  oglwrap::OGLWRAP_CheckError(__FILE__, __PRETTY_FUNCTION__, __LINE__)
+  OGLWRAP_NAMESPACE_NAME::OGLWRAP_CheckError(__FILE__, __PRETTY_FUNCTION__, __LINE__)
 
 /**
  * @brief Same as OGLWRAP_CHECK_ERROR, but you can specify the called
@@ -64,28 +64,28 @@ namespace oglwrap {
  * @see OGLWRAP_CHECK_ERROR
  */
 #define OGLWRAP_CHECK_ERROR_NAMED(glfunc) \
-  oglwrap::OGLWRAP_CheckError(__FILE__, __PRETTY_FUNCTION__, __LINE__, glfunc)
+  OGLWRAP_NAMESPACE_NAME::OGLWRAP_CheckError(__FILE__, __PRETTY_FUNCTION__, __LINE__, glfunc)
 
 
 inline void OGLWRAP_CheckError(const char *file,
                                const char *func,
                                int line,
                                const char* glfunc = nullptr) {
-  DebugOutput::LastError() = context::GetError();
-  if (DebugOutput::LastError() != ErrorType::NoError) {
+  DebugOutput::LastError() = GetError();
+  if (DebugOutput::LastError() != ErrorType::kNoError) {
     std::string title;
 
     #define OGLWRAP_CHECK_ENUM(X, Y) case ErrorType::X: title = Y; break;
 
     switch (DebugOutput::LastError()) {
-      OGLWRAP_CHECK_ENUM(InvalidEnum, "Invalid Enum")
-      OGLWRAP_CHECK_ENUM(InvalidValue, "Invalid Value")
-      OGLWRAP_CHECK_ENUM(InvalidOperation, "Invalid Operation")
-      OGLWRAP_CHECK_ENUM(StackOverflow, "Stack Overflow")
-      OGLWRAP_CHECK_ENUM(StackUnderflow, "Stack Underflow")
-      OGLWRAP_CHECK_ENUM(OutOfMemory, "Out of Memory")
-      OGLWRAP_CHECK_ENUM(InvalidFramebufferOperation, "Invalid Framebuffer Operation")
-      OGLWRAP_CHECK_ENUM(TableTooLarge, "Table Too Large")
+      OGLWRAP_CHECK_ENUM(kInvalidEnum, "Invalid Enum")
+      OGLWRAP_CHECK_ENUM(kInvalidValue, "Invalid Value")
+      OGLWRAP_CHECK_ENUM(kInvalidOperation, "Invalid Operation")
+      OGLWRAP_CHECK_ENUM(kStackOverflow, "Stack Overflow")
+      OGLWRAP_CHECK_ENUM(kStackUnderflow, "Stack Underflow")
+      OGLWRAP_CHECK_ENUM(kOutOfMemory, "Out of Memory")
+      OGLWRAP_CHECK_ENUM(kInvalidFramebufferOperation, "Invalid Framebuffer Operation")
+      OGLWRAP_CHECK_ENUM(kTableTooLarge, "Table Too Large")
       default:
         break;
     };

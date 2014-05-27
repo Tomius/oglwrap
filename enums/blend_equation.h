@@ -5,30 +5,29 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class BlendEquation : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FUNC_ADD)
-  FuncAdd = GL_FUNC_ADD,
+  kFuncAdd = GL_FUNC_ADD,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FUNC_SUBTRACT)
-  FuncSubtract = GL_FUNC_SUBTRACT,
+  kFuncSubtract = GL_FUNC_SUBTRACT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FUNC_REVERSE_SUBTRACT)
-  FuncReverseSubtract = GL_FUNC_REVERSE_SUBTRACT,
+  kFuncReverseSubtract = GL_FUNC_REVERSE_SUBTRACT,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_MIN)
-  Min = GL_MIN,
+  kMin = GL_MIN,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_MAX)
-  Max = GL_MAX,
+  kMax = GL_MAX,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

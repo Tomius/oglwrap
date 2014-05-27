@@ -21,7 +21,7 @@
 
 #include "./define_internal_macros.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 #if OGLWRAP_DEFINE_EVERYTHING || \
     (defined(glGenRenderbuffers) && defined(glDeleteRenderbuffers))
@@ -192,31 +192,31 @@ public:
     std::string errStr;
     GLenum status = gl(CheckFramebufferStatus(GLenum(FBO_TYPE)));
     switch (FramebufferStatus(status)) {
-      case FramebufferStatus::FramebufferComplete:
+      case FramebufferStatus::kFramebufferComplete:
         return;
-      case FramebufferStatus::FramebufferIncompleteAttachment:
+      case FramebufferStatus::kFramebufferIncompleteAttachment:
         errStr = "One or more framebuffer attachment points are incomplete.";
         break;
-      case FramebufferStatus::FramebufferIncompleteMissingAttachment:
+      case FramebufferStatus::kFramebufferIncompleteMissingAttachment:
         errStr = "The framebuffer does not have at least one image attached to it.";
         break;
-      case FramebufferStatus::FramebufferIncompleteDrawBuffer:
+      case FramebufferStatus::kFramebufferIncompleteDrawBuffer:
         errStr = "The value of GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE is GL_NONE for "
                  "any color attachment point(s) named by GL_DRAW_BUFFERi.";
         break;
-      case FramebufferStatus::FramebufferIncompleteReadBuffer:
+      case FramebufferStatus::kFramebufferIncompleteReadBuffer:
         errStr = "The GL_READ_BUFFER is not GL_NONE and the value of GL_FRAMEBUFFER_"
                  "ATTACHMENT_OBJECT_TYPE is GL_NONE for the color attachment point "
                  "named by GL_READ_BUFFER.";
         break;
-      case FramebufferStatus::FramebufferUnsupported:
+      case FramebufferStatus::kFramebufferUnsupported:
         errStr = "The combination of internal formats of the attached images violates an "
                  "implementation-dependent set of restrictions.";
         break;
-      case FramebufferStatus::FramebufferUndefined:
+      case FramebufferStatus::kFramebufferUndefined:
         errStr = "The currently bound framebuffer does not exist.";
         break;
-      case FramebufferStatus::FramebufferIncompleteMultisample:
+      case FramebufferStatus::kFramebufferIncompleteMultisample:
         errStr = "One of the followings happened: \n"
                  "-  The value of GL_RENDERBUFFER_SAMPLES is not the same for all attached "
                  "renderbuffers; if the value of GL_TEXTURE_SAMPLES is the not same for all "
@@ -228,7 +228,7 @@ public:
                  "and textures, the value of GL_TEXTURE_FIXED_SAMPLE_LOCATIONS is not GL_TRUE "
                  "for all attached textures.";
         break;
-      case FramebufferStatus::FramebufferIncompleteLayerTargets:
+      case FramebufferStatus::kFramebufferIncompleteLayerTargets:
         errStr = "One or more framebuffer attachment is layered, and any populated attachment "
                  "is not layered, or if all populated color attachments are not from textures "
                  "of the same target.";
@@ -414,9 +414,9 @@ public:
   }
 }; // class Framebuffer
 
-typedef FramebufferObject<FramebufferType::Framebuffer> Framebuffer;
-typedef FramebufferObject<FramebufferType::ReadFramebuffer> ReadFramebuffer;
-typedef FramebufferObject<FramebufferType::DrawFramebuffer> DrawFramebuffer;
+using Framebuffer     = FramebufferObject<FramebufferType::kFramebuffer>;
+using ReadFramebuffer = FramebufferObject<FramebufferType::kReadFramebuffer>;
+using DrawFramebuffer = FramebufferObject<FramebufferType::kDrawFramebuffer>;
 
 #endif // glGenFramebuffers && glDeleteFramebuffers
 

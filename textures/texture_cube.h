@@ -14,14 +14,14 @@
 
 #include "../define_internal_macros.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 // -------======{[ TextureCube declaration ]}======-------
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_CUBE_MAP)
 /// A set of 6 2D textures, that is used to be sampled with 3D direction vectors.
 /** @see GL_TEXTURE_CUBE_MAP */
-class TextureCube : public TextureBase<TextureType::TextureCubeMap> {
+class TextureCube : public TextureBase<TextureType::kTextureCubeMap> {
 public:
   /// Uploads one a base image for one side of the cube.
   /** @param target - Specifies which one of the six sides of the cube to use as target.
@@ -411,17 +411,17 @@ public:
   static TextureCubeTarget cubeFace(int i) {
     switch (i) {
       case 0:
-        return TextureCubeTarget::TextureCubeMapPositiveX;
+        return TextureCubeTarget::kTextureCubeMapPositiveX;
       case 1:
-        return TextureCubeTarget::TextureCubeMapNegativeX;
+        return TextureCubeTarget::kTextureCubeMapNegativeX;
       case 2:
-        return TextureCubeTarget::TextureCubeMapPositiveY;
+        return TextureCubeTarget::kTextureCubeMapPositiveY;
       case 3:
-        return TextureCubeTarget::TextureCubeMapNegativeY;
+        return TextureCubeTarget::kTextureCubeMapNegativeY;
       case 4:
-        return TextureCubeTarget::TextureCubeMapPositiveZ;
+        return TextureCubeTarget::kTextureCubeMapPositiveZ;
       case 5:
-        return TextureCubeTarget::TextureCubeMapNegativeZ;
+        return TextureCubeTarget::kTextureCubeMapNegativeZ;
       default:
         throw std::invalid_argument("CubeFace argument must be between 0 and 5");
     }
@@ -476,10 +476,10 @@ public:
 
       using InternalFormat = PixelDataInternalFormat;
       InternalFormat internal_format =
-        srgb ? (compressed ? InternalFormat::CompressedSrgbAlpha :
-                             InternalFormat::Srgb8Alpha8) :
-               (compressed ? InternalFormat::CompressedRgba :
-                             InternalFormat::Rgba8);
+        srgb ? (compressed ? InternalFormat::kCompressedSrgbAlpha :
+                             InternalFormat::kSrgb8Alpha8) :
+               (compressed ? InternalFormat::kCompressedRgba :
+                             InternalFormat::kRgba8);
 
       bool bad_alignment = (image.columns() * format_string.length()) % 4 != 0;
       GLint unpack_aligment;
@@ -494,8 +494,8 @@ public:
         internal_format,
         image.columns(),
         image.rows(),
-        PixelDataFormat::Rgba,
-        PixelDataType::UnsignedByte,
+        PixelDataFormat::kRgba,
+        PixelDataType::kUnsignedByte,
         blob.data()
       );
 

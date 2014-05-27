@@ -5,39 +5,38 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class CompareFunc : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LEQUAL)
-  Lequal = GL_LEQUAL,
+  kLequal = GL_LEQUAL,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_GEQUAL)
-  Gequal = GL_GEQUAL,
+  kGequal = GL_GEQUAL,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LESS)
-  Less = GL_LESS,
+  kLess = GL_LESS,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_GREATER)
-  Greater = GL_GREATER,
+  kGreater = GL_GREATER,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_EQUAL)
-  Equal = GL_EQUAL,
+  kEqual = GL_EQUAL,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_NOTEQUAL)
-  Notequal = GL_NOTEQUAL,
+  kNotequal = GL_NOTEQUAL,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ALWAYS)
-  Always = GL_ALWAYS,
+  kAlways = GL_ALWAYS,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_NEVER)
-  Never = GL_NEVER,
+  kNever = GL_NEVER,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif

@@ -11,7 +11,7 @@
 
 #include "../define_internal_macros.h"
 
-namespace oglwrap {
+namespace OGLWRAP_NAMESPACE_NAME {
 
 /// Specify clear values for the color buffers.
 /** @see glClearColor */
@@ -67,15 +67,15 @@ class ClearBuffers {
 	Bitfield<BufferSelectBit> buffers;
 public:
 	ClearBuffers& Color() {
-		buffers |= BufferSelectBit::ColorBufferBit;
+		buffers |= BufferSelectBit::kColorBufferBit;
 		return *this;
 	}
 	ClearBuffers& Depth() {
-		buffers |= BufferSelectBit::DepthBufferBit;
+		buffers |= BufferSelectBit::kDepthBufferBit;
 		return *this;
 	}
 	ClearBuffers& Stencil() {
-		buffers |= BufferSelectBit::StencilBufferBit;
+		buffers |= BufferSelectBit::kStencilBufferBit;
 		return *this;
 	}
 	~ClearBuffers() {

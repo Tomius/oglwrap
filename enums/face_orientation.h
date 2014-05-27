@@ -5,21 +5,20 @@
 
 #include "../config.h"
 
-namespace oglwrap {
-
+namespace OGLWRAP_NAMESPACE_NAME {
 inline namespace enums {
 
 enum class FaceOrientation : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_CW)
-  Cw = GL_CW,
+  kCw = GL_CW,
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_CCW)
-  Ccw = GL_CCW,
+  kCcw = GL_CCW,
 #endif
 };
 
-} // enums
+} // namespace enums
 
-} // oglwrap
+} // namespace oglwrap
 
 #endif
