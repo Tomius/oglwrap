@@ -5,7 +5,7 @@ Oglwrap is a lightweight, cross-platform, object-oriented, header-only C++ wrapp
 
 This project is mainly for personal use, and its interface might change often.
 If you need a object-oriented OpenGL wrapper with long term compatibility
-take a look at [oglplus](https://github.com/matus-chochlik/oglplus).
+take a look at [oglplus](https://github.com/matus-chochlik/oglplus) or [oogl](https://github.com/Overv/OOGL).
 
 Features:
 -------------
