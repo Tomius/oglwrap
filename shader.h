@@ -115,12 +115,11 @@ public:
 // -------======{[ Shader ]}======-------
 
 #if OGLWRAP_DEFINE_EVERYTHING || \
-  (defined(glCreateShader) && defined(glDeleteShader))
-template<ShaderType shader_t>
+  (defined(glCreateShader) && defined(glDeleteShader) && defined(glShaderSource))
 /// A GLSL shader object used to control the drawing process.
 /** @see glCreateShader, glDeleteShader */
 class Shader {
-  globjects::Shader<shader_t> shader_; ///< The handle for the buffer.
+  globjects::Shader shader_; ///< The handle for the buffer.
   bool compiled_; ///< Stores if the shader is compiled.
 
   #if OGLWRAP_DEBUG
@@ -128,36 +127,34 @@ class Shader {
     std::string filename_;
   #endif
 
-public:
-
+ public:
   /// Creates the an empty shader object.
   #if OGLWRAP_DEBUG
-    Shader() : compiled_(false), filename_("Unnamed shader") { }
+    Shader(ShaderType shader_t)
+        : shader_(shader_t), compiled_(false), filename_("Unnamed shader") { }
   #else
-    Shader() : compiled_(false) { }
+    Shader(ShaderType shader_t)
+        : shader_(shader_t), compiled_(false) { }
   #endif
 
-#if OGLWRAP_DEFINE_EVERYTHING || defined(glShaderSource)
   /// Creates a shader and sets the file as the shader source.
   /** @param file - The file to load and set as shader source.
     * @see glShaderSource */
-  Shader(const std::string& file)
-    : compiled_(false) {
+  Shader(ShaderType shader_t, const std::string& file)
+    : shader_(shader_t)
+    , compiled_(false) {
     sourceFile(file);
   }
-#endif // glShaderSource
 
-#if OGLWRAP_DEFINE_EVERYTHING || defined(glShaderSource)
   /// Creates a shader and sets the file as the shader source.
   /** @param src - The source of the shader code.
     * @see glShaderSource */
-  Shader(const ShaderSource& src)
-    : compiled_(false) {
+  Shader(ShaderType shader_t, const ShaderSource& src)
+    : shader_(shader_t)
+    , compiled_(false) {
     source(src);
   }
-#endif // glShaderSource
 
-#if OGLWRAP_DEFINE_EVERYTHING || defined(glShaderSource)
   /// Uploads a string as the shader's source.
   /** @param source - string containing the shader code.
     * @see glShaderSource */
@@ -165,9 +162,7 @@ public:
     const char *str = source.c_str();
     gl(ShaderSource(shader_, 1, &str, nullptr));
   }
-#endif // glShaderSource
 
-#if OGLWRAP_DEFINE_EVERYTHING || defined(glShaderSource)
   /// Uploads a ShaderSource as the shader's source.
   /** @param source - The source of the shader code.
     * @see glShaderSource */
@@ -178,16 +173,13 @@ public:
     #endif
     gl(ShaderSource(shader_, 1, &str, nullptr));
   }
-#endif // glShaderSource
 
-#if OGLWRAP_DEFINE_EVERYTHING || defined(glShaderSource)
   /// Loads a file and uploads it as shader source
   /** @param file - the shader file's path
     * @see glShaderSource */
   void sourceFile(const std::string& file)  {
     source(ShaderSource(file));
   }
-#endif // glShaderSource
 
 #if OGLWRAP_DEFINE_EVERYTHING || ( \
   defined(glCompileShader) && \
@@ -217,42 +209,8 @@ public:
       std::unique_ptr<GLchar> strInfoLog{ new GLchar[infoLogLength + 1] };
       gl(GetShaderInfoLog(shader_, infoLogLength, nullptr, strInfoLog.get()));
 
-      const char * strShaderType = nullptr;
-      switch (shader_t) {
-#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPUTE_SHADER)
-        case ShaderType::kComputeShader:
-          strShaderType = "compute";
-          break;
-#endif
-#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_VERTEX_SHADER)
-        case ShaderType::kVertexShader:
-          strShaderType = "vertex";
-          break;
-#endif
-#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_GEOMETRY_SHADER)
-        case ShaderType::kGeometryShader:
-          strShaderType = "geometry";
-          break;
-#endif
-#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRAGMENT_SHADER)
-        case ShaderType::kFragmentShader:
-          strShaderType = "fragment";
-          break;
-#endif
-#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TESS_CONTROL_SHADER)
-        case ShaderType::kTessControlShader:
-          strShaderType = "tessellation control";
-          break;
-#endif
-#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TESS_EVALUATION_SHADER)
-        case ShaderType::kTessEvaluationShader:
-          strShaderType = "tessellation evaluation";
-          break;
-#endif
-      }
-
       std::stringstream str;
-        str << "Compile failure in " << strShaderType << "shader '";
+        str << "Compile failure in shader '";
         str << filename_ << "' :" << std::endl << strInfoLog.get();
 
       OGLWRAP_PRINT_FATAL_ERROR(
@@ -291,14 +249,14 @@ public:
  * @version OpenGL 4.3
  * @see GL_COMPUTE_SHADER
  */
-typedef Shader<ShaderType::ComputeShader> ComputeShader;
-
-#if OGLWRAP_INSTANTIATE
-  template class Shader<ShaderType::ComputeShader>;
-#else
-  extern template class Shader<ShaderType::ComputeShader>;
-#endif
-
+class ComputeShader : public Shader {
+ public:
+  ComputeShader() : Shader(ShaderType::kComputeShader) { }
+  ComputeShader(const std::string& file)
+    : Shader(ShaderType::kComputeShader, file) {}
+  ComputeShader(const ShaderSource& src)
+    : Shader(ShaderType::kComputeShader, src) {}
+};
 #endif // GL_COMPUTE_SHADER
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_VERTEX_SHADER)
@@ -314,14 +272,14 @@ typedef Shader<ShaderType::ComputeShader> ComputeShader;
  * @version OpenGL 2.1
  * @see GL_VERTEX_SHADER
  */
-typedef Shader<ShaderType::kVertexShader> VertexShader;
-
-#if OGLWRAP_INSTANTIATE
-  template class Shader<ShaderType::kVertexShader>;
-#else
-  extern template class Shader<ShaderType::kVertexShader>;
-#endif
-
+class VertexShader : public Shader {
+ public:
+  VertexShader() : Shader(ShaderType::kVertexShader) { }
+  VertexShader(const std::string& file)
+    : Shader(ShaderType::kVertexShader, file) {}
+  VertexShader(const ShaderSource& src)
+    : Shader(ShaderType::kVertexShader, src) {}
+};
 #endif // GL_VERTEX_SHADER
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_GEOMETRY_SHADER)
@@ -337,14 +295,14 @@ typedef Shader<ShaderType::kVertexShader> VertexShader;
  * @version OpenGL 3.2
  * @see GL_GEOMETRY_SHADER
  */
-typedef Shader<ShaderType::kGeometryShader> GeometryShader;
-
-#if OGLWRAP_INSTANTIATE
-  template class Shader<ShaderType::kGeometryShader>;
-#else
-  extern template class Shader<ShaderType::kGeometryShader>;
-#endif
-
+class GeometryShader : public Shader {
+ public:
+  GeometryShader() : Shader(ShaderType::kGeometryShader) { }
+  GeometryShader(const std::string& file)
+    : Shader(ShaderType::kGeometryShader, file) {}
+  GeometryShader(const ShaderSource& src)
+    : Shader(ShaderType::kGeometryShader, src) {}
+};
 #endif // GL_GEOMETRY_SHADER
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRAGMENT_SHADER)
@@ -367,14 +325,14 @@ typedef Shader<ShaderType::kGeometryShader> GeometryShader;
  * @version OpenGL 2.1
  * @see GL_FRAGMENT_SHADER
  */
-typedef Shader<ShaderType::kFragmentShader> FragmentShader;
-
-#if OGLWRAP_INSTANTIATE
-  template class Shader<ShaderType::kFragmentShader>;
-#else
-  extern template class Shader<ShaderType::kFragmentShader>;
-#endif
-
+class FragmentShader : public Shader {
+ public:
+  FragmentShader() : Shader(ShaderType::kFragmentShader) { }
+  FragmentShader(const std::string& file)
+    : Shader(ShaderType::kFragmentShader, file) {}
+  FragmentShader(const ShaderSource& src)
+    : Shader(ShaderType::kFragmentShader, src) {}
+};
 #endif // GL_FRAGMENT_SHADER
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TESS_CONTROL_SHADER)
@@ -394,14 +352,14 @@ typedef Shader<ShaderType::kFragmentShader> FragmentShader;
  * @version OpenGL 4.0
  * @see GL_TESS_CONTROL_SHADER
  */
-typedef Shader<ShaderType::kTessControlShader> TessControlShader;
-
-#if OGLWRAP_INSTANTIATE
-  template class Shader<ShaderType::kTessControlShader>;
-#else
-  extern template class Shader<ShaderType::kTessControlShader>;
-#endif
-
+class TessControlShader : public Shader {
+ public:
+  TessControlShader() : Shader(ShaderType::kTessControlShader) { }
+  TessControlShader(const std::string& file)
+    : Shader(ShaderType::kTessControlShader, file) {}
+  TessControlShader(const ShaderSource& src)
+    : Shader(ShaderType::kTessControlShader, src) {}
+};
 #endif // GL_TESS_CONTROL_SHADER
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TESS_EVALUATION_SHADER)
@@ -420,14 +378,14 @@ typedef Shader<ShaderType::kTessControlShader> TessControlShader;
  * @version It is core since OpenGL 4.0.
  * @see GL_TESS_EVALUATION_SHADER
  */
-typedef Shader<ShaderType::kTessEvaluationShader> TessEvaluationShader;
-
-#if OGLWRAP_INSTANTIATE
-  template class Shader<ShaderType::kTessEvaluationShader>;
-#else
-  extern template class Shader<ShaderType::kTessEvaluationShader>;
-#endif
-
+class TessEvaluationShader : public Shader {
+ public:
+  TessEvaluationShader() : Shader(ShaderType::kTessEvaluationShader) { }
+  TessEvaluationShader(const std::string& file)
+    : Shader(ShaderType::kTessEvaluationShader, file) {}
+  TessEvaluationShader(const ShaderSource& src)
+    : Shader(ShaderType::kTessEvaluationShader, src) {}
+};
 #endif // GL_TESS_EVALUATION_SHADER
 
 #endif // glCreateShader && glDeleteShader
@@ -475,11 +433,10 @@ public:
   }
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glAttachShader)
-  template<ShaderType shader_t>
   /// Attaches a shader to this program object, and compiles it, if needed.
   /** @param shader Specifies the shader object that is to be attached.
     * @see glAttachShader */
-  void attachShader(Shader<shader_t>& shader) {
+  void attachShader(Shader& shader) {
     shader.compile();
     shaders_.push_back(shader.expose());
 
@@ -492,11 +449,10 @@ public:
 #endif // glAttachShader
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glAttachShader)
-  template<ShaderType shader_t>
   /// Attaches a shader to this program object.
   /** @param shader Specifies the shader object that is to be attached.
     * @see glAttachShader */
-  void attachShader(const Shader<shader_t>& shader) {
+  void attachShader(const Shader& shader) {
     shaders_.push_back(shader.expose());
 
     #if OGLWRAP_DEBUG
@@ -507,46 +463,42 @@ public:
   }
 #endif // glAttachShader
 
-  template<ShaderType shader_t>
   /// Attaching rvalue reference shaders to programs only work correctly on NVIDIA.
-  Program& attachShader(Shader<shader_t>&& shader) = delete;
+  Program& attachShader(Shader&& shader) = delete;
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glAttachShader)
-  template<ShaderType shader_t>
   /// Attaches a shader object to the program.
   /** @param shader Specifies the shader object that is to be attached.
     * @see glAttachShader */
-  Program& operator<<(Shader<shader_t>& shader) {
+  Program& operator<<(Shader& shader) {
     attachShader(shader);
     return *this;
   }
 #endif // glAttachShader
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glAttachShader)
-  template<ShaderType shader_t>
   /// Attaches a shader object to the program, and compiles it, if needed.
   /** @param shader Specifies the shader object that is to be attached.
     * @see glAttachShader */
-  Program& operator<<(const Shader<shader_t>& shader) {
+  Program& operator<<(const Shader& shader) {
     attachShader(shader);
     return *this;
   }
 #endif // glAttachShader
 
-  template<ShaderType shader_t>
   /// Attaching rvalue reference shaders to a programs only work correctly on NVIDIA.
-  Program& operator<<(Shader<shader_t>&& shader) = delete;
+  Program& operator<<(Shader&& shader) = delete;
 
-  #if OGLWRAP_DEBUG
-    /// Returns a formatted list of the names of the shaders that this program uses.
-    std::string getShaderNames() const {
-      std::string str;
-      for (size_t i = 0; i < filenames_.size(); i++) {
-          str += " - " + filenames_[i] + "\n";
-      }
-      return str;
+#if OGLWRAP_DEBUG
+  /// Returns a formatted list of the names of the shaders that this program uses.
+  std::string getShaderNames() const {
+    std::string str;
+    for (size_t i = 0; i < filenames_.size(); i++) {
+        str += " - " + filenames_[i] + "\n";
     }
-  #endif
+    return str;
+  }
+#endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || ( \
   defined(glLinkProgram) &&          \
@@ -665,85 +617,6 @@ public:
     return program_;
   }
 };
-
-// Explicit template instantiation (is ugly, but makes compilation a lot faster)
-#if OGLWRAP_DEFINE_EVERYTHING || defined(glAttachShader)
-  #if OGLWRAP_INSTANTIATE
-    #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPUTE_SHADER)
-      template void Program::attachShader(ComputeShader&);
-      template void Program::attachShader(const ComputeShader&);
-      template Program& Program::operator<<(ComputeShader&);
-      template Program& Program::operator<<(const ComputeShader&);
-    #endif
-    #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_VERTEX_SHADER)
-      template void Program::attachShader(VertexShader&);
-      template void Program::attachShader(const VertexShader&);
-      template Program& Program::operator<<(VertexShader&);
-      template Program& Program::operator<<(const VertexShader&);
-    #endif
-    #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRAGMENT_SHADER)
-      template void Program::attachShader(FragmentShader&);
-      template void Program::attachShader(const FragmentShader&);
-      template Program& Program::operator<<(FragmentShader&);
-      template Program& Program::operator<<(const FragmentShader&);
-    #endif
-    #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_GEOMETRY_SHADER)
-      template void Program::attachShader(GeometryShader&);
-      template void Program::attachShader(const GeometryShader&);
-      template Program& Program::operator<<(GeometryShader&);
-      template Program& Program::operator<<(const GeometryShader&);
-    #endif
-    #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TESS_CONTROL_SHADER)
-      template void Program::attachShader(TessControlShader&);
-      template void Program::attachShader(const TessControlShader&);
-      template Program& Program::operator<<(TessControlShader&);
-      template Program& Program::operator<<(const TessControlShader&);
-    #endif
-    #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TESS_EVALUATION_SHADER)
-      template void Program::attachShader(TessEvaluationShader&);
-      template void Program::attachShader(const TessEvaluationShader&);
-      template Program& Program::operator<<(TessEvaluationShader&);
-      template Program& Program::operator<<(const TessEvaluationShader&);
-    #endif
-  #else
-    #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPUTE_SHADER)
-      extern template void Program::attachShader(ComputeShader&);
-      extern template void Program::attachShader(const ComputeShader&);
-      extern template Program& Program::operator<<(ComputeShader&);
-      extern template Program& Program::operator<<(const ComputeShader&);
-    #endif
-    #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_VERTEX_SHADER)
-      extern template void Program::attachShader(VertexShader&);
-      extern template void Program::attachShader(const VertexShader&);
-      extern template Program& Program::operator<<(VertexShader&);
-      extern template Program& Program::operator<<(const VertexShader&);
-    #endif
-    #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRAGMENT_SHADER)
-      extern template void Program::attachShader(FragmentShader&);
-      extern template void Program::attachShader(const FragmentShader&);
-      extern template Program& Program::operator<<(FragmentShader&);
-      extern template Program& Program::operator<<(const FragmentShader&);
-    #endif
-    #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_GEOMETRY_SHADER)
-      extern template void Program::attachShader(GeometryShader&);
-      extern template void Program::attachShader(const GeometryShader&);
-      extern template Program& Program::operator<<(GeometryShader&);
-      extern template Program& Program::operator<<(const GeometryShader&);
-    #endif
-    #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TESS_CONTROL_SHADER)
-      extern template void Program::attachShader(TessControlShader&);
-      extern template void Program::attachShader(const TessControlShader&);
-      extern template Program& Program::operator<<(TessControlShader&);
-      extern template Program& Program::operator<<(const TessControlShader&);
-    #endif
-    #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TESS_EVALUATION_SHADER)
-      extern template void Program::attachShader(TessEvaluationShader&);
-      extern template void Program::attachShader(const TessEvaluationShader&);
-      extern template Program& Program::operator<<(TessEvaluationShader&);
-      extern template Program& Program::operator<<(const TessEvaluationShader&);
-    #endif
-  #endif
-#endif
 
 #endif // glCreateProgram && glDeleteProgram && glDetachShader
 

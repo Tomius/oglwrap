@@ -38,10 +38,9 @@ namespace globjects {
 
 #if OGLWRAP_DEFINE_EVERYTHING || \
     (defined(glCreateShader) && defined(glDeleteShader))
-  template<ShaderType shader_t>
   class Shader : public glObject {
   public:
-    Shader() { *handle_ = gl(CreateShader(GLenum(shader_t))); }
+    Shader(ShaderType shader_t) { *handle_ = gl(CreateShader(GLenum(shader_t))); }
     ~Shader() {
       if (unique()) gl(DeleteShader(*handle_));
     }

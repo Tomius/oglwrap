@@ -121,7 +121,7 @@ public:
     : location_(vertexAttribSlot), inited_(false) {}
 
 private:
-  template <class GLtype>
+  template <typename GLtype>
   /// A helper function for static setup
   /** @param value The default value to be used for this attribute. */
   void static_setup_helper(const GLtype value) {
@@ -131,7 +131,7 @@ private:
   }
 
 public:
-  template <class GLtype>
+  template <typename GLtype>
   /// static setup of the Vertex Array (all of the values will be the same).
   /** Ints and doubles won't be converted to floats.
     * If you need a GLfixed value, use glVertexAttrib directly
@@ -146,7 +146,7 @@ public:
     static_setup_helper(value);
   }
 
-  template <class GLtype>
+  template <typename GLtype>
   /// static setup of the Vertex Array (all of the values will be the same).
   /** Ints and doubles won't be converted to floats.
     * If you need a GLfixed value, use glVertexAttrib directly
@@ -156,7 +156,7 @@ public:
     static_setup(value);
   }
 
-  template <class GLtype>
+  template <typename GLtype>
   /**
    * @brief Sets up an attribute. It can be templated with any OpenGL type or
    *        glm vector.

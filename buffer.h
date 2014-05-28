@@ -83,21 +83,25 @@ public:
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glBufferData)
   template<typename GLtype>
   /// Creates and initializes a buffer object's data store.
-  /** @param size - Specifies the size in bytes of the buffer object's new data store.
-    * @param data - Specifies a pointer to data that will be copied into the data store for initialization, or NULL if no data is to be copied.
-    * @param usage - Specifies the expected usage pattern of the data store.
+  /** @param size    Specifies the size in bytes of the buffer object's new data
+    *                store.
+    * @param data    Specifies a pointer to data that will be copied into the
+    *                data store for initialization, or NULL if no data is to be
+    *                copied.
+    * @param usage   Specifies the expected usage pattern of the data store.
     * @see glBufferData */
   static void Data(GLsizei size, const GLtype* data,
                    BufferUsage usage = BufferUsage::kStaticDraw) {
-    gl(BufferData(
-      GLenum(BUFFER_TYPE), size, data, GLenum(usage)
-    ));
+    gl(BufferData(GLenum(BUFFER_TYPE), size, data, GLenum(usage)));
   }
   template<typename GLtype>
   /// Creates and initializes a buffer object's data store.
-  /** @param size - Specifies the size in bytes of the buffer object's new data store.
-    * @param data - Specifies a pointer to data that will be copied into the data store for initialization, or NULL if no data is to be copied.
-    * @param usage - Specifies the expected usage pattern of the data store.
+  /** @param size    Specifies the size in bytes of the buffer object's new data
+    *                store.
+    * @param data    Specifies a pointer to data that will be copied into the
+    *                data store for initialization, or NULL if no data is to be
+    *                copied.
+    * @param usage   Specifies the expected usage pattern of the data store.
     * @see glBufferData */
   BIND_CHECKED void data(GLsizei size, const GLtype* data,
                          BufferUsage usage = BufferUsage::kStaticDraw) const {
@@ -220,8 +224,8 @@ public:
   template <class T>
   /// Mapping moves the data of the buffer to the client address space.
   class TypedMap {
-    void *m_data; ///< The pointer to the data fetched from the buffer.
-    size_t m_size; ///< The size of the data fetched from the buffer.
+    void *data_; ///< The pointer to the data fetched from the buffer.
+    size_t size_; ///< The size of the data fetched from the buffer.
   public:
     /// Maps the whole buffer.
     /** @param access - Specifies the access policy (R, W, R/W).
@@ -229,8 +233,8 @@ public:
     TypedMap(BufferMapAccess access = BufferMapAccess::kReadWrite) {
       OGLWRAP_CHECK_FOR_DEFAULT_BINDING(GLenum(GetBindingTarget(BUFFER_TYPE)));
 
-      m_data = gl(MapBuffer(GLenum(BUFFER_TYPE), GLenum(access)));
-      m_size = BufferObject<BUFFER_TYPE>::Size();
+      data_ = gl(MapBuffer(GLenum(BUFFER_TYPE), GLenum(access)));
+      size_ = BufferObject<BUFFER_TYPE>::Size();
     }
 
     /// Maps a range of the buffer.
@@ -245,8 +249,8 @@ public:
 
       OGLWRAP_CHECK_FOR_DEFAULT_BINDING(GLenum(GetBindingTarget(BUFFER_TYPE)));
 
-      m_data = gl(MapBufferRange(GLenum(BUFFER_TYPE), offset, length, access));
-      m_size = BufferObject<BUFFER_TYPE>::Size();
+      data_ = gl(MapBufferRange(GLenum(BUFFER_TYPE), offset, length, access));
+      size_ = BufferObject<BUFFER_TYPE>::Size();
     }
 
     /// Unmaps the buffer.
@@ -259,17 +263,17 @@ public:
 
     /// Returns the size of the mapped buffer in bytes
     size_t size() const {
-      return m_size;
+      return size_;
     }
 
     /// Returns the size of the mapped buffer in elements
     size_t count() const {
-      return m_size / sizeof(T);
+      return size_ / sizeof(T);
     }
 
     /// Returns a pointer to the data
     T* data() const {
-      return static_cast<T*>(m_data);
+      return static_cast<T*>(data_);
     }
 
   }; // class Map

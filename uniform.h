@@ -21,7 +21,7 @@ namespace OGLWRAP_NAMESPACE_NAME {
 
 // -------======{[ UniformObject ]}======-------
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glGetUniformLocation)
-template<class GLtype>
+template<typename GLtype>
 /// An object implementing the base features Uniforms.
 /** You shouldn't use this class directly. Rather use Uniform or LazyUniform. */
 class UniformObject {

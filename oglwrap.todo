@@ -1,16 +1,8 @@
 + General:
-    - Context class.
     - Program uniforms.
     - Uniform blocks / shader storage.
     - Separable shader stages.
-    - Some other 4.0+ features are still missing.
 
 + Documentation
     - Examples
-    - Rewrite the readme
     - Add 'how to use' into class' documentations.
-
-+ Debug
-    - Logger for debug output
-        - GUI for watching it (including documentation browser).
-        - Probably with profiling support.
