@@ -5,7 +5,7 @@ Oglwrap is a lightweight, cross-platform, object-oriented, header-only C++ wrapp
 
 This project is mainly for personal use, and its interface might change often.
 If you need a object-oriented OpenGL wrapper with long term compatibility
-take a look at [oglplus](https://github.com/matus-chochlik/oglplus).
+take a look at [oglplus](https://github.com/matus-chochlik/oglplus) or [oogl](https://github.com/Overv/OOGL).
 
 Features:
 -------------
@@ -63,7 +63,7 @@ You get a compile time error:
 ```
 Error - no viable conversion from 'const smart_enums::LinearMipmapLinearEnum' to 'enums::MagFilter'
 ```
-While with C OpenGL, the error would only at pop runtime, as a GL_INVALID_ENUM.
+While with C OpenGL, the error would only pop at runtime, as a GL_INVALID_ENUM.
 
 Also note, that you can't bind the texture to a wrong target, and you can't
 specify an invalid border value. Also its more explicit, that you are uploading the base texture, not a mipmap (you can use tex.uploadMipmap() for that). Oh, and you can't forget about deleting the textures, because RAII
