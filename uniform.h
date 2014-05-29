@@ -126,7 +126,7 @@ public:
 
     #if OGLWRAP_DEBUG
       OGLWRAP_PRINT_IF_ERROR(
-        ErrorType::InvalidOperation,
+        ErrorType::kInvalidOperation,
         "Error setting uniform value",
         "Uniform::set is called for uniform '" + identifier_ +
         "' but the uniform template parameter and the actual uniform "
@@ -155,7 +155,7 @@ public:
 
     #if OGLWRAP_DEBUG
       OGLWRAP_PRINT_IF_ERROR(
-        ErrorType::InvalidOperation,
+        ErrorType::kInvalidOperation,
         "Error getting uniform value",
         "Uniform::get is called for uniform '" + identifier_ +
         "' but the uniform template parameter and the actual uniform "
@@ -228,7 +228,7 @@ public:
 
     #if OGLWRAP_DEBUG
       OGLWRAP_PRINT_IF_ERROR(
-        ErrorType::InvalidOperation,
+        ErrorType::kInvalidOperation,
         "Error setting uniform value",
         "Uniform::get is called for uniform '" + identifier_ +
         "' but the uniform template parameter and the actual uniform "
@@ -257,7 +257,7 @@ public:
 
     #if OGLWRAP_DEBUG
       OGLWRAP_PRINT_IF_ERROR(
-        ErrorType::InvalidOperation,
+        ErrorType::kInvalidOperation,
         "Error getting uniform value",
         "Uniform::get is called for uniform '" + identifier_ +
         "' but the uniform template parameter and the actual uniform "
@@ -340,7 +340,7 @@ public:
 
     #if OGLWRAP_DEBUG
       OGLWRAP_PRINT_IF_ERROR(
-        ErrorType::InvalidOperation,
+        ErrorType::kInvalidOperation,
         "Error setting uniform location",
         "Uniform::set is called for uniform '" + identifier_ +
         "' but the uniform template parameter and the actual uniform "
@@ -393,7 +393,7 @@ public:
 
     #if OGLWRAP_DEBUG
       OGLWRAP_PRINT_IF_ERROR(
-        ErrorType::InvalidOperation,
+        ErrorType::kInvalidOperation,
         "Error getting uniform location",
         "Uniform::get is called for uniform '" + identifier_ +
         "' but the uniform template parameter and the actual uniform "
