@@ -53,6 +53,13 @@ public:
     gl(BindTexture(GLenum(texture_t), texture));
   }
 
+  /// Binds the texture to this texture class's target in the specified texture unit.
+  /** @see glBindTexture, glActiveTexture */
+  void bind(GLuint tex_unit) const {
+    Active(tex_unit);
+    gl(BindTexture(GLenum(texture_t), texture));
+  }
+
   /// Unbinds the texture from this texture class's target.
   /** @see glBindTexture */
   static void Unbind() {
@@ -61,6 +68,20 @@ public:
   /// Unbinds the texture from this texture class's target.
   /** @see glBindTexture */
   BIND_CHECKED void unbind() const {
+    OGLWRAP_CHECK_BINDING2();
+    Unbind();
+  }
+
+  /// Unbinds the texture from this texture class's target in the specified texture unit.
+  /** @see glBindTexture */
+  static void Unbind(GLuint tex_unit) {
+    Active(tex_unit);
+    gl(BindTexture(GLenum(texture_t), 0));
+  }
+  /// Unbinds the texture from this texture class's target in the specified texture unit.
+  /** @see glBindTexture */
+  BIND_CHECKED void unbind(GLuint tex_unit) const {
+    Active(tex_unit);
     OGLWRAP_CHECK_BINDING2();
     Unbind();
   }
