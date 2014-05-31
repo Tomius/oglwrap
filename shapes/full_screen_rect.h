@@ -18,14 +18,14 @@ namespace OGLWRAP_NAMESPACE_NAME {
 /// Class providing vertex attributes and instructions for rendering of a cube.
 class FullScreenRectangle {
   VertexArray vao;
-  ArrayBuffer positions, texcoords;
-  bool is_setup_positions_, is_setup_texcoords_;
+  ArrayBuffer positions, tex_coords;
+  bool is_setup_positions_, is_setup_tex_coords_;
 public:
 
   /// Constructs a rectangle that covers the entire screen.
   FullScreenRectangle()
     : is_setup_positions_(false)
-    , is_setup_texcoords_(false)
+    , is_setup_tex_coords_(false)
   {}
 
   /// Creates vertex positions, and uploads it to an attribute array.
@@ -59,11 +59,11 @@ public:
     * Calling this function changes the currently active VAO and ArrayBuffer. */
   /// @param attrib - The attribute array to use as destination.
   void setupTexCoords(VertexAttribArray attrib, bool upside_down = false) {
-    if (is_setup_texcoords_) {
+    if (is_setup_tex_coords_) {
       throw std::logic_error("FullScreenRectangle::setupTexCoords is called "
                              "multiply times on the same object");
     } else {
-      is_setup_texcoords_ = true;
+      is_setup_tex_coords_ = true;
     }
 
     const float coords[4][2] = {
@@ -81,8 +81,8 @@ public:
     };
 
     vao.bind();
-    texcoords.bind();
-    texcoords.data(sizeof(coords), upside_down ? rev_coords : coords);
+    tex_coords.bind();
+    tex_coords.data(sizeof(coords), upside_down ? rev_coords : coords);
     attrib.setup<glm::vec2>().enable();
     vao.unbind();
   }

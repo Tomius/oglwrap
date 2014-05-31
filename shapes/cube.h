@@ -22,8 +22,8 @@ class Cube {
   float w, h, d;
 
   VertexArray vao;
-  ArrayBuffer positions, normals, texcoords, tangents;
-  bool is_setup_positions_, is_setup_normals_, is_setup_texcoords_, is_setup_tangents;
+  ArrayBuffer positions, normals, tex_coords, tangents;
+  bool is_setup_positions_, is_setup_normals_, is_setup_tex_coords_, is_setup_tangents_;
 
 public:
 
@@ -33,8 +33,8 @@ public:
     : w(w), h(h), d(d)
     , is_setup_positions_(false)
     , is_setup_normals_(false)
-    , is_setup_texcoords_(false)
-    , is_setup_tangents(false)
+    , is_setup_tex_coords_(false)
+    , is_setup_tangents_(false)
   {}
 
 private:
@@ -144,11 +144,11 @@ public:
     * @param attrib - The attribute array to use as destination. */
   void setupTexCoords(VertexAttribArray attrib) {
 
-    if (is_setup_texcoords_) {
+    if (is_setup_tex_coords_) {
       throw std::logic_error("Cube::setupTexCoords is called multiply "
                              "times on the same object");
     } else {
-      is_setup_texcoords_ = true;
+      is_setup_tex_coords_ = true;
     }
 
     const float n[6][2] = {
@@ -172,8 +172,8 @@ public:
     }
 
     vao.bind();
-    texcoords.bind();
-    texcoords.data(dest);
+    tex_coords.bind();
+    tex_coords.data(dest);
     attrib.setup<glm::vec3>().enable();
     vao.unbind();
   }
@@ -183,11 +183,11 @@ public:
     * Calling this function changes the currently active VAO and ArrayBuffer.
     * @param attrib - The attribute array to use as destination. */
   void setupTangents(VertexAttribArray attrib) {
-    if (is_setup_tangents) {
+    if (is_setup_tangents_) {
       throw std::logic_error("Cube::setupTangents is called multiply "
                              "times on the same object");
     } else {
-      is_setup_tangents = true;
+      is_setup_tangents_ = true;
     }
 
     const float n[6][3] = {
