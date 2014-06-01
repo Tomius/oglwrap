@@ -31,7 +31,7 @@ buffer1.data(vertices_vector); // Causes bind-check error because buffer0 is bou
 * Functions overloads, templates and default parameters let you type less than with C OpenGL. Consider:
 ```c++
 Texture2D tex;
-tex.bind();
+tex.bind(2);
 tex.upload(gl::kRgba, 32, 32, gl::kRgba, gl::kUnsignedByte, nullptr);
 tex.generateMipmap();
 tex.minFilter(gl::kLinearMipmapLinear);
@@ -43,6 +43,7 @@ Versus:
 ```c++
 GLuint tex;
 glGenTextures(1, &tex);
+glActiveTexture(GL_TEXTURE2);
 glBindTexture(GL_TEXTURE_2D, tex);
 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 glGenerateMipmap(GL_TEXTURE_2D);
