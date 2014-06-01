@@ -60,7 +60,7 @@ Notice that if you write a wrong enum for a function, for ex:
 tex.magFilter(gl::kLinearMipmapLinear);
 ```
 You get a compile time error:
-```c++
+```
 Error - no viable conversion from 'const smart_enums::LinearMipmapLinearEnum' to 'enums::MagFilter'
 ```
 While with C OpenGL, the error would only pop at runtime, as a GL_INVALID_ENUM.
