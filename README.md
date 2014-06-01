@@ -14,12 +14,12 @@ Features:
 * Has full code-completion support
 * Type-safe enums instead GLenum (so you can say goodbye to GL_INVALID_ENUM forever).
 * Has bind-checking. This means that you'll get warnings if forget to bind some OpenGL object before you use it:
-```
+```c++
 gl::Texture2D tex;
 tex.loadImage("image.png"); // Causes bind-check error because tex isn't bound.
 ```
 Or this:
-```
+```c++
 std::vector<glm::vec3> vertices_vector;
 // ... upload data to the vertices_vector
 gl::ArrayBuffer buffer0, buffer1;
@@ -29,7 +29,7 @@ buffer1.data(vertices_vector); // Causes bind-check error because buffer0 is bou
 * Note, that bind-checking (and debug-info in general) can be disabled with ```#define OGLWRAP_DEBUG 0```. With this, and function inlining enabled, oglwrap runs with zero runtime overhead compared to C OpenGL.
 * Oglwrap has full glm support, glm classes are treated like they were GL types. For example you can use Uniform< vec2 > to load data into a vec2 uniform (instead of with glUniform2fv).
 * Functions overloads, templates and default parameters let you type less than with C OpenGL. Consider:
-```
+```c++
 Texture2D tex;
 tex.bind();
 tex.upload(gl::kRgba, 32, 32, gl::kRgba, gl::kUnsignedByte, nullptr);
@@ -40,7 +40,7 @@ tex.wrapS(gl::kRepeat);
 tex.wrapT(gl::kRepeat);
 ```
 Versus:
-```
+```c++
 GLuint tex;
 glGenTextures(1, &tex);
 glBindTexture(GL_TEXTURE_2D, tex);
@@ -56,11 +56,11 @@ glDeleteTextures(1, tex);
 ```
 
 Notice that if you write a wrong enum for a function, for ex:
-```
+```c++
 tex.magFilter(gl::kLinearMipmapLinear);
 ```
 You get a compile time error:
-```
+```c++
 Error - no viable conversion from 'const smart_enums::LinearMipmapLinearEnum' to 'enums::MagFilter'
 ```
 While with C OpenGL, the error would only pop at runtime, as a GL_INVALID_ENUM.
@@ -73,7 +73,7 @@ if you forget to call tex.bind(); and even if you do forget, oglwrap will bind
 it for you, and your code will still work. And you get all this stuff with zero runtime overhead for a release build.
 
 * Lots of runtime debug info if you do something invalid that can't be caught compile-time. For example the following code:
-```
+```c++
 gl::DrawArrays(PrimitiveType::Triangles, 0, -1);
 ```
 Results this output:
