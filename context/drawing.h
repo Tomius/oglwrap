@@ -106,7 +106,7 @@ inline void DrawArraysInstanced(PrimType type,
  * of glVertexAttribDivisor​. Instanced vertex attributes supply per-instance
  * vertex data to the vertex shader. The index of the vertex fetched from the
  * enabled instanced vertex attribute arrays is calculated as:
- * ⌊gl_InstanceID/divisor⌋+baseInstance. Note that baseinstance​ does not
+ * ⌊gl_InstanceID/divisor⌋+baseInstance. Note that base_instance​ does not
  * affect the shader-visible value of gl_InstanceID​.
  *
  * @param type           Specifies what kind of primitives to render.
@@ -138,9 +138,9 @@ inline void DrawArraysInstancedBaseInstance(PrimType type,
  * subroutine calls. glDrawArraysIndirect behaves similarly to
  * glDrawArraysInstancedBaseInstance​, except that the parameters to
  * glDrawArraysInstancedBaseInstance​ are stored in the buffer bound to
- * GL_DRAW_INDIRECT_BUFFER​, offset by indirect​ bytes.
+ * GL_DRAW_INDIRECT_BUFFER​, offset by indirect bytes.
  *
- * The parameters referenced by indirect​ are packed into a structure that
+ * The parameters referenced by indirect are packed into a structure that
  * takes the form (in C):
  *
  * typedef  struct {
@@ -156,11 +156,11 @@ inline void DrawArraysInstancedBaseInstance(PrimType type,
  *   mode, cmd->first, cmd->count, cmd->instanceCount, cmd->baseInstance
  * );
  *
- * indirect​ is interpreted as an offset, in basic machine units, into the
+ * indirect is interpreted as an offset, in basic machine units, into the
  * buffer bound to GL_DRAW_INDIRECT_BUFFER​ at the time of the call. The
  * parameter data stored there is read from the buffer and executed.
  *
- * In contrast to glDrawArraysInstancedBaseInstance​, the first​ member of the
+ * In contrast to glDrawArraysInstancedBaseInstance​, the first member of the
  * parameter structure is unsigned, and out-of-range indices do not generate
  * an error.
  *
@@ -195,9 +195,9 @@ inline void DrawArraysIndirect(PrimType type,
  * glMultiDrawArrays behaves identically to glDrawArrays​ except that drawcount​
  * separate ranges of elements are specified instead.
  *
- * When glMultiDrawArrays is called, it uses count​ sequential elements from
+ * When glMultiDrawArrays is called, it uses count sequential elements from
  * each enabled array to construct a sequence of geometric primitives,
- * beginning with element first​. mode​ specifies what kind of primitives are
+ * beginning with element first. mode specifies what kind of primitives are
  * constructed, and how the array elements construct those primitives.
  *
  * Vertex attributes that are modified by glMultiDrawArrays have an
@@ -687,9 +687,9 @@ inline void DrawRangeElements(PrimType type,
  * very few subroutine calls. glDrawElementsIndirect behaves similarly to
  * glDrawElementsInstancedBaseVertexBaseInstance​, except that the parameters
  * to glDrawElementsInstancedBaseVertexBaseInstance​ are stored in the buffer
- * bound to GL_DRAW_INDIRECT_BUFFER​, offset by indirect​ bytes.
+ * bound to GL_DRAW_INDIRECT_BUFFER​, offset by indirect bytes.
  *
- * The parameters referenced by indirect​ are packed into a structure that
+ * The parameters referenced by indirect are packed into a structure that
  * takes the form (in C):
  *
  * typedef  struct {
@@ -716,7 +716,7 @@ inline void DrawRangeElements(PrimType type,
  *        cmd->baseInstance
  *      );
  *  }
- * indirect​ is interpreted as an offset, in basic machine units, into the
+ * indirect is interpreted as an offset, in basic machine units, into the
  * buffer bound to GL_DRAW_INDIRECT_BUFFER​ at the time of the call. That
  * buffer and the parameter data stored there is read from the buffer and
  * executed. If no buffer is bound to the GL_ELEMENT_ARRAY_BUFFER​ binding, an
@@ -759,7 +759,7 @@ inline void DrawElementsIndirect(PrimType type,
  * with very few subroutine calls. glMultiDrawElementsIndirect behaves like
  * repeated calls to glDrawElementsIndirect​.
  *
- * The parameters addressed by indirect​ are packed into a structure that takes
+ * The parameters addressed by indirect are packed into a structure that takes
  * the form (in C):
  *
  * typedef  struct {
@@ -797,7 +797,7 @@ inline void DrawElementsIndirect(PrimType type,
  *      );
  * }
  *
- * indirect​ is interpreted as an offset, in basic machine units, into the
+ * indirect is interpreted as an offset, in basic machine units, into the
  * buffer bound to GL_DRAW_INDIRECT_BUFFER​ at the time of the call. That
  * buffer and the parameter data stored there is read from the buffer and
  * executed. If no buffer is bound to the GL_ELEMENT_ARRAY_BUFFER​ binding, an
@@ -824,7 +824,7 @@ inline void DrawElementsIndirect(PrimType type,
  *                   the starting point of the structure containing the draw
  *                   parameters.
  * @param stride     Specifies the number of elements in the array addressed
- *                   by indirect​.
+ *                   by indirect.
  * @param indirect   Specifies the distance in basic machine units between
  *                   elements of the draw parameter array.
  * @see glMultiDrawElementsIndirect
