@@ -137,7 +137,7 @@ public:
   /** Important: if you use this to change the type of the active framebuffer,
     * don't forget to unbind the old one, and bind the new one */
   FramebufferObject(const BufferObject<another_fbo_t> src)
-    : framebuffer_(src.Expose())
+    : framebuffer_(src.expose())
   { }
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glBindFramebuffer)

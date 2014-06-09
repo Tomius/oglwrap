@@ -45,7 +45,7 @@ public:
   /** Important: if you use this to change the type of the active buffer,
     * don't forget to unbind the old one, and bind the new one */
   BufferObject(const BufferObject<ANOTHER_BUFFER_TYPE> src)
-    : buffer_(src.Expose())
+    : buffer_(src.expose())
   { }
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glBindBuffer)
