@@ -3,9 +3,10 @@
 #ifndef OGLWRAP_CONTEXT_SCISSOR_TEST_H_
 #define OGLWRAP_CONTEXT_SCISSOR_TEST_H_
 
-#include "../config.h"
+#define GLM_FORCE_RADIANS
 #include "../glm/glm/glm.hpp"
 
+#include "../config.h"
 #include "../define_internal_macros.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {

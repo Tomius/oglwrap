@@ -7,7 +7,7 @@ glm@g-truc.net
 ================================================================================
 The MIT License
 --------------------------------------------------------------------------------
-Copyright (c) 2005 - 2013 G-Truc Creation (www.g-truc.net)
+Copyright (c) 2005 - 2014 G-Truc Creation (www.g-truc.net)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -37,6 +37,100 @@ More informations in GLM manual:
 http://glm.g-truc.net/glm.pdf
 
 ================================================================================
+GLM 0.9.5.4: 2014-0X-XX
+--------------------------------------------------------------------------------
+- Fixed non-utf8 character #196
+- Added FindGLM install for CMake #189
+- Fixed GTX_color_space - saturation #195
+- Fixed glm::isinf and glm::isnan for with Android NDK 9d #191
+- Fixed builtin GLM_ARCH_SSE4 #204
+- Optimized Quaternion vector rotation #205
+
+================================================================================
+GLM 0.9.5.3: 2014-04-02
+--------------------------------------------------------------------------------
+- Added instruction set auto detection with Visual C++ using _M_IX86_FP - /arch
+  compiler argument
+- Fixed GTX_raw_data code dependency
+- Fixed GCC instruction set detection
+- Added GLM_GTX_matrix_transform_2d extension (#178, #176)
+- Fixed CUDA issues (#169, #168, #183, #182)
+- Added support for all extensions but GTX_string_cast to CUDA
+- Fixed strict aliasing warnings in GCC 4.8.1 / Android NDK 9c (#152)
+- Fixed missing bitfieldInterleave definisions
+- Fixed usubBorrow (#171)
+- Fixed eulerAngle*** not consistent for right-handed coordinate system (#173)
+- Added full tests for eulerAngle*** functions (#173)
+- Added workaround for a CUDA compiler bug (#186, #185)
+
+================================================================================
+GLM 0.9.5.2: 2014-02-08
+--------------------------------------------------------------------------------
+- Fixed initializer list ambiguity (#159, #160)
+- Fixed warnings with the Android NDK 9c
+- Fixed non power of two matrix products
+- Fixed mix function link error
+- Fixed SSE code included in GLM tests on "pure" platforms
+- Fixed undefined reference to fastInverseSqrt (#161)
+- Fixed GLM_FORCE_RADIANS with <glm/ext.hpp> build error (#165)
+- Fix dot product clamp range for vector angle functions. (#163)
+- Tentative fix for strict aliasing warning in GCC 4.8.1 / Android NDK 9c (#152)
+- Fixed GLM_GTC_constants description brief (#162)
+
+================================================================================
+GLM 0.9.5.1: 2014-01-11
+--------------------------------------------------------------------------------
+- Fixed angle and orientedAngle that sometimes return NaN values (#145)
+- Deprecated degrees for function parameters and display a message
+- Added possible static_cast conversion of GLM types (#72)
+- Fixed error 'inverse' is not a member of 'glm' from glm::unProject (#146)
+- Fixed mismatch between some declarations and definitions
+- Fixed inverse link error when using namespace glm; (#147)
+- Optimized matrix inverse and division code (#149)
+- Added intersectRayPlane function (#153)
+- Fixed outerProduct return type (#155)
+
+================================================================================
+GLM 0.9.5.0: 2013-12-25
+--------------------------------------------------------------------------------
+- Added forward declarations (glm/fwd.hpp) for faster compilations
+- Added per feature headers
+- Minimized GLM internal dependencies
+- Improved Intel Compiler detection
+- Added bitfieldInterleave and _mm_bit_interleave_si128 functions
+- Added GTX_scalar_relational
+- Added GTX_dual_quaternion
+- Added rotation function to GTX_quaternion (#22)
+- Added precision variation of each type
+- Added quaternion comparison functions
+- Fixed GTX_multiple for negative value
+- Removed GTX_ocl_type extension
+- Fixed post increment and decrement operators
+- Fixed perspective with zNear == 0 (#71)
+- Removed l-value swizzle operators
+- Cleaned up compiler detection code for unsupported compilers
+- Replaced C cast by C++ casts
+- Fixed .length() that should return a int and not a size_t
+- Added GLM_FORCE_SIZE_T_LENGTH and glm::length_t
+- Removed unnecessary conversions
+- Optimized packing and unpacking functions
+- Removed the normalization of the up argument of lookAt function (#114)
+- Added low precision specializations of inversesqrt
+- Fixed ldexp and frexp implementations
+- Increased assert coverage
+- Increased static_assert coverage
+- Replaced GLM traits by STL traits when possible
+- Allowed including individual core feature
+- Increased unit tests completness
+- Added creating of a quaternion from two vectors
+- Added C++11 initializer lists
+- Fixed umulExtended and imulExtended implementations for vector types (#76)
+- Fixed CUDA coverage for GTC extensions
+- Added GTX_io extension
+- Improved GLM messages enabled when defining GLM_MESSAGES
+- Hidden matrix _inverse function implementation detail into private section
+
+================================================================================
 GLM 0.9.4.6: 2013-09-20
 --------------------------------------------------------------------------------
 - Fixed detection to select the last known compiler if newer version #106
@@ -50,7 +144,7 @@ GLM 0.9.4.6: 2013-09-20
 - Added compilation errors for unsupported compiler versions
 - Fixed glm::orientation with GLM_FORCE_RADIANS defined #112
 - Fixed const ref issue on assignment operator taking a scalar parameter #116
-- Fixed glm::eulerAngleY implementation
+- Fixed glm::eulerAngleY implementation #117
 
 ================================================================================
 GLM 0.9.4.5: 2013-08-12

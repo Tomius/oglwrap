@@ -18,6 +18,7 @@
 #include "enums/data_type.h"
 #include "enums/whole_data_type.h"
 
+#define GLM_FORCE_RADIANS
 #include "glm/glm/glm.hpp"
 #include "glm/glm/gtc/type_ptr.hpp"
 

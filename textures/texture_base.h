@@ -29,6 +29,7 @@
 #include "../enums/pixel_data_format.h"
 #include "../enums/pixel_data_internal_format.h"
 
+#define GLM_FORCE_RADIANS
 #include "../glm/glm/glm.hpp"
 #include "../glm/glm/gtc/type_ptr.hpp"
 

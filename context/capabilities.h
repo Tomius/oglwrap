@@ -3,6 +3,7 @@
 #ifndef OGLWRAP_CONTEXT_CAPABILITIES_H_
 #define OGLWRAP_CONTEXT_CAPABILITIES_H_
 
+#define GLM_FORCE_RADIANS
 #include "../glm/glm/glm.hpp"
 
 #include "../config.h"
