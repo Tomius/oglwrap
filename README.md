@@ -111,5 +111,13 @@ Has generated the error because one of the following(s) were true:
 
 This lets you know, that the source of the GL_INVALID_VALUE was a glDrawArrays call in the main() function (the first one in the call stack that is not in the oglwrap namespace), where the count parameter was negative. Imagine how useful this information could be in a 100 000+ lines project.
 
+
+
+Notes about using oglwrap:
+-------------
+- A ```#define OGLWRAP_INSTANTIATE 1``` line is required at exactly one CXX file (.cpp, .cc etc), before including oglwrap. It is needed for explicit template instantiations (but oglwrap is header-only).
+- You have to load OpenGL extensions before including oglwrap with your preferred extension loader. If you don't have a preferred one, I recommend using [GLEW](https://github.com/nigels-com/glew).
+
+
 ----------------------
 If you have any problem, please post in the issues tab or mail me at icyplusplus@gmail.com. Any feedback would be appreciated.
