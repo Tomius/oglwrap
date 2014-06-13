@@ -226,7 +226,7 @@ public:
     OGLWRAP_CHECK_BINDING();
     Storage(levels, internalFormat, width, height);
   }
-#endif // glTexStorage2D
+#endif  // glTexStorage2D
 
   /// Copies pixels from the current GL_READ_BUFFER into the base mipmap of this texture.
   /** @param internalFormat - Specifies the internal format of the texture.
@@ -416,7 +416,7 @@ public:
     OGLWRAP_CHECK_BINDING();
     GetCompressedImage(level, img);
   }
-#endif // glGetCompressedTexImage
+#endif  // glGetCompressedTexImage
 
 #if OGLWRAP_USE_IMAGEMAGICK
   /// Loads in, and uploads an image from a file using Magick++.
@@ -496,16 +496,16 @@ typedef Texture2DBase<Texture2DType::kTexture2D> Texture2D;
   * texture, rather than normalized texture coordinates.
   * @see GL_TEXTURE_RECTANGLE */
 typedef Texture2DBase<Texture2DType::kTextureRectangle> TextureRect;
-#endif // GL_TEXTURE_RECTANGLE
+#endif  // GL_TEXTURE_RECTANGLE
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_1D_ARRAY)
 /// An array of one-dimensional textures.
 /** @see GL_TEXTURE_1D_ARRAY */
 typedef Texture2DBase<Texture2DType::kTexture1DArray> Texture1DArray;
-#endif // GL_TEXTURE_1D_ARRAY
+#endif  // GL_TEXTURE_1D_ARRAY
 
 } // namespace oglwrap
 
 #include "../undefine_internal_macros.h"
 
-#endif // OGLWRAP_TEXTURES_TEXTURE_2D_H_
+#endif  // OGLWRAP_TEXTURES_TEXTURE_2D_H_

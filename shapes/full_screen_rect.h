@@ -108,4 +108,4 @@ public:
 
 #include "../undefine_internal_macros.h"
 
-#endif // OGLWRAP_SHAPES_FULLSCREENRECT_H_
+#endif  // OGLWRAP_SHAPES_FULLSCREENRECT_H_

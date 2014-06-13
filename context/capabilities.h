@@ -154,4 +154,4 @@ public:
 } // namespace oglwrap
 
 #include "../undefine_internal_macros.h"
-#endif // OGLWRAP_CONTEXT_CAPABILITIES_H_
+#endif  // OGLWRAP_CONTEXT_CAPABILITIES_H_

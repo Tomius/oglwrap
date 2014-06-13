@@ -43,7 +43,7 @@ public:
   void bind() const {
     gl(BindTransformFeedback(GL_TRANSFORM_FEEDBACK, tfb_));
   }
-#endif // glBindTransformFeedback
+#endif  // glBindTransformFeedback
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glBindTransformFeedback)
   /// Unbinds the currently bound transform feedback.
@@ -57,7 +57,7 @@ public:
     OGLWRAP_CHECK_BINDING2();
     Unbind();
   }
-#endif // glBindTransformFeedback
+#endif  // glBindTransformFeedback
 
   /// Returns if this is the currently bound transform feedback.
   /** @see glGetIntegerv */
@@ -86,7 +86,7 @@ public:
     OGLWRAP_CHECK_BINDING();
     Begin(mode);
   }
-#endif // glBeginTransformFeedback
+#endif  // glBeginTransformFeedback
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glEndTransformFeedback)
   /// Ends the transform feedback mode.
@@ -100,7 +100,7 @@ public:
     OGLWRAP_CHECK_BINDING();
     End();
   }
-#endif // glEndTransformFeedback
+#endif  // glEndTransformFeedback
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glPauseTransformFeedback)
   /**
@@ -123,7 +123,7 @@ public:
     OGLWRAP_CHECK_BINDING();
     Pause();
   }
-#endif // glPauseTransformFeedback
+#endif  // glPauseTransformFeedback
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glResumeTransformFeedback)
   /**
@@ -145,7 +145,7 @@ public:
     OGLWRAP_CHECK_BINDING();
     Resume();
   }
-#endif // glResumeTransformFeedback
+#endif  // glResumeTransformFeedback
 };
 
 /**
@@ -183,11 +183,11 @@ public:
     }
   }
 };
-#endif // glGenTransformFeedbacks && glDeleteTransformFeedbacks
+#endif  // glGenTransformFeedbacks && glDeleteTransformFeedbacks
 
 } // namespace oglwrap
 
 #include "./undefine_internal_macros.h"
 
-#endif // OGLWRAP_TRANSFORMFEEDBACK_H_
+#endif  // OGLWRAP_TRANSFORMFEEDBACK_H_
 

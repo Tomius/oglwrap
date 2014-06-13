@@ -125,4 +125,4 @@
   #define OGLWRAP_NAMESPACE_NAME gl
 #endif
 
-#endif // OGLWRAP_CONFIG_H_
+#endif  // OGLWRAP_CONFIG_H_

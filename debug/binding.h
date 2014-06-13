@@ -153,4 +153,4 @@ inline void OGLWRAP_print_another_program_is_active_error(const char *file,
 
 } // namespace oglwarp
 
-#endif // OGLWRAP_DEBUG_BINDING_H_
+#endif  // OGLWRAP_DEBUG_BINDING_H_

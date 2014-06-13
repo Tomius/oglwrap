@@ -97,4 +97,4 @@ static inline std::ostream& operator<<(std::ostream& os, const glm::detail::tmat
   return os;
 }
 
-#endif // OGLWRAP_GLOBAL_H_
+#endif  // OGLWRAP_GLOBAL_H_

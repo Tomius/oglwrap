@@ -246,5 +246,5 @@ public:
 
 #include "../undefine_internal_macros.h"
 
-#endif // OGLWRAP_SHAPES_CUBE_H_
+#endif  // OGLWRAP_SHAPES_CUBE_H_
 

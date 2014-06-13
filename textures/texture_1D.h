@@ -193,7 +193,7 @@ public:
     OGLWRAP_CHECK_BINDING();
     Storage(levels, internalFormat, width);
   }
-#endif // glTexStorage1D
+#endif  // glTexStorage1D
 
   /// Copies pixels from the current GL_READ_BUFFER into the base mipmap of this texture.
   /** @param internalFormat - Specifies the internal format of the texture.
@@ -354,11 +354,11 @@ public:
     OGLWRAP_CHECK_BINDING();
     GetCompressedImage(level, img);
   }
-#endif // glGetCompressedTexImage
+#endif  // glGetCompressedTexImage
 };
 
 } // namespace oglwrap
 
 #include "../undefine_internal_macros.h"
 
-#endif // OGLWRAP_TEXTURES_TEXTURE_1D_H_
+#endif  // OGLWRAP_TEXTURES_TEXTURE_1D_H_

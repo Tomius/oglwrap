@@ -40,4 +40,4 @@
   #warning Some oglwrap header forgot to undefine its internal macros.
 #endif
 
-#endif // OGLWRAP_OGLWRAP_H_
+#endif  // OGLWRAP_OGLWRAP_H_

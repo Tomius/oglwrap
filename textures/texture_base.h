@@ -308,7 +308,7 @@ public:
     GLfloat maxAniso = 0.0f;
     gl(GetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAniso));
     gl(TexParameterf(GLenum(texture_t), GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAniso));
-#endif // GL_TEXTURE_MAX_ANISOTROPY_EXT
+#endif  // GL_TEXTURE_MAX_ANISOTROPY_EXT
   }
   /// Sets the anisotropy extension to the maximum value possible on this hardware.
   /** It doesn't do anything if anisotropy is not supported
@@ -376,4 +376,4 @@ public:
 
 #include "../undefine_internal_macros.h"
 
-#endif // OGLWRAP_TEXTURES_TEXUTRE_BASE_H_
+#endif  // OGLWRAP_TEXTURES_TEXUTRE_BASE_H_

@@ -15,4 +15,4 @@
   #include <GL/glew.h>
 #endif
 
-#endif // OGLWRAP_GLEW_H_
+#endif  // OGLWRAP_GLEW_H_

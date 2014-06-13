@@ -220,7 +220,7 @@ class Shader {
     }
     #endif
   }
-#endif // glCompileShader && glGetShaderInfoLog && glGetShaderiv
+#endif  // glCompileShader && glGetShaderInfoLog && glGetShaderiv
 
   #if OGLWRAP_DEBUG
     /// Returns the file's name that was loaded in.
@@ -257,7 +257,7 @@ class ComputeShader : public Shader {
   ComputeShader(const ShaderSource& src)
     : Shader(ShaderType::kComputeShader, src) {}
 };
-#endif // GL_COMPUTE_SHADER
+#endif  // GL_COMPUTE_SHADER
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_VERTEX_SHADER)
 /**
@@ -280,7 +280,7 @@ class VertexShader : public Shader {
   VertexShader(const ShaderSource& src)
     : Shader(ShaderType::kVertexShader, src) {}
 };
-#endif // GL_VERTEX_SHADER
+#endif  // GL_VERTEX_SHADER
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_GEOMETRY_SHADER)
 /**
@@ -303,7 +303,7 @@ class GeometryShader : public Shader {
   GeometryShader(const ShaderSource& src)
     : Shader(ShaderType::kGeometryShader, src) {}
 };
-#endif // GL_GEOMETRY_SHADER
+#endif  // GL_GEOMETRY_SHADER
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRAGMENT_SHADER)
 /**
@@ -333,7 +333,7 @@ class FragmentShader : public Shader {
   FragmentShader(const ShaderSource& src)
     : Shader(ShaderType::kFragmentShader, src) {}
 };
-#endif // GL_FRAGMENT_SHADER
+#endif  // GL_FRAGMENT_SHADER
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TESS_CONTROL_SHADER)
 /**
@@ -360,7 +360,7 @@ class TessControlShader : public Shader {
   TessControlShader(const ShaderSource& src)
     : Shader(ShaderType::kTessControlShader, src) {}
 };
-#endif // GL_TESS_CONTROL_SHADER
+#endif  // GL_TESS_CONTROL_SHADER
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TESS_EVALUATION_SHADER)
 /**
@@ -386,9 +386,9 @@ class TessEvaluationShader : public Shader {
   TessEvaluationShader(const ShaderSource& src)
     : Shader(ShaderType::kTessEvaluationShader, src) {}
 };
-#endif // GL_TESS_EVALUATION_SHADER
+#endif  // GL_TESS_EVALUATION_SHADER
 
-#endif // glCreateShader && glDeleteShader
+#endif  // glCreateShader && glDeleteShader
 
 #if OGLWRAP_DEFINE_EVERYTHING || \
   (defined(glCreateProgram) && defined(glDeleteProgram) && defined(glDetachShader))
@@ -446,7 +446,7 @@ public:
 
     gl(AttachShader(program_, shader.expose()));
   }
-#endif // glAttachShader
+#endif  // glAttachShader
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glAttachShader)
   /// Attaches a shader to this program object.
@@ -461,7 +461,7 @@ public:
 
     gl(AttachShader(program_, shader.expose()));
   }
-#endif // glAttachShader
+#endif  // glAttachShader
 
   /// Attaching rvalue reference shaders to programs only work correctly on NVIDIA.
   Program& attachShader(Shader&& shader) = delete;
@@ -474,7 +474,7 @@ public:
     attachShader(shader);
     return *this;
   }
-#endif // glAttachShader
+#endif  // glAttachShader
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glAttachShader)
   /// Attaches a shader object to the program, and compiles it, if needed.
@@ -484,7 +484,7 @@ public:
     attachShader(shader);
     return *this;
   }
-#endif // glAttachShader
+#endif  // glAttachShader
 
   /// Attaching rvalue reference shaders to a programs only work correctly on NVIDIA.
   Program& operator<<(Shader&& shader) = delete;
@@ -532,11 +532,11 @@ public:
         str.str()
       )
     }
-    #endif // OGLWRAP_DEBUG
+    #endif  // OGLWRAP_DEBUG
 
     return *this;
   }
-#endif // glLinkProgram && glGetProgramiv && glGetProgramInfoLog
+#endif  // glLinkProgram && glGetProgramiv && glGetProgramInfoLog
 
 #if OGLWRAP_DEFINE_EVERYTHING || ( \
   defined(glValidateProgram) &&      \
@@ -570,7 +570,7 @@ public:
     }
     #endif
   }
-#endif // glValidateProgram && glGetProgramiv && glGetProgramInfoLog
+#endif  // glValidateProgram && glGetProgramiv && glGetProgramInfoLog
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUseProgram)
   /// Installs the program as a part of the current rendering state.
@@ -618,10 +618,10 @@ public:
   }
 };
 
-#endif // glCreateProgram && glDeleteProgram && glDetachShader
+#endif  // glCreateProgram && glDeleteProgram && glDetachShader
 
 } // namespace oglwrap
 
 #include "./undefine_internal_macros.h"
 
-#endif // OGLWRAP_SHADER_H_
+#endif  // OGLWRAP_SHADER_H_

@@ -275,8 +275,8 @@ public:
   }
 };
 
-#endif // !OGLWRAP_DISABLE_DEBUG_OUTPUT
-#endif // OGLWRAP_DEBUG
+#endif  // !OGLWRAP_DISABLE_DEBUG_OUTPUT
+#endif  // OGLWRAP_DEBUG
 
 #if !OGLWRAP_DEBUG || OGLWRAP_DISABLE_DEBUG_OUTPUT
 class DebugOutput {
@@ -320,5 +320,5 @@ public:
 
 } // namespace oglwrap
 
-#endif // OGLWRAP_DEBUG_DEBUGOUTPUT_H_
+#endif  // OGLWRAP_DEBUG_DEBUGOUTPUT_H_
 

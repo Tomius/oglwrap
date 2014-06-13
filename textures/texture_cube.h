@@ -228,7 +228,7 @@ public:
     OGLWRAP_CHECK_BINDING();
     Storage(target, levels, internalFormat, width, height);
   }
-#endif // glTexStorage2D
+#endif  // glTexStorage2D
 
   /// Copies pixels from the current GL_READ_BUFFER into the base mipmap of one side of the cube.
   /** @param target - Specifies which one of the six sides of the cube to use as target.
@@ -539,10 +539,10 @@ public:
 #endif
 }; // End of TextureCube definition
 
-#endif // GL_TEXTURE_CUBE_MAP
+#endif  // GL_TEXTURE_CUBE_MAP
 
 } // namespace oglwrap
 
 #include "../undefine_internal_macros.h"
 
-#endif // OGLWRAP_TEXTURES_TEXTURE_CUBE_H_
+#endif  // OGLWRAP_TEXTURES_TEXTURE_CUBE_H_

@@ -20,7 +20,7 @@ namespace OGLWRAP_NAMESPACE_NAME {
   #define OGLWRAP_CHECKED_GLFUNCTION(func) \
     func;\
     OGLWRAP_CHECK_ERROR_NAMED(#func);
-#endif // OGLWRAP_DISABLE_DEBUG_OUTPUT
+#endif  // OGLWRAP_DISABLE_DEBUG_OUTPUT
 
 /**
  * @brief Prints additional info in case of a specific OpenGL error.
@@ -110,5 +110,5 @@ inline void OGLWRAP_CheckError(const char *file,
 
 } // namespace oglwrap
 
-#endif // OGLWRAP_DEBUG_ERROR_CHECKING_H_
+#endif  // OGLWRAP_DEBUG_ERROR_CHECKING_H_
 

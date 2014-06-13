@@ -26,4 +26,4 @@
 #include "context/synchronization.h"
 #include "context/hints.h"
 
-#endif // OGLWRAP_CONTEXT_CAPABILITIES_H_
+#endif  // OGLWRAP_CONTEXT_CAPABILITIES_H_

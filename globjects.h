@@ -127,4 +127,4 @@ class Texture : public glObject {
 
 #include "./undefine_internal_macros.h"
 
-#endif // OGLWRAP_GLOBJECTS_H_
+#endif  // OGLWRAP_GLOBJECTS_H_

@@ -56,7 +56,7 @@ public:
     OGLWRAP_CHECK_BINDING();
     Upload(internalFormat, width, height, depth, format, type, data);
   }
-#endif // glTexImage3D
+#endif  // glTexImage3D
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glTexImage3D)
   /// Uploads a mipmap of the image.
@@ -94,7 +94,7 @@ public:
     OGLWRAP_CHECK_BINDING();
     UploadMipmap(level, internalFormat, width, height, depth, format, type, data);
   }
-#endif // glTexImage3D
+#endif  // glTexImage3D
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glTexSubImage3D)
   /// Updates a part of the base image.
@@ -125,7 +125,7 @@ public:
     OGLWRAP_CHECK_BINDING();
     SubUpload(xOffset, yOffset, zOffset, width, height, depth, format, type, data);
   }
-#endif // glTexSubImage3D
+#endif  // glTexSubImage3D
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glTexSubImage3D)
   /// Updates a part of a mipmap image.
@@ -159,7 +159,7 @@ public:
     SubUploadMipmap(level, xOffset, yOffset, zOffset, width, height, depth,
                     format, type, data);
   }
-#endif // glTexSubImage3D
+#endif  // glTexSubImage3D
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glCopyTexSubImage3D)
   /// Copies pixels from the current GL_READ_BUFFER and updates part of the base mipmap of this texture with them.
@@ -183,7 +183,7 @@ public:
     OGLWRAP_CHECK_BINDING();
     CopySub(xOffset, yOffset, zOffset, x, y, width, height);
   }
-#endif // glCopyTexSubImage3D
+#endif  // glCopyTexSubImage3D
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glCopyTexSubImage3D)
   /// Copies pixels from the current GL_READ_BUFFER and updates part of a mipmap of this texture.
@@ -210,7 +210,7 @@ public:
     OGLWRAP_CHECK_BINDING();
     CopySubMipmap(level, xOffset, yOffset, zOffset, x, y, width, height);
   }
-#endif // glCopyTexSubImage3D
+#endif  // glCopyTexSubImage3D
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glTexStorage3D)
   /// Simultaneously specify storage for all levels of a three-dimensional, two-dimensional array or cube-map array texture.
@@ -235,7 +235,7 @@ public:
     OGLWRAP_CHECK_BINDING();
     Storage(levels, internalFormat, width, height, depth);
   }
-#endif // glTexStorage3D
+#endif  // glTexStorage3D
 
   /// Returns the width of a mipmap of the currently bound texture of this class.
   /** @param level - Specifies the mipmap whose size should be queried.
@@ -308,18 +308,18 @@ public:
 /// Three-dimensional texture.
 /** @see GL_TEXTURE_3D */
 typedef Texture3DBase<Texture3DType::kTexture3D> Texture3D;
-#endif // GL_TEXTURE_3D
+#endif  // GL_TEXTURE_3D
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_2D_ARRAY)
 /// An array of two dimensional textures
 /** @see GL_TEXTURE_2D_ARRAY */
 typedef Texture3DBase<Texture3DType::kTexture2DArray> Texture2DArray;
-#endif // GL_TEXTURE_2D_ARRAY
+#endif  // GL_TEXTURE_2D_ARRAY
 
-#endif // GL_TEXTURE_3D
+#endif  // GL_TEXTURE_3D
 
 } // namespace oglwrap
 
 #include "../undefine_internal_macros.h"
 
-#endif // OGLWRAP_TEXTURES_TEXTURE_3D_H_
+#endif  // OGLWRAP_TEXTURES_TEXTURE_3D_H_

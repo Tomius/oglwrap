@@ -13,4 +13,4 @@
 #include "textures/texture_cube.h"
 #include "textures/texture_3D.h"
 
-#endif // OGLWRAP_TEXTURE_H_
+#endif  // OGLWRAP_TEXTURE_H_

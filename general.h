@@ -118,4 +118,4 @@ public:
 
 } // namespace oglwrap
 
-#endif // OGLWRAP_GENERAL_H_
+#endif  // OGLWRAP_GENERAL_H_

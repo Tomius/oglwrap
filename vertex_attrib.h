@@ -90,7 +90,7 @@ public:
     return vao_;
   }
 };
-#endif // glGenVertexArrays && glDeleteVertexArrays
+#endif  // glGenVertexArrays && glDeleteVertexArrays
 
 // -------======{[ Vertex Attribute Array ]}======-------
 
@@ -220,7 +220,7 @@ public:
           "VertexAttribArrayObject::setup() is called with DataType::double, "
           "but the glVertexAttribLPointer symbol is missing."
         );
-#endif // glVertexAttribLPointer
+#endif  // glVertexAttribLPointer
         break;
       default:
         ipointer(
@@ -230,7 +230,7 @@ public:
     }
     return *this;
   }
-#endif // glVertexAttribPointer && glVertexAttribIPointer
+#endif  // glVertexAttribPointer && glVertexAttribIPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribPointer)
   /**
@@ -274,7 +274,7 @@ public:
     ));
     return *this;
   }
-#endif // glVertexAttribPointer
+#endif  // glVertexAttribPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
   /**
@@ -311,7 +311,7 @@ public:
     ));
     return *this;
   }
-#endif // glVertexAttribIPointer
+#endif  // glVertexAttribIPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribLPointer)
   /**
@@ -345,7 +345,7 @@ public:
     ));
     return *this;
   }
-#endif // glVertexAttribLPointer
+#endif  // glVertexAttribLPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribFormat)
   /**
@@ -379,7 +379,7 @@ public:
     ));
     return *this;
   }
-#endif // glVertexAttribFormat
+#endif  // glVertexAttribFormat
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIFormat)
   ///
@@ -410,7 +410,7 @@ public:
     ));
     return *this;
   }
-#endif // glVertexAttribIFormat
+#endif  // glVertexAttribIFormat
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribLFormat)
   /**
@@ -438,7 +438,7 @@ public:
     ));
     return *this;
   }
-#endif // glVertexAttribLFormat
+#endif  // glVertexAttribLFormat
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glEnableVertexAttribArray)
   /// Enables the attribute array slot
@@ -452,7 +452,7 @@ public:
     gl(EnableVertexAttribArray(location_));
     return *this;
   }
-#endif // glEnableVertexAttribArray
+#endif  // glEnableVertexAttribArray
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glDisableVertexAttribArray)
   /// Disables the attribute array slot
@@ -466,7 +466,7 @@ public:
     gl(DisableVertexAttribArray(location_));
     return *this;
   }
-#endif // glDisableVertexAttribArray
+#endif  // glDisableVertexAttribArray
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribDivisor)
   /**
@@ -486,7 +486,7 @@ public:
     gl(VertexAttribDivisor(location_, divisor));
     return *this;
   }
-#endif // glVertexAttribDivisor
+#endif  // glVertexAttribDivisor
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glBindAttribLocation)
   /**
@@ -626,7 +626,7 @@ VertexAttribArrayObject::setup<GLfloat>(GLuint values_per_vertex) {
   pointer(values_per_vertex, DataType::kFloat);
   return *this;
 }
-#endif // glVertexAttribPointer
+#endif  // glVertexAttribPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
@@ -635,7 +635,7 @@ VertexAttribArrayObject::setup<GLbyte>(GLuint values_per_vertex) {
   ipointer(values_per_vertex, WholeDataType::kByte);
   return *this;
 }
-#endif // glVertexAttribIPointer
+#endif  // glVertexAttribIPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
@@ -644,7 +644,7 @@ VertexAttribArrayObject::setup<GLubyte>(GLuint values_per_vertex) {
   ipointer(values_per_vertex, WholeDataType::kUnsignedByte);
   return *this;
 }
-#endif // glVertexAttribIPointer
+#endif  // glVertexAttribIPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
@@ -653,7 +653,7 @@ VertexAttribArrayObject::setup<GLshort>(GLuint values_per_vertex) {
   ipointer(values_per_vertex, WholeDataType::kShort);
   return *this;
 }
-#endif // glVertexAttribIPointer
+#endif  // glVertexAttribIPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
@@ -662,7 +662,7 @@ VertexAttribArrayObject::setup<GLushort>(GLuint values_per_vertex) {
   ipointer(values_per_vertex, WholeDataType::kUnsignedShort);
   return *this;
 }
-#endif // glVertexAttribIPointer
+#endif  // glVertexAttribIPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
@@ -671,7 +671,7 @@ VertexAttribArrayObject::setup<GLint>(GLuint values_per_vertex) {
   ipointer(values_per_vertex, WholeDataType::kInt);
   return *this;
 }
-#endif // glVertexAttribIPointer
+#endif  // glVertexAttribIPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
@@ -680,7 +680,7 @@ VertexAttribArrayObject::setup<GLuint>(GLuint values_per_vertex) {
   ipointer(values_per_vertex, WholeDataType::kUnsignedInt);
   return *this;
 }
-#endif // glVertexAttribIPointer
+#endif  // glVertexAttribIPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribPointer)
 template<>
@@ -689,7 +689,7 @@ VertexAttribArrayObject::setup<glm::vec2>(GLuint) {
   pointer(2, DataType::kFloat);
   return *this;
 }
-#endif // glVertexAttribPointer
+#endif  // glVertexAttribPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribLPointer)
 template<>
@@ -698,7 +698,7 @@ VertexAttribArrayObject::setup<glm::dvec2>(GLuint) {
   lpointer(2);
   return *this;
 }
-#endif // glVertexAttribLPointer
+#endif  // glVertexAttribLPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
@@ -707,7 +707,7 @@ VertexAttribArrayObject::setup<glm::ivec2>(GLuint) {
   ipointer(2, WholeDataType::kInt);
   return *this;
 }
-#endif // glVertexAttribIPointer
+#endif  // glVertexAttribIPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
@@ -716,7 +716,7 @@ VertexAttribArrayObject::setup<glm::uvec2>(GLuint) {
   ipointer(2, WholeDataType::kUnsignedInt);
   return *this;
 }
-#endif // glVertexAttribIPointer
+#endif  // glVertexAttribIPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribPointer)
 template<>
@@ -725,7 +725,7 @@ VertexAttribArrayObject::setup<glm::vec3>(GLuint) {
   pointer(3, DataType::kFloat);
   return *this;
 }
-#endif // glVertexAttribPointer
+#endif  // glVertexAttribPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribLPointer)
 template<>
@@ -734,7 +734,7 @@ VertexAttribArrayObject::setup<glm::dvec3>(GLuint) {
   lpointer(3);
   return *this;
 }
-#endif // glVertexAttribLPointer
+#endif  // glVertexAttribLPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
@@ -743,7 +743,7 @@ VertexAttribArrayObject::setup<glm::ivec3>(GLuint) {
   ipointer(3, WholeDataType::kInt);
   return *this;
 }
-#endif // glVertexAttribIPointer
+#endif  // glVertexAttribIPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
@@ -752,7 +752,7 @@ VertexAttribArrayObject::setup<glm::uvec3>(GLuint) {
   ipointer(3, WholeDataType::kUnsignedInt);
   return *this;
 }
-#endif // glVertexAttribIPointer
+#endif  // glVertexAttribIPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribPointer)
 template<>
@@ -761,7 +761,7 @@ VertexAttribArrayObject::setup<glm::vec4>(GLuint) {
   pointer(4, DataType::kFloat);
   return *this;
 }
-#endif // glVertexAttribPointer
+#endif  // glVertexAttribPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribLPointer)
 template<>
@@ -770,7 +770,7 @@ VertexAttribArrayObject::setup<glm::dvec4>(GLuint) {
   lpointer(4);
   return *this;
 }
-#endif // glVertexAttribLPointer
+#endif  // glVertexAttribLPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
@@ -779,7 +779,7 @@ VertexAttribArrayObject::setup<glm::ivec4>(GLuint) {
   ipointer(4, WholeDataType::kInt);
   return *this;
 }
-#endif // glVertexAttribIPointer
+#endif  // glVertexAttribIPointer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribIPointer)
 template<>
@@ -788,7 +788,7 @@ VertexAttribArrayObject::setup<glm::uvec4>(GLuint) {
   ipointer(4, WholeDataType::kUnsignedInt);
   return *this;
 }
-#endif // glVertexAttribIPointer
+#endif  // glVertexAttribIPointer
 
 
 // -------======{[ static setups ]}======-------
@@ -799,35 +799,35 @@ template<>
 inline void VertexAttribArrayObject::static_setup_helper(const GLfloat value) {
   gl(VertexAttrib1f(location_, value));
 }
-#endif // glVertexAttrib1f
+#endif  // glVertexAttrib1f
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttrib1s)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const GLshort value) {
   gl(VertexAttrib1s(location_, value));
 }
-#endif // glVertexAttrib1s
+#endif  // glVertexAttrib1s
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribL1d)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const GLdouble value) {
   gl(VertexAttribL1d(location_, value));
 }
-#endif // glVertexAttribL1d
+#endif  // glVertexAttribL1d
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribI1i)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const GLint value) {
   gl(VertexAttribI1i(location_, value));
 }
-#endif // glVertexAttribI1i
+#endif  // glVertexAttribI1i
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribI1ui)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const GLuint value) {
   gl(VertexAttribI1ui(location_, value));
 }
-#endif // glVertexAttribI1ui
+#endif  // glVertexAttribI1ui
 
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttrib2fv)
@@ -835,28 +835,28 @@ template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::vec2 value) {
   gl(VertexAttrib2fv(location_, glm::value_ptr(value)));
 }
-#endif // glVertexAttrib2fv
+#endif  // glVertexAttrib2fv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribL2dv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::dvec2 value) {
   gl(VertexAttribL2dv(location_, glm::value_ptr(value)));
 }
-#endif // glVertexAttribL2dv
+#endif  // glVertexAttribL2dv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribI2iv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::ivec2 value) {
   gl(VertexAttribI2iv(location_, glm::value_ptr(value)));
 }
-#endif // glVertexAttribI2iv
+#endif  // glVertexAttribI2iv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribI2uiv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::uvec2 value) {
   gl(VertexAttribI2uiv(location_, glm::value_ptr(value)));
 }
-#endif // glVertexAttribI2uiv
+#endif  // glVertexAttribI2uiv
 
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttrib3fv)
@@ -864,28 +864,28 @@ template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::vec3 value) {
   gl(VertexAttrib3fv(location_, glm::value_ptr(value)));
 }
-#endif // glVertexAttrib3fv
+#endif  // glVertexAttrib3fv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribL3dv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::dvec3 value) {
   gl(VertexAttribL3dv(location_, glm::value_ptr(value)));
 }
-#endif // glVertexAttribL3dv
+#endif  // glVertexAttribL3dv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribI3iv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::ivec3 value) {
   gl(VertexAttribI3iv(location_, glm::value_ptr(value)));
 }
-#endif // glVertexAttribI3iv
+#endif  // glVertexAttribI3iv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribI3uiv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::uvec3 value) {
   gl(VertexAttribI3uiv(location_, glm::value_ptr(value)));
 }
-#endif // glVertexAttribI3uiv
+#endif  // glVertexAttribI3uiv
 
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttrib4fv)
@@ -893,28 +893,28 @@ template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::vec4 value) {
   gl(VertexAttrib4fv(location_, glm::value_ptr(value)));
 }
-#endif // glVertexAttrib4fv
+#endif  // glVertexAttrib4fv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribL4dv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::dvec4 value) {
   gl(VertexAttribL4dv(location_, glm::value_ptr(value)));
 }
-#endif // glVertexAttribL4dv
+#endif  // glVertexAttribL4dv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribI4iv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::ivec4 value) {
   gl(VertexAttribI4iv(location_, glm::value_ptr(value)));
 }
-#endif // glVertexAttribI4iv
+#endif  // glVertexAttribI4iv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glVertexAttribI4uiv)
 template<>
 inline void VertexAttribArrayObject::static_setup_helper(const glm::uvec4 value) {
   gl(VertexAttribI4uiv(location_, glm::value_ptr(value)));
 }
-#endif // glVertexAttribI4uiv
+#endif  // glVertexAttribI4uiv
 
 /// A global operator that is a VertexArray constructor with nicer syntax.
 /** I think (prog | "Position") does look better than VertexAttribArray(prog, "Position") */
@@ -923,10 +923,10 @@ inline LazyVertexAttribArray operator|(const Program& prog,
   return LazyVertexAttribArray(prog, file);
 }
 
-#endif // glGetAttribLocation
+#endif  // glGetAttribLocation
 
 } // namespace oglwrap
 
 #include "./undefine_internal_macros.h"
 
-#endif // OGLWRAP_VERTEXATTRIB_H_
+#endif  // OGLWRAP_VERTEXATTRIB_H_
