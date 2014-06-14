@@ -17,11 +17,11 @@ namespace OGLWRAP_NAMESPACE_NAME {
 
 /// Class providing vertex attributes and instructions for rendering of a cube.
 class FullScreenRectangle {
-  VertexArray vao;
-  ArrayBuffer positions, tex_coords;
+  VertexArray vao_;
+  ArrayBuffer positions_, tex_coords_;
   bool is_setup_positions_, is_setup_tex_coords_;
-public:
 
+ public:
   /// Constructs a rectangle that covers the entire screen.
   FullScreenRectangle()
     : is_setup_positions_(false)
@@ -33,11 +33,18 @@ public:
     * Calling this function changes the currently active VAO and ArrayBuffer. */
   /// @param attrib - The attribute array to use as destination.
   void setupPositions(VertexAttribArray attrib) {
-    if (is_setup_positions_) {
-      throw std::logic_error("FullScreenRectangle::setup_position is called "
-                             "multiply times on the same object");
-    } else {
+    if (!is_setup_positions_) {
       is_setup_positions_ = true;
+    } else {
+      std::cerr << "FullScreenRectangle::setupPositions is called multiple "
+                   "times on the same object. If the two calls want to set "
+                   "positions up into the same attribute position, then the "
+                   "second call is unneccesary. If they want to set the "
+                   "positions to different attribute positions then the "
+                   "second call would make the first call not work anymore. "
+                   "Either way, calling setupPositions multiply times is a "
+                   "design error, that should be avoided.";
+      std::terminate();
     }
 
     const float pos[4][2] = {
@@ -47,11 +54,11 @@ public:
       {+1.0f, +1.0f}
     };
 
-    vao.bind();
-    positions.bind();
-    positions.data(sizeof(pos), pos);
+    vao_.bind();
+    positions_.bind();
+    positions_.data(sizeof(pos), pos);
     attrib.setup<glm::vec2>().enable();
-    vao.unbind();
+    vao_.unbind();
   }
 
   /// Creates vertex texture coordinates, and uploads it to an attribute array.
@@ -59,11 +66,18 @@ public:
     * Calling this function changes the currently active VAO and ArrayBuffer. */
   /// @param attrib - The attribute array to use as destination.
   void setupTexCoords(VertexAttribArray attrib, bool upside_down = false) {
-    if (is_setup_tex_coords_) {
-      throw std::logic_error("FullScreenRectangle::setupTexCoords is called "
-                             "multiply times on the same object");
-    } else {
+    if (!is_setup_tex_coords_) {
       is_setup_tex_coords_ = true;
+    } else {
+      std::cerr << "FullScreenRectangle::setupTexCoords is called multiple "
+                   "times on the same object. If the two calls want to set "
+                   "tex_coords up into the same attribute position, then the "
+                   "second call is unneccesary. If they want to set the "
+                   "tex_coords to different attribute positions then the "
+                   "second call would make the first call not work anymore. "
+                   "Either way, calling setupTexCoords multiply times is a "
+                   "design error, that should be avoided.";
+      std::terminate();
     }
 
     const float coords[4][2] = {
@@ -80,11 +94,11 @@ public:
       {1.0f, 0.0f}
     };
 
-    vao.bind();
-    tex_coords.bind();
-    tex_coords.data(sizeof(coords), upside_down ? rev_coords : coords);
+    vao_.bind();
+    tex_coords_.bind();
+    tex_coords_.data(sizeof(coords), upside_down ? rev_coords : coords);
     attrib.setup<glm::vec2>().enable();
-    vao.unbind();
+    vao_.unbind();
   }
 
 
@@ -92,9 +106,9 @@ public:
   /** This call changes the currently active VAO. */
   void render() {
     if (is_setup_positions_) {
-      vao.bind();
+      vao_.bind();
       DrawArrays(PrimType::kTriangleStrip, 0, 4);
-      vao.unbind();
+      vao_.unbind();
     }
   }
 
@@ -104,7 +118,7 @@ public:
   }
 };
 
-} // Namespace oglwrap
+}  // namespace oglwrap
 
 #include "../undefine_internal_macros.h"
 

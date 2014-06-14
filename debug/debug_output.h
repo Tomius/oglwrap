@@ -9,25 +9,29 @@
 
 #include <map>
 #include <vector>
+#include <string>
+#include <utility>
 #include <cassert>
-#include <iostream>
 #include <cstring>
 #include <fstream>
 #include <sstream>
+#include <iostream>
 #include <functional>
 
 #include "../config.h"
 #include "../enums/error_type.h"
-#include "error_formatting.h"
+#include "./error_formatting.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
 
 #if OGLWRAP_DEBUG
 
-#if !OGLWRAP_DISABLE_DEBUG_OUTPUT
 #define OGLWRAP_GET_FILENAME() __FILE__
 
-/// A configurable debug output that warns you if an OpenGL or a binding error happens.
+/**
+ * @brief A configurable debug output that warns you if an
+ *        OpenGL or a binding error happens.
+ */
 class DebugOutput {
   enum glError_t {
     INVALID_ENUM,
@@ -103,19 +107,23 @@ class DebugOutput {
   /// Loads in the list of OpenGL errors.
   DebugOutput() {
     // The GLerrors.txt should be in the same folder as this file.
-    // So we can use the __FILE__ macro to get the path to this file,
-    // and replaces the "debug_output.h" to "GLerrors.txt"
+    // So we can use the __FILE__ macro to get the path (dir) of this file
     std::string filename(OGLWRAP_GET_FILENAME());
-    auto directoryPath = filename.find("debug_output.h");
-    assert(directoryPath != std::string::npos); // Maybe it got renamed?
-    filename.erase(directoryPath, std::string::npos);
+    auto dir = filename.find_last_of("/\\");
+    if (dir != std::string::npos) {
+      // If the path to this file has no directory in it, then
+      // we should search for just "GLerrors.txt"
+      filename.erase();
+    } else {
+      filename.erase(dir, std::string::npos);
+    }
     filename.append("GLerrors.txt");
 
     std::ifstream is(filename);
     if (!is.good()) {
-      std::cerr <<
-        "Couldn't initialize DebugOutput because "
-        "GLerrors.txt is missing or corrupted." << std::endl;
+      std::cerr << "Couldn't initialize DebugOutput because "
+                   "GLerrors.txt is missing or corrupted." << std::endl;
+      return;
     }
 
     // Read until EOF, or until an error occurs.
@@ -134,7 +142,6 @@ class DebugOutput {
 
       // Get the error messages
       while (getline(is, buffer) && !buffer.empty()) {
-
         std::stringstream strstream(buffer);
         strstream >> buffer2;
         bool found_error = false;
@@ -186,8 +193,7 @@ class DebugOutput {
 
       if (errorMap.find(func) == errorMap.end()) {
         errorMap.insert(std::pair<std::string, ErrorInfo>(
-            func, ErrorInfo(funcSignature, errors)
-        ));
+            func, ErrorInfo(funcSignature, errors)));
       }
     }
   }
@@ -201,14 +207,15 @@ class DebugOutput {
     endl_plus_tabulation[0] = '\n';
 
     size_t param_pos = parameters_start;
-    while ((param_pos = funcSignature.find(',', param_pos + 1)) != std::string::npos) {
+    while ((param_pos = funcSignature.find(',', param_pos + 1)) !=
+            std::string::npos) {
       funcSignature.insert(param_pos + 1, endl_plus_tabulation);
     }
 
     return funcSignature;
   }
 
-public:
+ public:
   static void AddErrorPrintFormatter(std::function<ErrorPrintFormatter> printf) {
     if (!instance) {
       instance = new DebugOutput{};
@@ -241,14 +248,16 @@ public:
     std::stringstream sstream;
 
     size_t funcNameLen = functionCall.find_first_of('(');
-    std::string funcName = std::string(functionCall.begin(), functionCall.begin() + funcNameLen);
+    std::string funcName =
+      std::string(functionCall.begin(), functionCall.begin() + funcNameLen);
 
     if (instance->errorMap.find(funcName) != instance->errorMap.end() &&
        !instance->errorMap[funcName].errors[errIdx].empty()) {
       ErrorInfo errinfo = instance->errorMap[funcName];
-      sstream << "The following OpenGL function: " << std::endl << std::endl;
-      sstream << FormatedFuncSignature(errinfo.funcSignature) << std::endl << std::endl;
-      sstream << "Has generated the error because one of the following(s) were true:" << std::endl;
+      sstream << "The following OpenGL function: \n\n";
+      sstream << FormatedFuncSignature(errinfo.funcSignature) << "\n\n";
+      sstream << "Has generated the error because one of the "
+                 "following(s) were true:\n";
       for (size_t i = 0; i != errinfo.errors[errIdx].size(); ++i) {
         sstream << errinfo.errors[errIdx][i] << std::endl;
       }
@@ -264,7 +273,7 @@ public:
   }
 
   static std::string& LastUsedBindTarget() {
-    if(!last_used_bind_target) {
+    if (!last_used_bind_target) {
       last_used_bind_target = new std::string{};
     }
     return *last_used_bind_target;
@@ -275,32 +284,26 @@ public:
   }
 };
 
-#endif  // !OGLWRAP_DISABLE_DEBUG_OUTPUT
-#endif  // OGLWRAP_DEBUG
+#else  // !OGLWRAP_DEBUG
 
-#if !OGLWRAP_DEBUG || OGLWRAP_DISABLE_DEBUG_OUTPUT
 class DebugOutput {
-  using ErrorPrintFormatter = void(const ErrorMessage& error);
-
-  static DebugOutput *instance;
-  static std::string *last_used_bind_target;
-  static ErrorType last_error;
-
-  // Loads in the list of OpenGL errors.
-  DebugOutput() {}
-public:
-
+ public:
   static void AddErrorPrintFormatter(
     std::function<ErrorPrintFormatter> printFormatter) {}
 
   static void PrintError(ErrorMessage error) {}
 
-  /// If there was an error, notifies you about it through the callback function.
-  /** The default callback function prints the error to the stdout */
+  /**
+   * @brief If there was an error, notifies you
+   *        about it through the callback function.
+   *
+   * The default callback function prints the error to stderr
+   */
+
   static void GetDetailedErrorInfo(const std::string&, std::stringstream&) {}
 
   static std::string& LastUsedBindTarget() {
-    if(!last_used_bind_target) {
+    if (!last_used_bind_target) {
       last_used_bind_target = new std::string{};
     }
     return *last_used_bind_target;
@@ -309,6 +312,16 @@ public:
   static ErrorType& LastError() {
     return last_error;
   }
+
+ private:
+  using ErrorPrintFormatter = void(const ErrorMessage& error);
+
+  static DebugOutput *instance;
+  static std::string *last_used_bind_target;
+  static ErrorType last_error;
+
+  // Loads in the list of OpenGL errors.
+  DebugOutput() {}
 };
 #endif
 
@@ -318,7 +331,7 @@ public:
   ErrorType DebugOutput::last_error;
 #endif
 
-} // namespace oglwrap
+}  // namespace oglwrap
 
 #endif  // OGLWRAP_DEBUG_DEBUGOUTPUT_H_
 

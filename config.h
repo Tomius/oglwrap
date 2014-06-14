@@ -16,7 +16,7 @@
 #endif
 
 #if OGLWRAP_USE_GLEW
-  #include "glew.h"
+  #include "./glew.h"
 #endif
 
 /**
@@ -71,7 +71,7 @@
 #endif
 
 /**
- * @brief If set to true, disable the oglwrap debug output.
+ * @brief If set to true, disables the oglwrap debug output.
  *
  * Setting OGLWRAP_DEBUG flag to false will override this flag, and will
  * also turn the debug output off
@@ -83,16 +83,6 @@
 /// If true, uses Magick++ API to load images.
 #ifndef OGLWRAP_USE_IMAGEMAGICK
   #define OGLWRAP_USE_IMAGEMAGICK 0
-#endif
-
-/**
- * @brief If true, sacrifices a bit of performance, to increase portability.
- *
- * For example, excludes codes that do not work well with dual-gpu
- * systems, but are definitely faster on most configurations.
- */
-#ifndef OGLWRAP_PORTABILITY_MODE
-  #define OGLWRAP_PORTABILITY_MODE 1
 #endif
 
 /**

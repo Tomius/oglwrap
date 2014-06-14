@@ -19,20 +19,20 @@
 #endif
 
 // Commonly used oglwrap headers
-#include "buffer.h"
-#include "shader.h"
-#include "context.h"
-#include "uniform.h"
-#include "smart_enums.h"
-#include "vertex_attrib.h"
+#include "./buffer.h"
+#include "./shader.h"
+#include "./context.h"
+#include "./uniform.h"
+#include "./smart_enums.h"
+#include "./vertex_attrib.h"
 #include "textures/texture_2D.h"
 #include "textures/texture_cube.h"
 
 
 // Optional headers
 #if OGLWRAP_INCLUDE_EVERYTHING
-	#include "framebuffer.h"
-	#include "transfeedback.h"
+  #include "./framebuffer.h"
+  #include "./transfeedback.h"
 #endif
 
 // Put a warning if someone forgot to undef a macro
