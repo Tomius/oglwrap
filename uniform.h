@@ -9,8 +9,8 @@
 
 #include <stdexcept>
 
-#include "config.h"
-#include "shader.h"
+#include "./config.h"
+#include "./shader.h"
 
 #define GLM_FORCE_RADIANS
 #include "glm/glm/glm.hpp"
@@ -26,9 +26,9 @@ template<typename GLtype>
 /// An object implementing the base features Uniforms.
 /** You shouldn't use this class directly. Rather use Uniform or LazyUniform. */
 class UniformObject {
-protected:
-  GLuint location_; ///< The C handle for the uniform's location
-  Program& program_; ///< The program the uniform is in.
+ protected:
+  GLuint location_;  // The C handle for the uniform's location
+  Program& program_;  // The program the uniform is in.
 
   static constexpr GLuint kInvalidLocation = ~GLuint(0);
 
@@ -38,15 +38,16 @@ protected:
   UniformObject(Program& program, GLuint location = kInvalidLocation)
     : location_(location), program_(program) { }
 
-public:
+ public:
+  virtual ~UniformObject() {}
+
   /// Sets the uniform to a GLtype variable's value.
   /** It finds the appropriate glUniform* using template specialization.
     * @param value - The value to set the uniform.
     * @see glUniform* */
   virtual void set(const GLtype& value) { // See the specializations at the end of this file.
     static_assert((sizeof(GLtype), false),
-      "Trying to set a uniform to a value that is not an OpenGL type."
-    );
+        "Trying to set a uniform to a value that is not an OpenGL type.");
   }
 
   /// Sets the uniform to a GLtype variable's value.
@@ -65,8 +66,7 @@ public:
     * @see glUniform* */
   virtual GLtype get() {
     static_assert((sizeof(GLtype), false),
-      "Trying to get a uniform to a value that is not an OpenGL type."
-    );
+        "Trying to get a uniform to a value that is not an OpenGL type.");
   }
 
   /// Gets the current value of the uniform.
@@ -92,7 +92,8 @@ template<typename GLtype>
   * stderr, if getting the location of the variable, or setting it didn't work. */
 class Uniform : public UniformObject<GLtype> {
   const std::string identifier_;
-public:
+
+ public:
   /// Queries a variable named 'identifier' in the 'program', and stores it's location.
   /** It writes to stderr if the query didn't work.
     * @param program - The program to seek the uniform in. May call program.use().
@@ -112,8 +113,7 @@ public:
           "Error getting uniform location",
           "Error getting the location of uniform '" + identifier_ +
           "' in the program using the following shaders:\n" +
-          program.getShaderNames()
-        );
+          program.getShaderNames());
       }
     #endif
   }
@@ -133,8 +133,7 @@ public:
         "' but the uniform template parameter and the actual uniform "
         "type mismatches. \n"
         "The error happened in the program using the following shaders:\n" +
-        this->program_.getShaderNames()
-      )
+        this->program_.getShaderNames());
     #endif
   }
 
@@ -162,8 +161,7 @@ public:
         "' but the uniform template parameter and the actual uniform "
         "type mismatches. \n"
         "The error happened in the program using the following shaders:\n" +
-        this->program_.getShaderNames()
-      )
+        this->program_.getShaderNames());
     #endif
 
     return val;
@@ -190,7 +188,8 @@ template<typename GLtype>
     stderr, if getting the location of the variable, or setting it didn't work. */
 class IndexedUniform : public UniformObject<GLtype> {
   std::string identifier_;
-public:
+
+ public:
   /// Queries a variable named 'identifier' in the 'program', and stores it's location.
   /** It writes to stderr if the query didn't work.
     * @param program - The program to seek the uniform in. Will call program.use().
@@ -214,8 +213,7 @@ public:
           "Error getting uniform location",
           "Error getting the location of uniform '" + identifier_ +
           "' in the program using the following shaders:\n" +
-          program.getShaderNames()
-        );
+          program.getShaderNames());
       }
     #endif
   }
@@ -235,8 +233,7 @@ public:
         "' but the uniform template parameter and the actual uniform "
         "type mismatches. \n"
         "The error happened in the program using the following shaders:\n" +
-        this->program_.getShaderNames()
-      )
+        this->program_.getShaderNames());
     #endif
   }
 
@@ -264,8 +261,7 @@ public:
         "' but the uniform template parameter and the actual uniform "
         "type mismatches. \n"
         "The error happened in the program using the following shaders:\n" +
-        this->program_.getShaderNames()
-      )
+        this->program_.getShaderNames());
     #endif
     return val;
   }
@@ -295,9 +291,10 @@ template<typename GLtype>
   * to write program's and the uniform's name once, no matter how many
   * times you set it. */
 class LazyUniform : public UniformObject<GLtype> {
-  const std::string identifier_; ///< The uniform's name.
+  const std::string identifier_;  // The uniform's name.
   bool firstCall_;
-public:
+
+ public:
   /// Stores the uniform's information.
   /** It will only be used at the first set() or op=() call, so the program
     * doesn't have to be valid at the time this constructor is called.
@@ -329,8 +326,7 @@ public:
             "Error getting uniform location",
             "Error getting the location of uniform '" + identifier_ +
             "' in the program using the following shaders:\n" +
-            this->program_.getShaderNames()
-          );
+            this->program_.getShaderNames());
         }
       #endif
 
@@ -347,8 +343,7 @@ public:
         "' but the uniform template parameter and the actual uniform "
         "type mismatches. \n"
         "The error happened in the program using the following shaders:\n" +
-        this->program_.getShaderNames()
-      )
+        this->program_.getShaderNames());
     #endif
   }
 
@@ -366,14 +361,13 @@ public:
     * If it is called with not an OpenGL type, it throws std::invalid_argument.
     * @return The current value of the uniform.
     * @see glUniform* */
-   GLtype get() {
+  GLtype get() {
     OGLWRAP_CHECK_ACTIVE_PROGRAM(this->program_);
 
     // Get the uniform's location only at the first set call.
     if (firstCall_) {
       this->location_ = gl(GetUniformLocation(
-        this->program_.expose(), identifier_.c_str()
-      ));
+          this->program_.expose(), identifier_.c_str()));
 
       #if OGLWRAP_DEBUG
         // Check if it worked.
@@ -382,8 +376,7 @@ public:
             "Error getting uniform location",
             "Error getting the location of uniform '" + identifier_ +
             "' in the program using the following shaders:\n" +
-            this->program_.getShaderNames()
-          );
+            this->program_.getShaderNames());
         }
       #endif
 
@@ -400,8 +393,7 @@ public:
         "' but the uniform template parameter and the actual uniform "
         "type mismatches. \n"
         "The error happened in the program using the following shaders:\n" +
-        this->program_.getShaderNames()
-      )
+        this->program_.getShaderNames());
     #endif
     return val;
   }
