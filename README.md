@@ -115,7 +115,7 @@ This lets you know, that the source of the GL_INVALID_VALUE was a glDrawArrays c
 
 Notes about using oglwrap:
 -------------
-- A ```#define OGLWRAP_INSTANTIATE 1``` line is required at exactly one CXX file (.cpp, .cc etc), before including oglwrap. It is needed for explicit template instantiations (but oglwrap is header-only).
+- A ```#define OGLWRAP_INSTANTIATE 1``` line is required at exactly one CXX file (.cpp, .cc etc), before including oglwrap. It is needed for explicit template instantiations (but oglwrap is header-only). Alternatively you can link oglwrap.cc to your application, which has the exact same effect (but you loose the benefits of a header-only library, however in case of precompiled headers, it makes your life a lot easier)
 - You have to load OpenGL extensions before including oglwrap with your preferred extension loader. If you don't have a preferred one, I recommend using [GLEW](https://github.com/nigels-com/glew).
 
 

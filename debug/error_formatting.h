@@ -29,8 +29,6 @@ inline std::string cut_end_of_pretty_func(const std::string& func) {
 inline void OGLWRAP_PrintStackTrace(std::ostream& os) {
   #if __GLIBC__
     // Print stack trace
-
-
     void *array[32];
     size_t size = backtrace(array, 32);
     char** stack_trace = backtrace_symbols(array, size);
@@ -116,9 +114,8 @@ inline void OGLWRAP_PrintError(const ErrorMessage& error) {
       std::terminate();
     }
   #endif
-
 }
 
-}
+}  // namespace oglwrap
 
 #endif

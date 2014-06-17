@@ -318,9 +318,7 @@ class DebugOutput {
   static DebugOutput *instance;
   static std::string *last_used_bind_target;
   static ErrorType last_error;
-
-  // Loads in the list of OpenGL errors.
-  DebugOutput() {}
+  DebugOutput() = default;
 };
 #endif
 

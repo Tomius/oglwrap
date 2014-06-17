@@ -10,12 +10,12 @@
 
 #ifdef gl
   #undef gl
-  #warning Please don not define a macro named gl before including oglwrap
+  #warning Please do not define a macro named gl before including oglwrap
 #endif
 
 #ifdef glfunc
   #undef glfunc
-  #warning Please don not define a macro named glfunc before including oglwrap
+  #warning Please do not define a macro named glfunc before including oglwrap
 #endif
 
 // Commonly used oglwrap headers
@@ -38,7 +38,7 @@
   #include "shapes/full_screen_rect.h"
 #endif
 
-// Put a warning if someone forgot to undef a macro
+// Put a warning if I forget to undef the internal macros
 #ifdef gl
   #warning Some oglwrap header forgot to undefine its internal macros.
 #endif

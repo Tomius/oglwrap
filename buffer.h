@@ -322,13 +322,6 @@ typedef BufferObject<BufferType::kElementArrayBuffer> IndexBuffer;
 /** This buffer has no special semantics, it is intended to use as a buffer object for Buffer Textures.
   * @see GL_TEXTURE_BUFFER */
 typedef BufferObject<BufferType::kTextureBuffer> TextureBuffer;
-
-#if OGLWRAP_INSTANTIATE
-  template class BufferObject<BufferType::kTextureBuffer>;
-#else
-  extern template class BufferObject<BufferType::kTextureBuffer>;
-#endif
-
 #endif  // GL_TEXTURE_BUFFER
 
 #if OGLWRAP_DEFINE_EVERYTHING || \
@@ -387,26 +380,12 @@ class IndexedBufferObject : public BufferObject<BufferType(BUFFER_TYPE)> {
 /// An indexed buffer binding for buffers used as storage for uniform blocks.
 /** @see GL_UNIFORM_BUFFER */
 typedef IndexedBufferObject<IndexedBufferType::kUniformBuffer> UniformBuffer;
-
-#if OGLWRAP_INSTANTIATE
-  template class IndexedBufferObject<IndexedBufferType::kUniformBuffer>;
-#else
-  extern template class IndexedBufferObject<IndexedBufferType::kUniformBuffer>;
-#endif
-
 #endif  // GL_UNIFORM_BUFFER
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRANSFORM_FEEDBACK_BUFFER)
 /// An indexed buffer binding for buffers used in Transform Feedback operations.
 /** @see GL_TRANSFORM_FEEDBACK_BUFFER */
 typedef IndexedBufferObject<IndexedBufferType::kTransformFeedbackBuffer> TransformFeedbackBuffer;
-
-#if OGLWRAP_INSTANTIATE
-  template class IndexedBufferObject<IndexedBufferType::kTransformFeedbackBuffer>;
-#else
-  extern template class IndexedBufferObject<IndexedBufferType::kTransformFeedbackBuffer>;
-#endif
-
 #endif  // GL_TRANSFORM_FEEDBACK_BUFFER
 
 #endif  // glBindBufferRange && glBindBufferBase
