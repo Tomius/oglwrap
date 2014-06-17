@@ -331,14 +331,15 @@ typedef BufferObject<BufferType::kTextureBuffer> TextureBuffer;
 
 #endif  // GL_TEXTURE_BUFFER
 
-#if OGLWRAP_DEFINE_EVERYTHING || (defined(glBindBufferBase) && defined(glBindBufferRange))
+#if OGLWRAP_DEFINE_EVERYTHING || \
+    (defined(glBindBufferBase) && defined(glBindBufferRange))
 template<IndexedBufferType BUFFER_TYPE>
 /// Buffer objects that have an array of binding targets, like UniformBuffers.
 /** Buffer Objects are OpenGL Objects that store an array
   * of unformatted memory allocated by the OpenGL context (aka: the GPU).
   * IndexBufferObject is a buffer that is bound to an indexed target. */
 class IndexedBufferObject : public BufferObject<BufferType(BUFFER_TYPE)> {
-public:
+ public:
   /// Bind a buffer object to an index.
   /** @param index - Specify the index of the binding point within the array.
     * @see glBindBufferBase */
@@ -411,7 +412,7 @@ typedef IndexedBufferObject<IndexedBufferType::kTransformFeedbackBuffer> Transfo
 #endif  // glBindBufferRange && glBindBufferBase
 #endif  // glGenBuffers && glDeleteBuffers
 
-} // namespace oglwrap
+}  // namespace oglwrap
 
 #include "./undefine_internal_macros.h"
 

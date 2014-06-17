@@ -56,19 +56,19 @@ class DebugOutput {
   };
 
   struct ErrorInfo {
-    std::string funcSignature;
+    std::string func_signature;
     std::vector<std::string> errors[NUM_ERRORS + 1];
 
     ErrorInfo() {}
     ErrorInfo(const std::string& funcS, const std::vector<std::string> errs[])
-        : funcSignature(funcS) {
+        : func_signature(funcS) {
       for (int i = 0; i < NUM_ERRORS + 1; i++) {
         errors[i] = errs[i];
       }
     }
   };
 
-  std::map<std::string, ErrorInfo> errorMap;
+  std::map<std::string, ErrorInfo> error_map;
 
   glError_t getErrorIndex() const {
     switch (GLenum(last_error)) {
@@ -128,16 +128,16 @@ class DebugOutput {
 
     // Read until EOF, or until an error occurs.
     while (is.good()) {
-      std::string func, funcSignature;
+      std::string func, func_signature;
       std::vector<std::string> errors[NUM_ERRORS + 1];
       std::string buffer, buffer2;
 
       // Get lines until the first one that's not empty.
-      while (getline(is, funcSignature) && funcSignature.empty());
+      while (getline(is, func_signature) && func_signature.empty());
 
-      size_t end_pos = funcSignature.find('(');
-      size_t start_pos = funcSignature.rfind(' ', end_pos) + 1;
-      func = funcSignature.substr(start_pos, end_pos - start_pos);
+      size_t end_pos = func_signature.find('(');
+      size_t start_pos = func_signature.rfind(' ', end_pos) + 1;
+      func = func_signature.substr(start_pos, end_pos - start_pos);
 
 
       // Get the error messages
@@ -191,28 +191,28 @@ class DebugOutput {
         }
       }
 
-      if (errorMap.find(func) == errorMap.end()) {
-        errorMap.insert(std::pair<std::string, ErrorInfo>(
-            func, ErrorInfo(funcSignature, errors)));
+      if (error_map.find(func) == error_map.end()) {
+        error_map.insert(std::pair<std::string, ErrorInfo>(
+            func, ErrorInfo(func_signature, errors)));
       }
     }
   }
 
-  static std::string FormatedFuncSignature(std::string funcSignature) {
+  static std::string FormatedFuncSignature(std::string func_signature) {
     // Ident the function a little.
-    funcSignature.insert(0, "  ");
-    size_t parameters_start = funcSignature.find('(');
+    func_signature.insert(0, "  ");
+    size_t parameters_start = func_signature.find('(');
 
     std::string endl_plus_tabulation = std::string(parameters_start + 1, ' ');
     endl_plus_tabulation[0] = '\n';
 
     size_t param_pos = parameters_start;
-    while ((param_pos = funcSignature.find(',', param_pos + 1)) !=
+    while ((param_pos = func_signature.find(',', param_pos + 1)) !=
             std::string::npos) {
-      funcSignature.insert(param_pos + 1, endl_plus_tabulation);
+      func_signature.insert(param_pos + 1, endl_plus_tabulation);
     }
 
-    return funcSignature;
+    return func_signature;
   }
 
  public:
@@ -234,32 +234,32 @@ class DebugOutput {
 
   /** @brief Returns detailed information about why could the error happen in
     *        the specified call.
-    * @param functionCall - The function call string.
+    * @param function_call - The function call string.
     */
-  static std::string GetDetailedErrorInfo(const std::string& functionCall) {
+  static std::string GetDetailedErrorInfo(const std::string& function_call) {
     if (!instance) {
       instance = new DebugOutput{};
     }
-    size_t errIdx = instance->getErrorIndex();
-    if (errIdx == NUM_ERRORS) {
+    size_t err_idx = instance->getErrorIndex();
+    if (err_idx == NUM_ERRORS) {
       return std::string{};
     }
 
     std::stringstream sstream;
 
-    size_t funcNameLen = functionCall.find_first_of('(');
+    size_t func_name_len = function_call.find_first_of('(');
     std::string funcName =
-      std::string(functionCall.begin(), functionCall.begin() + funcNameLen);
+      std::string(function_call.begin(), function_call.begin() + func_name_len);
 
-    if (instance->errorMap.find(funcName) != instance->errorMap.end() &&
-       !instance->errorMap[funcName].errors[errIdx].empty()) {
-      ErrorInfo errinfo = instance->errorMap[funcName];
+    if (instance->error_map.find(funcName) != instance->error_map.end() &&
+       !instance->error_map[funcName].errors[err_idx].empty()) {
+      ErrorInfo errinfo = instance->error_map[funcName];
       sstream << "The following OpenGL function: \n\n";
-      sstream << FormatedFuncSignature(errinfo.funcSignature) << "\n\n";
+      sstream << FormatedFuncSignature(errinfo.func_signature) << "\n\n";
       sstream << "Has generated the error because one of the "
                  "following(s) were true:\n";
-      for (size_t i = 0; i != errinfo.errors[errIdx].size(); ++i) {
-        sstream << errinfo.errors[errIdx][i] << std::endl;
+      for (size_t i = 0; i != errinfo.errors[err_idx].size(); ++i) {
+        sstream << errinfo.errors[err_idx][i] << std::endl;
       }
       if (errinfo.errors[ADDITIONAL_NOTES].size() != 0) {
         sstream << std::endl << "Note that: " << std::endl;
@@ -287,9 +287,11 @@ class DebugOutput {
 #else  // !OGLWRAP_DEBUG
 
 class DebugOutput {
+  using ErrorPrintFormatter = void(const ErrorMessage& error);
+
  public:
   static void AddErrorPrintFormatter(
-    std::function<ErrorPrintFormatter> printFormatter) {}
+    std::function<ErrorPrintFormatter> print_formatter) {}
 
   static void PrintError(ErrorMessage error) {}
 
@@ -299,7 +301,6 @@ class DebugOutput {
    *
    * The default callback function prints the error to stderr
    */
-
   static void GetDetailedErrorInfo(const std::string&, std::stringstream&) {}
 
   static std::string& LastUsedBindTarget() {
@@ -314,8 +315,6 @@ class DebugOutput {
   }
 
  private:
-  using ErrorPrintFormatter = void(const ErrorMessage& error);
-
   static DebugOutput *instance;
   static std::string *last_used_bind_target;
   static ErrorType last_error;
