@@ -31,8 +31,11 @@
 
 // Optional headers
 #if OGLWRAP_INCLUDE_EVERYTHING
+  #include "./texture.h"
   #include "./framebuffer.h"
   #include "./transfeedback.h"
+  #include "shapes/cube.h"
+  #include "shapes/full_screen_rect.h"
 #endif
 
 // Put a warning if someone forgot to undef a macro
