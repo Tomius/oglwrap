@@ -7,9 +7,8 @@
 #ifndef OGLWRAP_SHADER_H_
 #define OGLWRAP_SHADER_H_
 
-#include <cstring>
 #include <string>
-#include <memory>
+#include <vector>
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
@@ -30,13 +29,13 @@ namespace OGLWRAP_NAMESPACE_NAME {
  *        preprocessing on them.
  */
 class ShaderSource {
-  std::string src_; /// The source
+  std::string src_;
 
   #if OGLWRAP_DEBUG
-    std::string filename_; /// The file's name stored to make debugging easier.
+    std::string filename_;
   #endif
 
-public:
+ public:
   /// Default constructor.
   #if OGLWRAP_DEBUG
     ShaderSource() : filename_("Unnamed shader") { }
@@ -46,19 +45,19 @@ public:
 
   /// Loads in the shader from a file.
   /** @param file - The path to the file. */
-  ShaderSource(const std::string& file) {
-    sourceFile(file);
+  explicit ShaderSource(const std::string& file) {
+    set_source_file(file);
   }
 
   /// Adds a string as the shader source.
   /** @param source_string - The source string. */
-  void source(const std::string& source_string) {
+  void set_source(const std::string& source_string) {
     src_ = source_string;
   }
 
   /// Loads in the shader from a file.
   /** @param file - The path to the file. */
-  void sourceFile(const std::string& file) {
+  void set_source_file(const std::string& file) {
     #if OGLWRAP_DEBUG
       filename_ = file;
     #endif
@@ -86,8 +85,7 @@ public:
       if (macro_pos == std::string::npos) {
         throw std::invalid_argument(
           "ShaderSource::insert_macro_value is called for '" + filename_ +
-          "', but the shader doesn't have any macro named " + macro_name
-        );
+          "', but the shader doesn't have any macro named " + macro_name);
       }
     #endif
 
@@ -101,15 +99,14 @@ public:
 
   #if OGLWRAP_DEBUG
     /// Returns the file's name that was loaded in.
-    std::string const& getFileName() const {
-      return filename_;
-    }
+    const std::string& fileName() const { return filename_; }
   #endif
 
   /// Returns the source.
-  std::string const& getSource() const {
-    return src_;
-  }
+  std::string const& source() const { return src_; }
+
+  /// Returns the source.
+  std::string& source() { return src_; }
 };
 
 // -------======{[ Shader ]}======-------
@@ -119,8 +116,8 @@ public:
 /// A GLSL shader object used to control the drawing process.
 /** @see glCreateShader, glDeleteShader */
 class Shader {
-  globjects::Shader shader_; ///< The handle for the buffer.
-  bool compiled_; ///< Stores if the shader is compiled.
+  globjects::Shader shader_;  // The handle for the buffer.
+  bool compiled_;  // Stores if the shader is compiled.
 
   #if OGLWRAP_DEBUG
     /// Stores the source file's name if the shader was initialized from file.
@@ -130,10 +127,10 @@ class Shader {
  public:
   /// Creates the an empty shader object.
   #if OGLWRAP_DEBUG
-    Shader(ShaderType shader_t)
+    explicit Shader(ShaderType shader_t)
         : shader_(shader_t), compiled_(false), filename_("Unnamed shader") { }
   #else
-    Shader(ShaderType shader_t)
+    explicit Shader(ShaderType shader_t)
         : shader_(shader_t), compiled_(false) { }
   #endif
 
@@ -141,24 +138,22 @@ class Shader {
   /** @param file - The file to load and set as shader source.
     * @see glShaderSource */
   Shader(ShaderType shader_t, const std::string& file)
-    : shader_(shader_t)
-    , compiled_(false) {
-    sourceFile(file);
+      : shader_(shader_t), compiled_(false) {
+    set_source_file(file);
   }
 
   /// Creates a shader and sets the file as the shader source.
   /** @param src - The source of the shader code.
     * @see glShaderSource */
   Shader(ShaderType shader_t, const ShaderSource& src)
-    : shader_(shader_t)
-    , compiled_(false) {
-    source(src);
+      : shader_(shader_t), compiled_(false) {
+    set_source(src);
   }
 
   /// Uploads a string as the shader's source.
   /** @param source - string containing the shader code.
     * @see glShaderSource */
-  void source(const std::string& source) {
+  void set_source(const std::string& source) {
     const char *str = source.c_str();
     gl(ShaderSource(shader_, 1, &str, nullptr));
   }
@@ -166,10 +161,10 @@ class Shader {
   /// Uploads a ShaderSource as the shader's source.
   /** @param source - The source of the shader code.
     * @see glShaderSource */
-  void source(const ShaderSource& source) {
-    const char *str = source.getSource().c_str();
+  void set_source(const ShaderSource& source) {
+    const char *str = source.source().c_str();
     #if OGLWRAP_DEBUG
-      filename_ = source.getFileName();
+      filename_ = source.fileName();
     #endif
     gl(ShaderSource(shader_, 1, &str, nullptr));
   }
@@ -177,8 +172,8 @@ class Shader {
   /// Loads a file and uploads it as shader source
   /** @param file - the shader file's path
     * @see glShaderSource */
-  void sourceFile(const std::string& file)  {
-    source(ShaderSource(file));
+  void set_source_file(const std::string& file)  {
+    set_source(ShaderSource(file));
   }
 
 #if OGLWRAP_DEFINE_EVERYTHING || ( \
@@ -252,9 +247,9 @@ class Shader {
 class ComputeShader : public Shader {
  public:
   ComputeShader() : Shader(ShaderType::kComputeShader) { }
-  ComputeShader(const std::string& file)
+  explicit ComputeShader(const std::string& file)
     : Shader(ShaderType::kComputeShader, file) {}
-  ComputeShader(const ShaderSource& src)
+  explicit ComputeShader(const ShaderSource& src)
     : Shader(ShaderType::kComputeShader, src) {}
 };
 #endif  // GL_COMPUTE_SHADER
@@ -275,9 +270,9 @@ class ComputeShader : public Shader {
 class VertexShader : public Shader {
  public:
   VertexShader() : Shader(ShaderType::kVertexShader) { }
-  VertexShader(const std::string& file)
+  explicit VertexShader(const std::string& file)
     : Shader(ShaderType::kVertexShader, file) {}
-  VertexShader(const ShaderSource& src)
+  explicit VertexShader(const ShaderSource& src)
     : Shader(ShaderType::kVertexShader, src) {}
 };
 #endif  // GL_VERTEX_SHADER
@@ -298,9 +293,9 @@ class VertexShader : public Shader {
 class GeometryShader : public Shader {
  public:
   GeometryShader() : Shader(ShaderType::kGeometryShader) { }
-  GeometryShader(const std::string& file)
+  explicit GeometryShader(const std::string& file)
     : Shader(ShaderType::kGeometryShader, file) {}
-  GeometryShader(const ShaderSource& src)
+  explicit GeometryShader(const ShaderSource& src)
     : Shader(ShaderType::kGeometryShader, src) {}
 };
 #endif  // GL_GEOMETRY_SHADER
@@ -328,9 +323,9 @@ class GeometryShader : public Shader {
 class FragmentShader : public Shader {
  public:
   FragmentShader() : Shader(ShaderType::kFragmentShader) { }
-  FragmentShader(const std::string& file)
+  explicit FragmentShader(const std::string& file)
     : Shader(ShaderType::kFragmentShader, file) {}
-  FragmentShader(const ShaderSource& src)
+  explicit FragmentShader(const ShaderSource& src)
     : Shader(ShaderType::kFragmentShader, src) {}
 };
 #endif  // GL_FRAGMENT_SHADER
@@ -355,9 +350,9 @@ class FragmentShader : public Shader {
 class TessControlShader : public Shader {
  public:
   TessControlShader() : Shader(ShaderType::kTessControlShader) { }
-  TessControlShader(const std::string& file)
+  explicit TessControlShader(const std::string& file)
     : Shader(ShaderType::kTessControlShader, file) {}
-  TessControlShader(const ShaderSource& src)
+  explicit TessControlShader(const ShaderSource& src)
     : Shader(ShaderType::kTessControlShader, src) {}
 };
 #endif  // GL_TESS_CONTROL_SHADER
@@ -381,9 +376,9 @@ class TessControlShader : public Shader {
 class TessEvaluationShader : public Shader {
  public:
   TessEvaluationShader() : Shader(ShaderType::kTessEvaluationShader) { }
-  TessEvaluationShader(const std::string& file)
+  explicit TessEvaluationShader(const std::string& file)
     : Shader(ShaderType::kTessEvaluationShader, file) {}
-  TessEvaluationShader(const ShaderSource& src)
+  explicit TessEvaluationShader(const ShaderSource& src)
     : Shader(ShaderType::kTessEvaluationShader, src) {}
 };
 #endif  // GL_TESS_EVALUATION_SHADER
@@ -398,8 +393,8 @@ class TessEvaluationShader : public Shader {
  * @see glCreateProgram, glDeleteProgram
  */
 class Program {
-  globjects::Program program_; ///< The C OpenGL handle for the program.
-  std::vector<GLuint> shaders_; ///< IDs of the shaders attached to the program
+  globjects::Program program_;  // The C OpenGL handle for the program.
+  std::vector<GLuint> shaders_;  // IDs of the shaders attached to the program
 
   #if OGLWRAP_DEBUG
     /// The names of the shaders are stored to help debugging.
@@ -620,7 +615,7 @@ public:
 
 #endif  // glCreateProgram && glDeleteProgram && glDetachShader
 
-} // namespace oglwrap
+}  // namespace oglwrap
 
 #include "./undefine_internal_macros.h"
 
