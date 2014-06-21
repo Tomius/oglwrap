@@ -19,3 +19,4 @@ for file_name in file_list:
         enum = line[start_pos + len(def_str)-3 : end_pos]
         out.write(enum + '\n')
     out.close()
+    

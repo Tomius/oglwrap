@@ -110,12 +110,12 @@ class DebugOutput {
     // So we can use the __FILE__ macro to get the path (dir) of this file
     std::string filename(OGLWRAP_GET_FILENAME());
     auto dir = filename.find_last_of("/\\");
-    if (dir != std::string::npos) {
+    if (dir == std::string::npos) {
       // If the path to this file has no directory in it, then
       // we should search for just "GLerrors.txt"
       filename.erase();
     } else {
-      filename.erase(dir, std::string::npos);
+      filename.erase(dir+1, std::string::npos);
     }
     filename.append("GLerrors.txt");
 

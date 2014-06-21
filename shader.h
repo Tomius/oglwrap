@@ -217,6 +217,9 @@ class Shader {
   }
 #endif  // glCompileShader && glGetShaderInfoLog && glGetShaderiv
 
+  /// Returns if the shader is compiled
+  bool compiled() { return compiled_; }
+
   #if OGLWRAP_DEBUG
     /// Returns the file's name that was loaded in.
     const std::string& filename() const {
