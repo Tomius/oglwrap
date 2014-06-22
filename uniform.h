@@ -28,14 +28,14 @@ template<typename GLtype>
 class UniformObject {
  protected:
   GLuint location_;  // The C handle for the uniform's location
-  Program& program_;  // The program the uniform is in.
+  const Program& program_;  // The program the uniform is in.
 
   static constexpr GLuint kInvalidLocation = ~GLuint(0);
 
   /// Creates a UniformObject
   /// @param program - The program in which the uniform is used
   /// @param location - The location of the uniform in the program
-  UniformObject(Program& program, GLuint location = kInvalidLocation)
+  UniformObject(const Program& program, GLuint location = kInvalidLocation)
     : location_(location), program_(program) { }
 
  public:
@@ -99,7 +99,7 @@ class Uniform : public UniformObject<GLtype> {
     * @param program - The program to seek the uniform in. May call program.use().
     * @param identifier - The name of the uniform that is to be set.
     * @see glGetUniformLocation */
-  Uniform(Program& program, const std::string& identifier)
+  Uniform(const Program& program, const std::string& identifier)
       : UniformObject<GLtype>(program)
       , identifier_(identifier) {
     OGLWRAP_CHECK_ACTIVE_PROGRAM(program);
@@ -196,7 +196,7 @@ class IndexedUniform : public UniformObject<GLtype> {
     * @param identifier - The name of the uniform that is to be set.
     * @param idx - The index of the element in the uniform array.
     * @see glGetUniformLocation */
-  IndexedUniform(Program& program, const std::string& identifier, size_t idx)
+  IndexedUniform(const Program& program, const std::string& identifier, size_t idx)
       : UniformObject<GLtype>(program) {
     std::stringstream id;
     id << identifier << '[' << idx << ']';
@@ -300,7 +300,7 @@ class LazyUniform : public UniformObject<GLtype> {
     * doesn't have to be valid at the time this constructor is called.
     * @param program - The program in which the uniform is to be set.
     * @param identifier - The uniform's name. */
-  LazyUniform(Program& program, const std::string& identifier)
+  LazyUniform(const Program& program, const std::string& identifier)
     : UniformObject<GLtype>(program)
     , identifier_(identifier)
     , firstCall_(true) {
@@ -765,8 +765,8 @@ inline glm::uvec4 UniformObject<glm::uvec4>::get() {
 #endif
 
 #endif  // glGetUniformLocation
-} // namespace oglwrap
 
+}  // namespace oglwrap
 
 #include "./undefine_internal_macros.h"
 

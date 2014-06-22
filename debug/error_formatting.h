@@ -41,7 +41,9 @@ inline void OGLWRAP_PrintStackTrace(std::ostream& os) {
             "Did you compile with \'-g\' and \'-rdynamic\' flags?\n\n";
     } else {
       os << "Stack trace:" << std::endl;
-      for (size_t i = 0; i < size; ++i) {
+      // the first 6 entry in the stacktrace are just the error checking
+      // functions, don't print them
+      for (size_t i = 6; i < size; ++i) {
         os << stack_trace[i] << std::endl;
       }
       os << std::endl;
