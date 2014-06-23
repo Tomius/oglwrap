@@ -8,7 +8,7 @@
 #define OGLWRAP_TEXTURES_TEXTURE_CUBE_H_
 
 #include <stdexcept>
-#include "texture_base.h"
+#include "./texture_base.h"
 #include "../enums/texture2D_type.h"
 #include "../enums/texture_cube_target.h"
 
@@ -22,7 +22,7 @@ namespace OGLWRAP_NAMESPACE_NAME {
 /// A set of 6 2D textures, that is used to be sampled with 3D direction vectors.
 /** @see GL_TEXTURE_CUBE_MAP */
 class TextureCube : public TextureBase<TextureType::kTextureCubeMap> {
-public:
+ public:
   /// Uploads one a base image for one side of the cube.
   /** @param target - Specifies which one of the six sides of the cube to use as target.
     * @param internalFormat - Specifies the number, order, and size of the color components in the texture.
@@ -458,17 +458,18 @@ public:
   static void LoadTexture(TextureCubeTarget target, const std::string& file,
                           std::string format_string = "CSRGBA") {
     try {
-      bool srgb{false}, compressed{false};
+      bool srgb{false}, compressed{false}, alpha{false};
       size_t s_pos = format_string.find('S');
-      if(s_pos != std::string::npos) {
+      if( s_pos != std::string::npos) {
         srgb = true;
         format_string.erase(format_string.begin() + s_pos);
       }
       size_t c_pos = format_string.find('C');
-      if(c_pos != std::string::npos) {
+      if (c_pos != std::string::npos) {
         compressed = true;
         format_string.erase(format_string.begin() + c_pos);
       }
+      alpha = format_string.find('A') != std::string::npos;
 
       Magick::Image image = Magick::Image(file);
       Magick::Blob blob;
@@ -476,15 +477,19 @@ public:
 
       using InternalFormat = PixelDataInternalFormat;
       InternalFormat internal_format =
-        srgb ? (compressed ? InternalFormat::kCompressedSrgbAlpha :
-                             InternalFormat::kSrgb8Alpha8) :
-               (compressed ? InternalFormat::kCompressedRgba :
-                             InternalFormat::kRgba8);
+        srgb ? (compressed ? (alpha ? InternalFormat::kCompressedSrgbAlpha
+                                    : InternalFormat::kCompressedSrgb)
+                           : (alpha ? InternalFormat::kSrgb8Alpha8
+                                    : InternalFormat::kSrgb8))
+             : (compressed ? (alpha ? InternalFormat::kCompressedRgba
+                                    : InternalFormat::kCompressedRgb)
+                           : (alpha ? InternalFormat::kRgba8
+                                    : InternalFormat::kRgb8));
 
       bool bad_alignment = (image.columns() * format_string.length()) % 4 != 0;
       GLint unpack_aligment;
 
-      if(bad_alignment) {
+      if (bad_alignment) {
         gl(GetIntegerv(GL_UNPACK_ALIGNMENT, &unpack_aligment));
         gl(PixelStorei(GL_UNPACK_ALIGNMENT, 1));
       }
@@ -494,16 +499,15 @@ public:
         internal_format,
         image.columns(),
         image.rows(),
-        PixelDataFormat::kRgba,
+        alpha ? PixelDataFormat::kRgba : PixelDataFormat::kRgb,
         PixelDataType::kUnsignedByte,
-        blob.data()
-      );
+        blob.data());
 
-      if(bad_alignment) {
+      if (bad_alignment) {
         gl(PixelStorei(GL_UNPACK_ALIGNMENT, unpack_aligment));
       }
-    } catch(Magick::Error& Error) {
-      std::cerr << "Error loading texture: " << Error.what() << std::endl;
+    } catch (const Magick::Error& error) {
+      std::cerr << "Error loading texture: " << error.what() << std::endl;
     }
   }
   /// Loads in, and uploads an image for one side of the cube from a file using Magick++.
