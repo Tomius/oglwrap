@@ -274,7 +274,7 @@ public:
     * @param level - Specifies the mipmap level of \a texture to attach.
     * @see glFramebufferTexture1D */
   static void AttachTexture(FramebufferAttachment attachment,
-                            const Texture1D& texture, GLuint level) {
+                            const Texture1D& texture, GLuint level = 0) {
     gl(FramebufferTexture1D(
       GLenum(FBO_TYPE), GLenum(attachment), GL_TEXTURE_1D, texture.expose(), level
     ));
@@ -285,7 +285,7 @@ public:
     * @param level - Specifies the mipmap level of \a texture to attach.
     * @see glFramebufferTexture1D */
   BIND_CHECKED void attachTexture(FramebufferAttachment attachment,
-                                  const Texture1D& texture, GLuint level) const {
+                                  const Texture1D& texture, GLuint level = 0) const {
     OGLWRAP_CHECK_BINDING();
     AttachTexture(attachment, texture, level);
   }
@@ -300,7 +300,7 @@ public:
     * @see glFramebufferTexture2D */
   static void AttachTexture(FramebufferAttachment attachment,
                             const Texture2DBase<texture_t>& texture,
-                            GLint level) {
+                            GLint level = 0) {
     gl(FramebufferTexture2D(
       GLenum(FBO_TYPE), GLenum(attachment),
       GLenum(texture_t), texture.expose(), level
@@ -314,7 +314,7 @@ public:
     * @see glFramebufferTexture2D */
   BIND_CHECKED void attachTexture(FramebufferAttachment attachment,
                                   const Texture2DBase<texture_t>& texture,
-                                  GLint level) const {
+                                  GLint level = 0) const {
     OGLWRAP_CHECK_BINDING();
     AttachTexture(attachment, texture, level);
   }
@@ -329,7 +329,7 @@ public:
     * @see glFramebufferTexture2D */
   static void AttachTexture(FramebufferAttachment attachment,
                             TextureCubeTarget target,
-                            const TextureCube& texture, GLint level) {
+                            const TextureCube& texture, GLint level = 0) {
     gl(FramebufferTexture2D(
       GLenum(FBO_TYPE), GLenum(attachment),
       GLenum(target), texture.expose(), level
@@ -343,7 +343,7 @@ public:
     * @see glFramebufferTexture2D */
   BIND_CHECKED void attachTexture(FramebufferAttachment attachment,
                                   TextureCubeTarget target,
-                                  const TextureCube& texture, GLint level) const {
+                                  const TextureCube& texture, GLint level = 0) const {
     OGLWRAP_CHECK_BINDING();
     AttachTexture(attachment, target, texture, level);
   }
