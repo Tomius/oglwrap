@@ -4,8 +4,8 @@
     @brief Implements a rectangle that covers the entire screen.
 */
 
-#ifndef OGLWRAP_SHAPES_FULL_SCREEN_RECT_H_
-#define OGLWRAP_SHAPES_FULL_SCREEN_RECT_H_
+#ifndef OGLWRAP_SHAPES_RECTANGLE_H_
+#define OGLWRAP_SHAPES_RECTANGLE_H_
 
 #include "../buffer.h"
 #include "../context.h"
@@ -15,28 +15,33 @@
 
 namespace OGLWRAP_NAMESPACE_NAME {
 
-/// Class providing vertex attributes and instructions for rendering of a cube.
-class FullScreenRectangle {
+/// Class providing vertex attributes and instructions for rendering of a rectangle.
+class Rectangle {
   VertexArray vao_;
   ArrayBuffer positions_, tex_coords_;
-  bool is_setup_positions_, is_setup_tex_coords_;
+  bool has_setup_positions_, has_setup_tex_coords_;
 
  public:
   /// Constructs a rectangle that covers the entire screen.
-  FullScreenRectangle()
-    : is_setup_positions_(false)
-    , is_setup_tex_coords_(false)
+  Rectangle()
+    : has_setup_positions_(false)
+    , has_setup_tex_coords_(false)
   {}
 
-  /// Creates vertex positions, and uploads it to an attribute array.
-  /** Uploads the vertex positions (in NDC) data to an attribute array, and sets it up for use.
-    * Calling this function changes the currently active VAO and ArrayBuffer. */
-  /// @param attrib - The attribute array to use as destination.
+  /**
+   * @brief Creates vertex positions, and uploads it to an attribute array.
+   *
+   * Uploads the vertex positions (in NDC) data to an attribute array, and sets
+   * it up for use. Calling this function changes the currently active VAO and
+   * ArrayBuffer.
+   *
+   * @param attrib - The attribute array to use as destination.
+   */
   void setupPositions(VertexAttribArray attrib) {
-    if (!is_setup_positions_) {
-      is_setup_positions_ = true;
+    if (!has_setup_positions_) {
+      has_setup_positions_ = true;
     } else {
-      std::cerr << "FullScreenRectangle::setupPositions is called multiple "
+      std::cerr << "Rectangle::setupPositions is called multiple "
                    "times on the same object. If the two calls want to set "
                    "positions up into the same attribute position, then the "
                    "second call is unneccesary. If they want to set the "
@@ -61,15 +66,19 @@ class FullScreenRectangle {
     vao_.unbind();
   }
 
-  /// Creates vertex texture coordinates, and uploads it to an attribute array.
-  /** Uploads the vertex normals data to an attribute array, and sets it up for use.
-    * Calling this function changes the currently active VAO and ArrayBuffer. */
-  /// @param attrib - The attribute array to use as destination.
+  /**
+   * @brief Creates vertex texture coordinates, and uploads it to an attribute array.
+   *
+   * Uploads the vertex normals data to an attribute array, and sets it up for use.
+   * Calling this function changes the currently active VAO and ArrayBuffer.
+   *
+   * @param attrib - The attribute array to use as destination.
+   */
   void setupTexCoords(VertexAttribArray attrib, bool upside_down = false) {
-    if (!is_setup_tex_coords_) {
-      is_setup_tex_coords_ = true;
+    if (!has_setup_tex_coords_) {
+      has_setup_tex_coords_ = true;
     } else {
-      std::cerr << "FullScreenRectangle::setupTexCoords is called multiple "
+      std::cerr << "Rectangle::setupTexCoords is called multiple "
                    "times on the same object. If the two calls want to set "
                    "tex_coords up into the same attribute position, then the "
                    "second call is unneccesary. If they want to set the "
@@ -102,10 +111,10 @@ class FullScreenRectangle {
   }
 
 
-  /// Renders the image.
+  /// Renders the rectangle.
   /** This call changes the currently active VAO. */
   void render() {
-    if (is_setup_positions_) {
+    if (has_setup_positions_) {
       vao_.bind();
       DrawArrays(PrimType::kTriangleStrip, 0, 4);
       vao_.unbind();

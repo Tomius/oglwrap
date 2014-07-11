@@ -61,15 +61,15 @@ class ShaderSource {
     #if OGLWRAP_DEBUG
       filename_ = file;
     #endif
-    std::ifstream shaderFile((OGLWRAP_DEFAULT_SHADER_PATH + file).c_str());
-    if (!shaderFile.is_open()) {
+    std::ifstream shader_file((OGLWRAP_DEFAULT_SHADER_PATH + file).c_str());
+    if (!shader_file.is_open()) {
       throw std::runtime_error("Shader file '" + file + "' not found.");
     }
-    std::stringstream shaderString;
-    shaderString << shaderFile.rdbuf();
+    std::stringstream shader_string;
+    shader_string << shader_file.rdbuf();
 
     // Remove the EOF from the end of the string.
-    src_ = shaderString.str();
+    src_ = shader_string.str();
     if (src_[src_.length() - 1] == EOF) {
       src_.pop_back();
     }
@@ -182,10 +182,7 @@ class Shader {
   defined(glGetShaderInfoLog) \
 )
   /// Compiles the shader code.
-  /** If the compilation fails, it throws a std::runtime_error, containing the
-    * compilation info as .what(). The compilation happens automatically
-    * when the shader gets attached a program.
-    * @see glCompileShader, glGetShaderiv, glGetShaderInfoLog */
+  /** @see glCompileShader, glGetShaderiv, glGetShaderInfoLog */
   void compile()  {
     if (compiled_) {
       return;
@@ -198,15 +195,15 @@ class Shader {
     GLint status;
     gl(GetShaderiv(shader_, GL_COMPILE_STATUS, &status));
     if (status == GL_FALSE) {
-      GLint infoLogLength;
-      gl(GetShaderiv(shader_, GL_INFO_LOG_LENGTH, &infoLogLength));
+      GLint info_log_length;
+      gl(GetShaderiv(shader_, GL_INFO_LOG_LENGTH, &info_log_length));
 
-      std::unique_ptr<GLchar> strInfoLog{ new GLchar[infoLogLength + 1] };
-      gl(GetShaderInfoLog(shader_, infoLogLength, nullptr, strInfoLog.get()));
+      std::unique_ptr<GLchar> str_info_log{ new GLchar[info_log_length + 1] };
+      gl(GetShaderInfoLog(shader_, info_log_length, nullptr, str_info_log.get()));
 
       std::stringstream str;
         str << "Compile failure in shader '";
-        str << filename_ << "' :" << std::endl << strInfoLog.get();
+        str << filename_ << "' :" << std::endl << str_info_log.get();
 
       OGLWRAP_PRINT_FATAL_ERROR(
         "Shader compile failure",
@@ -404,12 +401,12 @@ class Program {
     std::vector<std::string> filenames_;
   #endif
 
-  /// Stores if the program is linked. Its a pointer, so .use() can be const.
-  const std::shared_ptr<bool> linked_;
+  /// Stores if the program is linked.
+  bool linked_;
 
 public:
   /// Creates an empty program object.
-  Program() : linked_(new bool{false}) {}
+  Program() : linked_(false) {}
 
   // The copies aren't special, thanks to std::shared_ptr,
   // even though i had to write destructor.
@@ -507,23 +504,23 @@ public:
   /** If the linking fails, it throws an
     * std::runtime_error containing the linking info.
     * @see glLinkProgram, glGetProgramiv, glGetProgramInfoLog */
-  const Program& link() const {
+  const Program& link() {
     gl(LinkProgram(program_));
-    *linked_ = true;
+    linked_ = true;
 
     #if OGLWRAP_DEBUG
     GLint status;
     gl(GetProgramiv(program_, GL_LINK_STATUS, &status));
     if (status == GL_FALSE) {
-      GLint infoLogLength;
-      gl(GetProgramiv(program_, GL_INFO_LOG_LENGTH, &infoLogLength));
+      GLint info_log_length;
+      gl(GetProgramiv(program_, GL_INFO_LOG_LENGTH, &info_log_length));
 
-      std::unique_ptr<GLchar> strInfoLog{ new GLchar[infoLogLength + 1] };
-      gl(GetProgramInfoLog(program_, infoLogLength, NULL, strInfoLog.get()));
+      std::unique_ptr<GLchar> str_info_log{ new GLchar[info_log_length + 1] };
+      gl(GetProgramInfoLog(program_, info_log_length, NULL, str_info_log.get()));
       std::stringstream str;
       str << "OpenGL failed to link the following shaders together: " << std::endl;
       str << getShaderNames() << std::endl;
-      str << "The error message: \n" << strInfoLog.get();
+      str << "The error message: \n" << str_info_log.get();
 
       OGLWRAP_PRINT_FATAL_ERROR(
         "Program link failure",
@@ -549,17 +546,17 @@ public:
     gl(ValidateProgram(program_));
     gl(GetProgramiv(program_, GL_VALIDATE_STATUS, &status));
     if (status == GL_FALSE) {
-      GLint infoLogLength;
-      gl(GetProgramiv(program_, GL_INFO_LOG_LENGTH, &infoLogLength));
+      GLint info_log_length;
+      gl(GetProgramiv(program_, GL_INFO_LOG_LENGTH, &info_log_length));
 
-      std::unique_ptr<GLchar> strInfoLog{ new GLchar[infoLogLength + 1] };
-      gl(GetProgramInfoLog(program_, infoLogLength, NULL, strInfoLog.get()));
+      std::unique_ptr<GLchar> str_info_log{ new GLchar[info_log_length + 1] };
+      gl(GetProgramInfoLog(program_, info_log_length, NULL, str_info_log.get()));
       std::stringstream str;
       str << "The validation of the program containing the "
       "following shaders failed:\n" << getShaderNames() << std::endl;
 
       str << "This program might generate GL_INVALID_OPERATION "
-      "when used for rendering \nThe validation info: " << strInfoLog.get();
+      "when used for rendering \nThe validation info: " << str_info_log.get();
 
       OGLWRAP_PRINT_ERROR(
         "Program validation failure",
@@ -574,8 +571,8 @@ public:
   /// Installs the program as a part of the current rendering state.
   /** @see glUseProgram */
   const Program& use() const {
-    if (!*linked_) {
-      link();
+    if (!linked_) {
+      const_cast<Program*>(this)->link();  // F*ck the system :)
     }
     gl(UseProgram(program_));
     return *this;

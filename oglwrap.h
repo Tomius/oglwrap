@@ -35,7 +35,7 @@
   #include "./framebuffer.h"
   #include "./transfeedback.h"
   #include "shapes/cube.h"
-  #include "shapes/full_screen_rect.h"
+  #include "shapes/rectangle.h"
 #endif
 
 // Put a warning if I forget to undef the internal macros
