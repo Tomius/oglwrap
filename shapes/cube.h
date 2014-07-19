@@ -9,9 +9,14 @@
 #ifndef OGLWRAP_SHAPES_CUBE_H_
 #define OGLWRAP_SHAPES_CUBE_H_
 
+#include <set>
 #include "../buffer.h"
 #include "../context.h"
+#include "../general.h"
 #include "../vertex_attrib.h"
+
+#define GLM_FORCE_RADIANS
+#include "../glm/glm/glm.hpp"
 
 #include "../define_internal_macros.h"
 
@@ -19,44 +24,65 @@ namespace OGLWRAP_NAMESPACE_NAME {
 
 /// Class providing vertex attributes and instructions for rendering of a cube.
 class Cube {
-  float w, h, d;
-
-  VertexArray vao;
-  ArrayBuffer positions, normals, tex_coords, tangents;
-  bool is_setup_positions_, is_setup_normals_, is_setup_tex_coords_, is_setup_tangents_;
+  VertexArray vao_;
+  ArrayBuffer buffer_;
 
 public:
+  enum AttributeType {kPosition, kNormal, kTexCoord, kTangent, kAttribTypeNum};
 
   /// Constructs a cube centered at the origin with the given width, height, depth.
   /** @param w,h,d - The width, height, depth of the cube, respectively. */
-  Cube(float w = 1.0f, float h = 1.0f, float d = 1.0f)
-    : w(w), h(h), d(d)
-    , is_setup_positions_(false)
-    , is_setup_normals_(false)
-    , is_setup_tex_coords_(false)
-    , is_setup_tangents_(false)
-  {}
-
-private:
-  /// Helper class for setupPositions
-  struct Vector3 {
-    float x, y, z;
-  };
-
-public:
-  /// Creates vertex positions, and uploads it to an attribute array.
-  /** Uploads the vertex positions data to an attribute array, and sets it up for use.
-    * Calling this function changes the currently active VAO and ArrayBuffer.
-    * @param attrib - The attribute array to use as destination. */
-  void setupPositions(VertexAttribArray attrib) {
-
-    if (is_setup_positions_) {
-      throw std::logic_error("Cube::setup_position is called multiply "
-                             "times on the same object");
-    } else {
-      is_setup_positions_ = true;
+  Cube(const std::set<AttributeType>& attribs = {kPosition}) {
+    std::vector<glm::vec3> data;
+    intptr_t offset[kAttribTypeNum]{};
+    if (attribs.find(kPosition) != attribs.end()) {
+      offset[kPosition] = data.size()*sizeof(glm::vec3);
+      createPositions(&data);
     }
 
+    if (attribs.find(kNormal) != attribs.end()) {
+      offset[kNormal] = data.size()*sizeof(glm::vec3);
+      createNormals(&data);
+    }
+
+    if (attribs.find(kTexCoord) != attribs.end()) {
+      offset[kTexCoord] = data.size()*sizeof(glm::vec3);
+      createTexCoords(&data);
+    }
+
+    if (attribs.find(kTangent) != attribs.end()) {
+      offset[kTangent] = data.size()*sizeof(glm::vec3);
+      createTangents(&data);
+    }
+
+    vao_.bind();
+    buffer_.bind();
+    buffer_.data(data);
+    for (int i = 0; i < kAttribTypeNum; ++i) {
+      if (attribs.find(AttributeType(i)) != attribs.end()) {
+        gl::VertexAttribArray(i).pointer(3, DataType::kFloat, false, 0,
+                                         (const void *)offset[i]).enable();
+      }
+    }
+    vao_.unbind();
+  }
+
+  /// Draws the cube.
+  /** This call changes the currently active VAO. */
+  void render() {
+    vao_.bind();
+    DrawArrays(PrimType::kTriangles, 0, 108);
+    vao_.unbind();
+  }
+
+  /// Returns the face winding of the cube created by this class.
+  FaceOrientation faceWinding() const {
+    return FaceOrientation::kCw;
+  }
+
+private:
+  /// Creates vertex positions.
+  void createPositions(std::vector<glm::vec3>* data) {
     /*       (E)-----(A)
              /|      /|
             / |     / |
@@ -68,21 +94,16 @@ public:
 
     // Note: Positive Z is towards you!
 
-    const float half_w = w/2;
-    const float half_h = h/2;
-    const float half_d = d/2;
+    glm::vec3 A = {+0.5f, +0.5f, -0.5f};
+    glm::vec3 B = {+0.5f, +0.5f, +0.5f};
+    glm::vec3 C = {+0.5f, -0.5f, +0.5f};
+    glm::vec3 D = {+0.5f, -0.5f, -0.5f};
+    glm::vec3 E = {-0.5f, +0.5f, -0.5f};
+    glm::vec3 F = {-0.5f, +0.5f, +0.5f};
+    glm::vec3 G = {-0.5f, -0.5f, +0.5f};
+    glm::vec3 H = {-0.5f, -0.5f, -0.5f};
 
-
-    Vector3 A = {+half_w, +half_h, -half_d};
-    Vector3 B = {+half_w, +half_h, +half_d};
-    Vector3 C = {+half_w, -half_h, +half_d};
-    Vector3 D = {+half_w, -half_h, -half_d};
-    Vector3 E = {-half_w, +half_h, -half_d};
-    Vector3 F = {-half_w, +half_h, +half_d};
-    Vector3 G = {-half_w, -half_h, +half_d};
-    Vector3 H = {-half_w, -half_h, -half_d};
-
-    const Vector3 pos[] = {
+    const glm::vec3 pos[] = {
       A, D, B,    C, B, D,
       A, B, E,    F, E, B,
       B, C, F,    G, F, C,
@@ -91,28 +112,12 @@ public:
       E, H, A,    D, A, H
     };
 
-    // Care with -fipa-pure-const flag
-    vao.bind();
-    positions.bind();
-    positions.data(sizeof(pos), pos);
-    attrib.setup<glm::vec3>().enable();
-    vao.unbind();
+    data->insert(data->end(), std::begin(pos), std::end(pos));
   }
 
-  /// Creates vertex normals, and uploads it to an attribute array.
-  /** Uploads the vertex normals data to an attribute array, and sets it up for use.
-    * Calling this function changes the currently active VAO and ArrayBuffer.
-    * @param attrib - The attribute array to use as destination. */
-  void setupNormals(VertexAttribArray attrib) {
-
-    if (is_setup_normals_) {
-      throw std::logic_error("Cube::setupNormals is called multiply "
-                             "times on the same object");
-    } else {
-      is_setup_normals_ = true;
-    }
-
-    const float n[6][3] = {
+  /// Creates vertex normals.
+  void createNormals(std::vector<glm::vec3>* data) {
+    const glm::vec3 n[6] = {
       {+1,  0,  0},
       { 0, +1,  0},
       { 0,  0, +1},
@@ -121,36 +126,15 @@ public:
       { 0,  0, -1}
     };
 
-    std::vector<float> dest(108);
-    auto iter = dest.begin();
     for (int face = 0; face < 6; ++face) {
       for (int vertex = 0; vertex < 6; ++vertex) {
-        for (int i = 0; i < 3; ++i) {
-          *iter++ = n[face][i];
-        }
+        data->push_back(n[face]);
       }
     }
-
-    vao.bind();
-    normals.bind();
-    normals.data(dest);
-    attrib.setup<glm::vec3>().enable();
-    vao.unbind();
   };
 
-  /// Creates vertex texture coordinates, and uploads it to an attribute array.
-  /** Uploads the vertex normals data to an attribute array, and sets it up for use.
-    * Calling this function changes the currently active VAO and ArrayBuffer.
-    * @param attrib - The attribute array to use as destination. */
-  void setupTexCoords(VertexAttribArray attrib) {
-
-    if (is_setup_tex_coords_) {
-      throw std::logic_error("Cube::setupTexCoords is called multiply "
-                             "times on the same object");
-    } else {
-      is_setup_tex_coords_ = true;
-    }
-
+  /// Creates vertex texture coordinates.
+  void createTexCoords(std::vector<glm::vec3>* data) {
     const float n[6][2] = {
       {+1, +1},
       {+1,  0},
@@ -160,37 +144,16 @@ public:
       {+1,  0}
     };
 
-    std::vector<float> dest(108);
-    auto iter = dest.begin();
     for (int face = 0; face < 6; ++face) {
       for (int vertex = 0; vertex < 6; ++vertex) {
-        for (int i = 0; i < 2; ++i) {
-          *iter++ = n[vertex][i];
-        }
-        *iter++ = face;
+        data->emplace_back(n[vertex][0], n[vertex][1], face);
       }
     }
-
-    vao.bind();
-    tex_coords.bind();
-    tex_coords.data(dest);
-    attrib.setup<glm::vec3>().enable();
-    vao.unbind();
   }
 
-  /// Creates vertex tangents, and uploads it to an attribute array.
-  /** Uploads the tangents normals data to an attribute array, and sets it up for use.
-    * Calling this function changes the currently active VAO and ArrayBuffer.
-    * @param attrib - The attribute array to use as destination. */
-  void setupTangents(VertexAttribArray attrib) {
-    if (is_setup_tangents_) {
-      throw std::logic_error("Cube::setupTangents is called multiply "
-                             "times on the same object");
-    } else {
-      is_setup_tangents_ = true;
-    }
-
-    const float n[6][3] = {
+  /// Creates vertex tangents.
+  void createTangents(std::vector<glm::vec3>* data) {
+    const glm::vec3 n[6] = {
       { 0,  0, -1},
       {+1,  0,  0},
       {+1,  0,  0},
@@ -199,50 +162,15 @@ public:
       {-1,  0,  0}
     };
 
-    std::vector<float> dest(108);
-    auto iter = dest.begin();
     for (int face = 0; face < 6; ++face) {
       for (int vertex = 0; vertex < 6; ++vertex) {
-        for (int i = 0; i < 3; ++i) {
-          *iter++ = n[face][i];
-        }
+        data->push_back(n[face]);
       }
     }
-
-    vao.bind();
-    tangents.bind();
-    tangents.data(dest);
-    attrib.setup<glm::vec3>().enable();
-    vao.unbind();
-  }
-
-  /// Draws the cube.
-  /** This call changes the currently active VAO. */
-  void render() {
-    if (is_setup_positions_) {
-      vao.bind();
-      DrawArrays(PrimType::kTriangles, 0, 108 * sizeof(float));
-      vao.unbind();
-    }
-  }
-
-  /// Returns the face winding of the cube created by this class.
-  FaceOrientation faceWinding() const {
-    return FaceOrientation::kCw;
-  }
-
-  /// Returns the center of the cube's bounding sphere
-  glm::vec3 bSphereCenter() const {
-    return glm::vec3(0.0f);
-  }
-
-  /// Returns the radius of the cube's bounding sphere
-  float bSphereRadius() const {
-    return sqrt(w*w + h*h + d*d);
   }
 };
 
-} // Namespace oglwrap
+}  // namespace oglwrap
 
 #include "../undefine_internal_macros.h"
 
