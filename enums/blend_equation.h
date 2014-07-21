@@ -6,7 +6,7 @@
 #include "../config.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
-inline namespace enums {
+namespace enums {
 
 enum class BlendEquation : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FUNC_ADD)
@@ -26,8 +26,8 @@ enum class BlendEquation : GLenum {
 #endif
 };
 
-} // namespace enums
-
-} // namespace oglwrap
+}  // namespace enums
+using namespace enums;
+}  // namespace oglwrap
 
 #endif

@@ -7,8 +7,12 @@ This project is mainly for personal use, and its interface might change often.
 If you need a object-oriented OpenGL wrapper with long term compatibility
 take a look at [oglplus](https://github.com/matus-chochlik/oglplus) or [oogl](https://github.com/Overv/OOGL).
 
-Features:
+Dependencies:
 -------------
+* [GLM](https://github.com/g-truc/glm)
+
+Features:
+---------
 * Header only, platform-independent
 * No need to configure it per machine (but you might want some configuration using macros per projects)
 * Has full code-completion support

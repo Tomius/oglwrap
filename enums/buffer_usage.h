@@ -6,7 +6,7 @@
 #include "../config.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
-inline namespace enums {
+namespace enums {
 
 enum class BufferUsage : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_STREAM_DRAW)
@@ -38,8 +38,8 @@ enum class BufferUsage : GLenum {
 #endif
 };
 
-} // namespace enums
-
-} // namespace oglwrap
+}  // namespace enums
+using namespace enums;
+}  // namespace oglwrap
 
 #endif

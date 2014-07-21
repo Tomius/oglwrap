@@ -6,7 +6,7 @@
 #include "../config.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
-inline namespace enums {
+namespace enums {
 
 enum class HintTarget : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRAGMENT_SHADER_DERIVATIVE_HINT)
@@ -23,8 +23,8 @@ enum class HintTarget : GLenum {
 #endif
 };
 
-} // namespace enums
-
-} // namespace oglwrap
+}  // namespace enums
+using namespace enums;
+}  // namespace oglwrap
 
 #endif

@@ -8,7 +8,7 @@
 #include "indexed_buffer_type.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
-inline namespace enums {
+namespace enums {
 
 enum class IndexedBufferBinding : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ATOMIC_COUNTER_BUFFER_BINDING)
@@ -25,8 +25,8 @@ enum class IndexedBufferBinding : GLenum {
 #endif
 };
 
-} // namespace enums
-
+}  // namespace enums
+using namespace enums;
 inline IndexedBufferBinding GetBindingTarget(IndexedBufferType type) {
   IndexedBufferBinding target;
 
@@ -60,6 +60,6 @@ inline IndexedBufferBinding GetBindingTarget(IndexedBufferType type) {
  return target;
 }
 
-} // namespace oglwrap
+}  // namespace oglwrap
 
 #endif

@@ -8,7 +8,7 @@
 #include "buffer_type.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
-inline namespace enums {
+namespace enums {
 
 enum class BufferBinding : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ARRAY_BUFFER_BINDING)
@@ -52,8 +52,8 @@ enum class BufferBinding : GLenum {
 #endif
 };
 
-} // namespace enums
-
+}  // namespace enums
+using namespace enums;
 inline BufferBinding GetBindingTarget(BufferType type) {
   BufferBinding target;
 
@@ -141,6 +141,6 @@ inline BufferBinding GetBindingTarget(BufferType type) {
  return target;
 }
 
-} // namespace oglwrap
+}  // namespace oglwrap
 
 #endif

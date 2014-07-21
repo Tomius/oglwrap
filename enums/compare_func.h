@@ -6,7 +6,7 @@
 #include "../config.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
-inline namespace enums {
+namespace enums {
 
 enum class CompareFunc : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LEQUAL)
@@ -35,8 +35,8 @@ enum class CompareFunc : GLenum {
 #endif
 };
 
-} // namespace enums
-
-} // namespace oglwrap
+}  // namespace enums
+using namespace enums;
+}  // namespace oglwrap
 
 #endif

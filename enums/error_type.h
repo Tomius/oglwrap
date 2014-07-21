@@ -6,7 +6,7 @@
 #include "../config.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
-inline namespace enums {
+namespace enums {
 
 enum class ErrorType : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_NO_ERROR)
@@ -38,8 +38,8 @@ enum class ErrorType : GLenum {
 #endif
 };
 
-} // namespace enums
-
-} // namespace oglwrap
+}  // namespace enums
+using namespace enums;
+}  // namespace oglwrap
 
 #endif

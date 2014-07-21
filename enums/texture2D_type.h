@@ -6,7 +6,7 @@
 #include "../config.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
-inline namespace enums {
+namespace enums {
 
 enum class Texture2DType : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_2D)
@@ -23,8 +23,8 @@ enum class Texture2DType : GLenum {
 #endif
 };
 
-} // namespace enums
-
-} // namespace oglwrap
+}  // namespace enums
+using namespace enums;
+}  // namespace oglwrap
 
 #endif

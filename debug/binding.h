@@ -19,7 +19,7 @@ namespace OGLWRAP_NAMESPACE_NAME {
 /** Only if OGLWRAP_BINDCHECK is defined true */
 #define OGLWRAP_CHECK_BINDING() \
   if (!isBound()) { \
-    OGLWRAP_print_another_object_is_bound_error(__FILE__, __PRETTY_FUNCTION__, __LINE__); \
+    OGLWRAP_print_another_object_is_bound_error(__FILE__, OGLWRAP_FUNCTION_MACRO, __LINE__); \
     bind(); \
   }
 
@@ -27,14 +27,14 @@ namespace OGLWRAP_NAMESPACE_NAME {
 /** Only if OGLWRAP_BINDCHECK is defined true */
 #define OGLWRAP_CHECK_BINDING2() \
   if (!isBound()) { \
-    OGLWRAP_print_another_object_is_bound_error(__FILE__, __PRETTY_FUNCTION__, __LINE__); \
+    OGLWRAP_print_another_object_is_bound_error(__FILE__, OGLWRAP_FUNCTION_MACRO, __LINE__); \
   }
 
 /// Calls the isBoundFunc function, and prints an error and calls bindFunc if it returns false.
 /** Only if OGLWRAP_BINDCHECK is defined true */
 #define OGLWRAP_CHECK_BINDING_EXPLICIT(isBoundFunc, bindFunc) \
   if (!isBoundFunc) { \
-    OGLWRAP_print_another_object_is_bound_error(__FILE__, __PRETTY_FUNCTION__, __LINE__); \
+    OGLWRAP_print_another_object_is_bound_error(__FILE__, OGLWRAP_FUNCTION_MACRO, __LINE__); \
     bindFunc; \
   }
 
@@ -42,7 +42,7 @@ namespace OGLWRAP_NAMESPACE_NAME {
 /** Only if OGLWRAP_BINDCHECK is defined true */
 #define OGLWRAP_CHECK_BINDING2_EXPLICIT(isBoundFunc) \
   if (!isBoundFunc) { \
-    OGLWRAP_print_another_object_is_bound_error(__FILE__, __PRETTY_FUNCTION__, __LINE__); \
+    OGLWRAP_print_another_object_is_bound_error(__FILE__, OGLWRAP_FUNCTION_MACRO, __LINE__); \
   }
 
 /// Checks if the object name '0' is bound to the given target, and prints error if it is.
@@ -52,7 +52,7 @@ namespace OGLWRAP_NAMESPACE_NAME {
   GLint __currently_bound_target; \
   glGetIntegerv(bindTarget, &__currently_bound_target); \
   if (__currently_bound_target == 0) \
-    OGLWRAP_print_default_object_is_bound_error(__FILE__, __PRETTY_FUNCTION__, __LINE__);
+    OGLWRAP_print_default_object_is_bound_error(__FILE__, OGLWRAP_FUNCTION_MACRO, __LINE__);
 
 /// Checks if the object name '0' is bound to the target explicitly given by its name, and prints error if it is.
 /** Only if OGLWRAP_BINDCHECK is defined true
@@ -62,7 +62,7 @@ namespace OGLWRAP_NAMESPACE_NAME {
   GLint __currently_bound_target_for_##bindTarget; \
   glGetIntegerv(bindTarget, &__currently_bound_target_for_##bindTarget); \
   if (__currently_bound_target_for_##bindTarget == 0) \
-    OGLWRAP_print_default_object_is_bound_error(__FILE__, __PRETTY_FUNCTION__, __LINE__);
+    OGLWRAP_print_default_object_is_bound_error(__FILE__, OGLWRAP_FUNCTION_MACRO, __LINE__);
 
 /// A function used by OGLWRAP_CHECK_FOR_DEFAULT_BINDING() macro
 inline void OGLWRAP_print_another_object_is_bound_error(const char *file,
@@ -99,7 +99,7 @@ inline void OGLWRAP_print_default_object_is_bound_error(const char *file,
 #define OGLWRAP_CHECK_ACTIVE_PROGRAM(program)                                           \
   if (!program.isActive()) {                                                    \
     OGLWRAP_print_another_program_is_active_error(                              \
-      __FILE__, __PRETTY_FUNCTION__, __LINE__                                   \
+      __FILE__, OGLWRAP_FUNCTION_MACRO, __LINE__                                   \
     );                                                                          \
     program.use();                                                              \
   }

@@ -7,10 +7,18 @@
 #ifndef OGLWRAP_DEBUG_ERROR_CHECKING_H_
 #define OGLWRAP_DEBUG_ERROR_CHECKING_H_
 
-#include "debug_output.h"
+#include "./debug_output.h"
 #include "../context/errors.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
+
+#ifndef OGLWRAP_FUNCTION_MACRO
+  #if __PRETTY_FUNCTION__
+    #define OGLWRAP_FUNCTION_MACRO __PRETTY_FUNCTION__
+  #else
+    #define OGLWRAP_FUNCTION_MACRO __FUNCTION__
+  #endif
+#endif
 
 #if OGLWRAP_DEBUG
 
@@ -31,18 +39,18 @@ namespace OGLWRAP_NAMESPACE_NAME {
 #define OGLWRAP_PRINT_IF_ERROR(cond, title, message) \
   if (DebugOutput::LastError() == cond) { \
     DebugOutput::PrintError( \
-      ErrorMessage{title, message, __FILE__, __PRETTY_FUNCTION__, __LINE__}  \
+      ErrorMessage{title, message, __FILE__, OGLWRAP_FUNCTION_MACRO, __LINE__}  \
     ); \
   }
 
 #define OGLWRAP_PRINT_ERROR(title, message) \
   DebugOutput::PrintError( \
-    ErrorMessage{title, message, __FILE__, __PRETTY_FUNCTION__, __LINE__}  \
+    ErrorMessage{title, message, __FILE__, OGLWRAP_FUNCTION_MACRO, __LINE__}  \
   );
 
   #define OGLWRAP_PRINT_FATAL_ERROR(title, message) \
   DebugOutput::PrintError( \
-    ErrorMessage{title, message, __FILE__, __PRETTY_FUNCTION__, __LINE__, "", true}  \
+    ErrorMessage{title, message, __FILE__, OGLWRAP_FUNCTION_MACRO, __LINE__, "", true}  \
   );
 
 /**
@@ -56,7 +64,7 @@ namespace OGLWRAP_NAMESPACE_NAME {
  * @see glGetError
  */
 #define OGLWRAP_CHECK_ERROR() \
-  OGLWRAP_NAMESPACE_NAME::OGLWRAP_CheckError(__FILE__, __PRETTY_FUNCTION__, __LINE__)
+  OGLWRAP_NAMESPACE_NAME::OGLWRAP_CheckError(__FILE__, OGLWRAP_FUNCTION_MACRO, __LINE__)
 
 /**
  * @brief Same as OGLWRAP_CHECK_ERROR, but you can specify the called
@@ -64,7 +72,7 @@ namespace OGLWRAP_NAMESPACE_NAME {
  * @see OGLWRAP_CHECK_ERROR
  */
 #define OGLWRAP_CHECK_ERROR_NAMED(glfunc) \
-  OGLWRAP_NAMESPACE_NAME::OGLWRAP_CheckError(__FILE__, __PRETTY_FUNCTION__, __LINE__, glfunc)
+  OGLWRAP_NAMESPACE_NAME::OGLWRAP_CheckError(__FILE__, OGLWRAP_FUNCTION_MACRO, __LINE__, glfunc)
 
 
 inline void OGLWRAP_CheckError(const char *file,

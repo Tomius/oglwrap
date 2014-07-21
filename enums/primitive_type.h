@@ -6,7 +6,7 @@
 #include "../config.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
-inline namespace enums {
+namespace enums {
 
 enum class PrimitiveType : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_POINTS)
@@ -47,8 +47,8 @@ enum class PrimitiveType : GLenum {
 #endif
 };
 
-} // namespace enums
-
-} // namespace oglwrap
+}  // namespace enums
+using namespace enums;
+}  // namespace oglwrap
 
 #endif

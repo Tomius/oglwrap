@@ -8,7 +8,7 @@
 #include "texture_type.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
-inline namespace enums {
+namespace enums {
 
 enum class TextureBinding : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_BINDING_1D)
@@ -34,8 +34,8 @@ enum class TextureBinding : GLenum {
 #endif
 };
 
-} // namespace enums
-
+}  // namespace enums
+using namespace enums;
 inline TextureBinding GetBindingTarget(TextureType type) {
   TextureBinding target;
 
@@ -87,6 +87,6 @@ inline TextureBinding GetBindingTarget(TextureType type) {
  return target;
 }
 
-} // namespace oglwrap
+}  // namespace oglwrap
 
 #endif

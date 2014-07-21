@@ -7,8 +7,8 @@
 #include <string>
 
 #define GLM_FORCE_RADIANS
-#include "../glm/glm/glm.hpp"
-#include "../glm/glm/gtc/type_ptr.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 template <typename T, glm::precision P>
 /// Prints a glm vector to a given ostream.

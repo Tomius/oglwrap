@@ -19,7 +19,7 @@ def WriteHeader(file_list, out):
   out.write("""#include "./define_internal_macros.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
-inline namespace enums {
+namespace enums {
 namespace smart_enums {
 
 """)
@@ -29,6 +29,7 @@ def WriteFooter(enum_dict, out, instances):
   out.write(instances)
   out.write("""
 } // namespace enums
+using namespace enums;
 } // namespace oglwrap
 
 #include "./undefine_internal_macros.h"
@@ -55,13 +56,19 @@ def WriteEnums(enum_dict, out):
     out.write(ifdef)
     enum = CamelCase(gl_enum[3:])
     out.write('struct ' + enum + 'Enum {\n')
+    out.write('#if __has_feature(cxx_constexpr)\n')
     out.write('  constexpr ' + enum + 'Enum() { }\n')
     for enum_class in enum_dict[gl_enum]:
       out.write('  constexpr operator ' + enum_class +
                 '() const { return ' + enum_class + '(' + gl_enum + '); }\n')
+    out.write('#else\n')
+    for enum_class in enum_dict[gl_enum]:
+      out.write('  operator ' + enum_class +
+                '() const { return ' + enum_class + '(' + gl_enum + '); }\n')
+    out.write('#endif\n')
     out.write('};\n')
     out.write('#endif\n\n')
-    instances += ifdef + '  constexpr smart_enums::' + enum + 'Enum k' + enum + ';\n#endif\n'
+    instances += ifdef + '#if __has_feature(cxx_constexpr)\n  constexpr smart_enums::' + enum + 'Enum k' + enum + ';\n#else\n  static smart_enums::' + enum + 'Enum k' + enum + ';\n#endif\n#endif\n'
   return instances
 
 

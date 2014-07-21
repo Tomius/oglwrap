@@ -6,7 +6,7 @@
 #include "../config.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
-inline namespace enums {
+namespace enums {
 
 enum class PixelStorageMode : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PACK_SWAP_BYTES)
@@ -83,8 +83,8 @@ enum class PixelStorageMode : GLenum {
 #endif
 };
 
-} // namespace enums
-
-} // namespace oglwrap
+}  // namespace enums
+using namespace enums;
+}  // namespace oglwrap
 
 #endif

@@ -4,7 +4,7 @@
 #define OGLWRAP_CONTEXT_RASTERIZATION_H_
 
 #define GLM_FORCE_RADIANS
-#include "../glm/glm/glm.hpp"
+#include <glm/glm.hpp>
 
 #include "../config.h"
 #include "../enums/face.h"

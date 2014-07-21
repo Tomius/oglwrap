@@ -8,7 +8,7 @@
 #include "framebuffer_type.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
-inline namespace enums {
+namespace enums {
 
 enum class FramebufferBinding : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_READ_FRAMEBUFFER_BINDING)
@@ -22,8 +22,8 @@ enum class FramebufferBinding : GLenum {
 #endif
 };
 
-} // namespace enums
-
+}  // namespace enums
+using namespace enums;
 inline FramebufferBinding GetBindingTarget(FramebufferType type) {
   FramebufferBinding target;
 
@@ -51,6 +51,6 @@ inline FramebufferBinding GetBindingTarget(FramebufferType type) {
  return target;
 }
 
-} // namespace oglwrap
+}  // namespace oglwrap
 
 #endif

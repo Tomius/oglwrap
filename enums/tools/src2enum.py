@@ -17,7 +17,7 @@ def WriteEnum(file_name, file_base_name, out, is_binding):
     out.write('#include "' + file_name.replace('binding.txt', 'type.h') + '"\n')
   out.write("""
 namespace OGLWRAP_NAMESPACE_NAME {
-inline namespace enums {
+namespace enums {
 
 enum class """)
   out.write(CamelCase(file_base_name) + ' : GLenum {\n')
@@ -30,8 +30,8 @@ enum class """)
 
   out.write("""};
 
-} // namespace enums
-
+}  // namespace enums
+using namespace enums;
 """)
 
 def HandleNormalEnumFile(file_name, file_base_name, out):
@@ -64,7 +64,7 @@ def HandleBindingEnumFile(file_name, file_base_name, out):
   out.write('  }\n\n return target;\n}\n\n')
 
 def EndFile(out):
-  out.write("""} // namespace oglwrap
+  out.write("""}  // namespace oglwrap
 
 #endif
 """)

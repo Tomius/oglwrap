@@ -6,7 +6,7 @@
 #include "../config.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
-inline namespace enums {
+namespace enums {
 
 enum class ColorBuffer : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_NONE)
@@ -89,8 +89,8 @@ enum class ColorBuffer : GLenum {
 #endif
 };
 
-} // namespace enums
-
-} // namespace oglwrap
+}  // namespace enums
+using namespace enums;
+}  // namespace oglwrap
 
 #endif
