@@ -4,6 +4,7 @@
 #define OGLWRAP_ENUMS_BUFFER_TYPE_H_
 
 #include "../config.h"
+#include <GL/glew.h>
 
 namespace OGLWRAP_NAMESPACE_NAME {
 namespace enums {

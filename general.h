@@ -13,6 +13,10 @@
 
 #include "config.h"
 
+#ifndef M_PI
+  #define M_PI 3.14159265359f
+#endif
+
 namespace OGLWRAP_NAMESPACE_NAME {
 
 /// A template to convert an angle value from degrees to radians

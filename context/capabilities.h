@@ -16,7 +16,7 @@ namespace OGLWRAP_NAMESPACE_NAME {
 /// Enables a capability.
 /** @see glEnable */
 inline void Enable(Capability capability) {
-	gl(Enable(GLenum(capability)));
+  gl(Enable(GLenum(capability)));
 }
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glEnablei)
