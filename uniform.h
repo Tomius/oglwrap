@@ -30,7 +30,7 @@ class UniformObject {
   GLuint location_;  // The C handle for the uniform's location
   const Program& program_;  // The program the uniform is in.
 
-  static constexpr GLuint kInvalidLocation = ~GLuint(0);
+  static const GLuint kInvalidLocation = ~GLuint(0);
 
   /// Creates a UniformObject
   /// @param program - The program in which the uniform is used

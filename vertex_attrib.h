@@ -110,7 +110,7 @@ protected:
     inited_ = true;
   }
 
-  static constexpr GLuint kInvalidLocation = ~GLuint(0);
+  static const GLuint kInvalidLocation = ~GLuint(0);
 
 public:
   /// Default constructor, sets the location to invalid.

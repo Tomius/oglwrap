@@ -45,15 +45,7 @@ class DebugOutput {
     ADDITIONAL_NOTES = NUM_ERRORS
   };
 
-  const char* glErrorNames[NUM_ERRORS] = {
-    "GL_INVALID_ENUM",
-    "GL_INVALID_VALUE",
-    "GL_INVALID_OPERATION",
-    "GL_STACK_OVERFLOW",
-    "GL_STACK_UNDERFLOW",
-    "GL_OUT_OF_MEMORY",
-    "GL_INVALID_FRAMEBUFFER_OPERATION"
-  };
+  const char* glErrorNames[NUM_ERRORS];
 
   struct ErrorInfo {
     std::string func_signature;
@@ -91,9 +83,7 @@ class DebugOutput {
     }
   }
 
-
-  using ErrorPrintFormatter = void(ErrorMessage error);
-  std::function<ErrorPrintFormatter> error_printer{OGLWRAP_PrintError};
+  std::function<void(ErrorMessage error)> error_printer{ OGLWRAP_PrintError };
 
   // These static variables are dynamically allocated at the first use,
   // and that memory is never freed. See the link below to understand why:
@@ -106,6 +96,14 @@ class DebugOutput {
 
   /// Loads in the list of OpenGL errors.
   DebugOutput() {
+    glErrorNames[0] = "GL_INVALID_ENUM";
+    glErrorNames[1] = "GL_INVALID_VALUE";
+    glErrorNames[2] = "GL_INVALID_OPERATION";
+    glErrorNames[3] = "GL_STACK_OVERFLOW";
+    glErrorNames[4] = "GL_STACK_UNDERFLOW";
+    glErrorNames[5] = "GL_OUT_OF_MEMORY";
+    glErrorNames[6] = "GL_INVALID_FRAMEBUFFER_OPERATION";
+
     // The GLerrors.txt should be in the same folder as this file.
     // So we can use the __FILE__ macro to get the path (dir) of this file
     std::string filename(OGLWRAP_GET_FILENAME());
@@ -216,7 +214,7 @@ class DebugOutput {
   }
 
  public:
-  static void AddErrorPrintFormatter(std::function<ErrorPrintFormatter> printf) {
+  static void AddErrorPrintFormatter(std::function<void(ErrorMessage error)> printf) {
     if (!instance) {
       instance = new DebugOutput{};
     }
