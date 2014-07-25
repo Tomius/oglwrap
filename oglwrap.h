@@ -34,8 +34,9 @@
   #include "./texture.h"
   #include "./framebuffer.h"
   #include "./transfeedback.h"
-  #include "shapes/cube.h"
-  #include "shapes/rectangle.h"
+  #include "shapes/cube_shape.h"
+  #include "shapes/sphere_shape.h"
+  #include "shapes/rectangle_shape.h"
 #endif
 
 // Put a warning if I forget to undef the internal macros
