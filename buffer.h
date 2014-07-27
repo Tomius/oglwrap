@@ -83,7 +83,6 @@ class BufferObject {
 #endif  // glBindBuffer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glBufferData)
-  template<typename GLtype>
   /// Creates and initializes a buffer object's data store.
   /** @param size    Specifies the size in bytes of the buffer object's new data
     *                store.
@@ -92,11 +91,10 @@ class BufferObject {
     *                copied.
     * @param usage   Specifies the expected usage pattern of the data store.
     * @see glBufferData */
-  static void Data(GLsizei size, const GLtype* data,
+  static void Data(GLsizei size, const void* data,
                    BufferUsage usage = BufferUsage::kStaticDraw) {
     gl(BufferData(GLenum(BUFFER_TYPE), size, data, GLenum(usage)));
   }
-  template<typename GLtype>
   /// Creates and initializes a buffer object's data store.
   /** @param size    Specifies the size in bytes of the buffer object's new data
     *                store.
@@ -105,7 +103,7 @@ class BufferObject {
     *                copied.
     * @param usage   Specifies the expected usage pattern of the data store.
     * @see glBufferData */
-  BIND_CHECKED void data(GLsizei size, const GLtype* data,
+  BIND_CHECKED void data(GLsizei size, const void* data,
                          BufferUsage usage = BufferUsage::kStaticDraw) const {
     OGLWRAP_CHECK_BINDING();
     if (BUFFER_TYPE == BufferType::kArrayBuffer) {
