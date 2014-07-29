@@ -21,9 +21,12 @@
 #include "./enums/basic_primitive_type.h"
 #include "./enums/indexed_buffer_binding.h"
 #include "./enums/primitive_type.h"
+#include "./enums/vertex_array_binding.h"
+#include "./enums/renderbuffer_type.h"
 #include "./enums/whole_data_type.h"
 #include "./enums/blit_filter.h"
 #include "./enums/buffer_map_access.h"
+#include "./enums/transform_feedback_type.h"
 #include "./enums/compare_func.h"
 #include "./enums/texture_binding.h"
 #include "./enums/swizzle_mode.h"
@@ -32,6 +35,7 @@
 #include "./enums/hint_target.h"
 #include "./enums/face_orientation.h"
 #include "./enums/hint_option.h"
+#include "./enums/renderbuffer_binding.h"
 #include "./enums/memory_barrier_bit.h"
 #include "./enums/buffer_type.h"
 #include "./enums/compare_mode.h"
@@ -42,7 +46,9 @@
 #include "./enums/face.h"
 #include "./enums/blend_equation.h"
 #include "./enums/framebuffer_binding.h"
+#include "./enums/vertex_array_type.h"
 #include "./enums/buffer_select_bit.h"
+#include "./enums/transform_feedback_binding.h"
 #include "./enums/poly_mode.h"
 #include "./enums/shader_type.h"
 #include "./enums/index_type.h"
@@ -2670,6 +2676,17 @@ struct RedIntegerEnum {
 };
 #endif
 
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RENDERBUFFER)
+struct RenderbufferEnum {
+#if __has_feature(cxx_constexpr)
+  constexpr RenderbufferEnum() { }
+  constexpr operator RenderbufferType() const { return RenderbufferType(GL_RENDERBUFFER); }
+#else
+  operator RenderbufferType() const { return RenderbufferType(GL_RENDERBUFFER); }
+#endif
+};
+#endif
+
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_REPEAT)
 struct RepeatEnum {
 #if __has_feature(cxx_constexpr)
@@ -3893,6 +3910,17 @@ struct TextureUpdateBarrierBitEnum {
 };
 #endif
 
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRANSFORM_FEEDBACK)
+struct TransformFeedbackEnum {
+#if __has_feature(cxx_constexpr)
+  constexpr TransformFeedbackEnum() { }
+  constexpr operator TransformFeedbackType() const { return TransformFeedbackType(GL_TRANSFORM_FEEDBACK); }
+#else
+  operator TransformFeedbackType() const { return TransformFeedbackType(GL_TRANSFORM_FEEDBACK); }
+#endif
+};
+#endif
+
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRANSFORM_FEEDBACK_BARRIER_BIT)
 struct TransformFeedbackBarrierBitEnum {
 #if __has_feature(cxx_constexpr)
@@ -4342,6 +4370,17 @@ struct UnsignedShort565RevEnum {
   constexpr operator PixelDataType() const { return PixelDataType(GL_UNSIGNED_SHORT_5_6_5_REV); }
 #else
   operator PixelDataType() const { return PixelDataType(GL_UNSIGNED_SHORT_5_6_5_REV); }
+#endif
+};
+#endif
+
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_VERTEX_ARRAY)
+struct VertexArrayEnum {
+#if __has_feature(cxx_constexpr)
+  constexpr VertexArrayEnum() { }
+  constexpr operator VertexArrayType() const { return VertexArrayType(GL_VERTEX_ARRAY); }
+#else
+  operator VertexArrayType() const { return VertexArrayType(GL_VERTEX_ARRAY); }
 #endif
 };
 #endif
@@ -6017,6 +6056,13 @@ struct ZeroEnum {
   static smart_enums::RedIntegerEnum kRedInteger;
 #endif
 #endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RENDERBUFFER)
+#if __has_feature(cxx_constexpr)
+  constexpr smart_enums::RenderbufferEnum kRenderbuffer;
+#else
+  static smart_enums::RenderbufferEnum kRenderbuffer;
+#endif
+#endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_REPEAT)
 #if __has_feature(cxx_constexpr)
   constexpr smart_enums::RepeatEnum kRepeat;
@@ -6780,6 +6826,13 @@ struct ZeroEnum {
   static smart_enums::TextureUpdateBarrierBitEnum kTextureUpdateBarrierBit;
 #endif
 #endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRANSFORM_FEEDBACK)
+#if __has_feature(cxx_constexpr)
+  constexpr smart_enums::TransformFeedbackEnum kTransformFeedback;
+#else
+  static smart_enums::TransformFeedbackEnum kTransformFeedback;
+#endif
+#endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRANSFORM_FEEDBACK_BARRIER_BIT)
 #if __has_feature(cxx_constexpr)
   constexpr smart_enums::TransformFeedbackBarrierBitEnum kTransformFeedbackBarrierBit;
@@ -7051,6 +7104,13 @@ struct ZeroEnum {
   constexpr smart_enums::UnsignedShort565RevEnum kUnsignedShort565Rev;
 #else
   static smart_enums::UnsignedShort565RevEnum kUnsignedShort565Rev;
+#endif
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_VERTEX_ARRAY)
+#if __has_feature(cxx_constexpr)
+  constexpr smart_enums::VertexArrayEnum kVertexArray;
+#else
+  static smart_enums::VertexArrayEnum kVertexArray;
 #endif
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT)

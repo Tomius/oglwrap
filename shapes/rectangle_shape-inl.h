@@ -12,25 +12,26 @@ inline RectangleShape::RectangleShape(const std::set<AttributeType>& attribs) {
   data.reserve(attribs.size()*4);
   void* offset{nullptr};
 
-  vao_.bind();
-  buffer_.bind();
+  Bind(vao_);
+  Bind(buffer_);
   for (int i = 0; i < kAttribTypeNum; ++i) {
     AttributeType type = static_cast<AttributeType>(i);
     if (attribs.find(type) != attribs.end()) {
       createAttrib(&data, type);
-      gl::VertexAttribArray(i).pointer(
+      VertexAttrib(i).pointer(
           2, DataType::kFloat, false, 0, offset).enable();
       offset = (void*)(data.size() * sizeof(glm::vec2));
     }
   }
   buffer_.data(data);
-  vao_.unbind();
+  Unbind(buffer_);
+  Unbind(vao_);
 }
 
 inline void RectangleShape::render() {
-  vao_.bind();
+  Bind(vao_);
   DrawArrays(PrimType::kTriangleStrip, 0, 4);
-  vao_.unbind();
+  Unbind(vao_);
 }
 
 inline void RectangleShape::createAttrib(std::vector<glm::vec2>* data,

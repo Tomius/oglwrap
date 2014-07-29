@@ -27,7 +27,7 @@ Or this:
 std::vector<glm::vec3> vertices_vector;
 // ... upload data to the vertices_vector
 gl::ArrayBuffer buffer0, buffer1;
-buffer0.bind();
+gl::Bind(buffer0);
 buffer1.data(vertices_vector); // Causes bind-check error because buffer0 is bound, but the function is called through buffer1.
 ```
 * Note, that bind-checking (and debug-info in general) can be disabled with ```#define OGLWRAP_DEBUG 0```. With this, and function inlining enabled, oglwrap runs with zero runtime overhead compared to C OpenGL.
@@ -35,7 +35,7 @@ buffer1.data(vertices_vector); // Causes bind-check error because buffer0 is bou
 * Functions overloads, templates and default parameters let you type less than with C OpenGL. Consider:
 ```c++
 Texture2D tex;
-tex.bind(2);
+gl::BindToTexUnit(tex, 2);
 tex.upload(gl::kRgba, 32, 32, gl::kRgba, gl::kUnsignedByte, nullptr);
 tex.generateMipmap();
 tex.minFilter(gl::kLinearMipmapLinear);

@@ -20,26 +20,27 @@ inline SphereShape::SphereShape(const std::set<AttributeType>& attribs,
   std::vector<float> data;
   void* offset{nullptr};
 
-  vao_.bind();
-  buffer_.bind();
+  Bind(vao_);
+  Bind(buffer_);
   for (int i = 0; i < kAttribTypeNum; ++i) {
     AttributeType type = static_cast<AttributeType>(i);
     if (attribs.find(type) != attribs.end()) {
       GLuint vertex_per_attrib = createAttrib(&data, type);
-      gl::VertexAttribArray(i).pointer(
+      VertexAttrib(i).pointer(
           vertex_per_attrib, DataType::kFloat, false, 0, offset).enable();
       offset = (void*)(data.size() * sizeof(float));
       if (vertex_num_ == 0) { vertex_num_ = data.size() / vertex_per_attrib; }
     }
   }
   buffer_.data(data);
-  vao_.unbind();
+  Unbind(buffer_);
+  Unbind(vao_);
 }
 
 inline void SphereShape::render() {
-  vao_.bind();
+  Bind(vao_);
   DrawArrays(PrimType::kTriangleStrip, 0, vertex_num_);
-  vao_.unbind();
+  Unbind(vao_);
 }
 
 inline GLuint SphereShape::createAttrib(std::vector<float>* data,

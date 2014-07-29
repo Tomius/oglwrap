@@ -7,9 +7,6 @@
 #ifndef OGLWRAP_CONFIG_H_
 #define OGLWRAP_CONFIG_H_
 
-/// A macro to sign functions that are bind-checked in their signature.
-#define BIND_CHECKED
-
 /// Oglwrap can be forced to load glew.
 #ifndef OGLWRAP_USE_GLEW
   #define OGLWRAP_USE_GLEW 0

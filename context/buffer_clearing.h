@@ -7,7 +7,6 @@
 #include <glm/glm.hpp>
 
 #include "../config.h"
-#include "../general.h"
 #include "../enums/buffer_select_bit.h"
 
 #include "../define_internal_macros.h"

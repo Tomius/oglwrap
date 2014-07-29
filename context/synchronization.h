@@ -4,7 +4,6 @@
 #define OGLWRAP_CONTEXT_SYNCHRONIZATION_H_
 
 #include "../config.h"
-#include "../general.h"
 #include "../enums/memory_barrier_bit.h"
 
 #include "../define_internal_macros.h"

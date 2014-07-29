@@ -7,7 +7,6 @@
 #include <glm/glm.hpp>
 
 #include "../config.h"
-#include "../general.h"
 #include "../enums/blend_equation.h"
 #include "../enums/blend_function.h"
 

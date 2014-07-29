@@ -4,8 +4,8 @@
 #define OGLWRAP_ENUMS_TEXTURE_BINDING_H_
 
 #include "../config.h"
-#include "../debug/binding.h"
-#include "texture_type.h"
+#include "../debug/debug_output.h"
+#include "./texture_type.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
 namespace enums {

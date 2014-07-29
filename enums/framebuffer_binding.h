@@ -4,8 +4,8 @@
 #define OGLWRAP_ENUMS_FRAMEBUFFER_BINDING_H_
 
 #include "../config.h"
-#include "../debug/binding.h"
-#include "framebuffer_type.h"
+#include "../debug/debug_output.h"
+#include "./framebuffer_type.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
 namespace enums {

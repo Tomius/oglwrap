@@ -11,6 +11,7 @@
 #include <vector>
 #include "../buffer.h"
 #include "../context.h"
+#include "../vertex_array.h"
 #include "../vertex_attrib.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {

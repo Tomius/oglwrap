@@ -13,8 +13,8 @@ def WriteEnum(file_name, file_base_name, out, is_binding):
   out.write('#define ' + guard + '\n')
   out.write('\n#include "../config.h"\n')
   if is_binding:
-    out.write('#include "../debug/binding.h"\n')
-    out.write('#include "' + file_name.replace('binding.txt', 'type.h') + '"\n')
+    out.write('#include "../debug/debug_output.h"\n')
+    out.write('#include "./' + file_name.replace('binding.txt', 'type.h') + '"\n')
   out.write("""
 namespace OGLWRAP_NAMESPACE_NAME {
 namespace enums {

@@ -10,7 +10,8 @@
 #include <stdexcept>
 
 #include "./config.h"
-#include "./shader.h"
+#include "./program.h"
+#include "context/binding.h"
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -102,7 +103,7 @@ class Uniform : public UniformObject<GLtype> {
   Uniform(const Program& program, const std::string& identifier)
       : UniformObject<GLtype>(program)
       , identifier_(identifier) {
-    OGLWRAP_CHECK_ACTIVE_PROGRAM(program);
+    OGLWRAP_CHECK_BINDING_EXPLICIT(program);
 
     this->location_ =
       gl(GetUniformLocation(program.expose(), identifier_.c_str()));
@@ -202,7 +203,7 @@ class IndexedUniform : public UniformObject<GLtype> {
     id << identifier << '[' << idx << ']';
     identifier_ = id.str();
 
-    OGLWRAP_CHECK_ACTIVE_PROGRAM(program);
+    OGLWRAP_CHECK_BINDING_EXPLICIT(program);
 
     this->location_ =
       gl(GetUniformLocation(program.expose(), id.str().c_str()));
@@ -312,7 +313,7 @@ class LazyUniform : public UniformObject<GLtype> {
     * At every call it sets the uniform to the specified value.
     * @param value - Specifies the new value to be used for the uniform variable. */
   virtual void set(const GLtype& value) override {
-    OGLWRAP_CHECK_ACTIVE_PROGRAM(this->program_);
+    OGLWRAP_CHECK_BINDING_EXPLICIT(this->program_);
 
     // Get the uniform's location only at the first set call.
     if (firstCall_) {
@@ -362,7 +363,7 @@ class LazyUniform : public UniformObject<GLtype> {
     * @return The current value of the uniform.
     * @see glUniform* */
   GLtype get() {
-    OGLWRAP_CHECK_ACTIVE_PROGRAM(this->program_);
+    OGLWRAP_CHECK_BINDING_EXPLICIT(this->program_);
 
     // Get the uniform's location only at the first set call.
     if (firstCall_) {

@@ -4,8 +4,8 @@
 #define OGLWRAP_ENUMS_INDEXED_BUFFER_BINDING_H_
 
 #include "../config.h"
-#include "../debug/binding.h"
-#include "indexed_buffer_type.h"
+#include "../debug/debug_output.h"
+#include "./indexed_buffer_type.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
 namespace enums {

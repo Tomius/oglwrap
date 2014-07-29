@@ -25,5 +25,6 @@
 #include "context/blending.h"
 #include "context/synchronization.h"
 #include "context/hints.h"
+#include "context/binding.h"
 
 #endif  // OGLWRAP_CONTEXT_CAPABILITIES_H_

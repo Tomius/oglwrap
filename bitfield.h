@@ -1,43 +1,21 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file general.h
-    @brief Contains codes that are not related to OpenGL
+/** @file bitfield.h
+    @brief Generic bitfield class to replace GLbitfield
 */
 
-#ifndef OGLWRAP_GENERAL_H_
-#define OGLWRAP_GENERAL_H_
+#ifndef OGLWRAP_BITFIELD_H_
+#define OGLWRAP_BITFIELD_H_
 
-#include <cmath>
-#include <memory>
 #include <initializer_list>
 
-#include "config.h"
-
-#ifndef M_PI
-  #define M_PI 3.14159265359f
-#endif
-#ifndef M_PI_2
-  #define M_PI_2 1.57079632679f
-#endif
+#include "./config.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
 
-/// A template to convert an angle value from degrees to radians
-template<class T>
-T ToRadian(const T& x) {
-  return fmod(x * M_PI / 180.0f, 2 * M_PI);
-}
-
-/// A template to convert an angle value from radians to degrees
-template<class T>
-T ToDegree(const T& x) {
-  return fmod(x * 180.0f / M_PI, 360.0f);
-}
-
 template <typename Bit>
 class Bitfield {
-  GLbitfield bits_;
-public:
+ public:
   Bitfield() : bits_(0) {}
   Bitfield(GLbitfield bits) : bits_(bits) {}
   Bitfield(Bit bit) : bits_(GLbitfield(bit)) {}
@@ -121,8 +99,10 @@ public:
     return (bits_ & static_cast<GLbitfield>(b)) == static_cast<GLbitfield>(b);
   }
 
+ private:
+  GLbitfield bits_;
 };
 
-} // namespace oglwrap
+}  // namespace oglwrap
 
-#endif  // OGLWRAP_GENERAL_H_
+#endif  // OGLWRAP_BITFIELD_H_
