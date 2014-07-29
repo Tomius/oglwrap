@@ -31,10 +31,6 @@ class TransformFeedback {
  public:
   TransformFeedback() = default;
 
-  // It doesn't make much sense to copy a TFB
-  TransformFeedback(const TransformFeedback&) = delete;
-  TransformFeedback& operator=(const TransformFeedback&) = delete;
-
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glBeginTransformFeedback)
   /// Begins the transform feedback mode.
   /** @param mode - The primitive type the TFB should use.

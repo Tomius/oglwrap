@@ -39,13 +39,6 @@ class BufferObject {
   /// Default constructor.
   BufferObject() = default;
 
-  template<BufferType ANOTHER_BUFFER_TYPE>
-  /// Creates a copy of the buffer, or casts it to another type.
-  /** Important: if you use this to change the type of the active buffer,
-    * don't forget to unbind the old one, and bind the new one */
-  explicit BufferObject(const BufferObject<ANOTHER_BUFFER_TYPE> src)
-      : buffer_(src.expose()) { }
-
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glBufferData)
   /// Creates and initializes a buffer object's data store.
   /** @param size    Specifies the size in bytes of the buffer object's new data

@@ -21,25 +21,9 @@ namespace OGLWRAP_NAMESPACE_NAME {
  * @see glCreateProgram, glDeleteProgram
  */
 class Program {
-  globjects::Program program_;  // The C OpenGL handle for the program.
-  std::vector<GLuint> shaders_;  // IDs of the shaders attached to the program
-
-  #if OGLWRAP_DEBUG
-    /// The names of the shaders are stored to help debugging.
-    std::vector<std::string> filenames_;
-  #endif
-
-  /// Stores if the program is linked.
-  bool linked_;
-
-public:
+ public:
   /// Creates an empty program object.
   Program() : linked_(false) {}
-
-  // The copies aren't special, thanks to std::shared_ptr,
-  // even though i had to write destructor.
-  Program(const Program&) = default;
-  Program& operator=(const Program&) = default;
 
   /**
    * @brief Detaches all the shader objects currently attached to this program,
@@ -48,10 +32,8 @@ public:
    * @see glDetachShader, glDeleteShader
    */
   ~Program() {
-    if (program_.unique()) {
-      for (size_t i = 0; i < shaders_.size(); i++) {
-        gl(DetachShader(program_, shaders_[i]));
-      }
+    for (size_t i = 0; i < shaders_.size(); i++) {
+      gl(DetachShader(program_, shaders_[i]));
     }
   }
 
@@ -194,6 +176,18 @@ public:
   const glObject& expose() const {
     return program_;
   }
+
+ private:
+  globjects::Program program_;  // The C OpenGL handle for the program.
+  std::vector<GLuint> shaders_;  // IDs of the shaders attached to the program
+
+  #if OGLWRAP_DEBUG
+    /// The names of the shaders are stored to help debugging.
+    std::vector<std::string> filenames_;
+  #endif
+
+  /// Stores if the program is linked.
+  bool linked_;
 };
 
 #endif  // glCreateProgram
