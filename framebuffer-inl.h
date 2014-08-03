@@ -14,7 +14,7 @@ namespace OGLWRAP_NAMESPACE_NAME {
   || (defined(glGenFramebuffers) && defined(glDeleteFramebuffers))
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glCheckFramebufferStatus)
-template<FramebufferType FBO_TYPE>
+template<FramebufferTarget FBO_TYPE>
 FramebufferStatus FramebufferObject<FBO_TYPE>::status() const {
   OGLWRAP_CHECK_BINDING();
   GLenum status = gl(CheckFramebufferStatus(GLenum(FBO_TYPE)));
@@ -23,7 +23,7 @@ FramebufferStatus FramebufferObject<FBO_TYPE>::status() const {
 #endif  // glCheckFramebufferStatus
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glCheckFramebufferStatus)
-template<FramebufferType FBO_TYPE>
+template<FramebufferTarget FBO_TYPE>
 void FramebufferObject<FBO_TYPE>::validate() const {
   OGLWRAP_CHECK_BINDING();
   std::string error;
@@ -81,7 +81,7 @@ void FramebufferObject<FBO_TYPE>::validate() const {
 #endif  // glCheckFramebufferStatus
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glFramebufferRenderbuffer)
-template<FramebufferType FBO_TYPE>
+template<FramebufferTarget FBO_TYPE>
 void FramebufferObject<FBO_TYPE>::attachBuffer(
     FramebufferAttachment attachment, const Renderbuffer& render_buffer) {
   OGLWRAP_CHECK_BINDING();
@@ -91,7 +91,7 @@ void FramebufferObject<FBO_TYPE>::attachBuffer(
 #endif  // glFramebufferRenderbuffer
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glFramebufferTexture1D)
-template<FramebufferType FBO_TYPE>
+template<FramebufferTarget FBO_TYPE>
 void FramebufferObject<FBO_TYPE>::attachTexture(
     FramebufferAttachment attachment,
     const Texture1D& texture,
@@ -103,8 +103,8 @@ void FramebufferObject<FBO_TYPE>::attachTexture(
 #endif  // glFramebufferTexture1D
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glFramebufferTexture2D)
-template<FramebufferType FBO_TYPE>
-template <Texture2DType texture_t>
+template<FramebufferTarget FBO_TYPE>
+template <Texture2DTarget texture_t>
 void FramebufferObject<FBO_TYPE>::attachTexture(
     FramebufferAttachment attachment,
     const Texture2DBase<texture_t>& texture,
@@ -116,7 +116,7 @@ void FramebufferObject<FBO_TYPE>::attachTexture(
 #endif  // glFramebufferTexture2D
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glFramebufferTexture2D)
-template<FramebufferType FBO_TYPE>
+template<FramebufferTarget FBO_TYPE>
 void FramebufferObject<FBO_TYPE>::attachTexture(
     FramebufferAttachment attachment,
     TextureCubeTarget target,
@@ -129,7 +129,7 @@ void FramebufferObject<FBO_TYPE>::attachTexture(
 #endif  // glFramebufferTexture2D
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glFramebufferTexture3D)
-template<FramebufferType FBO_TYPE>
+template<FramebufferTarget FBO_TYPE>
 void FramebufferObject<FBO_TYPE>::attachTexture(
     FramebufferAttachment attachment, const Texture3D& texture,
     GLint level, GLint layer) {
@@ -140,8 +140,8 @@ void FramebufferObject<FBO_TYPE>::attachTexture(
 #endif  // glFramebufferTexture3D
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glFramebufferTextureLayer)
-template<FramebufferType FBO_TYPE>
-template <TextureType texture_t>
+template<FramebufferTarget FBO_TYPE>
+template <TextureTarget texture_t>
 void FramebufferObject<FBO_TYPE>::attachTextureLayer(
     FramebufferAttachment attachment, const TextureBase<texture_t>& texture,
     GLint level, GLint layer) {

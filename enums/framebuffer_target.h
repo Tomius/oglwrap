@@ -1,14 +1,14 @@
 // Copyright (c) 2014, Tamas Csala
 
-#ifndef OGLWRAP_ENUMS_FRAMEBUFFER_TYPE_H_
-#define OGLWRAP_ENUMS_FRAMEBUFFER_TYPE_H_
+#ifndef OGLWRAP_ENUMS_FRAMEBUFFER_TARGET_H_
+#define OGLWRAP_ENUMS_FRAMEBUFFER_TARGET_H_
 
 #include "../config.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
 namespace enums {
 
-enum class FramebufferType : GLenum {
+enum class FramebufferTarget : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_READ_FRAMEBUFFER)
   kReadFramebuffer = GL_READ_FRAMEBUFFER,
 #endif

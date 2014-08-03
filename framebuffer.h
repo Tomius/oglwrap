@@ -9,12 +9,12 @@
 
 #include "./renderbuffer.h"
 #include "textures/texture_base.h"
-#include "textures/texture_1D.h"
-#include "textures/texture_2D.h"
+#include "textures/texture1D.h"
+#include "textures/texture2D.h"
 #include "textures/texture_cube.h"
-#include "textures/texture_3D.h"
+#include "textures/texture3D.h"
 
-#include "enums/framebuffer_type.h"
+#include "enums/framebuffer_target.h"
 #include "enums/framebuffer_binding.h"
 #include "enums/framebuffer_status.h"
 #include "enums/framebuffer_attachment.h"
@@ -26,18 +26,11 @@ namespace OGLWRAP_NAMESPACE_NAME {
 #if OGLWRAP_DEFINE_EVERYTHING \
   || (defined(glGenFramebuffers) && defined(glDeleteFramebuffers))
 /// A buffer that you can draw to.
-template<FramebufferType FBO_TYPE>
+template<FramebufferTarget FBO_TYPE>
 class FramebufferObject {
  public:
   /// Default constructor
   FramebufferObject() = default;
-
-  template<FramebufferType another_fbo_t>
-  /// Creates a copy of the framebuffer, or casts it to another type.
-  /** Important: if you use this to change the type of the active framebuffer,
-    * don't forget to unbind the old one, and bind the new one */
-  FramebufferObject(const BufferObject<another_fbo_t> src)
-      : framebuffer_(src.expose()) { }
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glCheckFramebufferStatus)
   /// Returns the status of a bound framebuffer.
@@ -71,7 +64,7 @@ class FramebufferObject {
 #endif  // glFramebufferTexture1D
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glFramebufferTexture2D)
-  template <Texture2DType texture_t>
+  template <Texture2DTarget texture_t>
   /// Attach a level of a texture object as a logical buffer to the currently bound framebuffer object
   /** @param attachment - Specifies the attachment point of the framebuffer.
     * @param texture - Specifies the texture object to attach to the framebuffer attachment point named by \a attachment.
@@ -105,7 +98,7 @@ class FramebufferObject {
 #endif  // glFramebufferTexture3D
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glFramebufferTextureLayer)
-  template <TextureType texture_t>
+  template <TextureTarget texture_t>
   /// Attach a level of a texture object as a logical buffer to the currently bound framebuffer object
   /** @param attachment - Specifies the attachment point of the framebuffer.
     * @param texture - Specifies the texture object to attach to the framebuffer attachment point named by \a attachment.
@@ -124,9 +117,9 @@ class FramebufferObject {
   globjects::Framebuffer framebuffer_;
 };
 
-using Framebuffer     = FramebufferObject<FramebufferType::kFramebuffer>;
-using ReadFramebuffer = FramebufferObject<FramebufferType::kReadFramebuffer>;
-using DrawFramebuffer = FramebufferObject<FramebufferType::kDrawFramebuffer>;
+using Framebuffer     = FramebufferObject<FramebufferTarget::kFramebuffer>;
+using ReadFramebuffer = FramebufferObject<FramebufferTarget::kReadFramebuffer>;
+using DrawFramebuffer = FramebufferObject<FramebufferTarget::kDrawFramebuffer>;
 
 #endif  // glGenFramebuffers && glDeleteFramebuffers
 

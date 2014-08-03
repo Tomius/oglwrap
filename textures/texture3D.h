@@ -1,24 +1,24 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file texture_3D.h
+/** @file texture3D.h
     @brief Implements three-dimensional textures.
 */
 
-#ifndef OGLWRAP_TEXTURES_TEXTURE_3D_H_
-#define OGLWRAP_TEXTURES_TEXTURE_3D_H_
+#ifndef OGLWRAP_TEXTURES_TEXTURE3D_H_
+#define OGLWRAP_TEXTURES_TEXTURE3D_H_
 
 #include "./texture_base.h"
-#include "../enums/texture3D_type.h"
+#include "../enums/texture3D_target.h"
 
 #include "../define_internal_macros.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_3D)
-template<Texture3DType texture_t>
+template<Texture3DTarget texture_t>
 /// The base class describing functionality for all 2D textures.
 /** You should rather use the typedefed versions than this template. */
-class Texture3DBase : public TextureBase<TextureType(texture_t)> {
+class Texture3DBase : public TextureBase<TextureTarget(texture_t)> {
  public:
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glTexImage3D)
   /// Uploads the base image.
@@ -135,12 +135,12 @@ class Texture3DBase : public TextureBase<TextureType(texture_t)> {
 
 /// Three-dimensional texture.
 /** @see GL_TEXTURE_3D */
-using Texture3D = Texture3DBase<Texture3DType::kTexture3D>;
+using Texture3D = Texture3DBase<Texture3DTarget::kTexture3D>;
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_2D_ARRAY)
 /// An array of two dimensional textures
 /** @see GL_TEXTURE_2D_ARRAY */
-using Texture2DArray = Texture3DBase<Texture3DType::kTexture2DArray>;
+using Texture2DArray = Texture3DBase<Texture3DTarget::kTexture2DArray>;
 #endif  // GL_TEXTURE_2D_ARRAY
 
 #endif  // GL_TEXTURE_3D

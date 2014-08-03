@@ -1,14 +1,14 @@
 // Copyright (c) 2014, Tamas Csala
 
-#ifndef OGLWRAP_ENUMS_TEXTURE3D_TYPE_H_
-#define OGLWRAP_ENUMS_TEXTURE3D_TYPE_H_
+#ifndef OGLWRAP_ENUMS_TEXTURE3D_TARGET_H_
+#define OGLWRAP_ENUMS_TEXTURE3D_TARGET_H_
 
 #include "../config.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
 namespace enums {
 
-enum class Texture3DType : GLenum {
+enum class Texture3DTarget : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_3D)
   kTexture3D = GL_TEXTURE_3D,
 #endif

@@ -15,70 +15,6 @@
 
 namespace OGLWRAP_NAMESPACE_NAME {
 
-// Buffer
-#if OGLWRAP_DEFINE_EVERYTHING || defined(glBindBuffer)
-template<BufferType BUFFER_TYPE>
-void Bind(const BufferObject<BUFFER_TYPE>& buffer) {
-  gl(BindBuffer(GLenum(BUFFER_TYPE), buffer.expose()));
-}
-
-template<BufferType BUFFER_TYPE>
-void Unbind(const BufferObject<BUFFER_TYPE>&) {
-  gl(BindBuffer(GLenum(BUFFER_TYPE), 0));
-}
-
-inline void Unbind(BufferType BUFFER_TYPE) {
-  gl(BindBuffer(GLenum(BUFFER_TYPE), 0));
-}
-
-template<BufferType BUFFER_TYPE>
-bool IsBound(const BufferObject<BUFFER_TYPE>& buffer) {
-  GLint currently_bound_buffer;
-  gl(GetIntegerv(GLenum(GetBindingTarget(BUFFER_TYPE)),
-                 &currently_bound_buffer));
-
-  return buffer.expose() == GLuint(currently_bound_buffer);
-}
-#endif
-
-// IndexedBuffer
-#if OGLWRAP_DEFINE_EVERYTHING || defined(glBindBufferBase)
-template<IndexedBufferType BUFFER_TYPE>
-void BindBase(const IndexedBufferObject<BUFFER_TYPE>& buffer, GLuint index) {
-  gl(BindBufferBase(GLenum(BUFFER_TYPE), index, buffer.expose()));
-}
-
-#if OGLWRAP_DEFINE_EVERYTHING || defined(glBindBufferRange)
-template<IndexedBufferType BUFFER_TYPE>
-void BindRange(const IndexedBufferObject<BUFFER_TYPE>& buffer, GLuint index,
-               GLintptr offset, GLsizeiptr size) {
-  gl(BindBufferRange(GLenum(BUFFER_TYPE), index, offset, size, buffer.expose()));
-}
-#endif
-
-template<IndexedBufferType BUFFER_TYPE>
-bool IsBound(const IndexedBufferObject<BUFFER_TYPE>& buffer) {
-  return true;
-}
-
-template<IndexedBufferType BUFFER_TYPE>
-bool IsBound(const IndexedBufferObject<BUFFER_TYPE>& buffer, GLuint index) {
-  GLint currently_bound_buffer;
-  gl(GetIntegeri_v(GLenum(GetBindingTarget(BUFFER_TYPE)), index,
-                   &currently_bound_buffer));
-  return buffer.expose() == GLuint(currently_bound_buffer);
-}
-
-template<IndexedBufferType BUFFER_TYPE>
-void UnbindBase(const IndexedBufferObject<BUFFER_TYPE>&, GLuint index) {
-  gl(BindBufferBase(GLenum(BUFFER_TYPE), index, 0));
-}
-
-inline void UnbindBase(IndexedBufferType BUFFER_TYPE, GLuint index) {
-  gl(BindBufferBase(GLenum(BUFFER_TYPE), index, 0));
-}
-#endif
-
 // Renderbuffer
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glBindRenderbuffer)
 inline void Bind(const Renderbuffer& buffer) {
@@ -89,13 +25,13 @@ inline void Unbind(const Renderbuffer&) {
   gl(BindRenderbuffer(GL_RENDERBUFFER, 0));
 }
 
-inline void Unbind(RenderbufferType) {
+inline void Unbind(RenderbufferTarget) {
   gl(BindRenderbuffer(GL_RENDERBUFFER, 0));
 }
 
 inline bool IsBound(const Renderbuffer& buffer) {
   GLint currently_bound_buffer;
-  gl(GetIntegerv(GLenum(GetBindingTarget(RenderbufferType::kRenderbuffer)),
+  gl(GetIntegerv(GLenum(GetBindingTarget(RenderbufferTarget::kRenderbuffer)),
                  &currently_bound_buffer));
   return buffer.expose() == GLuint(currently_bound_buffer);
 }
@@ -103,24 +39,24 @@ inline bool IsBound(const Renderbuffer& buffer) {
 
 // Framebuffer
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glBindFramebuffer)
-template<FramebufferType FBO_TYPE>
+template<FramebufferTarget FBO_TYPE>
 void Bind(const FramebufferObject<FBO_TYPE>& fbo) {
   gl(BindFramebuffer(GLenum(FBO_TYPE), fbo.expose()));
 }
 
-template<FramebufferType FBO_TYPE>
+template<FramebufferTarget FBO_TYPE>
 bool IsBound(const FramebufferObject<FBO_TYPE>& fbo) {
   GLint currently_bound_buffer;
   gl(GetIntegerv(GLenum(GetBindingTarget(FBO_TYPE)), &currently_bound_buffer));
   return fbo.expose() == GLuint(currently_bound_buffer);
 }
 
-template<FramebufferType FBO_TYPE>
+template<FramebufferTarget FBO_TYPE>
 void Unbind(const FramebufferObject<FBO_TYPE>& fbo) {
   gl(BindFramebuffer(GLenum(FBO_TYPE), 0));
 }
 
-inline void Unbind(FramebufferType FBO_TYPE) {
+inline void Unbind(FramebufferTarget FBO_TYPE) {
   gl(BindFramebuffer(GLenum(FBO_TYPE), 0));
 }
 #endif
@@ -136,13 +72,13 @@ inline void Unbind(const TransformFeedback& tfb) {
   gl(BindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0));
 }
 
-inline void Unbind(TransformFeedbackType) {
+inline void Unbind(TransformFeedbackTarget) {
   gl(BindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0));
 }
 
 inline bool IsBound(const TransformFeedback& tfb)  {
   GLint currently_bound_tfb;
-  gl(GetIntegerv(GLenum(GetBindingTarget(TransformFeedbackType::kTransformFeedback)),
+  gl(GetIntegerv(GLenum(GetBindingTarget(TransformFeedbackTarget::kTransformFeedback)),
                  &currently_bound_tfb));
   return tfb.expose() == GLuint(currently_bound_tfb);
 }
@@ -159,51 +95,51 @@ inline void Unbind(const VertexArray& vao) {
   gl(BindVertexArray(0));
 }
 
-inline void Unbind(VertexArrayType) {
+inline void Unbind(VertexArrayTarget) {
   gl(BindVertexArray(0));
 }
 
 inline bool IsBound(const VertexArray& vao) {
   GLint currently_bound_vao;
-  gl(GetIntegerv(GLenum(GetBindingTarget(VertexArrayType::kVertexArray)),
+  gl(GetIntegerv(GLenum(GetBindingTarget(VertexArrayTarget::kVertexArray)),
                  &currently_bound_vao));
   return vao.expose() == GLuint(currently_bound_vao);
 }
 #endif
 
 // Texture
-template <TextureType texture_t>
+template <TextureTarget texture_t>
 void Bind(const TextureBase<texture_t>& tex) {
   gl(BindTexture(GLenum(texture_t), tex.expose()));
 }
 
-template <TextureType texture_t>
+template <TextureTarget texture_t>
 void BindToTexUnit(const TextureBase<texture_t>& tex, GLuint tex_unit) {
   gl(ActiveTexture(GL_TEXTURE0 + tex_unit));
   gl(BindTexture(GLenum(texture_t), tex.expose()));
 }
 
-template <TextureType texture_t>
+template <TextureTarget texture_t>
 void Unbind(const TextureBase<texture_t>& tex) {
   gl(BindTexture(GLenum(texture_t), 0));
 }
 
-inline void Unbind(TextureType texture_t) {
+inline void Unbind(TextureTarget texture_t) {
   gl(BindTexture(GLenum(texture_t), 0));
 }
 
-template <TextureType texture_t>
+template <TextureTarget texture_t>
 void UnbindFromTexUnit(const TextureBase<texture_t>& tex, GLuint tex_unit) {
   gl(ActiveTexture(GL_TEXTURE0 + tex_unit));
   gl(BindTexture(GLenum(texture_t), 0));
 }
 
-inline void UnbindFromTexUnit(TextureType texture_t, GLuint tex_unit) {
+inline void UnbindFromTexUnit(TextureTarget texture_t, GLuint tex_unit) {
   gl(ActiveTexture(GL_TEXTURE0 + tex_unit));
   gl(BindTexture(GLenum(texture_t), 0));
 }
 
-template <TextureType texture_t>
+template <TextureTarget texture_t>
 bool IsBound(const TextureBase<texture_t>& tex) {
   GLint currently_bound_texture;
   gl(GetIntegerv(GLenum(GetBindingTarget(texture_t)), &currently_bound_texture));
@@ -267,14 +203,13 @@ inline bool IsActive(const Program& prog) {
 
 #include "../undefine_internal_macros.h"
 #include "../debug/bind_checking.h"
-#include "../buffer-inl.h"
 #include "../renderbuffer-inl.h"
 #include "../transform_feedback-inl.h"
 #include "../textures/texture_base-inl.h"
-#include "../textures/texture_1D-inl.h"
-#include "../textures/texture_2D-inl.h"
+#include "../textures/texture1D-inl.h"
+#include "../textures/texture2D-inl.h"
 #include "../textures/texture_cube-inl.h"
-#include "../textures/texture_3D-inl.h"
+#include "../textures/texture3D-inl.h"
 #include "../framebuffer-inl.h"
 
 #endif

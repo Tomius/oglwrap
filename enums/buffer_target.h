@@ -1,14 +1,14 @@
 // Copyright (c) 2014, Tamas Csala
 
-#ifndef OGLWRAP_ENUMS_BUFFER_TYPE_H_
-#define OGLWRAP_ENUMS_BUFFER_TYPE_H_
+#ifndef OGLWRAP_ENUMS_BUFFER_TARGET_H_
+#define OGLWRAP_ENUMS_BUFFER_TARGET_H_
 
 #include "../config.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
 namespace enums {
 
-enum class BufferType : GLenum {
+enum class BufferTarget : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ARRAY_BUFFER)
   kArrayBuffer = GL_ARRAY_BUFFER,
 #endif

@@ -4,29 +4,31 @@
 #define OGLWRAP_SMART_ENUMS_H_
 
 #include "./config.h"
-#include "./enums/framebuffer_type.h"
+#include "./enums/framebuffer_target.h"
+#include "./enums/buffer_target.h"
 #include "./enums/pixel_data_internal_format.h"
 #include "./enums/capability.h"
-#include "./enums/texture_type.h"
 #include "./enums/pixel_storage_mode.h"
-#include "./enums/indexed_buffer_type.h"
 #include "./enums/buffer_binding.h"
 #include "./enums/data_type.h"
 #include "./enums/blend_function.h"
 #include "./enums/framebuffer_status.h"
 #include "./enums/min_filter.h"
 #include "./enums/pixel_data_type.h"
+#include "./enums/indexed_buffer_target.h"
 #include "./enums/color_buffer.h"
+#include "./enums/buffer_map_access_bit.h"
 #include "./enums/color_logic_operation.h"
+#include "./enums/vertex_array_target.h"
+#include "./enums/transform_feedback_target.h"
 #include "./enums/basic_primitive_type.h"
 #include "./enums/indexed_buffer_binding.h"
 #include "./enums/primitive_type.h"
 #include "./enums/vertex_array_binding.h"
-#include "./enums/renderbuffer_type.h"
 #include "./enums/whole_data_type.h"
 #include "./enums/blit_filter.h"
+#include "./enums/texture2D_target.h"
 #include "./enums/buffer_map_access.h"
-#include "./enums/transform_feedback_type.h"
 #include "./enums/compare_func.h"
 #include "./enums/texture_binding.h"
 #include "./enums/swizzle_mode.h"
@@ -37,27 +39,26 @@
 #include "./enums/hint_option.h"
 #include "./enums/renderbuffer_binding.h"
 #include "./enums/memory_barrier_bit.h"
-#include "./enums/buffer_type.h"
 #include "./enums/compare_mode.h"
 #include "./enums/error_type.h"
 #include "./enums/stencil_operation.h"
-#include "./enums/texture3D_type.h"
-#include "./enums/buffer_map_access_flags.h"
 #include "./enums/face.h"
 #include "./enums/blend_equation.h"
 #include "./enums/framebuffer_binding.h"
-#include "./enums/vertex_array_type.h"
 #include "./enums/buffer_select_bit.h"
+#include "./enums/renderbuffer_target.h"
 #include "./enums/transform_feedback_binding.h"
 #include "./enums/poly_mode.h"
 #include "./enums/shader_type.h"
+#include "./enums/texture3D_target.h"
 #include "./enums/index_type.h"
 #include "./enums/mag_filter.h"
 #include "./enums/texture_cube_target.h"
 #include "./enums/framebuffer_attachment.h"
-#include "./enums/texture2D_type.h"
+#include "./enums/texture_target.h"
 #include "./enums/provoke_mode.h"
 #include "./enums/pixel_data_format.h"
+#include "./enums/buffer_storage_bit.h"
 #include "./define_internal_macros.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
@@ -123,9 +124,9 @@ struct AndReverseEnum {
 struct ArrayBufferEnum {
 #if __has_feature(cxx_constexpr)
   constexpr ArrayBufferEnum() { }
-  constexpr operator BufferType() const { return BufferType(GL_ARRAY_BUFFER); }
+  constexpr operator BufferTarget() const { return BufferTarget(GL_ARRAY_BUFFER); }
 #else
-  operator BufferType() const { return BufferType(GL_ARRAY_BUFFER); }
+  operator BufferTarget() const { return BufferTarget(GL_ARRAY_BUFFER); }
 #endif
 };
 #endif
@@ -145,11 +146,11 @@ struct AtomicCounterBarrierBitEnum {
 struct AtomicCounterBufferEnum {
 #if __has_feature(cxx_constexpr)
   constexpr AtomicCounterBufferEnum() { }
-  constexpr operator IndexedBufferType() const { return IndexedBufferType(GL_ATOMIC_COUNTER_BUFFER); }
-  constexpr operator BufferType() const { return BufferType(GL_ATOMIC_COUNTER_BUFFER); }
+  constexpr operator BufferTarget() const { return BufferTarget(GL_ATOMIC_COUNTER_BUFFER); }
+  constexpr operator IndexedBufferTarget() const { return IndexedBufferTarget(GL_ATOMIC_COUNTER_BUFFER); }
 #else
-  operator IndexedBufferType() const { return IndexedBufferType(GL_ATOMIC_COUNTER_BUFFER); }
-  operator BufferType() const { return BufferType(GL_ATOMIC_COUNTER_BUFFER); }
+  operator BufferTarget() const { return BufferTarget(GL_ATOMIC_COUNTER_BUFFER); }
+  operator IndexedBufferTarget() const { return IndexedBufferTarget(GL_ATOMIC_COUNTER_BUFFER); }
 #endif
 };
 #endif
@@ -345,6 +346,17 @@ struct ClientMappedBufferBarrierBitEnum {
   constexpr operator MemoryBarrierBit() const { return MemoryBarrierBit(GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT); }
 #else
   operator MemoryBarrierBit() const { return MemoryBarrierBit(GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT); }
+#endif
+};
+#endif
+
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_CLIENT_STORAGE_BIT)
+struct ClientStorageBitEnum {
+#if __has_feature(cxx_constexpr)
+  constexpr ClientStorageBitEnum() { }
+  constexpr operator BufferStorageBit() const { return BufferStorageBit(GL_CLIENT_STORAGE_BIT); }
+#else
+  operator BufferStorageBit() const { return BufferStorageBit(GL_CLIENT_STORAGE_BIT); }
 #endif
 };
 #endif
@@ -781,9 +793,9 @@ struct CopyInvertedEnum {
 struct CopyReadBufferEnum {
 #if __has_feature(cxx_constexpr)
   constexpr CopyReadBufferEnum() { }
-  constexpr operator BufferType() const { return BufferType(GL_COPY_READ_BUFFER); }
+  constexpr operator BufferTarget() const { return BufferTarget(GL_COPY_READ_BUFFER); }
 #else
-  operator BufferType() const { return BufferType(GL_COPY_READ_BUFFER); }
+  operator BufferTarget() const { return BufferTarget(GL_COPY_READ_BUFFER); }
 #endif
 };
 #endif
@@ -792,9 +804,9 @@ struct CopyReadBufferEnum {
 struct CopyWriteBufferEnum {
 #if __has_feature(cxx_constexpr)
   constexpr CopyWriteBufferEnum() { }
-  constexpr operator BufferType() const { return BufferType(GL_COPY_WRITE_BUFFER); }
+  constexpr operator BufferTarget() const { return BufferTarget(GL_COPY_WRITE_BUFFER); }
 #else
-  operator BufferType() const { return BufferType(GL_COPY_WRITE_BUFFER); }
+  operator BufferTarget() const { return BufferTarget(GL_COPY_WRITE_BUFFER); }
 #endif
 };
 #endif
@@ -950,9 +962,9 @@ struct DepthTestEnum {
 struct DispatchIndirectBufferEnum {
 #if __has_feature(cxx_constexpr)
   constexpr DispatchIndirectBufferEnum() { }
-  constexpr operator BufferType() const { return BufferType(GL_DISPATCH_INDIRECT_BUFFER); }
+  constexpr operator BufferTarget() const { return BufferTarget(GL_DISPATCH_INDIRECT_BUFFER); }
 #else
-  operator BufferType() const { return BufferType(GL_DISPATCH_INDIRECT_BUFFER); }
+  operator BufferTarget() const { return BufferTarget(GL_DISPATCH_INDIRECT_BUFFER); }
 #endif
 };
 #endif
@@ -994,9 +1006,9 @@ struct DoubleEnum {
 struct DrawFramebufferEnum {
 #if __has_feature(cxx_constexpr)
   constexpr DrawFramebufferEnum() { }
-  constexpr operator FramebufferType() const { return FramebufferType(GL_DRAW_FRAMEBUFFER); }
+  constexpr operator FramebufferTarget() const { return FramebufferTarget(GL_DRAW_FRAMEBUFFER); }
 #else
-  operator FramebufferType() const { return FramebufferType(GL_DRAW_FRAMEBUFFER); }
+  operator FramebufferTarget() const { return FramebufferTarget(GL_DRAW_FRAMEBUFFER); }
 #endif
 };
 #endif
@@ -1005,9 +1017,9 @@ struct DrawFramebufferEnum {
 struct DrawIndirectBufferEnum {
 #if __has_feature(cxx_constexpr)
   constexpr DrawIndirectBufferEnum() { }
-  constexpr operator BufferType() const { return BufferType(GL_DRAW_INDIRECT_BUFFER); }
+  constexpr operator BufferTarget() const { return BufferTarget(GL_DRAW_INDIRECT_BUFFER); }
 #else
-  operator BufferType() const { return BufferType(GL_DRAW_INDIRECT_BUFFER); }
+  operator BufferTarget() const { return BufferTarget(GL_DRAW_INDIRECT_BUFFER); }
 #endif
 };
 #endif
@@ -1067,6 +1079,17 @@ struct DynamicReadEnum {
 };
 #endif
 
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DYNAMIC_STORAGE_BIT)
+struct DynamicStorageBitEnum {
+#if __has_feature(cxx_constexpr)
+  constexpr DynamicStorageBitEnum() { }
+  constexpr operator BufferStorageBit() const { return BufferStorageBit(GL_DYNAMIC_STORAGE_BIT); }
+#else
+  operator BufferStorageBit() const { return BufferStorageBit(GL_DYNAMIC_STORAGE_BIT); }
+#endif
+};
+#endif
+
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ELEMENT_ARRAY_BARRIER_BIT)
 struct ElementArrayBarrierBitEnum {
 #if __has_feature(cxx_constexpr)
@@ -1082,9 +1105,9 @@ struct ElementArrayBarrierBitEnum {
 struct ElementArrayBufferEnum {
 #if __has_feature(cxx_constexpr)
   constexpr ElementArrayBufferEnum() { }
-  constexpr operator BufferType() const { return BufferType(GL_ELEMENT_ARRAY_BUFFER); }
+  constexpr operator BufferTarget() const { return BufferTarget(GL_ELEMENT_ARRAY_BUFFER); }
 #else
-  operator BufferType() const { return BufferType(GL_ELEMENT_ARRAY_BUFFER); }
+  operator BufferTarget() const { return BufferTarget(GL_ELEMENT_ARRAY_BUFFER); }
 #endif
 };
 #endif
@@ -1205,9 +1228,9 @@ struct FragmentShaderDerivativeHintEnum {
 struct FramebufferEnum {
 #if __has_feature(cxx_constexpr)
   constexpr FramebufferEnum() { }
-  constexpr operator FramebufferType() const { return FramebufferType(GL_FRAMEBUFFER); }
+  constexpr operator FramebufferTarget() const { return FramebufferTarget(GL_FRAMEBUFFER); }
 #else
-  operator FramebufferType() const { return FramebufferType(GL_FRAMEBUFFER); }
+  operator FramebufferTarget() const { return FramebufferTarget(GL_FRAMEBUFFER); }
 #endif
 };
 #endif
@@ -1764,9 +1787,11 @@ struct LineStripAdjacencyEnum {
 struct MapCoherentBitEnum {
 #if __has_feature(cxx_constexpr)
   constexpr MapCoherentBitEnum() { }
-  constexpr operator BufferMapAccessFlags() const { return BufferMapAccessFlags(GL_MAP_COHERENT_BIT); }
+  constexpr operator BufferMapAccessBit() const { return BufferMapAccessBit(GL_MAP_COHERENT_BIT); }
+  constexpr operator BufferStorageBit() const { return BufferStorageBit(GL_MAP_COHERENT_BIT); }
 #else
-  operator BufferMapAccessFlags() const { return BufferMapAccessFlags(GL_MAP_COHERENT_BIT); }
+  operator BufferMapAccessBit() const { return BufferMapAccessBit(GL_MAP_COHERENT_BIT); }
+  operator BufferStorageBit() const { return BufferStorageBit(GL_MAP_COHERENT_BIT); }
 #endif
 };
 #endif
@@ -1775,9 +1800,9 @@ struct MapCoherentBitEnum {
 struct MapFlushExplicitBitEnum {
 #if __has_feature(cxx_constexpr)
   constexpr MapFlushExplicitBitEnum() { }
-  constexpr operator BufferMapAccessFlags() const { return BufferMapAccessFlags(GL_MAP_FLUSH_EXPLICIT_BIT); }
+  constexpr operator BufferMapAccessBit() const { return BufferMapAccessBit(GL_MAP_FLUSH_EXPLICIT_BIT); }
 #else
-  operator BufferMapAccessFlags() const { return BufferMapAccessFlags(GL_MAP_FLUSH_EXPLICIT_BIT); }
+  operator BufferMapAccessBit() const { return BufferMapAccessBit(GL_MAP_FLUSH_EXPLICIT_BIT); }
 #endif
 };
 #endif
@@ -1786,9 +1811,9 @@ struct MapFlushExplicitBitEnum {
 struct MapInvalidateBufferBitEnum {
 #if __has_feature(cxx_constexpr)
   constexpr MapInvalidateBufferBitEnum() { }
-  constexpr operator BufferMapAccessFlags() const { return BufferMapAccessFlags(GL_MAP_INVALIDATE_BUFFER_BIT); }
+  constexpr operator BufferMapAccessBit() const { return BufferMapAccessBit(GL_MAP_INVALIDATE_BUFFER_BIT); }
 #else
-  operator BufferMapAccessFlags() const { return BufferMapAccessFlags(GL_MAP_INVALIDATE_BUFFER_BIT); }
+  operator BufferMapAccessBit() const { return BufferMapAccessBit(GL_MAP_INVALIDATE_BUFFER_BIT); }
 #endif
 };
 #endif
@@ -1797,9 +1822,9 @@ struct MapInvalidateBufferBitEnum {
 struct MapInvalidateRangeBitEnum {
 #if __has_feature(cxx_constexpr)
   constexpr MapInvalidateRangeBitEnum() { }
-  constexpr operator BufferMapAccessFlags() const { return BufferMapAccessFlags(GL_MAP_INVALIDATE_RANGE_BIT); }
+  constexpr operator BufferMapAccessBit() const { return BufferMapAccessBit(GL_MAP_INVALIDATE_RANGE_BIT); }
 #else
-  operator BufferMapAccessFlags() const { return BufferMapAccessFlags(GL_MAP_INVALIDATE_RANGE_BIT); }
+  operator BufferMapAccessBit() const { return BufferMapAccessBit(GL_MAP_INVALIDATE_RANGE_BIT); }
 #endif
 };
 #endif
@@ -1808,9 +1833,11 @@ struct MapInvalidateRangeBitEnum {
 struct MapPersistentBitEnum {
 #if __has_feature(cxx_constexpr)
   constexpr MapPersistentBitEnum() { }
-  constexpr operator BufferMapAccessFlags() const { return BufferMapAccessFlags(GL_MAP_PERSISTENT_BIT); }
+  constexpr operator BufferMapAccessBit() const { return BufferMapAccessBit(GL_MAP_PERSISTENT_BIT); }
+  constexpr operator BufferStorageBit() const { return BufferStorageBit(GL_MAP_PERSISTENT_BIT); }
 #else
-  operator BufferMapAccessFlags() const { return BufferMapAccessFlags(GL_MAP_PERSISTENT_BIT); }
+  operator BufferMapAccessBit() const { return BufferMapAccessBit(GL_MAP_PERSISTENT_BIT); }
+  operator BufferStorageBit() const { return BufferStorageBit(GL_MAP_PERSISTENT_BIT); }
 #endif
 };
 #endif
@@ -1819,9 +1846,11 @@ struct MapPersistentBitEnum {
 struct MapReadBitEnum {
 #if __has_feature(cxx_constexpr)
   constexpr MapReadBitEnum() { }
-  constexpr operator BufferMapAccessFlags() const { return BufferMapAccessFlags(GL_MAP_READ_BIT); }
+  constexpr operator BufferMapAccessBit() const { return BufferMapAccessBit(GL_MAP_READ_BIT); }
+  constexpr operator BufferStorageBit() const { return BufferStorageBit(GL_MAP_READ_BIT); }
 #else
-  operator BufferMapAccessFlags() const { return BufferMapAccessFlags(GL_MAP_READ_BIT); }
+  operator BufferMapAccessBit() const { return BufferMapAccessBit(GL_MAP_READ_BIT); }
+  operator BufferStorageBit() const { return BufferStorageBit(GL_MAP_READ_BIT); }
 #endif
 };
 #endif
@@ -1830,9 +1859,9 @@ struct MapReadBitEnum {
 struct MapUnsynchronizedBitEnum {
 #if __has_feature(cxx_constexpr)
   constexpr MapUnsynchronizedBitEnum() { }
-  constexpr operator BufferMapAccessFlags() const { return BufferMapAccessFlags(GL_MAP_UNSYNCHRONIZED_BIT); }
+  constexpr operator BufferMapAccessBit() const { return BufferMapAccessBit(GL_MAP_UNSYNCHRONIZED_BIT); }
 #else
-  operator BufferMapAccessFlags() const { return BufferMapAccessFlags(GL_MAP_UNSYNCHRONIZED_BIT); }
+  operator BufferMapAccessBit() const { return BufferMapAccessBit(GL_MAP_UNSYNCHRONIZED_BIT); }
 #endif
 };
 #endif
@@ -1841,9 +1870,11 @@ struct MapUnsynchronizedBitEnum {
 struct MapWriteBitEnum {
 #if __has_feature(cxx_constexpr)
   constexpr MapWriteBitEnum() { }
-  constexpr operator BufferMapAccessFlags() const { return BufferMapAccessFlags(GL_MAP_WRITE_BIT); }
+  constexpr operator BufferMapAccessBit() const { return BufferMapAccessBit(GL_MAP_WRITE_BIT); }
+  constexpr operator BufferStorageBit() const { return BufferStorageBit(GL_MAP_WRITE_BIT); }
 #else
-  operator BufferMapAccessFlags() const { return BufferMapAccessFlags(GL_MAP_WRITE_BIT); }
+  operator BufferMapAccessBit() const { return BufferMapAccessBit(GL_MAP_WRITE_BIT); }
+  operator BufferStorageBit() const { return BufferStorageBit(GL_MAP_WRITE_BIT); }
 #endif
 };
 #endif
@@ -2322,9 +2353,9 @@ struct PixelBufferBarrierBitEnum {
 struct PixelPackBufferEnum {
 #if __has_feature(cxx_constexpr)
   constexpr PixelPackBufferEnum() { }
-  constexpr operator BufferType() const { return BufferType(GL_PIXEL_PACK_BUFFER); }
+  constexpr operator BufferTarget() const { return BufferTarget(GL_PIXEL_PACK_BUFFER); }
 #else
-  operator BufferType() const { return BufferType(GL_PIXEL_PACK_BUFFER); }
+  operator BufferTarget() const { return BufferTarget(GL_PIXEL_PACK_BUFFER); }
 #endif
 };
 #endif
@@ -2333,9 +2364,9 @@ struct PixelPackBufferEnum {
 struct PixelUnpackBufferEnum {
 #if __has_feature(cxx_constexpr)
   constexpr PixelUnpackBufferEnum() { }
-  constexpr operator BufferType() const { return BufferType(GL_PIXEL_UNPACK_BUFFER); }
+  constexpr operator BufferTarget() const { return BufferTarget(GL_PIXEL_UNPACK_BUFFER); }
 #else
-  operator BufferType() const { return BufferType(GL_PIXEL_UNPACK_BUFFER); }
+  operator BufferTarget() const { return BufferTarget(GL_PIXEL_UNPACK_BUFFER); }
 #endif
 };
 #endif
@@ -2621,9 +2652,9 @@ struct RasterizerDiscardEnum {
 struct ReadFramebufferEnum {
 #if __has_feature(cxx_constexpr)
   constexpr ReadFramebufferEnum() { }
-  constexpr operator FramebufferType() const { return FramebufferType(GL_READ_FRAMEBUFFER); }
+  constexpr operator FramebufferTarget() const { return FramebufferTarget(GL_READ_FRAMEBUFFER); }
 #else
-  operator FramebufferType() const { return FramebufferType(GL_READ_FRAMEBUFFER); }
+  operator FramebufferTarget() const { return FramebufferTarget(GL_READ_FRAMEBUFFER); }
 #endif
 };
 #endif
@@ -2680,9 +2711,9 @@ struct RedIntegerEnum {
 struct RenderbufferEnum {
 #if __has_feature(cxx_constexpr)
   constexpr RenderbufferEnum() { }
-  constexpr operator RenderbufferType() const { return RenderbufferType(GL_RENDERBUFFER); }
+  constexpr operator RenderbufferTarget() const { return RenderbufferTarget(GL_RENDERBUFFER); }
 #else
-  operator RenderbufferType() const { return RenderbufferType(GL_RENDERBUFFER); }
+  operator RenderbufferTarget() const { return RenderbufferTarget(GL_RENDERBUFFER); }
 #endif
 };
 #endif
@@ -3412,11 +3443,11 @@ struct ShaderStorageBarrierBitEnum {
 struct ShaderStorageBufferEnum {
 #if __has_feature(cxx_constexpr)
   constexpr ShaderStorageBufferEnum() { }
-  constexpr operator IndexedBufferType() const { return IndexedBufferType(GL_SHADER_STORAGE_BUFFER); }
-  constexpr operator BufferType() const { return BufferType(GL_SHADER_STORAGE_BUFFER); }
+  constexpr operator BufferTarget() const { return BufferTarget(GL_SHADER_STORAGE_BUFFER); }
+  constexpr operator IndexedBufferTarget() const { return IndexedBufferTarget(GL_SHADER_STORAGE_BUFFER); }
 #else
-  operator IndexedBufferType() const { return IndexedBufferType(GL_SHADER_STORAGE_BUFFER); }
-  operator BufferType() const { return BufferType(GL_SHADER_STORAGE_BUFFER); }
+  operator BufferTarget() const { return BufferTarget(GL_SHADER_STORAGE_BUFFER); }
+  operator IndexedBufferTarget() const { return IndexedBufferTarget(GL_SHADER_STORAGE_BUFFER); }
 #endif
 };
 #endif
@@ -3704,9 +3735,9 @@ struct TessEvaluationShaderEnum {
 struct Texture1DEnum {
 #if __has_feature(cxx_constexpr)
   constexpr Texture1DEnum() { }
-  constexpr operator TextureType() const { return TextureType(GL_TEXTURE_1D); }
+  constexpr operator TextureTarget() const { return TextureTarget(GL_TEXTURE_1D); }
 #else
-  operator TextureType() const { return TextureType(GL_TEXTURE_1D); }
+  operator TextureTarget() const { return TextureTarget(GL_TEXTURE_1D); }
 #endif
 };
 #endif
@@ -3715,11 +3746,11 @@ struct Texture1DEnum {
 struct Texture1DArrayEnum {
 #if __has_feature(cxx_constexpr)
   constexpr Texture1DArrayEnum() { }
-  constexpr operator TextureType() const { return TextureType(GL_TEXTURE_1D_ARRAY); }
-  constexpr operator Texture2DType() const { return Texture2DType(GL_TEXTURE_1D_ARRAY); }
+  constexpr operator Texture2DTarget() const { return Texture2DTarget(GL_TEXTURE_1D_ARRAY); }
+  constexpr operator TextureTarget() const { return TextureTarget(GL_TEXTURE_1D_ARRAY); }
 #else
-  operator TextureType() const { return TextureType(GL_TEXTURE_1D_ARRAY); }
-  operator Texture2DType() const { return Texture2DType(GL_TEXTURE_1D_ARRAY); }
+  operator Texture2DTarget() const { return Texture2DTarget(GL_TEXTURE_1D_ARRAY); }
+  operator TextureTarget() const { return TextureTarget(GL_TEXTURE_1D_ARRAY); }
 #endif
 };
 #endif
@@ -3728,11 +3759,11 @@ struct Texture1DArrayEnum {
 struct Texture2DEnum {
 #if __has_feature(cxx_constexpr)
   constexpr Texture2DEnum() { }
-  constexpr operator TextureType() const { return TextureType(GL_TEXTURE_2D); }
-  constexpr operator Texture2DType() const { return Texture2DType(GL_TEXTURE_2D); }
+  constexpr operator Texture2DTarget() const { return Texture2DTarget(GL_TEXTURE_2D); }
+  constexpr operator TextureTarget() const { return TextureTarget(GL_TEXTURE_2D); }
 #else
-  operator TextureType() const { return TextureType(GL_TEXTURE_2D); }
-  operator Texture2DType() const { return Texture2DType(GL_TEXTURE_2D); }
+  operator Texture2DTarget() const { return Texture2DTarget(GL_TEXTURE_2D); }
+  operator TextureTarget() const { return TextureTarget(GL_TEXTURE_2D); }
 #endif
 };
 #endif
@@ -3741,11 +3772,11 @@ struct Texture2DEnum {
 struct Texture2DArrayEnum {
 #if __has_feature(cxx_constexpr)
   constexpr Texture2DArrayEnum() { }
-  constexpr operator TextureType() const { return TextureType(GL_TEXTURE_2D_ARRAY); }
-  constexpr operator Texture3DType() const { return Texture3DType(GL_TEXTURE_2D_ARRAY); }
+  constexpr operator Texture3DTarget() const { return Texture3DTarget(GL_TEXTURE_2D_ARRAY); }
+  constexpr operator TextureTarget() const { return TextureTarget(GL_TEXTURE_2D_ARRAY); }
 #else
-  operator TextureType() const { return TextureType(GL_TEXTURE_2D_ARRAY); }
-  operator Texture3DType() const { return Texture3DType(GL_TEXTURE_2D_ARRAY); }
+  operator Texture3DTarget() const { return Texture3DTarget(GL_TEXTURE_2D_ARRAY); }
+  operator TextureTarget() const { return TextureTarget(GL_TEXTURE_2D_ARRAY); }
 #endif
 };
 #endif
@@ -3754,11 +3785,11 @@ struct Texture2DArrayEnum {
 struct Texture3DEnum {
 #if __has_feature(cxx_constexpr)
   constexpr Texture3DEnum() { }
-  constexpr operator TextureType() const { return TextureType(GL_TEXTURE_3D); }
-  constexpr operator Texture3DType() const { return Texture3DType(GL_TEXTURE_3D); }
+  constexpr operator Texture3DTarget() const { return Texture3DTarget(GL_TEXTURE_3D); }
+  constexpr operator TextureTarget() const { return TextureTarget(GL_TEXTURE_3D); }
 #else
-  operator TextureType() const { return TextureType(GL_TEXTURE_3D); }
-  operator Texture3DType() const { return Texture3DType(GL_TEXTURE_3D); }
+  operator Texture3DTarget() const { return Texture3DTarget(GL_TEXTURE_3D); }
+  operator TextureTarget() const { return TextureTarget(GL_TEXTURE_3D); }
 #endif
 };
 #endif
@@ -3767,9 +3798,9 @@ struct Texture3DEnum {
 struct TextureBufferEnum {
 #if __has_feature(cxx_constexpr)
   constexpr TextureBufferEnum() { }
-  constexpr operator BufferType() const { return BufferType(GL_TEXTURE_BUFFER); }
+  constexpr operator BufferTarget() const { return BufferTarget(GL_TEXTURE_BUFFER); }
 #else
-  operator BufferType() const { return BufferType(GL_TEXTURE_BUFFER); }
+  operator BufferTarget() const { return BufferTarget(GL_TEXTURE_BUFFER); }
 #endif
 };
 #endif
@@ -3789,11 +3820,11 @@ struct TextureCompressionHintEnum {
 struct TextureCubeMapEnum {
 #if __has_feature(cxx_constexpr)
   constexpr TextureCubeMapEnum() { }
-  constexpr operator TextureType() const { return TextureType(GL_TEXTURE_CUBE_MAP); }
-  constexpr operator Texture2DType() const { return Texture2DType(GL_TEXTURE_CUBE_MAP); }
+  constexpr operator Texture2DTarget() const { return Texture2DTarget(GL_TEXTURE_CUBE_MAP); }
+  constexpr operator TextureTarget() const { return TextureTarget(GL_TEXTURE_CUBE_MAP); }
 #else
-  operator TextureType() const { return TextureType(GL_TEXTURE_CUBE_MAP); }
-  operator Texture2DType() const { return Texture2DType(GL_TEXTURE_CUBE_MAP); }
+  operator Texture2DTarget() const { return Texture2DTarget(GL_TEXTURE_CUBE_MAP); }
+  operator TextureTarget() const { return TextureTarget(GL_TEXTURE_CUBE_MAP); }
 #endif
 };
 #endif
@@ -3890,11 +3921,11 @@ struct TextureFetchBarrierBitEnum {
 struct TextureRectangleEnum {
 #if __has_feature(cxx_constexpr)
   constexpr TextureRectangleEnum() { }
-  constexpr operator TextureType() const { return TextureType(GL_TEXTURE_RECTANGLE); }
-  constexpr operator Texture2DType() const { return Texture2DType(GL_TEXTURE_RECTANGLE); }
+  constexpr operator Texture2DTarget() const { return Texture2DTarget(GL_TEXTURE_RECTANGLE); }
+  constexpr operator TextureTarget() const { return TextureTarget(GL_TEXTURE_RECTANGLE); }
 #else
-  operator TextureType() const { return TextureType(GL_TEXTURE_RECTANGLE); }
-  operator Texture2DType() const { return Texture2DType(GL_TEXTURE_RECTANGLE); }
+  operator Texture2DTarget() const { return Texture2DTarget(GL_TEXTURE_RECTANGLE); }
+  operator TextureTarget() const { return TextureTarget(GL_TEXTURE_RECTANGLE); }
 #endif
 };
 #endif
@@ -3914,9 +3945,9 @@ struct TextureUpdateBarrierBitEnum {
 struct TransformFeedbackEnum {
 #if __has_feature(cxx_constexpr)
   constexpr TransformFeedbackEnum() { }
-  constexpr operator TransformFeedbackType() const { return TransformFeedbackType(GL_TRANSFORM_FEEDBACK); }
+  constexpr operator TransformFeedbackTarget() const { return TransformFeedbackTarget(GL_TRANSFORM_FEEDBACK); }
 #else
-  operator TransformFeedbackType() const { return TransformFeedbackType(GL_TRANSFORM_FEEDBACK); }
+  operator TransformFeedbackTarget() const { return TransformFeedbackTarget(GL_TRANSFORM_FEEDBACK); }
 #endif
 };
 #endif
@@ -3936,11 +3967,11 @@ struct TransformFeedbackBarrierBitEnum {
 struct TransformFeedbackBufferEnum {
 #if __has_feature(cxx_constexpr)
   constexpr TransformFeedbackBufferEnum() { }
-  constexpr operator IndexedBufferType() const { return IndexedBufferType(GL_TRANSFORM_FEEDBACK_BUFFER); }
-  constexpr operator BufferType() const { return BufferType(GL_TRANSFORM_FEEDBACK_BUFFER); }
+  constexpr operator BufferTarget() const { return BufferTarget(GL_TRANSFORM_FEEDBACK_BUFFER); }
+  constexpr operator IndexedBufferTarget() const { return IndexedBufferTarget(GL_TRANSFORM_FEEDBACK_BUFFER); }
 #else
-  operator IndexedBufferType() const { return IndexedBufferType(GL_TRANSFORM_FEEDBACK_BUFFER); }
-  operator BufferType() const { return BufferType(GL_TRANSFORM_FEEDBACK_BUFFER); }
+  operator BufferTarget() const { return BufferTarget(GL_TRANSFORM_FEEDBACK_BUFFER); }
+  operator IndexedBufferTarget() const { return IndexedBufferTarget(GL_TRANSFORM_FEEDBACK_BUFFER); }
 #endif
 };
 #endif
@@ -4017,11 +4048,11 @@ struct UniformBarrierBitEnum {
 struct UniformBufferEnum {
 #if __has_feature(cxx_constexpr)
   constexpr UniformBufferEnum() { }
-  constexpr operator IndexedBufferType() const { return IndexedBufferType(GL_UNIFORM_BUFFER); }
-  constexpr operator BufferType() const { return BufferType(GL_UNIFORM_BUFFER); }
+  constexpr operator BufferTarget() const { return BufferTarget(GL_UNIFORM_BUFFER); }
+  constexpr operator IndexedBufferTarget() const { return IndexedBufferTarget(GL_UNIFORM_BUFFER); }
 #else
-  operator IndexedBufferType() const { return IndexedBufferType(GL_UNIFORM_BUFFER); }
-  operator BufferType() const { return BufferType(GL_UNIFORM_BUFFER); }
+  operator BufferTarget() const { return BufferTarget(GL_UNIFORM_BUFFER); }
+  operator IndexedBufferTarget() const { return IndexedBufferTarget(GL_UNIFORM_BUFFER); }
 #endif
 };
 #endif
@@ -4378,9 +4409,9 @@ struct UnsignedShort565RevEnum {
 struct VertexArrayEnum {
 #if __has_feature(cxx_constexpr)
   constexpr VertexArrayEnum() { }
-  constexpr operator VertexArrayType() const { return VertexArrayType(GL_VERTEX_ARRAY); }
+  constexpr operator VertexArrayTarget() const { return VertexArrayTarget(GL_VERTEX_ARRAY); }
 #else
-  operator VertexArrayType() const { return VertexArrayType(GL_VERTEX_ARRAY); }
+  operator VertexArrayTarget() const { return VertexArrayTarget(GL_VERTEX_ARRAY); }
 #endif
 };
 #endif
@@ -4619,6 +4650,13 @@ struct ZeroEnum {
   constexpr smart_enums::ClientMappedBufferBarrierBitEnum kClientMappedBufferBarrierBit;
 #else
   static smart_enums::ClientMappedBufferBarrierBitEnum kClientMappedBufferBarrierBit;
+#endif
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_CLIENT_STORAGE_BIT)
+#if __has_feature(cxx_constexpr)
+  constexpr smart_enums::ClientStorageBitEnum kClientStorageBit;
+#else
+  static smart_enums::ClientStorageBitEnum kClientStorageBit;
 #endif
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_CLIP_DISTANCE)
@@ -5053,6 +5091,13 @@ struct ZeroEnum {
   constexpr smart_enums::DynamicReadEnum kDynamicRead;
 #else
   static smart_enums::DynamicReadEnum kDynamicRead;
+#endif
+#endif
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DYNAMIC_STORAGE_BIT)
+#if __has_feature(cxx_constexpr)
+  constexpr smart_enums::DynamicStorageBitEnum kDynamicStorageBit;
+#else
+  static smart_enums::DynamicStorageBitEnum kDynamicStorageBit;
 #endif
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ELEMENT_ARRAY_BARRIER_BIT)

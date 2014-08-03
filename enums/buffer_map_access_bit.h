@@ -1,14 +1,14 @@
 // Copyright (c) 2014, Tamas Csala
 
-#ifndef OGLWRAP_ENUMS_BUFFER_MAP_ACCESS_FLAGS_H_
-#define OGLWRAP_ENUMS_BUFFER_MAP_ACCESS_FLAGS_H_
+#ifndef OGLWRAP_ENUMS_BUFFER_MAP_ACCESS_BIT_H_
+#define OGLWRAP_ENUMS_BUFFER_MAP_ACCESS_BIT_H_
 
 #include "../config.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
 namespace enums {
 
-enum class BufferMapAccessFlags : GLenum {
+enum class BufferMapAccessBit : GLenum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_MAP_READ_BIT)
   kMapReadBit = GL_MAP_READ_BIT,
 #endif

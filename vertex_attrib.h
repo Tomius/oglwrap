@@ -18,7 +18,6 @@
 
 #include "enums/data_type.h"
 #include "enums/whole_data_type.h"
-#include "enums/vertex_array_type.h"
 
 #include "./define_internal_macros.h"
 

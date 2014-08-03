@@ -8,7 +8,7 @@
 #define OGLWRAP_TRANSFORM_FEEDBACK_H_
 
 #include "./globjects.h"
-#include "enums/transform_feedback_type.h"
+#include "enums/transform_feedback_target.h"
 #include "enums/transform_feedback_binding.h"
 #include "enums/basic_primitive_type.h"
 

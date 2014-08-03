@@ -26,7 +26,7 @@
 #include "./smart_enums.h"
 #include "./vertex_array.h"
 #include "./vertex_attrib.h"
-#include "textures/texture_2D.h"
+#include "textures/texture2D.h"
 #include "textures/texture_cube.h"
 
 

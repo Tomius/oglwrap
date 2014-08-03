@@ -1,23 +1,23 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file texture_2D.h
+/** @file texture2D.h
     @brief Implements two-dimensional, non-cubemap textures.
 */
 
-#ifndef OGLWRAP_TEXTURES_TEXTURE_2D_H_
-#define OGLWRAP_TEXTURES_TEXTURE_2D_H_
+#ifndef OGLWRAP_TEXTURES_TEXTURE2D_H_
+#define OGLWRAP_TEXTURES_TEXTURE2D_H_
 
 #include "./texture_base.h"
-#include "../enums/texture2D_type.h"
+#include "../enums/texture2D_target.h"
 
 #include "../define_internal_macros.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
 
-template<Texture2DType texture_t>
+template<Texture2DTarget texture_t>
 /// The base class describing functionality for all 2D textures.
 /** You should rather use the typedefed versions than this template. */
-class Texture2DBase : public TextureBase<TextureType(texture_t)> {
+class Texture2DBase : public TextureBase<TextureTarget(texture_t)> {
  public:
   /// Uploads the base image.
   /** @param internal_format - Specifies the number, order, and size of the color components in the texture.
@@ -140,7 +140,7 @@ class Texture2DBase : public TextureBase<TextureType(texture_t)> {
 
 /// The most commonly used two-dimensional texture type.
 /** @see GL_TEXTURE_2D */
-typedef Texture2DBase<Texture2DType::kTexture2D> Texture2D;
+typedef Texture2DBase<Texture2DTarget::kTexture2D> Texture2D;
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_RECTANGLE)
 /// A rectangle texture is a texture that contains a single 2D image with no mipmaps.
@@ -148,13 +148,13 @@ typedef Texture2DBase<Texture2DType::kTexture2D> Texture2D;
   * this texture must be texel values (floating-point), representing texels within the
   * texture, rather than normalized texture coordinates.
   * @see GL_TEXTURE_RECTANGLE */
-typedef Texture2DBase<Texture2DType::kTextureRectangle> TextureRect;
+typedef Texture2DBase<Texture2DTarget::kTextureRectangle> TextureRect;
 #endif  // GL_TEXTURE_RECTANGLE
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_1D_ARRAY)
 /// An array of one-dimensional textures.
 /** @see GL_TEXTURE_1D_ARRAY */
-typedef Texture2DBase<Texture2DType::kTexture1DArray> Texture1DArray;
+typedef Texture2DBase<Texture2DTarget::kTexture1DArray> Texture1DArray;
 #endif  // GL_TEXTURE_1D_ARRAY
 
 }  // namespace oglwrap

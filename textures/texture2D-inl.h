@@ -1,16 +1,16 @@
 // Copyright (c) 2014, Tamas Csala
 
-#ifndef OGLWRAP_TEXTURES_TEXTURE_2D_INL_H_
-#define OGLWRAP_TEXTURES_TEXTURE_2D_INL_H_
+#ifndef OGLWRAP_TEXTURES_TEXTURE2D_INL_H_
+#define OGLWRAP_TEXTURES_TEXTURE2D_INL_H_
 
-#include "./texture_2D.h"
+#include "./texture2D.h"
 #include "../context/binding.h"
 
 #include "../define_internal_macros.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
 
-template<Texture2DType texture_t>
+template<Texture2DTarget texture_t>
 void Texture2DBase<texture_t>::upload(
     PixelDataInternalFormat internal_format, GLsizei width, GLsizei height,
     PixelDataFormat format, PixelDataType type, const void *data) {
@@ -19,7 +19,7 @@ void Texture2DBase<texture_t>::upload(
                 width, height, 0, GLenum(format), GLenum(type), data));
 }
 
-template<Texture2DType texture_t>
+template<Texture2DTarget texture_t>
 void Texture2DBase<texture_t>::uploadMipmap(
     GLint level, PixelDataInternalFormat internal_format, GLsizei width,
     GLsizei height, PixelDataFormat format, PixelDataType type,
@@ -29,7 +29,7 @@ void Texture2DBase<texture_t>::uploadMipmap(
                 width, height, 0, GLenum(format), GLenum(type), data));
 }
 
-template<Texture2DType texture_t>
+template<Texture2DTarget texture_t>
 void Texture2DBase<texture_t>::subUpload(
     GLint x_offset, GLint y_offset, GLsizei width, GLsizei height,
     PixelDataFormat format, PixelDataType type, const void *data) {
@@ -38,7 +38,7 @@ void Texture2DBase<texture_t>::subUpload(
                    width, height, GLenum(format), GLenum(type), data));
 }
 
-template<Texture2DType texture_t>
+template<Texture2DTarget texture_t>
 void Texture2DBase<texture_t>::subUploadMipmap(
     GLint level, GLint x_offset, GLint y_offset, GLsizei width, GLsizei height,
     PixelDataFormat format, PixelDataType type, const void *data) {
@@ -48,7 +48,7 @@ void Texture2DBase<texture_t>::subUploadMipmap(
 }
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glTexStorage2D)
-template<Texture2DType texture_t>
+template<Texture2DTarget texture_t>
 void Texture2DBase<texture_t>::storage(GLsizei levels, GLenum internal_format,
                                        GLsizei width, GLsizei height) {
   OGLWRAP_CHECK_BINDING();
@@ -57,7 +57,7 @@ void Texture2DBase<texture_t>::storage(GLsizei levels, GLenum internal_format,
 }
 #endif  // glTexStorage2D
 
-template<Texture2DType texture_t>
+template<Texture2DTarget texture_t>
 void Texture2DBase<texture_t>::copy(
     PixelDataInternalFormat internal_format, GLint x, GLint y,
     GLsizei width, GLsizei height) {
@@ -66,7 +66,7 @@ void Texture2DBase<texture_t>::copy(
                     x, y, width, height, 0));
 }
 
-template<Texture2DType texture_t>
+template<Texture2DTarget texture_t>
 void Texture2DBase<texture_t>::copyMipmap(
     GLint level, PixelDataInternalFormat internal_format, GLint x, GLint y,
     GLsizei width, GLsizei height) {
@@ -75,7 +75,7 @@ void Texture2DBase<texture_t>::copyMipmap(
                     x, y, width, height, 0));
 }
 
-template<Texture2DType texture_t>
+template<Texture2DTarget texture_t>
 void Texture2DBase<texture_t>::copySub(
     GLint x_offset, GLint y_offset, GLint x,
     GLint y, GLsizei width, GLsizei height) {
@@ -84,7 +84,7 @@ void Texture2DBase<texture_t>::copySub(
                        x, y, width, height));
 }
 
-template<Texture2DType texture_t>
+template<Texture2DTarget texture_t>
 void Texture2DBase<texture_t>::copySubMipmap(
     GLint level, GLint x_offset, GLint y_offset,
     GLint x, GLint y, GLsizei width, GLsizei height) {
@@ -93,7 +93,7 @@ void Texture2DBase<texture_t>::copySubMipmap(
                        x, y, width, height));
 }
 
-template<Texture2DType texture_t>
+template<Texture2DTarget texture_t>
 GLsizei Texture2DBase<texture_t>::width(GLint level) const {
   OGLWRAP_CHECK_BINDING();
   GLsizei data;
@@ -101,7 +101,7 @@ GLsizei Texture2DBase<texture_t>::width(GLint level) const {
   return data;
 }
 
-template<Texture2DType texture_t>
+template<Texture2DTarget texture_t>
 GLsizei Texture2DBase<texture_t>::height(GLint level) const {
   OGLWRAP_CHECK_BINDING();
   GLsizei data;
@@ -110,7 +110,7 @@ GLsizei Texture2DBase<texture_t>::height(GLint level) const {
 }
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glGetCompressedTexImage)
-template<Texture2DType texture_t>
+template<Texture2DTarget texture_t>
 void Texture2DBase<texture_t>::getCompressedImage(GLint level,
                                                   GLvoid* img) const {
   OGLWRAP_CHECK_BINDING();
@@ -119,7 +119,7 @@ void Texture2DBase<texture_t>::getCompressedImage(GLint level,
 #endif  // glGetCompressedTexImage
 
 #if OGLWRAP_USE_IMAGEMAGICK
-template<Texture2DType texture_t>
+template<Texture2DTarget texture_t>
 void Texture2DBase<texture_t>::loadTexture(const std::string& file,
                                           std::string format_string) {
   try {

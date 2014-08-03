@@ -5,7 +5,7 @@
 
 #include "../config.h"
 #include "../debug/debug_output.h"
-#include "./vertex_array_type.h"
+#include "./vertex_array_target.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
 namespace enums {
@@ -18,12 +18,12 @@ enum class VertexArrayBinding : GLenum {
 
 }  // namespace enums
 using namespace enums;
-inline VertexArrayBinding GetBindingTarget(VertexArrayType type) {
+inline VertexArrayBinding GetBindingTarget(VertexArrayTarget type) {
   VertexArrayBinding target;
 
   switch (type) {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_VERTEX_ARRAY_BINDING) && defined(GL_VERTEX_ARRAY)
-    case VertexArrayType::kVertexArray:
+    case VertexArrayTarget::kVertexArray:
       target = VertexArrayBinding::kVertexArrayBinding;
       DebugOutput::LastUsedBindTarget() = "GL_VERTEX_ARRAY_BINDING";
       break;

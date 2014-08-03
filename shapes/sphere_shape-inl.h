@@ -21,7 +21,7 @@ inline SphereShape::SphereShape(const std::set<AttributeType>& attribs,
   void* offset{nullptr};
 
   Bind(vao_);
-  Bind(buffer_);
+  BoundBuffer bound_buffer{buffer_};
   for (int i = 0; i < kAttribTypeNum; ++i) {
     AttributeType type = static_cast<AttributeType>(i);
     if (attribs.find(type) != attribs.end()) {
@@ -32,8 +32,7 @@ inline SphereShape::SphereShape(const std::set<AttributeType>& attribs,
       if (vertex_num_ == 0) { vertex_num_ = data.size() / vertex_per_attrib; }
     }
   }
-  buffer_.data(data);
-  Unbind(buffer_);
+  bound_buffer.data(data);
   Unbind(vao_);
 }
 

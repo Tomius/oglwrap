@@ -5,7 +5,7 @@
 
 #include "../config.h"
 #include "../debug/debug_output.h"
-#include "./indexed_buffer_type.h"
+#include "./indexed_buffer_target.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
 namespace enums {
@@ -27,30 +27,30 @@ enum class IndexedBufferBinding : GLenum {
 
 }  // namespace enums
 using namespace enums;
-inline IndexedBufferBinding GetBindingTarget(IndexedBufferType type) {
+inline IndexedBufferBinding GetBindingTarget(IndexedBufferTarget type) {
   IndexedBufferBinding target;
 
   switch (type) {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ATOMIC_COUNTER_BUFFER_BINDING) && defined(GL_ATOMIC_COUNTER_BUFFER)
-    case IndexedBufferType::kAtomicCounterBuffer:
+    case IndexedBufferTarget::kAtomicCounterBuffer:
       target = IndexedBufferBinding::kAtomicCounterBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_ATOMIC_COUNTER_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SHADER_STORAGE_BUFFER_BINDING) && defined(GL_SHADER_STORAGE_BUFFER)
-    case IndexedBufferType::kShaderStorageBuffer:
+    case IndexedBufferTarget::kShaderStorageBuffer:
       target = IndexedBufferBinding::kShaderStorageBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_SHADER_STORAGE_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRANSFORM_FEEDBACK_BUFFER_BINDING) && defined(GL_TRANSFORM_FEEDBACK_BUFFER)
-    case IndexedBufferType::kTransformFeedbackBuffer:
+    case IndexedBufferTarget::kTransformFeedbackBuffer:
       target = IndexedBufferBinding::kTransformFeedbackBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_TRANSFORM_FEEDBACK_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNIFORM_BUFFER_BINDING) && defined(GL_UNIFORM_BUFFER)
-    case IndexedBufferType::kUniformBuffer:
+    case IndexedBufferTarget::kUniformBuffer:
       target = IndexedBufferBinding::kUniformBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_UNIFORM_BUFFER_BINDING";
       break;

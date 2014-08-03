@@ -13,7 +13,7 @@ inline CubeShape::CubeShape(const std::set<AttributeType>& attribs) {
   void* offset{nullptr};
 
   Bind(vao_);
-  Bind(buffer_);
+  BoundBuffer bound_buffer{buffer_};
   for (int i = 0; i < kAttribTypeNum; ++i) {
     AttributeType type = static_cast<AttributeType>(i);
     if (attribs.find(type) != attribs.end()) {
@@ -23,8 +23,7 @@ inline CubeShape::CubeShape(const std::set<AttributeType>& attribs) {
       offset = (void*)(data.size() * sizeof(glm::vec3));
     }
   }
-  buffer_.data(data);
-  Unbind(buffer_);
+  bound_buffer.data(data);
   Unbind(vao_);
 }
 

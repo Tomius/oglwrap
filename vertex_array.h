@@ -10,7 +10,7 @@
 #include "./config.h"
 #include "./globjects.h"
 
-#include "enums/vertex_array_type.h"
+#include "enums/vertex_array_target.h"
 #include "enums/vertex_array_binding.h"
 
 #include "./define_internal_macros.h"
@@ -22,8 +22,8 @@ namespace OGLWRAP_NAMESPACE_NAME {
 #if OGLWRAP_DEFINE_EVERYTHING \
     || (defined(glGenVertexArrays) && defined(glDeleteVertexArrays))
 /**
- * @brief VAO is an object that remembers which ArrayBuffers to use for a
- *        draw call.
+ * @brief VAO is an object that remembers which IndexBuffer and ArrayBuffers
+ *        to use for a draw call, and how to undestand the data in them.
  *
  * A Vertex Array glObject (VAO) is an object that encapsulates all of the
  * state needed to specify vertex data. They define the format of the vertex

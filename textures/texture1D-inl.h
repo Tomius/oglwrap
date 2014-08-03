@@ -1,13 +1,9 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file texture_1D.h
-    @brief Implements one-dimensional textures.
-*/
+#ifndef OGLWRAP_TEXTURES_TEXTURE1D_INL_H_
+#define OGLWRAP_TEXTURES_TEXTURE1D_INL_H_
 
-#ifndef OGLWRAP_TEXTURES_TEXTURE_1D_INL_H_
-#define OGLWRAP_TEXTURES_TEXTURE_1D_INL_H_
-
-#include "./texture_1D.h"
+#include "./texture1D.h"
 #include "../context/binding.h"
 
 #include "../define_internal_macros.h"

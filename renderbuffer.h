@@ -9,7 +9,7 @@
 
 #include "./config.h"
 #include "./globjects.h"
-#include "enums/renderbuffer_type.h"
+#include "enums/renderbuffer_target.h"
 #include "enums/renderbuffer_binding.h"
 #include "enums/pixel_data_internal_format.h"
 

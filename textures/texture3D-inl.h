@@ -1,9 +1,9 @@
 // Copyright (c) 2014, Tamas Csala
 
-#ifndef OGLWRAP_TEXTURES_TEXTURE_3D_INL_H_
-#define OGLWRAP_TEXTURES_TEXTURE_3D_INL_H_
+#ifndef OGLWRAP_TEXTURES_TEXTURE3D_INL_H_
+#define OGLWRAP_TEXTURES_TEXTURE3D_INL_H_
 
-#include "./texture_3D.h"
+#include "./texture3D.h"
 #include "../context/binding.h"
 
 #include "../define_internal_macros.h"
@@ -13,7 +13,7 @@ namespace OGLWRAP_NAMESPACE_NAME {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_3D)
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glTexImage3D)
-template<Texture3DType texture_t>
+template<Texture3DTarget texture_t>
 void Texture3DBase<texture_t>::upload(PixelDataInternalFormat internal_format,
                                       GLsizei width, GLsizei height,
                                       GLsizei depth, PixelDataFormat format,
@@ -24,7 +24,7 @@ void Texture3DBase<texture_t>::upload(PixelDataInternalFormat internal_format,
                 depth, 0, GLenum(format), GLenum(type), data));
 }
 
-template<Texture3DType texture_t>
+template<Texture3DTarget texture_t>
 void Texture3DBase<texture_t>::uploadMipmap(
     GLint level, PixelDataInternalFormat internal_format, GLsizei width,
     GLsizei height, GLsizei depth, PixelDataFormat format, PixelDataType type,
@@ -36,7 +36,7 @@ void Texture3DBase<texture_t>::uploadMipmap(
 #endif  // glTexImage3D
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glTexSubImage3D)
-template<Texture3DType texture_t>
+template<Texture3DTarget texture_t>
 void Texture3DBase<texture_t>::subUpload(
     GLint x_offset, GLint y_offset, GLint z_offset, GLsizei width,
     GLsizei height, GLsizei depth, PixelDataFormat format, PixelDataType type,
@@ -46,7 +46,7 @@ void Texture3DBase<texture_t>::subUpload(
                    height, depth, GLenum(format), GLenum(type), data));
 }
 
-template<Texture3DType texture_t>
+template<Texture3DTarget texture_t>
 void Texture3DBase<texture_t>::subUploadMipmap(
     GLint level, GLint x_offset, GLint y_offset, GLint z_offset, GLsizei width,
     GLsizei height, GLsizei depth, PixelDataFormat format, PixelDataType type,
@@ -58,7 +58,7 @@ void Texture3DBase<texture_t>::subUploadMipmap(
 #endif  // glTexSubImage3D
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glCopyTexSubImage3D)
-template<Texture3DType texture_t>
+template<Texture3DTarget texture_t>
 void Texture3DBase<texture_t>::copySub(GLint x_offset, GLint y_offset,
                                        GLint z_offset, GLint x, GLint y,
                                        GLsizei width, GLsizei height) {
@@ -67,7 +67,7 @@ void Texture3DBase<texture_t>::copySub(GLint x_offset, GLint y_offset,
                        width, height));
 }
 
-template<Texture3DType texture_t>
+template<Texture3DTarget texture_t>
 void Texture3DBase<texture_t>::copySubMipmap(GLint level, GLint x_offset,
                                              GLint y_offset, GLint z_offset,
                                              GLint x, GLint y, GLsizei width,
@@ -79,7 +79,7 @@ void Texture3DBase<texture_t>::copySubMipmap(GLint level, GLint x_offset,
 #endif  // glCopyTexSubImage3D
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glTexStorage3D)
-template<Texture3DType texture_t>
+template<Texture3DTarget texture_t>
 void Texture3DBase<texture_t>::storage(
     GLsizei levels, PixelDataInternalFormat internal_format, GLsizei width,
     GLsizei height, GLsizei depth) {
@@ -89,7 +89,7 @@ void Texture3DBase<texture_t>::storage(
 }
 #endif  // glTexStorage3D
 
-template<Texture3DType texture_t>
+template<Texture3DTarget texture_t>
 GLsizei Texture3DBase<texture_t>::width(GLint level) const {
   OGLWRAP_CHECK_BINDING();
   GLsizei data;
@@ -97,7 +97,7 @@ GLsizei Texture3DBase<texture_t>::width(GLint level) const {
   return data;
 }
 
-template<Texture3DType texture_t>
+template<Texture3DTarget texture_t>
 GLsizei Texture3DBase<texture_t>::height(GLint level) const {
   OGLWRAP_CHECK_BINDING();
   GLsizei data;
@@ -106,7 +106,7 @@ GLsizei Texture3DBase<texture_t>::height(GLint level) const {
 }
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_DEPTH)
-template<Texture3DType texture_t>
+template<Texture3DTarget texture_t>
 GLsizei Texture3DBase<texture_t>::depth(GLint level) const {
   OGLWRAP_CHECK_BINDING();
   GLsizei data;
@@ -116,7 +116,7 @@ GLsizei Texture3DBase<texture_t>::depth(GLint level) const {
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glGetCompressedTexImage)
-template<Texture3DType texture_t>
+template<Texture3DTarget texture_t>
 void Texture3DBase<texture_t>::getCompressedImage(GLint level,
                                                   GLvoid* img) const {
   OGLWRAP_CHECK_BINDING();

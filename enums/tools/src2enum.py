@@ -14,7 +14,7 @@ def WriteEnum(file_name, file_base_name, out, is_binding):
   out.write('\n#include "../config.h"\n')
   if is_binding:
     out.write('#include "../debug/debug_output.h"\n')
-    out.write('#include "./' + file_name.replace('binding.txt', 'type.h') + '"\n')
+    out.write('#include "./' + file_name.replace('binding.txt', 'target.h') + '"\n')
   out.write("""
 namespace OGLWRAP_NAMESPACE_NAME {
 namespace enums {
@@ -40,14 +40,14 @@ def HandleNormalEnumFile(file_name, file_base_name, out):
 def HandleBindingEnumFile(file_name, file_base_name, out):
   WriteEnum(file_name, file_base_name, out, True)
   binding = CamelCase(file_base_name)
-  target = binding.replace('Binding', 'Type')
+  target = binding.replace('Binding', 'Target')
   out.write('inline ' + binding + ' GetBindingTarget(' +
              target + ' type) {\n')
   out.write('  ' + binding + ' target;\n\n')
   out.write('  switch (type) {\n')
 
   binding_lines = open('../src/' + file_name).readlines()
-  target_lines = open('../src/' + file_name.replace('binding', 'type')).readlines()
+  target_lines = open('../src/' + file_name.replace('binding', 'target')).readlines()
   if len(binding_lines) != len(target_lines):
     raise Exception(file_name + ' mismatches ' +
       file_name.replace('binding', 'type') + ' in element size.')

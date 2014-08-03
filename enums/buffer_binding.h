@@ -5,7 +5,7 @@
 
 #include "../config.h"
 #include "../debug/debug_output.h"
-#include "./buffer_type.h"
+#include "./buffer_target.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
 namespace enums {
@@ -54,84 +54,84 @@ enum class BufferBinding : GLenum {
 
 }  // namespace enums
 using namespace enums;
-inline BufferBinding GetBindingTarget(BufferType type) {
+inline BufferBinding GetBindingTarget(BufferTarget type) {
   BufferBinding target;
 
   switch (type) {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ARRAY_BUFFER_BINDING) && defined(GL_ARRAY_BUFFER)
-    case BufferType::kArrayBuffer:
+    case BufferTarget::kArrayBuffer:
       target = BufferBinding::kArrayBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_ARRAY_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ATOMIC_COUNTER_BUFFER_BINDING) && defined(GL_ATOMIC_COUNTER_BUFFER)
-    case BufferType::kAtomicCounterBuffer:
+    case BufferTarget::kAtomicCounterBuffer:
       target = BufferBinding::kAtomicCounterBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_ATOMIC_COUNTER_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COPY_READ_BUFFER) && defined(GL_COPY_READ_BUFFER)
-    case BufferType::kCopyReadBuffer:
+    case BufferTarget::kCopyReadBuffer:
       target = BufferBinding::kCopyReadBuffer;
       DebugOutput::LastUsedBindTarget() = "GL_COPY_READ_BUFFER";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COPY_WRITE_BUFFER) && defined(GL_COPY_WRITE_BUFFER)
-    case BufferType::kCopyWriteBuffer:
+    case BufferTarget::kCopyWriteBuffer:
       target = BufferBinding::kCopyWriteBuffer;
       DebugOutput::LastUsedBindTarget() = "GL_COPY_WRITE_BUFFER";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DISPATCH_INDIRECT_BUFFER_BINDING) && defined(GL_DISPATCH_INDIRECT_BUFFER)
-    case BufferType::kDispatchIndirectBuffer:
+    case BufferTarget::kDispatchIndirectBuffer:
       target = BufferBinding::kDispatchIndirectBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_DISPATCH_INDIRECT_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DRAW_INDIRECT_BUFFER_BINDING) && defined(GL_DRAW_INDIRECT_BUFFER)
-    case BufferType::kDrawIndirectBuffer:
+    case BufferTarget::kDrawIndirectBuffer:
       target = BufferBinding::kDrawIndirectBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_DRAW_INDIRECT_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ELEMENT_ARRAY_BUFFER_BINDING) && defined(GL_ELEMENT_ARRAY_BUFFER)
-    case BufferType::kElementArrayBuffer:
+    case BufferTarget::kElementArrayBuffer:
       target = BufferBinding::kElementArrayBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_ELEMENT_ARRAY_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PIXEL_PACK_BUFFER_BINDING) && defined(GL_PIXEL_PACK_BUFFER)
-    case BufferType::kPixelPackBuffer:
+    case BufferTarget::kPixelPackBuffer:
       target = BufferBinding::kPixelPackBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_PIXEL_PACK_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_PIXEL_UNPACK_BUFFER_BINDING) && defined(GL_PIXEL_UNPACK_BUFFER)
-    case BufferType::kPixelUnpackBuffer:
+    case BufferTarget::kPixelUnpackBuffer:
       target = BufferBinding::kPixelUnpackBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_PIXEL_UNPACK_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SHADER_STORAGE_BUFFER_BINDING) && defined(GL_SHADER_STORAGE_BUFFER)
-    case BufferType::kShaderStorageBuffer:
+    case BufferTarget::kShaderStorageBuffer:
       target = BufferBinding::kShaderStorageBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_SHADER_STORAGE_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_BINDING_BUFFER) && defined(GL_TEXTURE_BUFFER)
-    case BufferType::kTextureBuffer:
+    case BufferTarget::kTextureBuffer:
       target = BufferBinding::kTextureBindingBuffer;
       DebugOutput::LastUsedBindTarget() = "GL_TEXTURE_BINDING_BUFFER";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRANSFORM_FEEDBACK_BUFFER_BINDING) && defined(GL_TRANSFORM_FEEDBACK_BUFFER)
-    case BufferType::kTransformFeedbackBuffer:
+    case BufferTarget::kTransformFeedbackBuffer:
       target = BufferBinding::kTransformFeedbackBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_TRANSFORM_FEEDBACK_BUFFER_BINDING";
       break;
 #endif
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNIFORM_BUFFER_BINDING) && defined(GL_UNIFORM_BUFFER)
-    case BufferType::kUniformBuffer:
+    case BufferTarget::kUniformBuffer:
       target = BufferBinding::kUniformBufferBinding;
       DebugOutput::LastUsedBindTarget() = "GL_UNIFORM_BUFFER_BINDING";
       break;

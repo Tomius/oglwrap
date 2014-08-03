@@ -1,11 +1,11 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file texture_1D.h
+/** @file texture1D.h
     @brief Implements one-dimensional textures.
 */
 
-#ifndef OGLWRAP_TEXTURES_TEXTURE_1D_H_
-#define OGLWRAP_TEXTURES_TEXTURE_1D_H_
+#ifndef OGLWRAP_TEXTURES_TEXTURE1D_H_
+#define OGLWRAP_TEXTURES_TEXTURE1D_H_
 
 #include "./texture_base.h"
 
@@ -15,7 +15,7 @@ namespace OGLWRAP_NAMESPACE_NAME {
 
 /// A one dimensional texture class
 /** @see GL_TEXTURE_1D */
-class Texture1D : public TextureBase<TextureType::kTexture1D> {
+class Texture1D : public TextureBase<TextureTarget::kTexture1D> {
  public:
   /// Uploads the base image.
   /** @param internal_format - Specifies the number, order, and size of the color components in the texture.

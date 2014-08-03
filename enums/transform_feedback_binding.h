@@ -5,7 +5,7 @@
 
 #include "../config.h"
 #include "../debug/debug_output.h"
-#include "./transform_feedback_type.h"
+#include "./transform_feedback_target.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
 namespace enums {
@@ -18,12 +18,12 @@ enum class TransformFeedbackBinding : GLenum {
 
 }  // namespace enums
 using namespace enums;
-inline TransformFeedbackBinding GetBindingTarget(TransformFeedbackType type) {
+inline TransformFeedbackBinding GetBindingTarget(TransformFeedbackTarget type) {
   TransformFeedbackBinding target;
 
   switch (type) {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRANSFORM_FEEDBACK_BINDING) && defined(GL_TRANSFORM_FEEDBACK)
-    case TransformFeedbackType::kTransformFeedback:
+    case TransformFeedbackTarget::kTransformFeedback:
       target = TransformFeedbackBinding::kTransformFeedbackBinding;
       DebugOutput::LastUsedBindTarget() = "GL_TRANSFORM_FEEDBACK_BINDING";
       break;

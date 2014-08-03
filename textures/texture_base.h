@@ -21,7 +21,7 @@
 #include "../enums/swizzle_mode.h"
 #include "../enums/compare_mode.h"
 #include "../enums/compare_func.h"
-#include "../enums/texture_type.h"
+#include "../enums/texture_target.h"
 #include "../enums/texture_binding.h"
 #include "../enums/pixel_data_type.h"
 #include "../enums/pixel_data_format.h"
@@ -35,7 +35,7 @@
 
 namespace OGLWRAP_NAMESPACE_NAME {
 
-template <TextureType texture_t>
+template <TextureTarget texture_t>
 /// This class is implementing the base functions for textures.
 /** You shouldn't use this class directly.
   * glGenTextures, glDeleteTextures */

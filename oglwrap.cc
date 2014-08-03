@@ -7,19 +7,6 @@
 
 namespace OGLWRAP_NAMESPACE_NAME {
 
-#if OGLWRAP_DEFINE_EVERYTHING \
-      || (defined(glGenBuffers) && defined(glDeleteBuffers))
-
-#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ARRAY_BUFFER)
-  template class BufferObject<BufferType::kArrayBuffer>;
-#endif
-
-#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ELEMENT_ARRAY_BUFFER)
-  template class BufferObject<BufferType::kElementArrayBuffer>;
-#endif
-
-#endif  // glGenBuffers && glDeleteBuffers
-
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glGetUniformLocation)
   template class Uniform<GLint>;
   template class Uniform<glm::vec3>;

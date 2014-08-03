@@ -17,7 +17,7 @@ namespace OGLWRAP_NAMESPACE_NAME {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_CUBE_MAP)
 /// A set of 6 2D textures, that is used to be sampled with 3D direction vectors.
 /** @see GL_TEXTURE_CUBE_MAP */
-class TextureCube : public TextureBase<TextureType::kTextureCubeMap> {
+class TextureCube : public TextureBase<TextureTarget::kTextureCubeMap> {
  public:
   /// Uploads one a base image for one side of the cube.
   /** @param target - Specifies which one of the six sides of the cube to use as target.
