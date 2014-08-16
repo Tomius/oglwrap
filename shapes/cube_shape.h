@@ -1,8 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file cube_shape.h
-    @brief Implements a cube shape wrapper.
-*/
 
 #ifndef OGLWRAP_SHAPES_CUBE_SHAPE_H_
 #define OGLWRAP_SHAPES_CUBE_SHAPE_H_
@@ -24,7 +21,6 @@ class CubeShape {
   explicit CubeShape(const std::set<AttributeType>& attribs = {kPosition});
 
   /// Renders the cube.
-  /** This call changes the currently active VAO. */
   void render();
 
   /// Returns the face winding of the cube created by this class.

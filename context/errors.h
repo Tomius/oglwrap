@@ -8,11 +8,10 @@
 namespace OGLWRAP_NAMESPACE_NAME {
 
 /// Returns the last OpenGL error.
-/** @see glGetError */
 inline ErrorType GetError() {
-	return static_cast<ErrorType>(glGetError());
+  return static_cast<ErrorType>(glGetError());
 }
 
-} // namespace oglwrap
+}  // namespace oglwrap
 
 #endif

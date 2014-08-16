@@ -20,7 +20,7 @@ void Texture3DBase<texture_t>::upload(PixelDataInternalFormat internal_format,
                                       PixelDataType type,
                                       const void *data) {
   OGLWRAP_CHECK_BINDING();
-  gl(TexImage3D(GLenum(texture_t), 0, GLenum(internal_format), width, height,
+  gl(TexImage3D(target_, 0, GLenum(internal_format), width, height,
                 depth, 0, GLenum(format), GLenum(type), data));
 }
 
@@ -30,7 +30,7 @@ void Texture3DBase<texture_t>::uploadMipmap(
     GLsizei height, GLsizei depth, PixelDataFormat format, PixelDataType type,
     const void *data) {
   OGLWRAP_CHECK_BINDING();
-  gl(TexImage3D(GLenum(texture_t), level, GLenum(internal_format), width,
+  gl(TexImage3D(target_, level, GLenum(internal_format), width,
                 height, depth, 0, GLenum(format), GLenum(type), data));
 }
 #endif  // glTexImage3D
@@ -42,7 +42,7 @@ void Texture3DBase<texture_t>::subUpload(
     GLsizei height, GLsizei depth, PixelDataFormat format, PixelDataType type,
     const void *data) {
   OGLWRAP_CHECK_BINDING();
-  gl(TexSubImage3D(GLenum(texture_t), 0, x_offset, y_offset, z_offset, width,
+  gl(TexSubImage3D(target_, 0, x_offset, y_offset, z_offset, width,
                    height, depth, GLenum(format), GLenum(type), data));
 }
 
@@ -52,7 +52,7 @@ void Texture3DBase<texture_t>::subUploadMipmap(
     GLsizei height, GLsizei depth, PixelDataFormat format, PixelDataType type,
     const void *data) {
   OGLWRAP_CHECK_BINDING();
-  gl(TexSubImage3D(GLenum(texture_t), level, x_offset, y_offset, z_offset, width,
+  gl(TexSubImage3D(target_, level, x_offset, y_offset, z_offset, width,
                    height, depth, GLenum(format), GLenum(type), data));
 }
 #endif  // glTexSubImage3D
@@ -63,7 +63,7 @@ void Texture3DBase<texture_t>::copySub(GLint x_offset, GLint y_offset,
                                        GLint z_offset, GLint x, GLint y,
                                        GLsizei width, GLsizei height) {
   OGLWRAP_CHECK_BINDING();
-  gl(CopyTexSubImage3D(GLenum(texture_t), 0, x_offset, y_offset, z_offset, x, y,
+  gl(CopyTexSubImage3D(target_, 0, x_offset, y_offset, z_offset, x, y,
                        width, height));
 }
 
@@ -73,7 +73,7 @@ void Texture3DBase<texture_t>::copySubMipmap(GLint level, GLint x_offset,
                                              GLint x, GLint y, GLsizei width,
                                              GLsizei height) {
   OGLWRAP_CHECK_BINDING();
-  gl(CopyTexSubImage3D(GLenum(texture_t), level, x_offset, y_offset, z_offset, x,
+  gl(CopyTexSubImage3D(target_, level, x_offset, y_offset, z_offset, x,
                        y, width, height));
 }
 #endif  // glCopyTexSubImage3D
@@ -84,7 +84,7 @@ void Texture3DBase<texture_t>::storage(
     GLsizei levels, PixelDataInternalFormat internal_format, GLsizei width,
     GLsizei height, GLsizei depth) {
   OGLWRAP_CHECK_BINDING();
-  gl(TexStorage3D(GLenum(texture_t), levels, GLenum(internal_format), width,
+  gl(TexStorage3D(target_, levels, GLenum(internal_format), width,
                   height, depth));
 }
 #endif  // glTexStorage3D
@@ -93,7 +93,7 @@ template<Texture3DTarget texture_t>
 GLsizei Texture3DBase<texture_t>::width(GLint level) const {
   OGLWRAP_CHECK_BINDING();
   GLsizei data;
-  gl(GetTexLevelParameteriv(GLenum(texture_t), level, GL_TEXTURE_WIDTH, &data));
+  gl(GetTexLevelParameteriv(target_, level, GL_TEXTURE_WIDTH, &data));
   return data;
 }
 
@@ -101,7 +101,7 @@ template<Texture3DTarget texture_t>
 GLsizei Texture3DBase<texture_t>::height(GLint level) const {
   OGLWRAP_CHECK_BINDING();
   GLsizei data;
-  gl(GetTexLevelParameteriv(GLenum(texture_t), level, GL_TEXTURE_HEIGHT, &data));
+  gl(GetTexLevelParameteriv(target_, level, GL_TEXTURE_HEIGHT, &data));
   return data;
 }
 
@@ -110,7 +110,7 @@ template<Texture3DTarget texture_t>
 GLsizei Texture3DBase<texture_t>::depth(GLint level) const {
   OGLWRAP_CHECK_BINDING();
   GLsizei data;
-  gl(GetTexLevelParameteriv(GLenum(texture_t), level, GL_TEXTURE_DEPTH, &data));
+  gl(GetTexLevelParameteriv(target_, level, GL_TEXTURE_DEPTH, &data));
   return data;
 }
 #endif

@@ -12,23 +12,16 @@ namespace OGLWRAP_NAMESPACE_NAME {
 
 // See http://www.opengl.org/archives/resources/features/OGLextensions
 inline bool IsExtensionSupported(const char *extension) {
-  const GLubyte *extensions = NULL;
+  const GLubyte *extensions = nullptr;
   const GLubyte *start;
 
   GLubyte *where, *terminator;
-  /* Extension names should not have spaces. */
-
   where = (GLubyte *) strchr(extension, ' ');
 
   if (where || *extension == '\0')
     return false;
 
   extensions = gl(GetString(GL_EXTENSIONS));
-
-  /* It takes a bit of care to be fool-proof about parsing the
-     OpenGL extensions string. Don't be fooled by sub-strings,
-     etc. */
-
   start = extensions;
 
   for (;;) {
@@ -48,7 +41,7 @@ inline bool IsExtensionSupported(const char *extension) {
   return false;
 }
 
-} // namespace oglwrap
+}  // namespace oglwrap
 
 #include "../undefine_internal_macros.h"
 #endif

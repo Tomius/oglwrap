@@ -1,14 +1,11 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file vertex_array.h
-    @brief Implements a wrapper for the vertex array
-*/
-
 #ifndef OGLWRAP_VERTEX_ARRAY_H_
 #define OGLWRAP_VERTEX_ARRAY_H_
 
 #include "./config.h"
 #include "./globjects.h"
+#include "./buffer.h"
 
 #include "enums/vertex_array_target.h"
 #include "enums/vertex_array_binding.h"
@@ -19,27 +16,39 @@ namespace OGLWRAP_NAMESPACE_NAME {
 
 // -------======{[ Vertex Array declaration ]}======-------
 
-#if OGLWRAP_DEFINE_EVERYTHING \
-    || (defined(glGenVertexArrays) && defined(glDeleteVertexArrays))
-/**
- * @brief VAO is an object that remembers which IndexBuffer and ArrayBuffers
- *        to use for a draw call, and how to undestand the data in them.
- *
- * A Vertex Array glObject (VAO) is an object that encapsulates all of the
- * state needed to specify vertex data. They define the format of the vertex
- * data as well as the sources for the vertex arrays. Note that VAOs do not
- * contain the arrays themselves, the arrays are stored in ArrayBuffer Objects.
- * The VAOs simply reference already existing buffer objects.
- * @see glGenVertexArrays, glDeleteVertexArrays
- */
-class VertexArray {
+#if OGLWRAP_DEFINE_EVERYTHING || \
+    (defined(glGenVertexArrays) && defined(glDeleteVertexArrays))
+
+struct VertexArray {
+  globjects::VertexArray handle;
+};
+
+class BoundVertexArray {
  public:
-  /// Returns the handle for the VertexArray.
-  const glObject& expose() const { return vao_; }
+  explicit BoundVertexArray(const VertexArray& vertex_array)
+      : index_buffer_(0) {
+    gl(GetIntegerv(GL_VERTEX_ARRAY_BINDING,
+                   reinterpret_cast<GLint*>(&last_binding_)));
+    gl(BindVertexArray(vertex_array.handle));
+  }
+
+  ~BoundVertexArray() {
+    if (index_buffer_) {
+      gl(BindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_));  // HACK
+    }
+    gl(BindVertexArray(last_binding_));
+  }
+
+  // No copy
+  BoundVertexArray(const BoundVertexArray&) = delete;
+  BoundVertexArray& operator=(const BoundVertexArray&) = delete;
+
+  void setIndexBuffer(const IndexBuffer& index_buffer) {
+    index_buffer_ = index_buffer.handle;  // HACK
+  }
 
  private:
-  /// The handle for the VertexArray
-  globjects::VertexArray vao_;
+  GLuint last_binding_, index_buffer_;
 };
 #endif  // glGenVertexArrays && glDeleteVertexArrays
 

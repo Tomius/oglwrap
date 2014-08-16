@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file transform_feedback.h
-    @brief Implements transform feedback functionality.
-*/
-
 #ifndef OGLWRAP_TRANSFORM_FEEDBACK_H_
 #define OGLWRAP_TRANSFORM_FEEDBACK_H_
 
@@ -18,76 +14,57 @@ namespace OGLWRAP_NAMESPACE_NAME {
 
 #if OGLWRAP_DEFINE_EVERYTHING \
     || (defined(glGenTransformFeedbacks) && defined(glDeleteTransformFeedbacks))
-/**
- * @brief A wrapper class for transform feedback.
- *
- * Transform Feedback is the process of altering the rendering pipeline so that
- * primitives processed by a Vertex Shader and optionally a Geometry Shader will
- * be written to buffer objects. This allows one to preserve the post-transform
- * rendering state of an object and resubmit this data multiple times.
- * @see glGenTransformFeedbacks, glDeleteTransformFeedbacks
- */
-class TransformFeedback {
+
+struct TransformFeedback {
+  static const TransformFeedbackTarget target;
+  globjects::TransformFeedback handle;
+};
+
+class BoundTransformFeedback {
  public:
-  TransformFeedback() = default;
+  BoundTransformFeedback(const TransformFeedback& buffer,
+                         BasicPrimitiveType mode)
+    : moved_(false) {
+      gl(GetIntegerv(GL_TRANSFORM_FEEDBACK_BINDING,
+                     reinterpret_cast<GLint*>(&last_binding_)));
+      gl(BindTransformFeedback(GL_TRANSFORM_FEEDBACK, buffer.handle));
+      gl(BeginTransformFeedback(GLenum(mode)));
+  }
 
-#if OGLWRAP_DEFINE_EVERYTHING || defined(glBeginTransformFeedback)
-  /// Begins the transform feedback mode.
-  /** @param mode - The primitive type the TFB should use.
-    * @see glBeginTransformFeedback */
-  void begin(BasicPrimitiveType mode);
-#endif  // glBeginTransformFeedback
+  BoundTransformFeedback(BoundTransformFeedback&& other)
+      : last_binding_(other.last_binding_)
+      , moved_(other.moved_) {
+    other.moved_ = true;
+  }
 
-#if OGLWRAP_DEFINE_EVERYTHING || defined(glEndTransformFeedback)
-  /// Ends the transform feedback mode.
-  /** @see glEndTransformFeedback */
-  void end();
-#endif  // glEndTransformFeedback
+  ~BoundTransformFeedback() {
+    if (!moved_) {
+      gl(EndTransformFeedback());
+      gl(BindTransformFeedback(GL_TRANSFORM_FEEDBACK, last_binding_));
+    }
+  }
+
+  // No copy
+  BoundTransformFeedback(const BoundTransformFeedback&) = delete;
+  BoundTransformFeedback& operator=(const BoundTransformFeedback&) = delete;
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glPauseTransformFeedback)
-  /**
-   * @brief Pauses transform feedback operations on the currently active
-   *        transform feedback object.
-   *
-   * @see glPauseTransformFeedback
-   */
-  void pause();
+
+  void pause() {
+    gl(PauseTransformFeedback());
+  }
 #endif  // glPauseTransformFeedback
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glResumeTransformFeedback)
-  /**
-   * @brief Resumes transform feedback operations on the currently active
-   *        transform feedback object.
-   *
-   * @see glResumeTransformFeedback
-   */
-  void resume();
+
+  void resume() {
+    gl(ResumeTransformFeedback());
+  }
 #endif  // glResumeTransformFeedback
 
-  /// Returns the handle for the transform feedback.
-  const glObject& expose() const { return tfb_; }
-
  private:
-  /// The handle for the TransformFeedback
-  globjects::TransformFeedback tfb_;
-};
-
-/**
- * @brief Activates TransformFeedback for the lifetime of this variable.
- *
- * Assumes that no other tfb will be used during this.
- */
-class TransformFeedbackActivator {
- public:
-  explicit TransformFeedbackActivator(BasicPrimitiveType mode);
-  ~TransformFeedbackActivator();
-
-  void pause();
-  void resume();
-
- private:
-  TransformFeedback tfb_;
-  bool paused_;
+  GLuint last_binding_;
+  bool moved_;
 };
 #endif  // glGenTransformFeedbacks && glDeleteTransformFeedbacks
 

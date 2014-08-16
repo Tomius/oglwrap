@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file shader.h
-    @brief Implements GLSL shaders related classes.
-*/
-
 #ifndef OGLWRAP_SHADER_H_
 #define OGLWRAP_SHADER_H_
 
@@ -17,7 +13,6 @@ namespace OGLWRAP_NAMESPACE_NAME {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glCreateShader)
 /// A GLSL shader object used to control the drawing process.
-/** @see glCreateShader, glDeleteShader */
 class Shader {
   globjects::Shader shader_;  // The handle for the buffer.
   bool compiled_;  // Stores if the shader is compiled.
@@ -38,32 +33,24 @@ class Shader {
   #endif
 
   /// Creates a shader and sets the file as the shader source.
-  /** @param file - The file to load and set as shader source.
-    * @see glShaderSource */
   Shader(ShaderType shader_t, const std::string& file)
       : shader_(shader_t), compiled_(false) {
     set_source_file(file);
   }
 
   /// Creates a shader and sets the file as the shader source.
-  /** @param src - The source of the shader code.
-    * @see glShaderSource */
   Shader(ShaderType shader_t, const ShaderSource& src)
       : shader_(shader_t), compiled_(false) {
     set_source(src);
   }
 
   /// Uploads a string as the shader's source.
-  /** @param source - string containing the shader code.
-    * @see glShaderSource */
   void set_source(const std::string& source) {
     const char *str = source.c_str();
     gl(ShaderSource(shader_, 1, &str, nullptr));
   }
 
   /// Uploads a ShaderSource as the shader's source.
-  /** @param source - The source of the shader code.
-    * @see glShaderSource */
   void set_source(const ShaderSource& source) {
     const char *str = source.source().c_str();
     #if OGLWRAP_DEBUG
@@ -79,10 +66,7 @@ class Shader {
   }
 #endif
 
-
   /// Loads a file and uploads it as shader source
-  /** @param file - the shader file's path
-    * @see glShaderSource */
   void set_source_file(const std::string& file)  {
     set_source(ShaderSource(file));
   }
@@ -93,7 +77,6 @@ class Shader {
   defined(glGetShaderInfoLog) \
 )
   /// Compiles the shader code.
-  /** @see glCompileShader, glGetShaderiv, glGetShaderInfoLog */
   void compile()  {
     if (compiled_) {
       return;
@@ -136,18 +119,7 @@ class Shader {
 
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COMPUTE_SHADER)
-/**
- * @brief A Shader that is used for computing arbitrary information.
- *
- * A Compute Shader is a Shader Stage that is used entirely for computing
- * arbitrary information.
- *
- * While it can do rendering, it is generally used for tasks not directly
- * related to drawing triangles and pixels.
- *
- * @version OpenGL 4.3
- * @see GL_COMPUTE_SHADER
- */
+
 class ComputeShader : public Shader {
  public:
   ComputeShader() : Shader(ShaderType::kComputeShader) { }
@@ -159,18 +131,7 @@ class ComputeShader : public Shader {
 #endif  // GL_COMPUTE_SHADER
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_VERTEX_SHADER)
-/**
- * @brief A Shader that handles the processing of individual vertices.
- *
- * The Vertex Shader is the programmable Shader stage in the rendering pipeline
- * that handles the processing of individual vertices. Vertex shaders are fed
- * Vertex Attribute data, as specified from a vertex array object by a rendering
- * command. A vertex shader receives a single vertex from the vertex stream and
- * generates a single vertex to the output vertex stream.
- *
- * @version OpenGL 2.1
- * @see GL_VERTEX_SHADER
- */
+
 class VertexShader : public Shader {
  public:
   VertexShader() : Shader(ShaderType::kVertexShader) { }
@@ -182,18 +143,7 @@ class VertexShader : public Shader {
 #endif  // GL_VERTEX_SHADER
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_GEOMETRY_SHADER)
-/**
- * @brief A Shader that governs the processing of Primitives.
- *
- * A Geometry Shader is a Shader program written in GLSL that governs the
- * processing of Primitives. Geometry shaders reside between the Vertex Shaders
- * (or the optional Tessellation stage) and the fixed-function Vertex
- * Post-Processing stage. A geometry shader is optional and does not have to
- * be used.
- *
- * @version OpenGL 3.2
- * @see GL_GEOMETRY_SHADER
- */
+
 class GeometryShader : public Shader {
  public:
   GeometryShader() : Shader(ShaderType::kGeometryShader) { }
@@ -205,25 +155,7 @@ class GeometryShader : public Shader {
 #endif  // GL_GEOMETRY_SHADER
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRAGMENT_SHADER)
-/**
- * @brief A Shader that processes a Fragment from the rasterization process
- * into a set of colors and a single depth value.
- *
- * A Fragment Shader is a user-supplied program that, when executed, will
- * process a Fragment from the rasterization process into a set of colors and a
- * single depth value. The fragment shader is the OpenGL pipeline stage after a
- * primitive is rasterized. For each sample of the pixels covered by a primitive,
- * a "fragment" is generated. Each fragment has a Window Space position, a few
- * other values, and it contains all of the interpolated per-vertex output
- * values from the last Vertex Processing stage. The output of a fragment shader
- * is a depth value, a possible stencil value (unmodified by the fragment shader),
- * and zero or more color values to be potentially written to the buffers in the
- * current framebuffers. Fragment shaders take a single fragment as input and
- * produce a single fragment as output.
- *
- * @version OpenGL 2.1
- * @see GL_FRAGMENT_SHADER
- */
+
 class FragmentShader : public Shader {
  public:
   FragmentShader() : Shader(ShaderType::kFragmentShader) { }
@@ -235,22 +167,7 @@ class FragmentShader : public Shader {
 #endif  // GL_FRAGMENT_SHADER
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TESS_CONTROL_SHADER)
-/**
- * @brief A shader that controls how much tessellation a particular patch gets
- * and also defines the size of a patch.
- *
- * The Tessellation Control Shader (TCS) is a Shader program written in GLSL.
- * It sits between the Vertex Shader and the Tessellation Evaluation Shader.
- * The TCS controls how much tessellation a particular patch gets; it also
- * defines the size of a patch, thus allowing it to augment data. It can also
- * filter vertex data taken from the vertex shader. The main purpose of the TCS
- * is to feed the tessellation levels to the Tessellation primitive generator
- * stage, as well as to feed patch data (as its output values) to the
- * Tessellation Evaluation Shader stage.
- *
- * @version OpenGL 4.0
- * @see GL_TESS_CONTROL_SHADER
- */
+
 class TessControlShader : public Shader {
  public:
   TessControlShader() : Shader(ShaderType::kTessControlShader) { }
@@ -262,21 +179,7 @@ class TessControlShader : public Shader {
 #endif  // GL_TESS_CONTROL_SHADER
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TESS_EVALUATION_SHADER)
-/**
- * @brief A shader that generates vertices from the patch data.
- *
- * The Tessellation Evaluation Shader (TES) is a Shader program written in GLSL
- * that takes the results of a Tessellation operation and computes the
- * interpolated positions and other per-vertex data from them. These values are
- * passed on to the next stage in the pipeline. The (TES) takes the abstract
- * patch generated by the tessellation primitive generation stage, as well as
- * the actual vertex data for the entire patch, and generates a particular
- * vertex from it. Each TES invocation generates a single vertex. It can also
- * take per-patch data provided by the Tessellation Control Shader.
- *
- * @version It is core since OpenGL 4.0.
- * @see GL_TESS_EVALUATION_SHADER
- */
+
 class TessEvaluationShader : public Shader {
  public:
   TessEvaluationShader() : Shader(ShaderType::kTessEvaluationShader) { }

@@ -12,8 +12,6 @@
 
 template <typename T, glm::precision P>
 /// Prints a glm vector to a given ostream.
-/** @param os - The ostream.
-  * @param v - The vector. */
 static inline std::ostream& operator<<(std::ostream& os, const glm::detail::tvec2<T, P>& v) {
   os << v.x << ", " << v.y;
   return os;
@@ -21,8 +19,6 @@ static inline std::ostream& operator<<(std::ostream& os, const glm::detail::tvec
 
 template <typename T, glm::precision P>
 /// Prints a glm vector to a given ostream.
-/** @param os - The ostream.
-  * @param v - The vector. */
 static inline std::ostream& operator<<(std::ostream& os, const glm::detail::tvec3<T, P>& v) {
   os << v.x << ", " << v.y << ", " << v.z;
   return os;
@@ -30,8 +26,6 @@ static inline std::ostream& operator<<(std::ostream& os, const glm::detail::tvec
 
 template <typename T, glm::precision P>
 /// Prints a glm vector to a given ostream.
-/** @param os - The ostream.
-  * @param v - The vector. */
 static inline std::ostream& operator<<(std::ostream& os, const glm::detail::tvec4<T, P>& v) {
   os << v.x << ", " << v.y << ", " << v.z << ", " << v.w;
   return os;
@@ -39,8 +33,6 @@ static inline std::ostream& operator<<(std::ostream& os, const glm::detail::tvec
 
 template <typename T, glm::precision P>
 /// Prints a glm vector to a given ostream.
-/** @param os - The ostream.
-  * @param v - The vector. */
 static inline std::ostream& operator<<(std::ostream& os, const glm::detail::tquat<T, P>& v) {
   os << v.x << ", " << v.y << ", " << v.z << ", " << v.w;
   return os;
@@ -48,8 +40,6 @@ static inline std::ostream& operator<<(std::ostream& os, const glm::detail::tqua
 
 template <typename T, glm::precision P>
 /// Prints a glm matrix to a given ostream.
-/** @param os - The ostream.
-  * @param mat - The matrix. */
 static inline std::ostream& operator<<(std::ostream& os, const glm::detail::tmat2x2<T, P>& mat) {
   for (int i = 0; i < 2; i++) {
     for (int j = 0; j < 2; j++) {
@@ -65,8 +55,6 @@ static inline std::ostream& operator<<(std::ostream& os, const glm::detail::tmat
 
 template <typename T, glm::precision P>
 /// Prints a glm matrix to a given ostream.
-/** @param os - The ostream.
-  * @param mat - The matrix. */
 static inline std::ostream& operator<<(std::ostream& os, const glm::detail::tmat3x3<T, P>& mat) {
   for (int i = 0; i < 3; i++) {
     for (int j = 0; j < 3; j++) {
@@ -82,8 +70,6 @@ static inline std::ostream& operator<<(std::ostream& os, const glm::detail::tmat
 
 template <typename T, glm::precision P>
 /// Prints a glm matrix to a given ostream.
-/** @param os - The ostream.
-  * @param mat - The matrix. */
 static inline std::ostream& operator<<(std::ostream& os, const glm::detail::tmat4x4<T, P>& mat) {
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 4; j++) {

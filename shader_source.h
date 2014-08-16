@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file shader_source.h
-    @brief Implements GLSL shader source loading and manipulating facilities.
-*/
-
 #ifndef OGLWRAP_SHADER_SOURCE_H_
 #define OGLWRAP_SHADER_SOURCE_H_
 
@@ -18,10 +14,6 @@
 
 namespace OGLWRAP_NAMESPACE_NAME {
 
-/**
- * @brief A class that can load shader sources in from files, and do some
- *        preprocessing on them.
- */
 class ShaderSource {
   std::string src_;
 
@@ -38,7 +30,6 @@ class ShaderSource {
   #endif
 
   /// Loads in the shader from a file.
-  /** @param file - The path to the file. */
   explicit ShaderSource(const std::string& file) {
     set_source_file(file);
   }
@@ -50,7 +41,6 @@ class ShaderSource {
   std::string& source() { return src_; }
 
   /// Adds a string as the shader source.
-  /** @param source_string - The source string. */
   void set_source(const std::string& source_string) {
     src_ = source_string;
   }
@@ -61,7 +51,6 @@ class ShaderSource {
 #endif
 
   /// Loads in the shader from a file.
-  /** @param file - The path to the file. */
   void set_source_file(const std::string& file) {
   #if OGLWRAP_DEBUG
     filename_ = file;
@@ -82,8 +71,6 @@ class ShaderSource {
 
   template<typename T>
   /// Inserts a value for a defined preprocessor in the shader.
-  /** @param macro_name - The name of the macro.
-    * @param value - The value to insert. */
   void insertMacroValue(const std::string& macro_name, const T& value) {
     size_t macro_pos = src_.find("#define " + macro_name);
   #if OGLWRAP_DEBUG

@@ -10,53 +10,47 @@
 namespace OGLWRAP_NAMESPACE_NAME {
 
 /// Sets the destination color buffer for draw operations.
-/** @see glDrawBuffer */
 inline void DrawBuffer(ColorBuffer buffer) {
-	gl(DrawBuffer(GLenum(buffer)));
+  gl(DrawBuffer(GLenum(buffer)));
 }
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DRAW_BUFFER)
 /// Returns the destination color buffer for draw operations.
-/** @see glGetIntegerv, GL_DRAW_BUFFER */
 inline ColorBuffer DrawBuffer() {
-	GLint data;
-	gl(GetIntegerv(GL_DRAW_BUFFER, &data));
-	return static_cast<ColorBuffer>(data);
+  GLint data;
+  gl(GetIntegerv(GL_DRAW_BUFFER, &data));
+  return static_cast<ColorBuffer>(data);
 }
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glDrawBuffers)
 /// Sets the destination color buffer for draw operations.
-/** @see glDrawBuffers */
 inline void DrawBuffers(std::vector<ColorBuffer> buffers) {
-	gl(DrawBuffers(buffers.size(),
-		reinterpret_cast<const GLenum*>(buffers.data())));
+  gl(DrawBuffers(buffers.size(),
+    reinterpret_cast<const GLenum*>(buffers.data())));
 }
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DRAW_BUFFER)
 /// Returns the destination color buffer of the specified index for draw operations.
-/** @see glGetIntegerv, GL_DRAW_BUFFER */
 inline ColorBuffer DrawBuffers(int idx) {
-	GLint data;
-	gl(GetIntegerv(GL_DRAW_BUFFER+idx, &data));
-	return static_cast<ColorBuffer>(data);
+  GLint data;
+  gl(GetIntegerv(GL_DRAW_BUFFER+idx, &data));
+  return static_cast<ColorBuffer>(data);
 }
 #endif
 
 /// Sets the source color buffer for read operations.
-/** @see glReadBuffer */
 inline void ReadBuffer(ColorBuffer buffer) {
-	gl(ReadBuffer(GLenum(buffer)));
+  gl(ReadBuffer(GLenum(buffer)));
 }
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_READ_BUFFER)
 /// Returns the source color buffer for draw operations.
-/** @see glGetIntegerv, GL_DRAW_BUFFER */
 inline ColorBuffer ReadBuffer() {
-	GLint data;
-	gl(GetIntegerv(GL_READ_BUFFER, &data));
-	return static_cast<ColorBuffer>(data);
+  GLint data;
+  gl(GetIntegerv(GL_READ_BUFFER, &data));
+  return static_cast<ColorBuffer>(data);
 }
 #endif
 

@@ -1,10 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file oglwrap.h
-    @brief The main header, including the core files of the library.
-    It doesn't include everything, just the main features.
-*/
-
 #ifndef OGLWRAP_OGLWRAP_H_
 #define OGLWRAP_OGLWRAP_H_
 

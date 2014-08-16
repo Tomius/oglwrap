@@ -1,8 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file rectangle_shape.h
-    @brief Implements an NDC rectangle shape.
-*/
 
 #ifndef OGLWRAP_SHAPES_RECTANGLE_SHAPE_H_
 #define OGLWRAP_SHAPES_RECTANGLE_SHAPE_H_
@@ -24,7 +21,6 @@ class RectangleShape {
   explicit RectangleShape(const std::set<AttributeType>& attribs = {kPosition});
 
   /// Renders the rectangle.
-  /** This call changes the currently active VAO. */
   void render();
 
   /// Returns the face winding of the cube created by this class.

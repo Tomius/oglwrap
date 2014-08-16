@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file bitfield.h
-    @brief Generic bitfield class to replace GLbitfield
-*/
-
 #ifndef OGLWRAP_BITFIELD_H_
 #define OGLWRAP_BITFIELD_H_
 

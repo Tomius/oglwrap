@@ -1,8 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file error_checking.h
-    @brief Contains error handling macros
-*/
 
 #ifndef OGLWRAP_DEBUG_ERROR_CHECKING_H_
 #define OGLWRAP_DEBUG_ERROR_CHECKING_H_
@@ -30,12 +27,6 @@ namespace OGLWRAP_NAMESPACE_NAME {
     OGLWRAP_CHECK_ERROR_NAMED(#func);
 #endif  // OGLWRAP_DISABLE_DEBUG_OUTPUT
 
-/**
- * @brief Prints additional info in case of a specific OpenGL error.
- *
- * Conditionally prints more information about an error if the
- * condition equals with the last error catched by OGLWRAP_CHECK_ERROR()
- */
 #define OGLWRAP_PRINT_IF_ERROR(cond, title, message) \
   if (DebugOutput::LastError() == cond) { \
     DebugOutput::PrintError( \
@@ -53,24 +44,9 @@ namespace OGLWRAP_NAMESPACE_NAME {
     ErrorMessage{title, message, __FILE__, OGLWRAP_FUNCTION_MACRO, __LINE__, "", true}  \
   );
 
-/**
- * @brief A wrapper around glGetError, that prints file, function, line, and the
- * error in human-readable format.
- *
- * An error checking macro used for debugging purposes. If OGLWRAP_DEBUG
- * is defined to be a number different than 0, than it oglwrap will
- * check for OpenGL related errors after every gl* function call, and
- * prints out where did the error happen to stderr.
- * @see glGetError
- */
 #define OGLWRAP_CHECK_ERROR() \
   OGLWRAP_NAMESPACE_NAME::OGLWRAP_CheckError(__FILE__, OGLWRAP_FUNCTION_MACRO, __LINE__)
 
-/**
- * @brief Same as OGLWRAP_CHECK_ERROR, but you can specify the called
- *        functions's name.
- * @see OGLWRAP_CHECK_ERROR
- */
 #define OGLWRAP_CHECK_ERROR_NAMED(glfunc) \
   OGLWRAP_NAMESPACE_NAME::OGLWRAP_CheckError(__FILE__, OGLWRAP_FUNCTION_MACRO, __LINE__, glfunc)
 

@@ -1,8 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file error.h
-    @brief Contains error message formatter utilites
-*/
 
 #ifndef OGLWRAP_DEBUG_ERROR_FORMATTING_H_
 #define OGLWRAP_DEBUG_ERROR_FORMATTING_H_
@@ -18,10 +15,6 @@
 
 namespace OGLWRAP_NAMESPACE_NAME {
 
-/**
- * @brief Cuts the [with: ... part of the pretty func (not quite useful with
- *        oglwrap, but looks ugly).
- */
 inline std::string cut_end_of_pretty_func(const std::string& func) {
   return func.substr(0, func.find(")") + 1) + ';';
 }

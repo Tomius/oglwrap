@@ -12,7 +12,7 @@ inline CubeShape::CubeShape(const std::set<AttributeType>& attribs) {
   data.reserve(attribs.size()*36);
   void* offset{nullptr};
 
-  Bind(vao_);
+  gl::BoundVertexArray bound_vao{vao_};
   BoundBuffer bound_buffer{buffer_};
   for (int i = 0; i < kAttribTypeNum; ++i) {
     AttributeType type = static_cast<AttributeType>(i);
@@ -24,13 +24,11 @@ inline CubeShape::CubeShape(const std::set<AttributeType>& attribs) {
     }
   }
   bound_buffer.data(data);
-  Unbind(vao_);
 }
 
 inline void CubeShape::render() {
-  Bind(vao_);
+  gl::BoundVertexArray bound_vao{vao_};
   DrawArrays(PrimType::kTriangles, 0, 36);
-  Unbind(vao_);
 }
 
 inline void CubeShape::createAttrib(std::vector<glm::vec3>* data,

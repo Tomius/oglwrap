@@ -1,8 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file sphere_shape.h
-    @brief Implements a sphere shape wrapper.
-*/
 
 #ifndef OGLWRAP_SHAPES_SPHERE_SHAPE_H_
 #define OGLWRAP_SHAPES_SPHERE_SHAPE_H_
@@ -24,7 +21,6 @@ class SphereShape {
                       unsigned rings = 12, unsigned segments = 18);
 
   /// Renders the sphere.
-  /** This call changes the currently active VAO. */
   void render();
 
   /// Returns the face winding of the sphere created by this class.

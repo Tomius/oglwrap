@@ -1,8 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file debug_output.h
-    @brief Implements the oglwrap debug output.
-*/
 
 #ifndef OGLWRAP_DEBUG_DEBUG_OUTPUT_H_
 #define OGLWRAP_DEBUG_DEBUG_OUTPUT_H_
@@ -28,10 +25,6 @@ namespace OGLWRAP_NAMESPACE_NAME {
 
 #define OGLWRAP_GET_FILENAME() __FILE__
 
-/**
- * @brief A configurable debug output that warns you if an
- *        OpenGL or a binding error happens.
- */
 class DebugOutput {
   enum glError_t {
     INVALID_ENUM,
@@ -137,7 +130,6 @@ class DebugOutput {
       size_t start_pos = func_signature.rfind(' ', end_pos) + 1;
       func = func_signature.substr(start_pos, end_pos - start_pos);
 
-
       // Get the error messages
       while (getline(is, buffer) && !buffer.empty()) {
         std::stringstream strstream(buffer);
@@ -230,10 +222,6 @@ class DebugOutput {
     }
   }
 
-  /** @brief Returns detailed information about why could the error happen in
-    *        the specified call.
-    * @param function_call - The function call string.
-    */
   static std::string GetDetailedErrorInfo(const std::string& function_call) {
     if (!instance) {
       instance = new DebugOutput{};
@@ -293,12 +281,6 @@ class DebugOutput {
 
   static void PrintError(ErrorMessage error) {}
 
-  /**
-   * @brief If there was an error, notifies you
-   *        about it through the callback function.
-   *
-   * The default callback function prints the error to stderr
-   */
   static void GetDetailedErrorInfo(const std::string&, std::stringstream&) {}
 
   static std::string& LastUsedBindTarget() {

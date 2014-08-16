@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file buffer.h
-    @brief Implements wrappers around OpenGL Buffer glObject.
-*/
-
 #ifndef OGLWRAP_BUFFER_H_
 #define OGLWRAP_BUFFER_H_
 
@@ -30,9 +26,13 @@
 
 namespace OGLWRAP_NAMESPACE_NAME {
 
+#if OGLWRAP_DEFINE_EVERYTHING || \
+    (defined(glGenBuffers) && defined(glDeleteBuffers))
+
+/// Buffer Objects are OpenGL data stores, arrays on the server memory.
 class Buffer {
  public:
-  BufferTarget target;
+  const BufferTarget target;
   globjects::Buffer handle;
 
   explicit Buffer(BufferTarget target) : target(target) { }
@@ -52,18 +52,11 @@ class Buffer {
 #endif
 };
 
-#if OGLWRAP_DEFINE_EVERYTHING || (defined(glGenBuffers) \
-      && defined(glDeleteBuffers) && defined(glBindBuffer))
-/// Buffer Objects are OpenGL data stores, arrays on the server memory.
-/** Buffer Objects are OpenGL Objects that store an array
-  * of unformatted memory allocated by the OpenGL context (aka: the GPU).
-  * These can be used to store vertex data, pixel data retrieved from
-  * images or the framebuffer, and a variety of other things.
-  * @see glGenBuffers, glDeleteBuffers */
 class BoundBuffer {
  public:
   explicit BoundBuffer(const Buffer& buffer)
-      : target_(static_cast<GLenum>(buffer.target)) {
+      : target_(static_cast<GLenum>(buffer.target))
+      , moved_(false) {
     gl(GetIntegerv(GLenum(GetBindingTarget(buffer.target)),
                   reinterpret_cast<GLint*>(&last_binding_)));
     gl(BindBuffer(target_, buffer.handle));
@@ -71,7 +64,8 @@ class BoundBuffer {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glBindBufferBase)
   BoundBuffer(const Buffer& buffer, GLuint index)
-      : target_(static_cast<GLenum>(buffer.target)) {
+      : target_(static_cast<GLenum>(buffer.target))
+      , moved_(false) {
     gl(GetIntegerv(GLenum(GetBindingTarget(buffer.target)),
                    reinterpret_cast<GLint*>(&last_binding_)));
     gl(BindBufferBase(target_, index, buffer.handle));
@@ -81,23 +75,28 @@ class BoundBuffer {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glBindBufferRange)
   BoundBuffer(const Buffer& buffer, GLuint index,
               GLintptr offset, GLsizeiptr size)
-      : target_(static_cast<GLenum>(buffer.target)) {
+      : target_(static_cast<GLenum>(buffer.target))
+      , moved_(false) {
     gl(GetIntegerv(GLenum(GetBindingTarget(buffer.target)),
                           reinterpret_cast<GLint*>(&last_binding_)));
     gl(BindBufferRange(target_, index, offset, size, buffer.handle));
   }
 #endif
 
-  ~BoundBuffer() {
-    if (target_ != GL_ELEMENT_ARRAY_BUFFER) {
-      gl(BindBuffer(target_, last_binding_));
-    }
+  BoundBuffer(BoundBuffer&& bound_buffer)
+      : last_binding_(bound_buffer.last_binding_)
+      , target_(bound_buffer.target_)
+      , moved_(bound_buffer.moved_) {
+    bound_buffer.moved_ = true;
   }
 
-  // BoundBuffer shouldn't be copied or dynamically allocated
+  ~BoundBuffer() {
+    if (!moved_) { gl(BindBuffer(target_, last_binding_)); }
+  }
+
+  // No copy
   BoundBuffer(const BoundBuffer&) = delete;
   BoundBuffer& operator=(const BoundBuffer&) = delete;
-  static void* operator new(size_t size) = delete;
 
   /// Returns the target, to which the buffer is currently bound
   BufferTarget target() const {
@@ -106,22 +105,11 @@ class BoundBuffer {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glBufferData)
   /// Allocates buffer storage to the specified size without any data
-  /** @param size    Specifies the size in bytes of the buffer object's new data
-    *                store.
-    * @param usage   Specifies the expected usage pattern of the data store.
-    * @see glBufferData */
   void resize(GLsizei size, BufferUsage usage = BufferUsage::kStaticDraw) {
     gl(BufferData(target_, size, nullptr, GLenum(usage)));
   }
 
   /// Creates and initializes a buffer object's data store.
-  /** @param size    Specifies the size in bytes of the buffer object's new data
-    *                store.
-    * @param data    Specifies a pointer to data that will be copied into the
-    *                data store for initialization, or NULL if no data is to be
-    *                copied.
-    * @param usage   Specifies the expected usage pattern of the data store.
-    * @see glBufferData */
   void data(GLsizei size, const GLvoid* data,
             BufferUsage usage = BufferUsage::kStaticDraw) {
     gl(BufferData(target_, size, data, GLenum(usage)));
@@ -129,9 +117,6 @@ class BoundBuffer {
 
   template<typename GLtype>
   /// Creates and initializes a buffer object's data store.
-  /** @param data - Specifies a vector of data to upload.
-    * @param usage - Specifies the expected usage pattern of the data store.
-    * @see glBufferData */
   void data(const std::vector<GLtype>& data,
             BufferUsage usage = BufferUsage::kStaticDraw) {
     gl(BufferData(target_, data.size()*sizeof(GLtype),
@@ -141,24 +126,12 @@ class BoundBuffer {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glBufferSubData)
   /// Updates a subset of a buffer object's data store.
-  /** @param offset  Specifies the offset into the buffer object's data store
-    *                where data replacement will begin, measured in bytes.
-    * @param size    Specifies the size in bytes of the data store region being
-    *                replaced.
-    * @param data    Specifies a pointer to the new data that will be copied
-    *                into the data store.
-    * @see glBufferSubData */
   void subData(GLintptr offset, GLsizei size, const GLvoid* data) {
     gl(BufferSubData(target_, offset, size, data));
   }
 
   template<typename GLtype>
   /// Updates a subset of a buffer object's data store.
-  /** @param offset  Specifies the offset into the buffer object's data store
-    *                where data replacement will begin, measured in bytes.
-    * @param data    Specifies a vector containing the new data that will be
-    *                copied into the data store.
-    * @see glBufferSubData */
   void subData(GLintptr offset, const std::vector<GLtype>& data) {
     gl(BufferSubData(target_, offset, data.size()*sizeof(GLtype), data.data()));
   }
@@ -210,12 +183,9 @@ class BoundBuffer {
   }
 #endif
 
-#if OGLWRAP_DEFINE_EVERYTHING \
-    || (defined(glGetBufferParameteriv) && defined(GL_BUFFER_SIZE))
+#if OGLWRAP_DEFINE_EVERYTHING || \
+    (defined(glGetBufferParameteriv) && defined(GL_BUFFER_SIZE))
   /// A getter for the buffer's size.
-  /** @return The size of the buffer currently bound to the buffer objects
-    *         default target in bytes.
-    * @see glGetBufferParameteriv, GL_BUFFER_SIZE */
   size_t size() const {
     GLint size;
     gl(GetBufferParameteriv(target_, GL_BUFFER_SIZE, &size));
@@ -223,18 +193,17 @@ class BoundBuffer {
   }
 #endif  // glGetBufferParameteriv && GL_BUFFER_SIZE
 
- protected:
+ private:
   GLuint last_binding_;
   const GLenum target_;
+  bool moved_;
 };
 
-#if OGLWRAP_DEFINE_EVERYTHING || (defined(glMapBuffer) \
-     && defined(glUnmapBuffer) && defined(glMapBufferRange))
+#if OGLWRAP_DEFINE_EVERYTHING || \
+    (defined(glMapBuffer) && defined(glUnmapBuffer))
 class MappedBuffer {
   public:
     /// Maps the whole buffer.
-    /** @param access  Specifies the access policy (R, W, R/W).
-      * @see glMapBuffer */
     MappedBuffer(const BoundBuffer& buffer,
                  BufferMapAccess access = BufferMapAccess::kReadWrite)
         : target_(static_cast<GLenum>(buffer.target())) {
@@ -247,12 +216,6 @@ class MappedBuffer {
 
     #if OGLWRAP_DEFINE_EVERYTHING ||  defined(glMapBufferRange)
     /// Maps a range of the buffer.
-    /** @param length  Specifies a length of the range to be mapped (in bytes).
-      * @param offset  Specifies a the starting offset within the buffer of the
-      *                range to be mapped (in bytes).
-      * @param access  Specifies a combination of access flags indicating the
-      *                desired access to the range.
-      * @see glMapBufferRange */
     MappedBuffer(const BoundBuffer& buffer,
                  GLintptr offset, GLsizeiptr length,
                  Bitfield<BufferMapAccessBit> access =
@@ -271,15 +234,13 @@ class MappedBuffer {
     #endif  // glMapBufferRange
 
     /// Unmaps the buffer.
-    /** @see glUnmapBuffer */
     ~MappedBuffer() {
       gl(UnmapBuffer(target_));
     }
 
-    // MappedBuffer shouldn't be copied or dynamically allocated
+    // No copy
     MappedBuffer(const MappedBuffer&) = delete;
     MappedBuffer& operator=(const MappedBuffer&) = delete;
-    static void* operator new(size_t size) = delete;
 
     /// Returns the size of the mapped buffer in bytes
     GLint size() const { return size_; }
@@ -299,9 +260,6 @@ class MappedBuffer {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ARRAY_BUFFER)
 /// A Buffer that stores vertex attribute data.
-/** The buffer will be used as a source for vertex data,
-  * but only when VertexAttribArray::Pointer​ is called.
-  * @see GL_ARRAY_BUFFER */
 struct ArrayBuffer : public Buffer {
   explicit ArrayBuffer() : Buffer(BufferTarget::kArrayBuffer) { }
 };
@@ -309,12 +267,6 @@ struct ArrayBuffer : public Buffer {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ELEMENT_ARRAY_BUFFER)
 /// A buffer that stores the order of the vertices for a draw call.
-/** All rendering functions of the form gl*Draw*Elements*​ will use the pointer
-  * field as a byte offset from the beginning of the buffer object bound to this
-  * target. The indices used for indexed rendering will be taken from the buffer
-  * object. Note that this binding target is part of a Vertex Array Objects
-  * state, so a VAO must be bound before binding a buffer here.
-  * @see GL_ELEMENT_ARRAY_BUFFER */
 struct IndexBuffer : public Buffer {
   explicit IndexBuffer() : Buffer(BufferTarget::kElementArrayBuffer) { }
 };
@@ -322,9 +274,6 @@ struct IndexBuffer : public Buffer {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_BUFFER)
 /// A Buffer that stores texture pixels.
-/** This buffer has no special semantics, it is intended to use as a buffer
-  * object for Buffer Textures.
-  * @see GL_TEXTURE_BUFFER */
 struct TextureBuffer : public Buffer {
   explicit TextureBuffer() : Buffer(BufferTarget::kTextureBuffer) { }
 };
@@ -332,7 +281,6 @@ struct TextureBuffer : public Buffer {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNIFORM_BUFFER)
 /// An indexed buffer binding for buffers used as storage for uniform blocks.
-/** @see GL_UNIFORM_BUFFER */
 struct UniformBuffer : public Buffer {
   explicit UniformBuffer() : Buffer(BufferTarget::kUniformBuffer) { }
 };
@@ -340,13 +288,12 @@ struct UniformBuffer : public Buffer {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRANSFORM_FEEDBACK_BUFFER)
 /// An indexed buffer binding for buffers used in Transform Feedback operations.
-/** @see GL_TRANSFORM_FEEDBACK_BUFFER */
 struct TransformFeedbackBuffer : public Buffer {
   explicit TransformFeedbackBuffer() : Buffer(BufferTarget::kTransformFeedbackBuffer) { }
 };
 #endif  // GL_TRANSFORM_FEEDBACK_BUFFER
 
-#endif  // glGenBuffers && glDeleteBuffers && glBindBuffer
+#endif  // glGenBuffers && glDeleteBuffers
 
 }  // namespace oglwrap
 

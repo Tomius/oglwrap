@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file program.h
-    @brief Implements a wrapper for GLSL programs.
-*/
-
 #ifndef OGLWRAP_PROGRAM_H_
 #define OGLWRAP_PROGRAM_H_
 
@@ -15,22 +11,11 @@
 namespace OGLWRAP_NAMESPACE_NAME {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glCreateProgram)
-/**
- * @brief The program object can combine multiple shader stages (built from
- *        shader objects) into a single, linked whole.
- * @see glCreateProgram, glDeleteProgram
- */
 class Program {
  public:
   /// Creates an empty program object.
   Program() : linked_(false) {}
 
-  /**
-   * @brief Detaches all the shader objects currently attached to this program,
-   * and deletes the program.
-   *
-   * @see glDetachShader, glDeleteShader
-   */
   ~Program() {
     for (size_t i = 0; i < shaders_.size(); i++) {
       gl(DetachShader(program_, shaders_[i]));
@@ -39,8 +24,6 @@ class Program {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glAttachShader)
   /// Attaches a shader to this program object, and compiles it, if needed.
-  /** @param shader Specifies the shader object that is to be attached.
-    * @see glAttachShader */
   void attachShader(Shader& shader) {
     shader.compile();
     shaders_.push_back(shader.expose());
@@ -55,8 +38,6 @@ class Program {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glAttachShader)
   /// Attaches a shader to this program object.
-  /** @param shader Specifies the shader object that is to be attached.
-    * @see glAttachShader */
   void attachShader(const Shader& shader) {
     shaders_.push_back(shader.expose());
 
@@ -73,8 +54,6 @@ class Program {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glAttachShader)
   /// Attaches a shader object to the program.
-  /** @param shader Specifies the shader object that is to be attached.
-    * @see glAttachShader */
   Program& operator<<(Shader& shader) {
     attachShader(shader);
     return *this;
@@ -83,8 +62,6 @@ class Program {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glAttachShader)
   /// Attaches a shader object to the program, and compiles it, if needed.
-  /** @param shader Specifies the shader object that is to be attached.
-    * @see glAttachShader */
   Program& operator<<(const Shader& shader) {
     attachShader(shader);
     return *this;
@@ -107,9 +84,6 @@ class Program {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glLinkProgram)
   /// Links the program and checks for error if OGLWRAP_DEBUG is defined.
-  /** If the linking fails, it throws an
-    * std::runtime_error containing the linking info.
-    * @see glLinkProgram, glGetProgramiv, glGetProgramInfoLog */
   const Program& link() {
     gl(LinkProgram(program_));
     linked_ = true;
@@ -144,7 +118,6 @@ class Program {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glValidateProgram)
   /// Validates the program if OGLWRAP_DEBUG is defined.
-  /** @see glLinkProgram, glGetProgramiv, glGetProgramInfoLog */
   void validate() const {
     #if OGLWRAP_DEBUG
     GLint status;

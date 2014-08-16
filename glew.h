@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file glew.h
-    @brief #includes glew in a platform independent way.
-*/
-
 #ifndef OGLWRAP_GLEW_H_
 #define OGLWRAP_GLEW_H_
 

@@ -12,7 +12,7 @@ inline RectangleShape::RectangleShape(const std::set<AttributeType>& attribs) {
   data.reserve(attribs.size()*4);
   void* offset{nullptr};
 
-  Bind(vao_);
+  gl::BoundVertexArray bound_vao{vao_};
   BoundBuffer bound_buffer{buffer_};
   for (int i = 0; i < kAttribTypeNum; ++i) {
     AttributeType type = static_cast<AttributeType>(i);
@@ -24,13 +24,11 @@ inline RectangleShape::RectangleShape(const std::set<AttributeType>& attribs) {
     }
   }
   bound_buffer.data(data);
-  Unbind(vao_);
 }
 
 inline void RectangleShape::render() {
-  Bind(vao_);
+  gl::BoundVertexArray bound_vao{vao_};
   DrawArrays(PrimType::kTriangleStrip, 0, 4);
-  Unbind(vao_);
 }
 
 inline void RectangleShape::createAttrib(std::vector<glm::vec2>* data,

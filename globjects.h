@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file globjects.h
-    @brief Implements wrappers for OpenGL objects
-*/
-
 #ifndef OGLWRAP_GLOBJECTS_H_
 #define OGLWRAP_GLOBJECTS_H_
 

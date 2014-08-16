@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file context.h
-    @brief Implements OpenGL context related stuff.
-*/
-
 #ifndef OGLWRAP_CONTEXT_H_
 #define OGLWRAP_CONTEXT_H_
 

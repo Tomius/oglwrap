@@ -20,7 +20,7 @@ inline SphereShape::SphereShape(const std::set<AttributeType>& attribs,
   std::vector<float> data;
   void* offset{nullptr};
 
-  Bind(vao_);
+  gl::BoundVertexArray bound_vao{vao_};
   BoundBuffer bound_buffer{buffer_};
   for (int i = 0; i < kAttribTypeNum; ++i) {
     AttributeType type = static_cast<AttributeType>(i);
@@ -33,13 +33,11 @@ inline SphereShape::SphereShape(const std::set<AttributeType>& attribs,
     }
   }
   bound_buffer.data(data);
-  Unbind(vao_);
 }
 
 inline void SphereShape::render() {
-  Bind(vao_);
+  gl::BoundVertexArray bound_vao{vao_};
   DrawArrays(PrimType::kTriangleStrip, 0, vertex_num_);
-  Unbind(vao_);
 }
 
 inline GLuint SphereShape::createAttrib(std::vector<float>* data,

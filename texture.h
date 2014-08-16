@@ -1,9 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-/** @file texture.h
-    @brief The main header for textures, including the texture related headers of the library.
-*/
-
 #ifndef OGLWRAP_TEXTURE_H_
 #define OGLWRAP_TEXTURE_H_
 
@@ -12,5 +8,6 @@
 #include "textures/texture2D.h"
 #include "textures/texture_cube.h"
 #include "textures/texture3D.h"
+#include "textures/texture_layout.h"
 
 #endif  // OGLWRAP_TEXTURE_H_
