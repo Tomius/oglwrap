@@ -1,6 +1,5 @@
 // Copyright (c) 2014, Tamas Csala
 
-
 #ifndef OGLWRAP_TEXTURES_TEXUTRE_BASE_H_
 #define OGLWRAP_TEXTURES_TEXUTRE_BASE_H_
 
