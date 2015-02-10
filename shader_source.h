@@ -23,24 +23,16 @@ namespace OGLWRAP_NAMESPACE_NAME {
  *        preprocessing on them.
  */
 class ShaderSource {
-  std::string src_;
-
-#if OGLWRAP_DEBUG
-  std::string filename_;
-#endif
+  std::string src_, filename_;
 
  public:
   /// Default constructor.
-  #if OGLWRAP_DEBUG
-    ShaderSource() : filename_("Unnamed shader") { }
-  #else
-    ShaderSource() = default;
-  #endif
+  ShaderSource() : filename_("Unnamed shader") { }
 
   /// Loads in the shader from a file.
   /** @param file - The path to the file. */
   explicit ShaderSource(const std::string& file) {
-    set_source_file(file);
+    loadFromFile(file);
   }
 
   /// Returns the source.
@@ -55,17 +47,10 @@ class ShaderSource {
     src_ = source_string;
   }
 
-#if OGLWRAP_DEBUG
-  /// Returns the file's name that was loaded in.
-  const std::string& source_file() const { return filename_; }
-#endif
-
   /// Loads in the shader from a file.
   /** @param file - The path to the file. */
-  void set_source_file(const std::string& file) {
-  #if OGLWRAP_DEBUG
+  void loadFromFile(const std::string& file) {
     filename_ = file;
-  #endif
     std::ifstream shader_file((OGLWRAP_DEFAULT_SHADER_PATH + file).c_str());
     if (!shader_file.is_open()) {
       throw std::runtime_error("Shader file '" + file + "' not found.");
@@ -78,6 +63,13 @@ class ShaderSource {
     if (src_[src_.length() - 1] == EOF) {
       src_.pop_back();
     }
+  }
+
+  /// Returns the file's name that was loaded in.
+  const std::string& source_file() const { return filename_; }
+
+  void set_source_file(const std::string& file) {
+    filename_ = file;
   }
 
   template<typename T>

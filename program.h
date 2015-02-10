@@ -22,8 +22,16 @@ namespace OGLWRAP_NAMESPACE_NAME {
  */
 class Program {
  public:
+  enum State { kNotLinked, kLinkFailure, kLinkSuccesful, kValidationFailure };
+
   /// Creates an empty program object.
-  Program() : linked_(false) {}
+  Program() {}
+
+  template <typename... Shaders>
+  explicit Program(const Shader& shader, Shaders&&... shaders) {
+    attachShaders(shader, shaders...);
+    link();
+  }
 
   /**
    * @brief Detaches all the shader objects currently attached to this program,
@@ -37,34 +45,42 @@ class Program {
     }
   }
 
-#if OGLWRAP_DEFINE_EVERYTHING || defined(glAttachShader)
-  /// Attaches a shader to this program object, and compiles it, if needed.
+  /// Attaches a shader to this program object.
   /** @param shader Specifies the shader object that is to be attached.
     * @see glAttachShader */
-  void attachShader(Shader& shader) {
-    shader.compile();
-    shaders_.push_back(shader.expose());
+  template<typename... Rest>
+  Program& attachShaders(const Shader& shader, Rest&&... rest) {
+    attachShader(shader);
+    attachShaders(rest...);
 
-    #if OGLWRAP_DEBUG
-      filenames_.push_back(shader.source_file());
-    #endif
-
-    gl(AttachShader(program_, shader.expose()));
+    return *this;
   }
-#endif  // glAttachShader
+
+  /// Doesn't do anything.
+  Program& attachShaders() {
+    return *this;
+  }
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glAttachShader)
   /// Attaches a shader to this program object.
   /** @param shader Specifies the shader object that is to be attached.
     * @see glAttachShader */
-  void attachShader(const Shader& shader) {
-    shaders_.push_back(shader.expose());
+  Program& attachShader(const Shader& shader) {
+    if (state_ == kNotLinked) {
+      shader.compile();
+      shaders_.push_back(shader.expose());
 
-    #if OGLWRAP_DEBUG
-      filenames_.push_back(shader.source_file());
-    #endif
+      #if OGLWRAP_DEBUG
+        filenames_.push_back(shader.source_file());
+      #endif
 
-    gl(AttachShader(program_, shader.expose()));
+      gl(AttachShader(program_, shader.expose()));
+    } else {
+      throw new std::logic_error{
+        "Program::attachShader called on an already linked program."};
+    }
+
+    return *this;
   }
 #endif  // glAttachShader
 
@@ -110,47 +126,56 @@ class Program {
   /** If the linking fails, it throws an
     * std::runtime_error containing the linking info.
     * @see glLinkProgram, glGetProgramiv, glGetProgramInfoLog */
-  const Program& link() {
-    gl(LinkProgram(program_));
-    linked_ = true;
+  virtual const Program& link() {
+    if (state_ == kNotLinked) {
+      gl(LinkProgram(program_));
 
-    #if OGLWRAP_DEBUG
-    GLint status;
-    gl(GetProgramiv(program_, GL_LINK_STATUS, &status));
-    if (status == GL_FALSE) {
-      GLint info_log_length;
-      gl(GetProgramiv(program_, GL_INFO_LOG_LENGTH, &info_log_length));
+      GLint status;
+      gl(GetProgramiv(program_, GL_LINK_STATUS, &status));
+      if (status == GL_FALSE) {
+        state_ = kLinkFailure;
 
-      std::unique_ptr<GLchar> str_info_log{ new GLchar[info_log_length + 1] };
-      gl(GetProgramInfoLog(program_, info_log_length, NULL, str_info_log.get()));
-      std::stringstream str;
-      str << "OpenGL failed to link the following shaders together: " << std::endl;
-      str << getShaderNames() << std::endl;
-      str << "The error message: \n" << str_info_log.get();
+        #if OGLWRAP_DEBUG
+        GLint info_log_length;
+        gl(GetProgramiv(program_, GL_INFO_LOG_LENGTH, &info_log_length));
 
-      OGLWRAP_PRINT_FATAL_ERROR(
-        "Program link failure",
-        str.str()
-      )
+        std::unique_ptr<GLchar> str_info_log{ new GLchar[info_log_length + 1] };
+        gl(GetProgramInfoLog(program_, info_log_length, NULL, str_info_log.get()));
+        std::stringstream str;
+        str << "OpenGL failed to link the following shaders together: " << std::endl;
+        str << getShaderNames() << std::endl;
+        str << "The error message: \n" << str_info_log.get();
+
+        OGLWRAP_PRINT_ERROR(
+          "Program link failure",
+          str.str()
+        )
+        #endif  // OGLWRAP_DEBUG
+      } else {
+        state_ = kLinkSuccesful;
+      }
     }
-    #endif  // OGLWRAP_DEBUG
 
     return *this;
   }
 
-  /// Returns if the program is linked
-  bool linked() const { return linked_; }
 #endif  // glLinkProgram
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glValidateProgram)
   /// Validates the program if OGLWRAP_DEBUG is defined.
   /** @see glLinkProgram, glGetProgramiv, glGetProgramInfoLog */
-  void validate() const {
-    #if OGLWRAP_DEBUG
+  void validate() {
+    if (state_ == kNotLinked) {
+      link();
+    }
+
     GLint status;
     gl(ValidateProgram(program_));
     gl(GetProgramiv(program_, GL_VALIDATE_STATUS, &status));
     if (status == GL_FALSE) {
+      state_ = kValidationFailure;
+
+      #if OGLWRAP_DEBUG
       GLint info_log_length;
       gl(GetProgramiv(program_, GL_INFO_LOG_LENGTH, &info_log_length));
 
@@ -167,10 +192,14 @@ class Program {
         "Program validation failure",
         str.str()
       )
+      #endif
     }
-    #endif
   }
 #endif  // glValidateProgram
+
+  State state() const {
+    return state_;
+  }
 
   /// Returns the C OpenGL handle for the program.
   const glObject& expose() const {
@@ -186,8 +215,7 @@ class Program {
     std::vector<std::string> filenames_;
   #endif
 
-  /// Stores if the program is linked.
-  bool linked_;
+  mutable State state_ = kNotLinked;
 };
 
 #endif  // glCreateProgram

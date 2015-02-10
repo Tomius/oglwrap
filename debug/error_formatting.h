@@ -66,22 +66,19 @@ struct ErrorMessage {
   std::string file, function;
   int line;
   std::string call_string;
-  bool fatal;
 
   ErrorMessage(const std::string& title,
                const std::string& message,
                const std::string& file = "",
                const std::string& function = "",
                int line = -1,
-               const std::string& call_string = "",
-               bool fatal = false)
+               const std::string& call_string = "")
       : title(title)
       , message(message)
       , file(file)
       , function(function)
       , line(line)
       , call_string(call_string)
-      , fatal(fatal)
     { }
 };
 
@@ -104,11 +101,7 @@ inline void OGLWRAP_PrintError(const ErrorMessage& error) {
   // footer
   sstream << '\n' + std::string(header.size(), '-') + "\n\n";
 
-  if (error.fatal) {
-    throw std::runtime_error(sstream.str());
-  } else {
-    std::cerr << sstream.str() << std::endl;
-  }
+  std::cerr << sstream.str() << std::endl;
 
   #if OGLWRAP_STOP_AFTER_X_ERRORS
     if (++OGLWRAP_ERRORS_NUM >= OGLWRAP_STOP_AFTER_X_ERRORS) {

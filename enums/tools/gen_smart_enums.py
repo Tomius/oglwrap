@@ -24,9 +24,10 @@ namespace smart_enums {
 
 """)
 
-def WriteFooter(enum_dict, out, instances):
+def WriteFooter(enum_dict, out, data):
   out.write('} // namespace smart_enums\n\n')
-  out.write(instances)
+  out.write(data[0] + '\n')
+  out.write(data[1])
   out.write("""
 } // namespace enums
 using namespace enums;
@@ -51,25 +52,21 @@ def CreateEnumDictionary(enum_dict, file_list):
 
 def WriteEnums(enum_dict, out):
   instances = ""
+  suppress_unused = "// Just an ugly hack to surpress -Wunused-variable\ntemplate<typename T> static void _OGLWRAP_SUPPRESS_UNUSED() {\n"
   for gl_enum in sorted(enum_dict.keys()):
     ifdef = '#if OGLWRAP_DEFINE_EVERYTHING || defined(' + gl_enum + ')\n'
     out.write(ifdef)
     enum = CamelCase(gl_enum[3:])
     out.write('struct ' + enum + 'Enum {\n')
-    out.write('#if __has_feature(cxx_constexpr)\n')
-    out.write('  constexpr ' + enum + 'Enum() { }\n')
-    for enum_class in enum_dict[gl_enum]:
-      out.write('  constexpr operator ' + enum_class +
-                '() const { return ' + enum_class + '(' + gl_enum + '); }\n')
-    out.write('#else\n')
     for enum_class in enum_dict[gl_enum]:
       out.write('  operator ' + enum_class +
                 '() const { return ' + enum_class + '(' + gl_enum + '); }\n')
-    out.write('#endif\n')
     out.write('};\n')
     out.write('#endif\n\n')
-    instances += ifdef + '#if __has_feature(cxx_constexpr)\n  constexpr smart_enums::' + enum + 'Enum k' + enum + ';\n#else\n  static smart_enums::' + enum + 'Enum k' + enum + ';\n#endif\n#endif\n'
-  return instances
+    instances += ifdef + '  static smart_enums::' + enum + 'Enum k' + enum + ';\n#endif\n'
+    suppress_unused += ifdef + '  (void) k' + CamelCase(gl_enum[3:]) + ';\n#endif\n'
+  suppress_unused += '}\n'
+  return [instances, suppress_unused]
 
 
 # __main()__
@@ -79,5 +76,5 @@ out = open('../../smart_enums.h', 'w')
 WriteHeader(file_list, out)
 enum_dict = {}
 CreateEnumDictionary(enum_dict, file_list)
-instances = WriteEnums(enum_dict, out)
-WriteFooter(enum_dict, out, instances)
+data = WriteEnums(enum_dict, out)
+WriteFooter(enum_dict, out, data)

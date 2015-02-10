@@ -48,11 +48,6 @@ namespace OGLWRAP_NAMESPACE_NAME {
     ErrorMessage{title, message, __FILE__, OGLWRAP_FUNCTION_MACRO, __LINE__}  \
   );
 
-  #define OGLWRAP_PRINT_FATAL_ERROR(title, message) \
-  DebugOutput::PrintError( \
-    ErrorMessage{title, message, __FILE__, OGLWRAP_FUNCTION_MACRO, __LINE__, "", true}  \
-  );
-
 /**
  * @brief A wrapper around glGetError, that prints file, function, line, and the
  * error in human-readable format.

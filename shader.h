@@ -19,37 +19,36 @@ namespace OGLWRAP_NAMESPACE_NAME {
 /// A GLSL shader object used to control the drawing process.
 /** @see glCreateShader, glDeleteShader */
 class Shader {
-  globjects::Shader shader_;  // The handle for the buffer.
-  bool compiled_;  // Stores if the shader is compiled.
+ public:
+  enum State { kNotCompiled, kCompileFailure, kCompileSuccessful };
 
-  #if OGLWRAP_DEBUG
-    /// Stores the source file's name if the shader was initialized from file.
-    std::string filename_;
-  #endif
+ private:
+  globjects::Shader shader_;  // The handle for the buffer.
+
+  /// Stores the source file's name if the shader was initialized from file.
+  std::string filename_;
+
+ protected:
+  mutable State state_ = kNotCompiled;
 
  public:
   /// Creates the an empty shader object.
-  #if OGLWRAP_DEBUG
-    explicit Shader(ShaderType shader_t)
-        : shader_(shader_t), compiled_(false), filename_("Unnamed shader") { }
-  #else
-    explicit Shader(ShaderType shader_t)
-        : shader_(shader_t), compiled_(false) { }
-  #endif
+  explicit Shader(ShaderType shader_t)
+      : shader_(shader_t), filename_("Unnamed shader") { }
 
   /// Creates a shader and sets the file as the shader source.
   /** @param file - The file to load and set as shader source.
     * @see glShaderSource */
   Shader(ShaderType shader_t, const std::string& file)
-      : shader_(shader_t), compiled_(false) {
-    set_source_file(file);
+      : shader_(shader_t) {
+    set_source(ShaderSource{file});
   }
 
   /// Creates a shader and sets the file as the shader source.
   /** @param src - The source of the shader code.
     * @see glShaderSource */
   Shader(ShaderType shader_t, const ShaderSource& src)
-      : shader_(shader_t), compiled_(false) {
+      : shader_(shader_t) {
     set_source(src);
   }
 
@@ -66,25 +65,17 @@ class Shader {
     * @see glShaderSource */
   void set_source(const ShaderSource& source) {
     const char *str = source.source().c_str();
-    #if OGLWRAP_DEBUG
-      filename_ = source.source_file();
-    #endif
+    filename_ = source.source_file();
     gl(ShaderSource(shader_, 1, &str, nullptr));
   }
 
-#if OGLWRAP_DEBUG
   /// Returns the file's name that was loaded in.
   const std::string& source_file() const {
     return filename_;
   }
-#endif
 
-
-  /// Loads a file and uploads it as shader source
-  /** @param file - the shader file's path
-    * @see glShaderSource */
-  void set_source_file(const std::string& file)  {
-    set_source(ShaderSource(file));
+  void set_source_file(const std::string& filename)  {
+    filename_ = filename;
   }
 
 #if OGLWRAP_DEFINE_EVERYTHING || ( \
@@ -94,17 +85,22 @@ class Shader {
 )
   /// Compiles the shader code.
   /** @see glCompileShader, glGetShaderiv, glGetShaderInfoLog */
-  void compile()  {
-    if (compiled_) {
+  void compile() const {
+    if (state_ != kNotCompiled) {
       return;
     }
     gl(CompileShader(shader_));
-    compiled_ = true;
 
-    #if OGLWRAP_DEBUG
     // Get compilation status
     GLint status;
     gl(GetShaderiv(shader_, GL_COMPILE_STATUS, &status));
+    if (status == GL_TRUE) {
+      state_ = kCompileSuccessful;
+    } else {
+      state_ = kCompileFailure;
+    }
+
+    #if OGLWRAP_DEBUG
     if (status == GL_FALSE) {
       GLint info_log_length;
       gl(GetShaderiv(shader_, GL_INFO_LOG_LENGTH, &info_log_length));
@@ -116,7 +112,7 @@ class Shader {
         str << "Compile failure in shader '";
         str << filename_ << "' :" << std::endl << str_info_log.get();
 
-      OGLWRAP_PRINT_FATAL_ERROR(
+      OGLWRAP_PRINT_ERROR(
         "Shader compile failure",
         str.str()
       )
@@ -126,7 +122,7 @@ class Shader {
 #endif  // glCompileShader && glGetShaderInfoLog && glGetShaderiv
 
   /// Returns if the shader is compiled
-  bool compiled() { return compiled_; }
+  State state() const { return state_; }
 
   /// Returns the C OpenGL handle for the shader.
   const glObject& expose() const  {

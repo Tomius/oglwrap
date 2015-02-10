@@ -49,7 +49,8 @@ inline GLuint SphereShape::createAttrib(std::vector<float>* data,
     case kPosition: return createPositions(data);
     case kNormal: return createNormals(data);
     case kTexCoord: return createTexCoords(data);
-    case kTangent:  return createTangents(data);
+    case kTangent: return createTangents(data);
+    default: throw new std::runtime_error("Unsupported AttributeType");
   }
 }
 
@@ -70,12 +71,12 @@ static inline void vector_push_back(std::vector<float>* data,
 inline GLuint SphereShape::createPositions(std::vector<float>* data) {
   // One triangle strip per ring, then a degenerate to jump to the next ring
   float ring_step = M_PI / rings_;
-  for (int ring = 0; ring != rings_; ++ring) {
+  for (unsigned ring = 0; ring != rings_; ++ring) {
     float phi0 = ring * ring_step;
     float phi1 = (ring+1) * ring_step;
 
     float segment_step = 2*M_PI / segments_;
-    for (int segment = 0; segment != segments_ + 1; ++segment) {
+    for (unsigned segment = 0; segment != segments_ + 1; ++segment) {
       float theta = segment * segment_step;
 
       vector_push_back(data, SphericalToDescates(phi0, theta)/2.0f);
@@ -94,12 +95,12 @@ inline GLuint SphereShape::createPositions(std::vector<float>* data) {
 
 inline GLuint SphereShape::createNormals(std::vector<float>* data) {
   float ring_step = M_PI / rings_;
-  for (int ring = 0; ring != rings_; ++ring) {
+  for (unsigned ring = 0; ring != rings_; ++ring) {
     float phi0 = ring * ring_step;
     float phi1 = (ring+1) * ring_step;
 
     float segment_step = 2*M_PI / segments_;
-    for (int segment = 0; segment != segments_ + 1; ++segment) {
+    for (unsigned segment = 0; segment != segments_ + 1; ++segment) {
       float theta = segment * segment_step;
 
       vector_push_back(data, SphericalToDescates(phi0, theta));
@@ -114,11 +115,11 @@ inline GLuint SphereShape::createNormals(std::vector<float>* data) {
 }
 
 inline GLuint SphereShape::createTexCoords(std::vector<float>* data) {
-  for (int ring = 0; ring != rings_; ++ring) {
+  for (unsigned ring = 0; ring != rings_; ++ring) {
     float s0 = float(ring) / rings_;
     float s1 = float(ring+1) / rings_;
 
-    for (int segment = 0; segment != segments_ + 1; ++segment) {
+    for (unsigned segment = 0; segment != segments_ + 1; ++segment) {
       float t = float(segment) / segments_;
 
       vector_push_back(data, glm::vec2(s0, t));
@@ -134,12 +135,12 @@ inline GLuint SphereShape::createTexCoords(std::vector<float>* data) {
 
 inline GLuint SphereShape::createTangents(std::vector<float>* data) {
   float ring_step = M_PI / rings_;
-  for (int ring = 0; ring != rings_; ++ring) {
+  for (unsigned ring = 0; ring != rings_; ++ring) {
     float phi0 = ring * ring_step;
     float phi1 = (ring+1) * ring_step;
 
     float segment_step = 2*M_PI / segments_;
-    for (int segment = 0; segment != segments_ + 1; ++segment) {
+    for (unsigned segment = 0; segment != segments_ + 1; ++segment) {
       float theta = segment * segment_step;
 
       vector_push_back(data, SphericalToDescates(phi0 + M_PI_2, theta));

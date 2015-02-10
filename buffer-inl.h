@@ -85,7 +85,7 @@ template <class T>
 BufferObject<BUFFER_TYPE>::TypedMap<T>::TypedMap(BufferMapAccess access) {
   OGLWRAP_CHECK_FOR_DEFAULT_BINDING(GLenum(GetBindingTarget(BUFFER_TYPE)));
   data_ = gl(MapBuffer(GLenum(BUFFER_TYPE), GLenum(access)));
-  gl(GetBufferParameteriv(GLenum(BUFFER_TYPE), GL_BUFFER_SIZE, &size_));
+  gl(GetBufferParameteriv(GLenum(BUFFER_TYPE), GL_BUFFER_SIZE, (GLint*)&size_));
 }
 
 template<BufferType BUFFER_TYPE>
@@ -94,7 +94,7 @@ BufferObject<BUFFER_TYPE>::TypedMap<T>::TypedMap(
     GLintptr offset, GLsizeiptr length, Bitfield<BufferMapAccessFlags> access) {
   OGLWRAP_CHECK_FOR_DEFAULT_BINDING(GLenum(GetBindingTarget(BUFFER_TYPE)));
   data_ = gl(MapBufferRange(GLenum(BUFFER_TYPE), offset, length, access));
-  gl(GetBufferParameteriv(GLenum(BUFFER_TYPE), GL_BUFFER_SIZE, &size_));
+  gl(GetBufferParameteriv(GLenum(BUFFER_TYPE), GL_BUFFER_SIZE, (GLint*)&size_));
 }
 
 template<BufferType BUFFER_TYPE>
