@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 #ifndef OGLWRAP_ENUMS_PIXEL_DATA_FORMAT_H_
 #define OGLWRAP_ENUMS_PIXEL_DATA_FORMAT_H_

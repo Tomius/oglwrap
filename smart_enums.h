@@ -1,63 +1,63 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 #ifndef OGLWRAP_SMART_ENUMS_H_
 #define OGLWRAP_SMART_ENUMS_H_
 
 #include "./config.h"
+#include "./enums/framebuffer_type.h"
 #include "./enums/stencil_operation.h"
-#include "./enums/blend_function.h"
-#include "./enums/poly_mode.h"
-#include "./enums/blend_equation.h"
-#include "./enums/buffer_binding.h"
+#include "./enums/capability.h"
+#include "./enums/data_type.h"
+#include "./enums/index_type.h"
+#include "./enums/transform_feedback_type.h"
+#include "./enums/color_buffer.h"
+#include "./enums/whole_data_type.h"
+#include "./enums/pixel_data_type.h"
+#include "./enums/face.h"
+#include "./enums/provoke_mode.h"
+#include "./enums/pixel_data_format.h"
+#include "./enums/buffer_select_bit.h"
+#include "./enums/renderbuffer_binding.h"
+#include "./enums/hint_option.h"
+#include "./enums/transform_feedback_binding.h"
+#include "./enums/swizzle_mode.h"
 #include "./enums/basic_primitive_type.h"
+#include "./enums/poly_mode.h"
+#include "./enums/framebuffer_binding.h"
+#include "./enums/blit_filter.h"
+#include "./enums/indexed_buffer_binding.h"
+#include "./enums/texture_type.h"
+#include "./enums/buffer_type.h"
+#include "./enums/pixel_storage_mode.h"
+#include "./enums/buffer_map_access.h"
+#include "./enums/memory_barrier_bit.h"
+#include "./enums/compare_func.h"
 #include "./enums/texture_cube_target.h"
+#include "./enums/blend_function.h"
+#include "./enums/primitive_type.h"
+#include "./enums/vertex_array_type.h"
+#include "./enums/face_orientation.h"
+#include "./enums/hint_target.h"
+#include "./enums/min_filter.h"
+#include "./enums/color_logic_operation.h"
+#include "./enums/blend_equation.h"
+#include "./enums/buffer_map_access_flags.h"
 #include "./enums/vertex_array_binding.h"
+#include "./enums/renderbuffer_type.h"
+#include "./enums/buffer_binding.h"
+#include "./enums/shader_type.h"
+#include "./enums/framebuffer_status.h"
+#include "./enums/pixel_data_internal_format.h"
+#include "./enums/framebuffer_attachment.h"
+#include "./enums/texture_binding.h"
+#include "./enums/indexed_buffer_type.h"
+#include "./enums/compare_mode.h"
+#include "./enums/texture3D_type.h"
+#include "./enums/mag_filter.h"
 #include "./enums/buffer_usage.h"
 #include "./enums/texture2D_type.h"
-#include "./enums/buffer_select_bit.h"
-#include "./enums/color_logic_operation.h"
-#include "./enums/compare_func.h"
-#include "./enums/blit_filter.h"
-#include "./enums/pixel_data_internal_format.h"
-#include "./enums/texture3D_type.h"
-#include "./enums/buffer_map_access_flags.h"
-#include "./enums/renderbuffer_binding.h"
-#include "./enums/index_type.h"
-#include "./enums/framebuffer_binding.h"
-#include "./enums/error_type.h"
-#include "./enums/renderbuffer_type.h"
-#include "./enums/transform_feedback_type.h"
-#include "./enums/shader_type.h"
-#include "./enums/face.h"
 #include "./enums/wrap_mode.h"
-#include "./enums/pixel_data_type.h"
-#include "./enums/framebuffer_type.h"
-#include "./enums/hint_option.h"
-#include "./enums/framebuffer_attachment.h"
-#include "./enums/swizzle_mode.h"
-#include "./enums/texture_type.h"
-#include "./enums/whole_data_type.h"
-#include "./enums/pixel_storage_mode.h"
-#include "./enums/framebuffer_status.h"
-#include "./enums/color_buffer.h"
-#include "./enums/transform_feedback_binding.h"
-#include "./enums/face_orientation.h"
-#include "./enums/provoke_mode.h"
-#include "./enums/buffer_map_access.h"
-#include "./enums/data_type.h"
-#include "./enums/mag_filter.h"
-#include "./enums/indexed_buffer_type.h"
-#include "./enums/hint_target.h"
-#include "./enums/indexed_buffer_binding.h"
-#include "./enums/vertex_array_type.h"
-#include "./enums/compare_mode.h"
-#include "./enums/capability.h"
-#include "./enums/min_filter.h"
-#include "./enums/texture_binding.h"
-#include "./enums/pixel_data_format.h"
-#include "./enums/buffer_type.h"
-#include "./enums/memory_barrier_bit.h"
-#include "./enums/primitive_type.h"
+#include "./enums/error_type.h"
 #include "./define_internal_macros.h"
 
 namespace OGLWRAP_NAMESPACE_NAME {
@@ -108,15 +108,15 @@ struct AtomicCounterBarrierBitEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ATOMIC_COUNTER_BUFFER)
 struct AtomicCounterBufferEnum {
-  operator IndexedBufferType() const { return IndexedBufferType(GL_ATOMIC_COUNTER_BUFFER); }
   operator BufferType() const { return BufferType(GL_ATOMIC_COUNTER_BUFFER); }
+  operator IndexedBufferType() const { return IndexedBufferType(GL_ATOMIC_COUNTER_BUFFER); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_BACK)
 struct BackEnum {
-  operator Face() const { return Face(GL_BACK); }
   operator ColorBuffer() const { return ColorBuffer(GL_BACK); }
+  operator Face() const { return Face(GL_BACK); }
 };
 #endif
 
@@ -164,8 +164,8 @@ struct BlendEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_BLUE)
 struct BlueEnum {
-  operator SwizzleMode() const { return SwizzleMode(GL_BLUE); }
   operator PixelDataFormat() const { return PixelDataFormat(GL_BLUE); }
+  operator SwizzleMode() const { return SwizzleMode(GL_BLUE); }
 };
 #endif
 
@@ -183,9 +183,9 @@ struct BufferUpdateBarrierBitEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_BYTE)
 struct ByteEnum {
-  operator PixelDataType() const { return PixelDataType(GL_BYTE); }
-  operator WholeDataType() const { return WholeDataType(GL_BYTE); }
   operator DataType() const { return DataType(GL_BYTE); }
+  operator WholeDataType() const { return WholeDataType(GL_BYTE); }
+  operator PixelDataType() const { return PixelDataType(GL_BYTE); }
 };
 #endif
 
@@ -227,113 +227,113 @@ struct ClipDistanceEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT0)
 struct ColorAttachment0Enum {
-  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT0); }
   operator ColorBuffer() const { return ColorBuffer(GL_COLOR_ATTACHMENT0); }
+  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT0); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT1)
 struct ColorAttachment1Enum {
-  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT1); }
   operator ColorBuffer() const { return ColorBuffer(GL_COLOR_ATTACHMENT1); }
+  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT1); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT10)
 struct ColorAttachment10Enum {
-  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT10); }
   operator ColorBuffer() const { return ColorBuffer(GL_COLOR_ATTACHMENT10); }
+  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT10); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT11)
 struct ColorAttachment11Enum {
-  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT11); }
   operator ColorBuffer() const { return ColorBuffer(GL_COLOR_ATTACHMENT11); }
+  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT11); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT12)
 struct ColorAttachment12Enum {
-  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT12); }
   operator ColorBuffer() const { return ColorBuffer(GL_COLOR_ATTACHMENT12); }
+  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT12); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT13)
 struct ColorAttachment13Enum {
-  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT13); }
   operator ColorBuffer() const { return ColorBuffer(GL_COLOR_ATTACHMENT13); }
+  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT13); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT14)
 struct ColorAttachment14Enum {
-  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT14); }
   operator ColorBuffer() const { return ColorBuffer(GL_COLOR_ATTACHMENT14); }
+  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT14); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT15)
 struct ColorAttachment15Enum {
-  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT15); }
   operator ColorBuffer() const { return ColorBuffer(GL_COLOR_ATTACHMENT15); }
+  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT15); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT2)
 struct ColorAttachment2Enum {
-  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT2); }
   operator ColorBuffer() const { return ColorBuffer(GL_COLOR_ATTACHMENT2); }
+  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT2); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT3)
 struct ColorAttachment3Enum {
-  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT3); }
   operator ColorBuffer() const { return ColorBuffer(GL_COLOR_ATTACHMENT3); }
+  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT3); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT4)
 struct ColorAttachment4Enum {
-  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT4); }
   operator ColorBuffer() const { return ColorBuffer(GL_COLOR_ATTACHMENT4); }
+  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT4); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT5)
 struct ColorAttachment5Enum {
-  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT5); }
   operator ColorBuffer() const { return ColorBuffer(GL_COLOR_ATTACHMENT5); }
+  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT5); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT6)
 struct ColorAttachment6Enum {
-  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT6); }
   operator ColorBuffer() const { return ColorBuffer(GL_COLOR_ATTACHMENT6); }
+  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT6); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT7)
 struct ColorAttachment7Enum {
-  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT7); }
   operator ColorBuffer() const { return ColorBuffer(GL_COLOR_ATTACHMENT7); }
+  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT7); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT8)
 struct ColorAttachment8Enum {
-  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT8); }
   operator ColorBuffer() const { return ColorBuffer(GL_COLOR_ATTACHMENT8); }
+  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT8); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_ATTACHMENT9)
 struct ColorAttachment9Enum {
-  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT9); }
   operator ColorBuffer() const { return ColorBuffer(GL_COLOR_ATTACHMENT9); }
+  operator FramebufferAttachment() const { return FramebufferAttachment(GL_COLOR_ATTACHMENT9); }
 };
 #endif
 
@@ -519,15 +519,15 @@ struct DepthClampEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DEPTH_COMPONENT)
 struct DepthComponentEnum {
-  operator PixelDataInternalFormat() const { return PixelDataInternalFormat(GL_DEPTH_COMPONENT); }
   operator PixelDataFormat() const { return PixelDataFormat(GL_DEPTH_COMPONENT); }
+  operator PixelDataInternalFormat() const { return PixelDataInternalFormat(GL_DEPTH_COMPONENT); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_DEPTH_STENCIL)
 struct DepthStencilEnum {
-  operator PixelDataInternalFormat() const { return PixelDataInternalFormat(GL_DEPTH_STENCIL); }
   operator PixelDataFormat() const { return PixelDataFormat(GL_DEPTH_STENCIL); }
+  operator PixelDataInternalFormat() const { return PixelDataInternalFormat(GL_DEPTH_STENCIL); }
 };
 #endif
 
@@ -659,8 +659,8 @@ struct FixedEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FLOAT)
 struct FloatEnum {
-  operator PixelDataType() const { return PixelDataType(GL_FLOAT); }
   operator DataType() const { return DataType(GL_FLOAT); }
+  operator PixelDataType() const { return PixelDataType(GL_FLOAT); }
 };
 #endif
 
@@ -756,15 +756,15 @@ struct FramebufferUnsupportedEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRONT)
 struct FrontEnum {
-  operator Face() const { return Face(GL_FRONT); }
   operator ColorBuffer() const { return ColorBuffer(GL_FRONT); }
+  operator Face() const { return Face(GL_FRONT); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FRONT_AND_BACK)
 struct FrontAndBackEnum {
-  operator Face() const { return Face(GL_FRONT_AND_BACK); }
   operator ColorBuffer() const { return ColorBuffer(GL_FRONT_AND_BACK); }
+  operator Face() const { return Face(GL_FRONT_AND_BACK); }
 };
 #endif
 
@@ -818,8 +818,8 @@ struct GreaterEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_GREEN)
 struct GreenEnum {
-  operator SwizzleMode() const { return SwizzleMode(GL_GREEN); }
   operator PixelDataFormat() const { return PixelDataFormat(GL_GREEN); }
+  operator SwizzleMode() const { return SwizzleMode(GL_GREEN); }
 };
 #endif
 
@@ -831,8 +831,8 @@ struct GreenIntegerEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_HALF_FLOAT)
 struct HalfFloatEnum {
-  operator PixelDataType() const { return PixelDataType(GL_HALF_FLOAT); }
   operator DataType() const { return DataType(GL_HALF_FLOAT); }
+  operator PixelDataType() const { return PixelDataType(GL_HALF_FLOAT); }
 };
 #endif
 
@@ -850,9 +850,9 @@ struct IncrWrapEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_INT)
 struct IntEnum {
-  operator PixelDataType() const { return PixelDataType(GL_INT); }
-  operator WholeDataType() const { return WholeDataType(GL_INT); }
   operator DataType() const { return DataType(GL_INT); }
+  operator WholeDataType() const { return WholeDataType(GL_INT); }
+  operator PixelDataType() const { return PixelDataType(GL_INT); }
 };
 #endif
 
@@ -926,8 +926,8 @@ struct LineEnum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_LINEAR)
 struct LinearEnum {
   operator BlitFilter() const { return BlitFilter(GL_LINEAR); }
-  operator MagFilter() const { return MagFilter(GL_LINEAR); }
   operator MinFilter() const { return MinFilter(GL_LINEAR); }
+  operator MagFilter() const { return MagFilter(GL_LINEAR); }
 };
 #endif
 
@@ -1067,8 +1067,8 @@ struct NandEnum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_NEAREST)
 struct NearestEnum {
   operator BlitFilter() const { return BlitFilter(GL_NEAREST); }
-  operator MagFilter() const { return MagFilter(GL_NEAREST); }
   operator MinFilter() const { return MinFilter(GL_NEAREST); }
+  operator MagFilter() const { return MagFilter(GL_NEAREST); }
 };
 #endif
 
@@ -1129,8 +1129,8 @@ struct NoErrorEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ONE)
 struct OneEnum {
-  operator BlendFunction() const { return BlendFunction(GL_ONE); }
   operator SwizzleMode() const { return SwizzleMode(GL_ONE); }
+  operator BlendFunction() const { return BlendFunction(GL_ONE); }
 };
 #endif
 
@@ -1473,9 +1473,9 @@ struct ReadWriteEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RED)
 struct RedEnum {
-  operator PixelDataInternalFormat() const { return PixelDataInternalFormat(GL_RED); }
-  operator SwizzleMode() const { return SwizzleMode(GL_RED); }
   operator PixelDataFormat() const { return PixelDataFormat(GL_RED); }
+  operator SwizzleMode() const { return SwizzleMode(GL_RED); }
+  operator PixelDataInternalFormat() const { return PixelDataInternalFormat(GL_RED); }
 };
 #endif
 
@@ -1505,8 +1505,8 @@ struct ReplaceEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RG)
 struct RgEnum {
-  operator PixelDataInternalFormat() const { return PixelDataInternalFormat(GL_RG); }
   operator PixelDataFormat() const { return PixelDataFormat(GL_RG); }
+  operator PixelDataInternalFormat() const { return PixelDataInternalFormat(GL_RG); }
 };
 #endif
 
@@ -1584,8 +1584,8 @@ struct Rg8SnormEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGB)
 struct RgbEnum {
-  operator PixelDataInternalFormat() const { return PixelDataInternalFormat(GL_RGB); }
   operator PixelDataFormat() const { return PixelDataFormat(GL_RGB); }
+  operator PixelDataInternalFormat() const { return PixelDataInternalFormat(GL_RGB); }
 };
 #endif
 
@@ -1711,8 +1711,8 @@ struct Rgb9E5Enum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_RGBA)
 struct RgbaEnum {
-  operator PixelDataInternalFormat() const { return PixelDataInternalFormat(GL_RGBA); }
   operator PixelDataFormat() const { return PixelDataFormat(GL_RGBA); }
+  operator PixelDataInternalFormat() const { return PixelDataInternalFormat(GL_RGBA); }
 };
 #endif
 
@@ -1886,16 +1886,16 @@ struct ShaderStorageBarrierBitEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SHADER_STORAGE_BUFFER)
 struct ShaderStorageBufferEnum {
-  operator IndexedBufferType() const { return IndexedBufferType(GL_SHADER_STORAGE_BUFFER); }
   operator BufferType() const { return BufferType(GL_SHADER_STORAGE_BUFFER); }
+  operator IndexedBufferType() const { return IndexedBufferType(GL_SHADER_STORAGE_BUFFER); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_SHORT)
 struct ShortEnum {
-  operator PixelDataType() const { return PixelDataType(GL_SHORT); }
-  operator WholeDataType() const { return WholeDataType(GL_SHORT); }
   operator DataType() const { return DataType(GL_SHORT); }
+  operator WholeDataType() const { return WholeDataType(GL_SHORT); }
+  operator PixelDataType() const { return PixelDataType(GL_SHORT); }
 };
 #endif
 
@@ -2051,29 +2051,29 @@ struct Texture1DEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_1D_ARRAY)
 struct Texture1DArrayEnum {
-  operator Texture2DType() const { return Texture2DType(GL_TEXTURE_1D_ARRAY); }
   operator TextureType() const { return TextureType(GL_TEXTURE_1D_ARRAY); }
+  operator Texture2DType() const { return Texture2DType(GL_TEXTURE_1D_ARRAY); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_2D)
 struct Texture2DEnum {
-  operator Texture2DType() const { return Texture2DType(GL_TEXTURE_2D); }
   operator TextureType() const { return TextureType(GL_TEXTURE_2D); }
+  operator Texture2DType() const { return Texture2DType(GL_TEXTURE_2D); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_2D_ARRAY)
 struct Texture2DArrayEnum {
-  operator Texture3DType() const { return Texture3DType(GL_TEXTURE_2D_ARRAY); }
   operator TextureType() const { return TextureType(GL_TEXTURE_2D_ARRAY); }
+  operator Texture3DType() const { return Texture3DType(GL_TEXTURE_2D_ARRAY); }
 };
 #endif
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_3D)
 struct Texture3DEnum {
-  operator Texture3DType() const { return Texture3DType(GL_TEXTURE_3D); }
   operator TextureType() const { return TextureType(GL_TEXTURE_3D); }
+  operator Texture3DType() const { return Texture3DType(GL_TEXTURE_3D); }
 };
 #endif
 
@@ -2091,8 +2091,8 @@ struct TextureCompressionHintEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_CUBE_MAP)
 struct TextureCubeMapEnum {
-  operator Texture2DType() const { return Texture2DType(GL_TEXTURE_CUBE_MAP); }
   operator TextureType() const { return TextureType(GL_TEXTURE_CUBE_MAP); }
+  operator Texture2DType() const { return Texture2DType(GL_TEXTURE_CUBE_MAP); }
 };
 #endif
 
@@ -2146,8 +2146,8 @@ struct TextureFetchBarrierBitEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TEXTURE_RECTANGLE)
 struct TextureRectangleEnum {
-  operator Texture2DType() const { return Texture2DType(GL_TEXTURE_RECTANGLE); }
   operator TextureType() const { return TextureType(GL_TEXTURE_RECTANGLE); }
+  operator Texture2DType() const { return Texture2DType(GL_TEXTURE_RECTANGLE); }
 };
 #endif
 
@@ -2171,8 +2171,8 @@ struct TransformFeedbackBarrierBitEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRANSFORM_FEEDBACK_BUFFER)
 struct TransformFeedbackBufferEnum {
-  operator IndexedBufferType() const { return IndexedBufferType(GL_TRANSFORM_FEEDBACK_BUFFER); }
   operator BufferType() const { return BufferType(GL_TRANSFORM_FEEDBACK_BUFFER); }
+  operator IndexedBufferType() const { return IndexedBufferType(GL_TRANSFORM_FEEDBACK_BUFFER); }
 };
 #endif
 
@@ -2215,8 +2215,8 @@ struct UniformBarrierBitEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNIFORM_BUFFER)
 struct UniformBufferEnum {
-  operator IndexedBufferType() const { return IndexedBufferType(GL_UNIFORM_BUFFER); }
   operator BufferType() const { return BufferType(GL_UNIFORM_BUFFER); }
+  operator IndexedBufferType() const { return IndexedBufferType(GL_UNIFORM_BUFFER); }
 };
 #endif
 
@@ -2294,10 +2294,10 @@ struct UnpackSwapBytesEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_BYTE)
 struct UnsignedByteEnum {
-  operator IndexType() const { return IndexType(GL_UNSIGNED_BYTE); }
-  operator PixelDataType() const { return PixelDataType(GL_UNSIGNED_BYTE); }
-  operator WholeDataType() const { return WholeDataType(GL_UNSIGNED_BYTE); }
   operator DataType() const { return DataType(GL_UNSIGNED_BYTE); }
+  operator IndexType() const { return IndexType(GL_UNSIGNED_BYTE); }
+  operator WholeDataType() const { return WholeDataType(GL_UNSIGNED_BYTE); }
+  operator PixelDataType() const { return PixelDataType(GL_UNSIGNED_BYTE); }
 };
 #endif
 
@@ -2315,10 +2315,10 @@ struct UnsignedByte332Enum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_INT)
 struct UnsignedIntEnum {
-  operator IndexType() const { return IndexType(GL_UNSIGNED_INT); }
-  operator PixelDataType() const { return PixelDataType(GL_UNSIGNED_INT); }
-  operator WholeDataType() const { return WholeDataType(GL_UNSIGNED_INT); }
   operator DataType() const { return DataType(GL_UNSIGNED_INT); }
+  operator IndexType() const { return IndexType(GL_UNSIGNED_INT); }
+  operator WholeDataType() const { return WholeDataType(GL_UNSIGNED_INT); }
+  operator PixelDataType() const { return PixelDataType(GL_UNSIGNED_INT); }
 };
 #endif
 
@@ -2366,10 +2366,10 @@ struct UnsignedInt8888RevEnum {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNSIGNED_SHORT)
 struct UnsignedShortEnum {
-  operator IndexType() const { return IndexType(GL_UNSIGNED_SHORT); }
-  operator PixelDataType() const { return PixelDataType(GL_UNSIGNED_SHORT); }
-  operator WholeDataType() const { return WholeDataType(GL_UNSIGNED_SHORT); }
   operator DataType() const { return DataType(GL_UNSIGNED_SHORT); }
+  operator IndexType() const { return IndexType(GL_UNSIGNED_SHORT); }
+  operator WholeDataType() const { return WholeDataType(GL_UNSIGNED_SHORT); }
+  operator PixelDataType() const { return PixelDataType(GL_UNSIGNED_SHORT); }
 };
 #endif
 
@@ -2442,8 +2442,8 @@ struct XorEnum {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ZERO)
 struct ZeroEnum {
   operator StencilOperation() const { return StencilOperation(GL_ZERO); }
-  operator BlendFunction() const { return BlendFunction(GL_ZERO); }
   operator SwizzleMode() const { return SwizzleMode(GL_ZERO); }
+  operator BlendFunction() const { return BlendFunction(GL_ZERO); }
 };
 #endif
 

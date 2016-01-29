@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 #ifndef OGLWRAP_ENUMS_TRANSFORM_FEEDBACK_BINDING_H_
 #define OGLWRAP_ENUMS_TRANSFORM_FEEDBACK_BINDING_H_

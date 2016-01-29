@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 /** @file globjects.h
     @brief Implements wrappers for OpenGL objects

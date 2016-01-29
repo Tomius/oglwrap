@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 #ifndef OGLWRAP_SHAPES_RECTANGLE_SHAPE_INL_H_
 #define OGLWRAP_SHAPES_RECTANGLE_SHAPE_INL_H_

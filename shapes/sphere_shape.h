@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 /** @file sphere_shape.h
     @brief Implements a sphere shape wrapper.

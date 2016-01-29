@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 /** @file config.h
     @brief Contains macros to configure oglwrap.
@@ -94,7 +94,7 @@
 
 #if OGLWRAP_DEBUG
   #ifndef OGLWRAP_STOP_AFTER_X_ERRORS
-    #define OGLWRAP_STOP_AFTER_X_ERRORS 10
+    #define OGLWRAP_STOP_AFTER_X_ERRORS 0
   #endif
 #endif
 

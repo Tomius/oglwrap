@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 /** @file oglwrap.h
     @brief The main header, including the core files of the library.

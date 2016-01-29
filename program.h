@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 /** @file program.h
     @brief Implements a wrapper for GLSL programs.
@@ -76,7 +76,7 @@ class Program {
 
       gl(AttachShader(program_, shader.expose()));
     } else {
-      throw new std::logic_error{
+      throw std::logic_error{
         "Program::attachShader called on an already linked program."};
     }
 
@@ -134,8 +134,12 @@ class Program {
       gl(GetProgramiv(program_, GL_LINK_STATUS, &status));
       if (status == GL_FALSE) {
         state_ = kLinkFailure;
+      } else {
+        state_ = kLinkSuccesful;
+      }
 
-        #if OGLWRAP_DEBUG
+      #if OGLWRAP_DEBUG
+      if (status == GL_FALSE) {
         GLint info_log_length;
         gl(GetProgramiv(program_, GL_INFO_LOG_LENGTH, &info_log_length));
 
@@ -144,16 +148,26 @@ class Program {
         std::stringstream str;
         str << "OpenGL failed to link the following shaders together: " << std::endl;
         str << getShaderNames() << std::endl;
-        str << "The error message: \n" << str_info_log.get();
+        str << "The error message:\n" << str_info_log.get();
 
-        OGLWRAP_PRINT_ERROR(
-          "Program link failure",
-          str.str()
-        )
-        #endif  // OGLWRAP_DEBUG
+        OGLWRAP_PRINT_ERROR("Program link failure", str.str());
       } else {
-        state_ = kLinkSuccesful;
+        GLint info_log_length;
+        gl(GetProgramiv(program_, GL_INFO_LOG_LENGTH, &info_log_length));
+
+        if (info_log_length > 1) {
+          std::unique_ptr<GLchar> str_info_log{ new GLchar[info_log_length + 1] };
+          gl(GetProgramInfoLog(program_, info_log_length, NULL, str_info_log.get()));
+          std::stringstream str;
+          str << "There was a warning when linking the following shaders together: " << std::endl;
+          str << getShaderNames() << std::endl;
+          str << "The warning message:\n" << str_info_log.get();
+
+          OGLWRAP_PRINT_ERROR("Program link warning", str.str());
+        }
+
       }
+      #endif  // OGLWRAP_DEBUG
     }
 
     return *this;
@@ -174,8 +188,10 @@ class Program {
     gl(GetProgramiv(program_, GL_VALIDATE_STATUS, &status));
     if (status == GL_FALSE) {
       state_ = kValidationFailure;
+    }
 
-      #if OGLWRAP_DEBUG
+    #if OGLWRAP_DEBUG
+    if (status == GL_FALSE) {
       GLint info_log_length;
       gl(GetProgramiv(program_, GL_INFO_LOG_LENGTH, &info_log_length));
 
@@ -186,14 +202,26 @@ class Program {
       "following shaders failed:\n" << getShaderNames() << std::endl;
 
       str << "This program might generate GL_INVALID_OPERATION "
-      "when used for rendering \nThe validation info: " << str_info_log.get();
+      "when used for rendering \nThe validation info:\n" << str_info_log.get();
 
-      OGLWRAP_PRINT_ERROR(
-        "Program validation failure",
-        str.str()
-      )
-      #endif
+      OGLWRAP_PRINT_ERROR("Program validation failure", str.str());
+    } else {
+      GLint info_log_length;
+      gl(GetProgramiv(program_, GL_INFO_LOG_LENGTH, &info_log_length));
+
+      if (info_log_length > 1) { // empty info log == one new line character
+        std::unique_ptr<GLchar> str_info_log{ new GLchar[info_log_length + 1] };
+        gl(GetProgramInfoLog(program_, info_log_length, NULL, str_info_log.get()));
+        std::stringstream str;
+        str << "The validation of the program containing the "
+        "following shaders caused a warning:\n" << getShaderNames() << std::endl;
+
+        str << "The validation warning:\n" << str_info_log.get();
+
+        OGLWRAP_PRINT_ERROR("Program validation warning", str.str());
+      }
     }
+    #endif
   }
 #endif  // glValidateProgram
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 /** @file bind_checking.h
     @brief Implements enums casts to help binding checks.

@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 /** @file rectangle_shape.h
     @brief Implements an NDC rectangle shape.

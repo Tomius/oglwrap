@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 #ifndef OGLWRAP_CONTEXT_SYNCHRONIZATION_H_
 #define OGLWRAP_CONTEXT_SYNCHRONIZATION_H_

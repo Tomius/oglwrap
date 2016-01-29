@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 /** @file vertex_array.h
     @brief Implements a wrapper for the vertex array

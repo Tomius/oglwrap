@@ -8,7 +8,7 @@ def CamelCase(str):
 
 def WriteHeader(file_list, out):
   guard = 'OGLWRAP_SMART_ENUMS_H_'
-  out.write('// Copyright (c) 2014, Tamas Csala\n\n')
+  out.write('// Copyright (c) Tamas Csala\n\n')
   out.write('#ifndef ' + guard + '\n')
   out.write('#define ' + guard + '\n')
   out.write('\n#include "./config.h"\n')

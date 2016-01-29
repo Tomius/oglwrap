@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 /** @file texture_cube.h
     @brief Implements two-dimensional cubeMap textures.

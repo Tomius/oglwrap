@@ -1,9 +1,16 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
-#include "./buffer.h"
-#include "./uniform.h"
-#include "./debug/debug_output.h"
-#include "./debug/error_formatting.h"
+#ifdef OGLWRAP_SYSTEM_HEADERS
+  #include <oglwrap/buffer.h>
+  #include <oglwrap/uniform.h>
+  #include <oglwrap/debug/debug_output.h>
+  #include <oglwrap/debug/error_formatting.h>
+#else
+  #include "./buffer.h"
+  #include "./uniform.h"
+  #include "./debug/debug_output.h"
+  #include "./debug/error_formatting.h"
+#endif
 
 namespace OGLWRAP_NAMESPACE_NAME {
 

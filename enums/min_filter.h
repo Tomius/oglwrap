@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 #ifndef OGLWRAP_ENUMS_MIN_FILTER_H_
 #define OGLWRAP_ENUMS_MIN_FILTER_H_

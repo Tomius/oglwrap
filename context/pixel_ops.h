@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 /** @file pixel_ops.h
     @brief Implements OpenGL pixel operations related stuff.

@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 /** @file shader.h
     @brief Implements GLSL shaders related classes.
@@ -24,6 +24,7 @@ class Shader {
 
  private:
   globjects::Shader shader_;  // The handle for the buffer.
+  const ShaderType shader_t_;
 
   /// Stores the source file's name if the shader was initialized from file.
   std::string filename_;
@@ -34,13 +35,13 @@ class Shader {
  public:
   /// Creates the an empty shader object.
   explicit Shader(ShaderType shader_t)
-      : shader_(shader_t), filename_("Unnamed shader") { }
+      : shader_(shader_t), shader_t_(shader_t), filename_("Unnamed shader") { }
 
   /// Creates a shader and sets the file as the shader source.
   /** @param file - The file to load and set as shader source.
     * @see glShaderSource */
   Shader(ShaderType shader_t, const std::string& file)
-      : shader_(shader_t) {
+      : shader_(shader_t), shader_t_(shader_t) {
     set_source(ShaderSource{file});
   }
 
@@ -48,7 +49,7 @@ class Shader {
   /** @param src - The source of the shader code.
     * @see glShaderSource */
   Shader(ShaderType shader_t, const ShaderSource& src)
-      : shader_(shader_t) {
+      : shader_(shader_t), shader_t_(shader_t) {
     set_source(src);
   }
 
@@ -76,6 +77,10 @@ class Shader {
 
   void set_source_file(const std::string& filename)  {
     filename_ = filename;
+  }
+
+  ShaderType shader_type() const {
+    return shader_t_;
   }
 
 #if OGLWRAP_DEFINE_EVERYTHING || ( \
@@ -112,10 +117,21 @@ class Shader {
         str << "Compile failure in shader '";
         str << filename_ << "' :" << std::endl << str_info_log.get();
 
-      OGLWRAP_PRINT_ERROR(
-        "Shader compile failure",
-        str.str()
-      )
+      OGLWRAP_PRINT_ERROR("Shader compile failure", str.str());
+    } else {
+      GLint info_log_length;
+      gl(GetShaderiv(shader_, GL_INFO_LOG_LENGTH, &info_log_length));
+
+      if (info_log_length > 1) { // empty compile info == one new line character
+        std::unique_ptr<GLchar> str_info_log{ new GLchar[info_log_length + 1] };
+        gl(GetShaderInfoLog(shader_, info_log_length, nullptr, str_info_log.get()));
+
+        std::stringstream str;
+          str << "Compile warning in shader '";
+          str << filename_ << "' :" << std::endl << str_info_log.get();
+
+        OGLWRAP_PRINT_ERROR("Shader compile warning", str.str());
+      }
     }
     #endif
   }

@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 #ifndef OGLWRAP_TEXTURES_TEXUTRE_BASE_INL_H_
 #define OGLWRAP_TEXTURES_TEXUTRE_BASE_INL_H_

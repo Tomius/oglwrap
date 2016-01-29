@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 /** @file buffer.h
     @brief Implements wrappers around OpenGL Buffer glObject.
@@ -129,6 +129,9 @@ class BufferObject {
     size_t count() const { return size_ / sizeof(T); }
 
     /// Returns a pointer to the data
+    T* data() { return static_cast<T*>(data_); }
+
+    /// Returns a pointer to the data
     const T* data() const { return static_cast<const T*>(data_); }
 
    private:
@@ -136,7 +139,7 @@ class BufferObject {
     size_t size_;  // The size of the data fetched from the buffer.
   };
 
-  using Map = TypedMap<GLbyte>;
+  using Map = TypedMap<GLubyte>;
 #endif  // glMapBuffer && glUnmapBuffer && glMapBufferRange
 
  protected:

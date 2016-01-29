@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 #ifndef OGLWRAP_RENDERBUFFER_INL_H_
 #define OGLWRAP_RENDERBUFFER_INL_H_

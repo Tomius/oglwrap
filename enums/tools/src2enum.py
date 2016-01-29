@@ -8,7 +8,7 @@ def CamelCase(str):
 
 def WriteEnum(file_name, file_base_name, out, is_binding):
   guard = 'OGLWRAP_ENUMS_' + file_base_name.upper() + '_H_'
-  out.write('// Copyright (c) 2014, Tamas Csala\n\n')
+  out.write('// Copyright (c) Tamas Csala\n\n')
   out.write('#ifndef ' + guard + '\n')
   out.write('#define ' + guard + '\n')
   out.write('\n#include "../config.h"\n')

@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 /** @file framebuffer.h
     @brief Implements a wrapper for Framebuffer objects

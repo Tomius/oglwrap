@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 /** @file bitfield.h
     @brief Generic bitfield class to replace GLbitfield

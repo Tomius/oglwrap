@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Tamas Csala
+// Copyright (c) Tamas Csala
 
 #ifndef OGLWRAP_SHAPES_SPHERE_SHAPE_INL_H_
 #define OGLWRAP_SHAPES_SPHERE_SHAPE_INL_H_
@@ -50,7 +50,7 @@ inline GLuint SphereShape::createAttrib(std::vector<float>* data,
     case kNormal: return createNormals(data);
     case kTexCoord: return createTexCoords(data);
     case kTangent: return createTangents(data);
-    default: throw new std::runtime_error("Unsupported AttributeType");
+    default: throw std::runtime_error("Unsupported AttributeType");
   }
 }
 
