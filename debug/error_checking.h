@@ -88,7 +88,6 @@ inline void OGLWRAP_CheckError(const char *file,
       OGLWRAP_CHECK_ENUM(kStackUnderflow, "Stack Underflow")
       OGLWRAP_CHECK_ENUM(kOutOfMemory, "Out of Memory")
       OGLWRAP_CHECK_ENUM(kInvalidFramebufferOperation, "Invalid Framebuffer Operation")
-      OGLWRAP_CHECK_ENUM(kTableTooLarge, "Table Too Large")
       default:
         break;
     };
