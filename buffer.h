@@ -27,7 +27,7 @@ namespace OGLWRAP_NAMESPACE_NAME {
 
 #if OGLWRAP_DEFINE_EVERYTHING \
       || (defined(glGenBuffers) && defined(glDeleteBuffers))
-template<enum BufferType BUFFER_TYPE>
+template<BufferType BUFFER_TYPE>
 /// Buffer Objects are OpenGL data stores, arrays on the server memory.
 /** Buffer Objects are OpenGL Objects that store an array
   * of unformatted memory allocated by the OpenGL context (aka: the GPU).

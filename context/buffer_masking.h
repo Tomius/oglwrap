@@ -19,10 +19,10 @@ inline void ColorMask(bool r, bool g, bool b, bool a) {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_COLOR_WRITEMASK)
 /// Returns the color mask.
 /** @see glGetBooleanv, GL_COLOR_WRITEMASK */
-inline std::tuple<bool, bool, bool, bool> ColorMask() {
+inline std::tuple<GLboolean, GLboolean, GLboolean, GLboolean> ColorMask() {
   GLboolean data[4];
   gl(GetBooleanv(GL_COLOR_WRITEMASK, data));
-  return std::tuple<bool, bool, bool, bool>(
+  return std::tuple<GLboolean, GLboolean, GLboolean, GLboolean>(
             data[0], data[1], data[2], data[3]);
 }
 #endif
