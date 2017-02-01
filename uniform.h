@@ -740,31 +740,6 @@ inline glm::uvec4 UniformObject<glm::uvec4>::get() const {
 }
 #endif  // glGetUniformuiv
 
-// Explicit instantiate just the common ones.
-#if OGLWRAP_INSTANTIATE
-  template class Uniform<GLint>;
-  template class Uniform<glm::vec3>;
-  template class Uniform<glm::vec4>;
-  template class Uniform<glm::mat3>;
-  template class Uniform<glm::mat4>;
-  template class LazyUniform<GLint>;
-  template class LazyUniform<glm::vec3>;
-  template class LazyUniform<glm::vec4>;
-  template class LazyUniform<glm::mat3>;
-  template class LazyUniform<glm::mat4>;
-#else
-  extern template class Uniform<GLint>;
-  extern template class Uniform<glm::vec3>;
-  extern template class Uniform<glm::vec4>;
-  extern template class Uniform<glm::mat3>;
-  extern template class Uniform<glm::mat4>;
-  extern template class LazyUniform<GLint>;
-  extern template class LazyUniform<glm::vec3>;
-  extern template class LazyUniform<glm::vec4>;
-  extern template class LazyUniform<glm::mat3>;
-  extern template class LazyUniform<glm::mat4>;
-#endif
-
 #endif  // glGetUniformLocation
 
 }  // namespace oglwrap

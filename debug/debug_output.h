@@ -33,6 +33,12 @@ namespace OGLWRAP_NAMESPACE_NAME {
  *        OpenGL or a binding error happens.
  */
 class DebugOutput {
+ private:
+  static DebugOutput& GetInstanceSingleton() {
+    static DebugOutput instance;
+    return instance;
+  }
+
   enum glError_t {
     INVALID_ENUM,
     INVALID_VALUE,
@@ -63,7 +69,7 @@ class DebugOutput {
   std::map<std::string, ErrorInfo> error_map;
 
   glError_t getErrorIndex() const {
-    switch (GLenum(last_error)) {
+    switch (GLenum(LastError())) {
       case GL_INVALID_ENUM:
         return INVALID_ENUM;
       case GL_INVALID_VALUE:
@@ -84,15 +90,6 @@ class DebugOutput {
   }
 
   std::function<void(ErrorMessage error)> error_printer{ OGLWRAP_PrintError };
-
-  // These static variables are dynamically allocated at the first use,
-  // and that memory is never freed. See the link below to understand why:
-  // http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml
-  // ?showone=Static_and_Global_Variables#Static_and_Global_Variables
-  static DebugOutput *instance;
-  static std::string *last_used_bind_target;
-  // static enum is ok, it has trivial constructor and destructor
-  static ErrorType last_error;
 
   /// Loads in the list of OpenGL errors.
   DebugOutput() {
@@ -215,18 +212,12 @@ class DebugOutput {
 
  public:
   static void AddErrorPrintFormatter(std::function<void(ErrorMessage error)> printf) {
-    if (!instance) {
-      instance = new DebugOutput{};
-    }
-    instance->error_printer = printf;
+    GetInstanceSingleton().error_printer = printf;
   }
 
   static void PrintError(ErrorMessage error) {
-    if (!instance) {
-      instance = new DebugOutput{};
-    }
-    if (instance->error_printer) {
-      instance->error_printer(error);
+    if (GetInstanceSingleton().error_printer) {
+      GetInstanceSingleton().error_printer(error);
     }
   }
 
@@ -235,10 +226,7 @@ class DebugOutput {
     * @param function_call - The function call string.
     */
   static std::string GetDetailedErrorInfo(const std::string& function_call) {
-    if (!instance) {
-      instance = new DebugOutput{};
-    }
-    size_t err_idx = instance->getErrorIndex();
+    size_t err_idx = GetInstanceSingleton().getErrorIndex();
     if (err_idx == NUM_ERRORS) {
       return std::string{};
     }
@@ -249,9 +237,9 @@ class DebugOutput {
     std::string funcName =
       std::string(function_call.begin(), function_call.begin() + func_name_len);
 
-    if (instance->error_map.find(funcName) != instance->error_map.end() &&
-       !instance->error_map[funcName].errors[err_idx].empty()) {
-      ErrorInfo errinfo = instance->error_map[funcName];
+    if (GetInstanceSingleton().error_map.find(funcName) != GetInstanceSingleton().error_map.end() &&
+       !GetInstanceSingleton().error_map[funcName].errors[err_idx].empty()) {
+      ErrorInfo errinfo = GetInstanceSingleton().error_map[funcName];
       sstream << "The following OpenGL function: \n\n";
       sstream << FormatedFuncSignature(errinfo.func_signature) << "\n\n";
       sstream << "Has generated the error because one of the "
@@ -271,14 +259,13 @@ class DebugOutput {
   }
 
   static std::string& LastUsedBindTarget() {
-    if (!last_used_bind_target) {
-      last_used_bind_target = new std::string{};
-    }
-    return *last_used_bind_target;
+    static std::string last_used_bind_target;
+    return last_used_bind_target;
   }
 
   static ErrorType& LastError() {
-    return last_error;
+    static ErrorType error_type;
+    return error_type;
   }
 };
 
@@ -302,29 +289,20 @@ class DebugOutput {
   static void GetDetailedErrorInfo(const std::string&, std::stringstream&) {}
 
   static std::string& LastUsedBindTarget() {
-    if (!last_used_bind_target) {
-      last_used_bind_target = new std::string{};
-    }
-    return *last_used_bind_target;
+    static std::string last_used_bind_target;
+    return last_used_bind_target;
   }
 
   static ErrorType& LastError() {
-    return last_error;
+    static ErrorType error_type;
+    return error_type;
   }
 
  private:
-  static DebugOutput *instance;
-  static std::string *last_used_bind_target;
-  static ErrorType last_error;
   DebugOutput() = default;
 };
 #endif
 
-#if OGLWRAP_INSTANTIATE
-  DebugOutput *DebugOutput::instance;
-  std::string *DebugOutput::last_used_bind_target;
-  ErrorType DebugOutput::last_error;
-#endif
 
 }  // namespace oglwrap
 

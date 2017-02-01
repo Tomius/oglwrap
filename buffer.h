@@ -153,12 +153,6 @@ class BufferObject {
   * @see GL_ARRAY_BUFFER */
 using ArrayBuffer = BufferObject<BufferType::kArrayBuffer>;
 
-// #if OGLWRAP_INSTANTIATE
-//   template class BufferObject<BufferType::kArrayBuffer>;
-// #else
-//   extern template class BufferObject<BufferType::kArrayBuffer>;
-// #endif
-
 #endif  // GL_ARRAY_BUFFER
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_ELEMENT_ARRAY_BUFFER)
@@ -170,12 +164,6 @@ using ArrayBuffer = BufferObject<BufferType::kArrayBuffer>;
   * state, so a VAO must be bound before binding a buffer here.
   * @see GL_ELEMENT_ARRAY_BUFFER */
 using IndexBuffer = BufferObject<BufferType::kElementArrayBuffer>;
-
-// #if OGLWRAP_INSTANTIATE
-//   template class BufferObject<BufferType::kElementArrayBuffer>;
-// #else
-//   extern template class BufferObject<BufferType::kElementArrayBuffer>;
-// #endif
 
 #endif  // GL_ELEMENT_ARRAY_BUFFER
 

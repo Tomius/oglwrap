@@ -53,14 +53,6 @@ inline void OGLWRAP_PrintStackTrace(std::ostream& os) {
 #endif
 }
 
-#if OGLWRAP_STOP_AFTER_X_ERRORS
-  #if OGLWRAP_INSTANTIATE
-    int OGLWRAP_ERRORS_NUM = 0;
-  #else
-    extern int OGLWRAP_ERRORS_NUM;
-  #endif
-#endif
-
 struct ErrorMessage {
   std::string title, message;
   std::string file, function;
@@ -104,7 +96,8 @@ inline void OGLWRAP_PrintError(const ErrorMessage& error) {
   std::cerr << sstream.str() << std::endl;
 
   #if OGLWRAP_STOP_AFTER_X_ERRORS
-    if (++OGLWRAP_ERRORS_NUM >= OGLWRAP_STOP_AFTER_X_ERRORS) {
+    static int errors_num = 0;
+    if (++errors_num >= OGLWRAP_STOP_AFTER_X_ERRORS) {
       std::cerr <<  "\nOglwrap has encountered too many errors, stopping now.\n\n";
       std::terminate();
     }
