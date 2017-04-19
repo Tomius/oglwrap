@@ -23,6 +23,12 @@ namespace OGLWRAP_NAMESPACE_NAME {
 /** @see glGenRenderbuffers, glDeleteRenderbuffers */
 class Renderbuffer {
  public:
+  /// Creates a new renderbuffer
+  Renderbuffer() = default;
+
+  /// Wrappes an existing OpenGL renderbuffer into an oglwrap Renderbuffer
+  explicit Renderbuffer(GLuint handle) : renderbuffer_{handle} {}
+
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glRenderbufferStorage)
   /// Establish data storage, format and dimensions of a renderbuffer object's image.
   /** @see glRenderbufferStorage */

@@ -20,6 +20,8 @@ template<Texture3DType texture_t>
 /** You should rather use the typedefed versions than this template. */
 class Texture3DBase : public TextureBase<TextureType(texture_t)> {
  public:
+  using TextureBase<TextureType(texture_t)>::TextureBase;
+
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glTexImage3D)
   /// Uploads the base image.
   /** @param internal_format - Specifies the number, order, and size of the color components in the texture.

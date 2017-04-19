@@ -37,6 +37,10 @@ class Shader {
   explicit Shader(ShaderType shader_t)
       : shader_(shader_t), shader_t_(shader_t), filename_("Unnamed shader") { }
 
+  /// Wrappes an existing OpenGL shader into an oglwrap Shader
+  Shader(GLuint handle, ShaderType shader_t)
+      : shader_{handle}, shader_t_(shader_t), filename_("Unnamed shader") {}
+
   /// Creates a shader and sets the file as the shader source.
   /** @param file - The file to load and set as shader source.
     * @see glShaderSource */
@@ -71,14 +75,16 @@ class Shader {
   }
 
   /// Returns the file's name that was loaded in.
-  const std::string& source_file() const {
+  const std::string& source_file_name() const {
     return filename_;
   }
 
-  void set_source_file(const std::string& filename)  {
+  /// Stores a file name, only for debug purposes
+  void set_source_file_name(const std::string& filename)  {
     filename_ = filename;
   }
 
+  /// Returns the type of the shader
   ShaderType shader_type() const {
     return shader_t_;
   }

@@ -25,9 +25,13 @@ class Program {
   enum State { kNotLinked, kLinkFailure, kLinkSuccesful, kValidationFailure };
 
   /// Creates an empty program object.
-  Program() {}
+  Program() = default;
+
+  /// Wrappes an existing OpenGL program into an oglwrap Program
+  explicit Program(GLuint handle) : program_{handle} {}
 
   template <typename... Shaders>
+  /// Creates a program with the given set of shaders
   explicit Program(const Shader& shader, Shaders&&... shaders) {
     attachShaders(shader, shaders...);
     link();
@@ -56,7 +60,7 @@ class Program {
     return *this;
   }
 
-  /// Doesn't do anything.
+  /// Just the terminating overload of the variadic template. Doesn't do anything.
   Program& attachShaders() {
     return *this;
   }

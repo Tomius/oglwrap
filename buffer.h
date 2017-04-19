@@ -37,6 +37,12 @@ template<BufferType BUFFER_TYPE>
 class BufferObject {
  public:
 
+  /// Creates a new buffer
+  BufferObject() = default;
+
+  /// Wrappes an existing OpenGL buffer into an oglwrap BufferObject
+  explicit BufferObject(GLuint handle) : buffer_{handle} {}
+
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glBufferData)
   /// Creates and initializes a buffer object's data store.
   /** @param size    Specifies the size in bytes of the buffer object's new data

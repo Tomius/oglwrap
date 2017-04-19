@@ -41,6 +41,12 @@ template <TextureType texture_t>
   * glGenTextures, glDeleteTextures */
 class TextureBase {
  public:
+  /// Creates a new texture
+  TextureBase() = default;
+
+  /// Wrappes an existing OpenGL texture into an oglwrap TextureBase
+  explicit TextureBase(GLuint handle) : texture_{handle} {}
+
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glGenerateMipmap)
   /// Generates mipmaps for the currently uploaded image to this texture class.
   /** @see glGenerateMipmap */

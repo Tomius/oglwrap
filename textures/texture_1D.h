@@ -17,6 +17,8 @@ namespace OGLWRAP_NAMESPACE_NAME {
 /** @see GL_TEXTURE_1D */
 class Texture1D : public TextureBase<TextureType::kTexture1D> {
  public:
+  using TextureBase<TextureType::kTexture1D>::TextureBase;
+
   /// Uploads the base image.
   /** @param internal_format - Specifies the number, order, and size of the color components in the texture.
     * @param width - Specifies the width of the texture image. All implementations support texture images that are at least 1024 texels wide.

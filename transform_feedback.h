@@ -29,7 +29,11 @@ namespace OGLWRAP_NAMESPACE_NAME {
  */
 class TransformFeedback {
  public:
+  /// Creates a new transform feedback
   TransformFeedback() = default;
+
+  /// Wrappes an existing OpenGL transform feedback into an oglwrap TransformFeedback
+  explicit TransformFeedback(GLuint handle) : tfb_{handle} {}
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glBeginTransformFeedback)
   /// Begins the transform feedback mode.

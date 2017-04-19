@@ -19,6 +19,8 @@ namespace OGLWRAP_NAMESPACE_NAME {
 /** @see GL_TEXTURE_CUBE_MAP */
 class TextureCube : public TextureBase<TextureType::kTextureCubeMap> {
  public:
+  using TextureBase<TextureType::kTextureCubeMap>::TextureBase;
+
   /// Uploads one a base image for one side of the cube.
   /** @param target - Specifies which one of the six sides of the cube to use as target.
     * @param internal_format - Specifies the number, order, and size of the color components in the texture.

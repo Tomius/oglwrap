@@ -29,19 +29,25 @@ class glObject {
 
   // But it should be moveable
   glObject(glObject&& other) noexcept
-      : handle_(other.handle_) {
+      : handle_{other.handle_}
+      , ownership_{other.ownership_} {
     other.handle_ = 0;
+    other.ownership_ = false;
   }
   glObject& operator=(glObject&& other) noexcept {
     std::swap(handle_, other.handle_);
+    std::swap(ownership_, other.ownership_);
     return *this;
   }
 
  protected:
   /// The C handle for the object.
-  GLuint handle_;
+  GLuint handle_ = 0;
 
-  glObject() : handle_{0} {}
+  /// Specifies if this object has the ownership of the entity behind the handle
+  bool ownership_ = false;
+
+  glObject() = default;
 };
 
 namespace globjects {
@@ -50,10 +56,21 @@ namespace globjects {
     (defined(glCreateShader) && defined(glDeleteShader))
   class Shader : public glObject {
    public:
+    explicit Shader(GLuint handle) {
+      handle_ = handle;
+      ownership_ = false;
+    }
+
     explicit Shader(ShaderType shader_t) {
       handle_ = gl(CreateShader(GLenum(shader_t)));
+      ownership_ = true;
     }
-    ~Shader() { gl(DeleteShader(handle_)); }
+
+    ~Shader() {
+      if (ownership_) {
+        gl(DeleteShader(handle_));
+      }
+    }
 
     Shader(Shader&&) noexcept = default;
     Shader& operator=(Shader&&) noexcept = default;
@@ -64,8 +81,21 @@ namespace globjects {
     (defined(glCreateProgram) && defined(glDeleteProgram))
   class Program : public glObject {
   public:
-    Program() { handle_ = gl(CreateProgram()); }
-    ~Program() { gl(DeleteProgram(handle_)); }
+    explicit Program(GLuint handle) {
+      handle_ = handle;
+      ownership_ = false;
+    }
+
+    Program() {
+      handle_ = gl(CreateProgram());
+      ownership_ = true;
+    }
+
+    ~Program() {
+      if (ownership_) {
+        gl(DeleteProgram(handle_));
+      }
+    }
 
     Program(Program&&) noexcept = default;
     Program& operator=(Program&&) noexcept = default;
@@ -76,8 +106,21 @@ namespace globjects {
     (defined(glGenBuffers) && defined(glDeleteBuffers))
   class Buffer : public glObject {
    public:
-    Buffer() { gl(GenBuffers(1, &handle_)); }
-    ~Buffer() { gl(DeleteBuffers(1, &handle_)); }
+    explicit Buffer(GLuint handle) {
+      handle_ = handle;
+      ownership_ = false;
+    }
+
+    Buffer() {
+      gl(GenBuffers(1, &handle_));
+      ownership_ = true;
+    }
+
+    ~Buffer() {
+      if (ownership_) {
+        gl(DeleteBuffers(1, &handle_));
+      }
+    }
 
     Buffer(Buffer&&) noexcept = default;
     Buffer& operator=(Buffer&&) noexcept = default;
@@ -88,8 +131,21 @@ namespace globjects {
     (defined(glGenRenderbuffers) && defined(glDeleteRenderbuffers))
   class Renderbuffer : public glObject {
    public:
-    Renderbuffer() { gl(GenRenderbuffers(1, &handle_)); }
-    ~Renderbuffer() { gl(DeleteRenderbuffers(1, &handle_)); }
+    explicit Renderbuffer(GLuint handle) {
+      handle_ = handle;
+      ownership_ = false;
+    }
+
+    Renderbuffer() {
+      gl(GenRenderbuffers(1, &handle_));
+      ownership_ = true;
+    }
+
+    ~Renderbuffer() {
+      if (ownership_) {
+        gl(DeleteRenderbuffers(1, &handle_));
+      }
+    }
 
     Renderbuffer(Renderbuffer&&) noexcept = default;
     Renderbuffer& operator=(Renderbuffer&&) noexcept = default;
@@ -100,8 +156,21 @@ namespace globjects {
     (defined(glGenFramebuffers) && defined(glDeleteFramebuffers))
   class Framebuffer : public glObject {
    public:
-    Framebuffer() { gl(GenFramebuffers(1, &handle_)); }
-    ~Framebuffer() { gl(DeleteFramebuffers(1, &handle_)); }
+    explicit Framebuffer(GLuint handle) {
+      handle_ = handle;
+      ownership_ = false;
+    }
+
+    Framebuffer() {
+      gl(GenFramebuffers(1, &handle_));
+      ownership_ = true;
+    }
+
+    ~Framebuffer() {
+      if (ownership_) {
+        gl(DeleteFramebuffers(1, &handle_));
+      }
+    }
 
     Framebuffer(Framebuffer&&) noexcept = default;
     Framebuffer& operator=(Framebuffer&&) noexcept = default;
@@ -112,8 +181,21 @@ namespace globjects {
     (defined(glGenTransformFeedbacks) && defined(glDeleteTransformFeedbacks))
   class TransformFeedback : public glObject {
    public:
-    TransformFeedback() { gl(GenTransformFeedbacks(1, &handle_)); }
-    ~TransformFeedback() { gl(DeleteTransformFeedbacks(1, &handle_)); }
+    explicit TransformFeedback(GLuint handle) {
+      handle_ = handle;
+      ownership_ = false;
+    }
+
+    TransformFeedback() {
+      gl(GenTransformFeedbacks(1, &handle_));
+      ownership_ = true;
+    }
+
+    ~TransformFeedback() {
+      if (ownership_) {
+        gl(DeleteTransformFeedbacks(1, &handle_));
+      }
+    }
 
     TransformFeedback(TransformFeedback&&) noexcept = default;
     TransformFeedback& operator=(TransformFeedback&&) noexcept = default;
@@ -124,8 +206,21 @@ namespace globjects {
     (defined(glGenVertexArrays) && defined(glDeleteVertexArrays))
   class VertexArray : public glObject {
    public:
-    VertexArray() { gl(GenVertexArrays(1, &handle_)); }
-    ~VertexArray() { gl(DeleteVertexArrays(1, &handle_)); }
+    explicit VertexArray(GLuint handle) {
+      handle_ = handle;
+      ownership_ = false;
+    }
+
+    VertexArray() {
+      gl(GenVertexArrays(1, &handle_));
+      ownership_ = true;
+    }
+
+    ~VertexArray() {
+      if (ownership_) {
+        gl(DeleteVertexArrays(1, &handle_));
+      }
+    }
 
     VertexArray(VertexArray&&) noexcept = default;
     VertexArray& operator=(VertexArray&&) noexcept = default;
@@ -134,8 +229,21 @@ namespace globjects {
 
 class Texture : public glObject {
  public:
-  Texture() { gl(GenTextures(1, &handle_)); }
-  ~Texture() { gl(DeleteTextures(1, &handle_)); }
+  explicit Texture(GLuint handle) {
+    handle_ = handle;
+    ownership_ = false;
+  }
+
+  Texture() {
+    gl(GenTextures(1, &handle_));
+    ownership_ = true;
+  }
+
+  ~Texture() {
+    if (ownership_) {
+      gl(DeleteTextures(1, &handle_));
+    }
+  }
 
   Texture(Texture&&) noexcept = default;
   Texture& operator=(Texture&&) noexcept = default;

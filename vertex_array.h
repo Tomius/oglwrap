@@ -34,6 +34,12 @@ namespace OGLWRAP_NAMESPACE_NAME {
  */
 class VertexArray {
  public:
+  /// Creates a new vertex array
+  VertexArray() = default;
+
+  /// Wrappes an existing OpenGL vertex array into an oglwrap VertexArray
+  explicit VertexArray(GLuint handle) : vao_{handle} {}
+
   /// Returns the handle for the VertexArray.
   const glObject& expose() const { return vao_; }
 

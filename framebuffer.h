@@ -29,15 +29,11 @@ namespace OGLWRAP_NAMESPACE_NAME {
 template<FramebufferType FBO_TYPE>
 class FramebufferObject {
  public:
-  /// Default constructor
+  /// Creates a new framebuffer
   FramebufferObject() = default;
 
-  template<FramebufferType another_fbo_t>
-  /// Creates a copy of the framebuffer, or casts it to another type.
-  /** Important: if you use this to change the type of the active framebuffer,
-    * don't forget to unbind the old one, and bind the new one */
-  FramebufferObject(const BufferObject<another_fbo_t> src)
-      : framebuffer_(src.expose()) { }
+  /// Wrappes an existing OpenGL framebuffer into an oglwrap FramebufferObject
+  explicit FramebufferObject(GLuint handle) : framebuffer_{handle} {}
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glCheckFramebufferStatus)
   /// Returns the status of a bound framebuffer.

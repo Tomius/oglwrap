@@ -19,6 +19,8 @@ template<Texture2DType texture_t>
 /** You should rather use the typedefed versions than this template. */
 class Texture2DBase : public TextureBase<TextureType(texture_t)> {
  public:
+  using TextureBase<TextureType(texture_t)>::TextureBase;
+
   /// Uploads the base image.
   /** @param internal_format - Specifies the number, order, and size of the color components in the texture.
     * @param width - Specifies the width of the texture image. All implementations support texture images that are at least 1024 texels wide.
