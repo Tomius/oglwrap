@@ -28,7 +28,8 @@ class Program {
   Program() = default;
 
   /// Wrappes an existing OpenGL program into an oglwrap Program
-  explicit Program(GLuint handle) : program_{handle} {}
+  explicit Program(GLuint handle, State state = kNotLinked)
+      : program_{handle}, state_{state} {}
 
   template <typename... Shaders>
   /// Creates a program with the given set of shaders
