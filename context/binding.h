@@ -218,7 +218,7 @@ inline void ActiveTexture(GLuint tex_unit) {
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUseProgram)
 inline void Bind(const Program& prog) {
 #if OGLWRAP_DEBUG
-  if (prog.state() != Program::kLinkSuccesful) {
+  if (prog.state() != Program::kLinkSuccessful) {
     OGLWRAP_PRINT_ERROR(
       "Program binding failure",
       "Tried to bind a program that wasn't linked successfully.")

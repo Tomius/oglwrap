@@ -22,7 +22,7 @@ namespace OGLWRAP_NAMESPACE_NAME {
  */
 class Program {
  public:
-  enum State { kNotLinked, kLinkFailure, kLinkSuccesful, kValidationFailure };
+  enum State { kNotLinked, kLinkFailure, kLinkSuccessful, kValidationFailure };
 
   /// Creates an empty program object.
   Program() = default;
@@ -140,7 +140,7 @@ class Program {
       if (status == GL_FALSE) {
         state_ = kLinkFailure;
       } else {
-        state_ = kLinkSuccesful;
+        state_ = kLinkSuccessful;
       }
 
       #if OGLWRAP_DEBUG
