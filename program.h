@@ -76,7 +76,7 @@ class Program {
       shaders_.push_back(shader.expose());
 
       #if OGLWRAP_DEBUG
-        filenames_.push_back(shader.source_file());
+        filenames_.push_back(shader.source_file_name());
       #endif
 
       gl(AttachShader(program_, shader.expose()));
