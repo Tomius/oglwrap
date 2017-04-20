@@ -3,19 +3,14 @@
 
 Oglwrap is a lightweight, cross-platform, object-oriented, header-only C++ wrapper for modern (2.1+) OpenGL, that focuses on preventing most of the trivial OpenGL errors, and giving as much debug information about the other errors, as possible.
 
-This project is mainly for personal use, and its interface might change often.
-If you need a object-oriented OpenGL wrapper with long term compatibility
-take a look at [oglplus](https://github.com/matus-chochlik/oglplus) or [oogl](https://github.com/Overv/OOGL).
-
 Dependencies:
 -------------
 * [GLM](https://github.com/g-truc/glm)
 
 Features:
 ---------
-* Header only, platform-independent
-* No need to configure it per machine (but you might want some configuration using macros per projects)
-* Has full code-completion support
+* Header only
+* No installation / configuration needed, the same headers work everywhere
 * Type-safe enums instead GLenum (so you can say goodbye to GL_INVALID_ENUM forever).
 * Has bind-checking. This means that you'll get warnings if forget to bind some OpenGL object before you use it:
 ```c++
