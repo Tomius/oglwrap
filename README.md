@@ -26,10 +26,10 @@ gl::Bind(buffer0);
 buffer1.data(vertices_vector); // Causes bind-check error because buffer0 is bound, but the function is called through buffer1.
 ```
 * Note, that bind-checking (and debug-info in general) can be disabled with ```#define OGLWRAP_DEBUG 0```. With this, and function inlining enabled, oglwrap runs with zero runtime overhead compared to C OpenGL.
-* Oglwrap has full glm support, glm classes are treated like they were GL types. For example you can use Uniform< vec2 > to load data into a vec2 uniform (instead of with glUniform2fv).
+* Oglwrap has full glm support, glm classes are treated like they were GL types. For example you can use `Uniform<vec2>` to load data into a `vec2` uniform (instead of with `glUniform2fv`).
 * Functions overloads, templates and default parameters let you type less than with C OpenGL. Consider:
 ```c++
-Texture2D tex;
+gl::Texture2D tex;
 gl::BindToTexUnit(tex, 2);
 tex.upload(gl::kRgba, 32, 32, gl::kRgba, gl::kUnsignedByte, nullptr);
 tex.generateMipmap();
