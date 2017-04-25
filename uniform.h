@@ -39,6 +39,9 @@ class UniformObject {
   UniformObject(const Program& program, GLuint location = kInvalidLocation)
     : location_(location), program_(program) { }
 
+  template<class T>
+  friend class UniformObject;
+
  public:
   virtual ~UniformObject() {}
 
@@ -46,9 +49,17 @@ class UniformObject {
   /** It finds the appropriate glUniform* using template specialization.
     * @param value - The value to set the uniform.
     * @see glUniform* */
-  virtual void set(const GLtype& value) { // See the specializations at the end of this file.
+  virtual void set(const GLtype& value, unsigned count = 1) { // See the specializations at the end of this file.
     static_assert((sizeof(GLtype), false),
         "Trying to set a uniform to a value that is not an OpenGL type.");
+  }
+
+  template<typename ArrayOfGLType>
+  void set(const ArrayOfGLType& value) {
+    auto begin_iter = std::begin(value);
+    auto end_iter   = std::end(value);
+
+    set(*begin_iter, end_iter - begin_iter);
   }
 
   /// Sets the uniform to a GLtype variable's value.
@@ -123,8 +134,8 @@ class Uniform : public UniformObject<GLtype> {
   /** It throws std::invalid_argument if it is an unrecognized type.
     * @param value - Specifies the new value to be used for the uniform variable.
     * @see glUniform* */
-  virtual void set(const GLtype& value) override {
-    glfunc(UniformObject<GLtype>::set(value));
+  virtual void set(const GLtype& value, unsigned count = 1) override {
+    glfunc(UniformObject<GLtype>::set(value, count));
 
     #if OGLWRAP_DEBUG
       OGLWRAP_PRINT_IF_ERROR(
@@ -137,6 +148,8 @@ class Uniform : public UniformObject<GLtype> {
         this->program_.getShaderNames());
     #endif
   }
+
+  using UniformObject<GLtype>::set;
 
   /// Sets the uniform to value if it is an OpenGL type or a glm vector or matrix.
   /** It throws std::invalid_argument if it is an unrecognized type.
@@ -223,8 +236,8 @@ class IndexedUniform : public UniformObject<GLtype> {
   /** It throws std::invalid_argument if it is an unrecognized type.
     * @param value - Specifies the new value to be used for the uniform variable.
     * @see glUniform* */
-  virtual void set(const GLtype& value) override {
-    glfunc(UniformObject<GLtype>::set(value));
+  virtual void set(const GLtype& value, unsigned count = 1) override {
+    glfunc(UniformObject<GLtype>::set(value, count));
 
     #if OGLWRAP_DEBUG
       OGLWRAP_PRINT_IF_ERROR(
@@ -237,6 +250,8 @@ class IndexedUniform : public UniformObject<GLtype> {
         this->program_.getShaderNames());
     #endif
   }
+
+  using UniformObject<GLtype>::set;
 
   /// Sets the uniform to value if it is an OpenGL type or a glm vector or matrix.
   /** It throws std::invalid_argument if it is an unrecognized type.
@@ -312,7 +327,7 @@ class LazyUniform : public UniformObject<GLtype> {
     * It writes to stderr if it was unable to get it.
     * At every call it sets the uniform to the specified value.
     * @param value - Specifies the new value to be used for the uniform variable. */
-  virtual void set(const GLtype& value) override {
+  virtual void set(const GLtype& value, unsigned count = 1) override {
     OGLWRAP_CHECK_BINDING_EXPLICIT(this->program_);
 
     // Get the uniform's location only at the first set call.
@@ -334,7 +349,7 @@ class LazyUniform : public UniformObject<GLtype> {
       firstCall_ = false;
     }
 
-    glfunc(UniformObject<GLtype>::set(value));
+    glfunc(UniformObject<GLtype>::set(value, count));
 
     #if OGLWRAP_DEBUG
       OGLWRAP_PRINT_IF_ERROR(
@@ -347,6 +362,8 @@ class LazyUniform : public UniformObject<GLtype> {
         this->program_.getShaderNames());
     #endif
   }
+
+  using UniformObject<GLtype>::set;
 
   /// Sets the uniforms value.
   /** At the first call, queries the uniform's location. It writes to stderr if it was unable to get it.
@@ -423,158 +440,157 @@ typedef LazyUniform<GLint> LazyUniformSampler;
 // -------======{[ UniformObject::set specializations ]}======-------
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniform1f)
 template<>
-inline void UniformObject<GLfloat>::set(const GLfloat& value) {
-  glUniform1f(location_, value);
+inline void UniformObject<GLfloat>::set(const GLfloat& value, unsigned count) {
+  glUniform1fv(location_, count, &value);
 }
 #endif  // glUniform1f
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniform1d)
 template<>
-inline void UniformObject<GLdouble>::set(const GLdouble& value) {
-  glUniform1d(location_, value);
+inline void UniformObject<GLdouble>::set(const GLdouble& value, unsigned count) {
+  glUniform1dv(location_, count, &value);
 }
 #endif  // glUniform1d
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniform1i)
 template<>
-inline void UniformObject<GLint>::set(const GLint& value) {
-  glUniform1i(location_, value);
+inline void UniformObject<GLint>::set(const GLint& value, unsigned count) {
+  glUniform1iv(location_, count, &value);
 }
 #endif  // glUniform1i
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniform1ui)
 template<>
-inline void UniformObject<GLuint>::set(const GLuint& value) {
-  glUniform1ui(location_, value);
+inline void UniformObject<GLuint>::set(const GLuint& value, unsigned count) {
+  glUniform1uiv(location_, count, &value);
 }
 #endif  // glUniform1ui
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniform2fv)
 template<>
-inline void UniformObject<glm::vec2>::set(const glm::vec2& vec) {
-  glUniform2fv(location_, 1, glm::value_ptr(vec));
+inline void UniformObject<glm::vec2>::set(const glm::vec2& vec, unsigned count) {
+  glUniform2fv(location_, count, glm::value_ptr(vec));
 }
 #endif  // glUniform2fv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniform2dv)
 template<>
-inline void UniformObject<glm::dvec2>::set(const glm::dvec2& vec) {
-  glUniform2dv(location_, 1, glm::value_ptr(vec));
+inline void UniformObject<glm::dvec2>::set(const glm::dvec2& vec, unsigned count) {
+  glUniform2dv(location_, count, glm::value_ptr(vec));
 }
 #endif  // glUniform2dv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniform2iv)
 template<>
-inline void UniformObject<glm::ivec2>::set(const glm::ivec2& vec) {
-  glUniform2iv(location_, 1, glm::value_ptr(vec));
+inline void UniformObject<glm::ivec2>::set(const glm::ivec2& vec, unsigned count) {
+  glUniform2iv(location_, count, glm::value_ptr(vec));
 }
 #endif  // glUniform2iv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniform2uiv)
 template<>
-inline void UniformObject<glm::uvec2>::set(const glm::uvec2& vec) {
-  glUniform2uiv(location_, 1, glm::value_ptr(vec));
+inline void UniformObject<glm::uvec2>::set(const glm::uvec2& vec, unsigned count) {
+  glUniform2uiv(location_, count, glm::value_ptr(vec));
 }
 #endif  // glUniform2uiv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniform3fv)
 template<>
-inline void UniformObject<glm::vec3>::set(const glm::vec3& vec) {
-  glUniform3fv(location_, 1, glm::value_ptr(vec));
+inline void UniformObject<glm::vec3>::set(const glm::vec3& vec, unsigned count) {
+  glUniform3fv(location_, count, glm::value_ptr(vec));
 }
 #endif  // glUniform3fv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniform3dv)
 template<>
-inline void UniformObject<glm::dvec3>::set(const glm::dvec3& vec) {
-  glUniform3dv(location_, 1, glm::value_ptr(vec));
+inline void UniformObject<glm::dvec3>::set(const glm::dvec3& vec, unsigned count) {
+  glUniform3dv(location_, count, glm::value_ptr(vec));
 }
 #endif  // glUniform3dv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniform3iv)
 template<>
-inline void UniformObject<glm::ivec3>::set(const glm::ivec3& vec) {
-  glUniform3iv(location_, 1, glm::value_ptr(vec));
+inline void UniformObject<glm::ivec3>::set(const glm::ivec3& vec, unsigned count) {
+  glUniform3iv(location_, count, glm::value_ptr(vec));
 }
 #endif  // glUniform3iv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniform3uiv)
 template<>
-inline void UniformObject<glm::uvec3>::set(const glm::uvec3& vec) {
-  glUniform3uiv(location_, 1, glm::value_ptr(vec));
+inline void UniformObject<glm::uvec3>::set(const glm::uvec3& vec, unsigned count) {
+  glUniform3uiv(location_, count, glm::value_ptr(vec));
 }
 #endif  // glUniform3uiv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniform4fv)
 template<>
-inline void UniformObject<glm::vec4>::set(const glm::vec4& vec) {
-  glUniform4fv(location_, 1, glm::value_ptr(vec));
+inline void UniformObject<glm::vec4>::set(const glm::vec4& vec, unsigned count) {
+  glUniform4fv(location_, count, glm::value_ptr(vec));
 }
 #endif  // glUniform4fv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniform4dv)
 template<>
-inline void UniformObject<glm::dvec4>::set(const glm::dvec4& vec) {
-  glUniform4dv(location_, 1, glm::value_ptr(vec));
+inline void UniformObject<glm::dvec4>::set(const glm::dvec4& vec, unsigned count) {
+  glUniform4dv(location_, count, glm::value_ptr(vec));
 }
 #endif  // glUniform4dv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniform4iv)
 template<>
-inline void UniformObject<glm::ivec4>::set(const glm::ivec4& vec) {
-  glUniform4iv(location_, 1, glm::value_ptr(vec));
+inline void UniformObject<glm::ivec4>::set(const glm::ivec4& vec, unsigned count) {
+  glUniform4iv(location_, count, glm::value_ptr(vec));
 }
 #endif  // glUniform4iv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniform4uiv)
 template<>
-inline void UniformObject<glm::uvec4>::set(const glm::uvec4& vec) {
-  glUniform4uiv(location_, 1, glm::value_ptr(vec));
+inline void UniformObject<glm::uvec4>::set(const glm::uvec4& vec, unsigned count) {
+  glUniform4uiv(location_, count, glm::value_ptr(vec));
 }
 #endif  // glUniform4uiv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniformMatrix2fv)
 template<>
-inline void UniformObject<glm::mat2>::set(const glm::mat2& mat) {
-  glUniformMatrix2fv(location_, 1, GL_FALSE, glm::value_ptr(mat));
+inline void UniformObject<glm::mat2>::set(const glm::mat2& mat, unsigned count) {
+  glUniformMatrix2fv(location_, count, GL_FALSE, glm::value_ptr(mat));
 }
 #endif  // glUniformMatrix2fv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniformMatrix2dv)
 template<>
-inline void UniformObject<glm::dmat2>::set(const glm::dmat2& mat) {
-  glUniformMatrix2dv(location_, 1, GL_FALSE, glm::value_ptr(mat));
+inline void UniformObject<glm::dmat2>::set(const glm::dmat2& mat, unsigned count) {
+  glUniformMatrix2dv(location_, count, GL_FALSE, glm::value_ptr(mat));
 }
 #endif  // glUniformMatrix2dv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniformMatrix3fv)
 template<>
-inline void UniformObject<glm::mat3>::set(const glm::mat3& mat) {
-  glUniformMatrix3fv(location_, 1, GL_FALSE, glm::value_ptr(mat));
+inline void UniformObject<glm::mat3>::set(const glm::mat3& mat, unsigned count) {
+  glUniformMatrix3fv(location_, count, GL_FALSE, glm::value_ptr(mat));
 }
 #endif  // glUniformMatrix3fv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniformMatrix3dv)
 template<>
-inline void UniformObject<glm::dmat3>::set(const glm::dmat3& mat) {
-  glUniformMatrix3dv(location_, 1, GL_FALSE, glm::value_ptr(mat));
+inline void UniformObject<glm::dmat3>::set(const glm::dmat3& mat, unsigned count) {
+  glUniformMatrix3dv(location_, count, GL_FALSE, glm::value_ptr(mat));
 }
 #endif  // glUniformMatrix3dv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniformMatrix4fv)
 template<>
-inline void UniformObject<glm::mat4>::set(const glm::mat4& mat) {
-  glUniformMatrix4fv(location_, 1, GL_FALSE, glm::value_ptr(mat));
+inline void UniformObject<glm::mat4>::set(const glm::mat4& mat, unsigned count) {
+  glUniformMatrix4fv(location_, count, GL_FALSE, glm::value_ptr(mat));
 }
 #endif  // glUniformMatrix4fv
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUniformMatrix4dv)
 template<>
-inline void UniformObject<glm::dmat4>::set(const glm::dmat4& mat) {
-  glUniformMatrix4dv(location_, 1, GL_FALSE, glm::value_ptr(mat));
+inline void UniformObject<glm::dmat4>::set(const glm::dmat4& mat, unsigned count) {
+  glUniformMatrix4dv(location_, count, GL_FALSE, glm::value_ptr(mat));
 }
 #endif  // glUniformMatrix4dv
-
 
 // -------======{[ UniformObject::get specializations ]}======-------
 
