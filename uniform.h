@@ -55,19 +55,24 @@ class UniformObject {
   }
 
   template<typename ArrayOfGLType>
-  void set(const ArrayOfGLType& value) {
-    auto begin_iter = std::begin(value);
-    auto end_iter   = std::end(value);
+  /// Sets the uniform to an array of GLtype variables' value.
+  /** It finds the appropriate glUniform* using template specialization.
+    * @param values - The value to set the uniform.
+    * @see glUniform* */
+  void set(const ArrayOfGLType& values) {
+    auto begin_iter = std::begin(values);
+    auto end_iter   = std::end(values);
 
     set(*begin_iter, end_iter - begin_iter);
   }
 
+  template<typename T>
   /// Sets the uniform to a GLtype variable's value.
   /** It finds the appropriate glUniform* using template specialization.
     * If it is called with not an OpenGL type, it throws std::invalid_argument.
     * @param value - The value to set the uniform.
     * @see glUniform* */
-  void operator=(const GLtype& value) {
+  void operator=(const T& value) {
     set(value);
   }
 
@@ -151,11 +156,12 @@ class Uniform : public UniformObject<GLtype> {
 
   using UniformObject<GLtype>::set;
 
+  template<typename T>
   /// Sets the uniform to value if it is an OpenGL type or a glm vector or matrix.
   /** It throws std::invalid_argument if it is an unrecognized type.
     * @param value - Specifies the new value to be used for the uniform variable.
     * @see glUniform* */
-  void operator=(const GLtype& value) {
+  void operator=(const T& value) {
     set(value);
   }
 
@@ -253,11 +259,12 @@ class IndexedUniform : public UniformObject<GLtype> {
 
   using UniformObject<GLtype>::set;
 
+  template<typename T>
   /// Sets the uniform to value if it is an OpenGL type or a glm vector or matrix.
   /** It throws std::invalid_argument if it is an unrecognized type.
     * @param value - Specifies the new value to be used for the uniform variable.
     * @see glUniform* */
-  void operator=(const GLtype& value) {
+  void operator=(const T& value) {
     set(value);
   }
 
@@ -365,12 +372,13 @@ class LazyUniform : public UniformObject<GLtype> {
 
   using UniformObject<GLtype>::set;
 
+  template<typename T>
   /// Sets the uniforms value.
   /** At the first call, queries the uniform's location. It writes to stderr if it was unable to get it.
     * At every call it sets the uniform to the specified value. It also changes the active program
     * to the one specified in the constructor.
     * @param value - Specifies the new value to be used for the uniform variable. */
-  void operator=(const GLtype& value) {
+  void operator=(const T& value) {
     set(value);
   }
 
