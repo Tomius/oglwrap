@@ -18,9 +18,6 @@ template<BufferType BUFFER_TYPE>
 void BufferObject<BUFFER_TYPE>::data(GLsizei size, const void* data,
                                      BufferUsage usage) {
   OGLWRAP_CHECK_BINDING();
-  if (BUFFER_TYPE == BufferType::kArrayBuffer) {
-    OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
-  }
 
   gl(BufferData(GLenum(BUFFER_TYPE), size, data, GLenum(usage)));
 }
@@ -30,9 +27,6 @@ template<typename GLtype>
 void BufferObject<BUFFER_TYPE>::data(
     const std::vector<GLtype>& data, BufferUsage usage) {
   OGLWRAP_CHECK_BINDING();
-  if (BUFFER_TYPE == BufferType::kArrayBuffer) {
-    OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
-  }
 
   gl(BufferData(GLenum(BUFFER_TYPE), data.size() * sizeof(GLtype),
                 data.data(), GLenum(usage)));
@@ -45,9 +39,6 @@ template<typename GLtype>
 void BufferObject<BUFFER_TYPE>::subData(GLintptr offset, GLsizei size,
                                         const GLtype* data) {
   OGLWRAP_CHECK_BINDING();
-  if (BUFFER_TYPE == BufferType::kArrayBuffer) {
-    OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
-  }
 
   gl(BufferSubData(GLenum(BUFFER_TYPE), offset, size, data));
 }
@@ -57,9 +48,6 @@ template<typename GLtype>
 void BufferObject<BUFFER_TYPE>::subData(GLintptr offset,
                                         const std::vector<GLtype>& data) {
   OGLWRAP_CHECK_BINDING();
-  if (BUFFER_TYPE == BufferType::kArrayBuffer) {
-    OGLWRAP_CHECK_FOR_DEFAULT_BINDING_EXPLICIT(GL_VERTEX_ARRAY_BINDING);
-  }
 
   gl(BufferSubData(GLenum(BUFFER_TYPE), offset,
                    data.size() * sizeof(GLtype), data.data()));
