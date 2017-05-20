@@ -26,7 +26,7 @@
   #define OGLWRAP_INSTANTIATE 0
 #endif
 
-/// A macro for internal use only
+/// True if a gl header was included (don't tweak this manually)
 #ifdef GL_LINE
   #define OGLWRAP_OPENGL_INCLUDED 1
 #else
@@ -92,6 +92,13 @@
 #endif
 
 
+/**
+ * @brief If set to a positive number X, then if oglwrap encounters X errors,
+ *        it will terminate the program.
+ *
+ * This can be useful during the development, as making an OpenGL error every
+ * frame, oglwrap will flood the stderr with the same error again and again.
+ */
 #if OGLWRAP_DEBUG
   #ifndef OGLWRAP_STOP_AFTER_X_ERRORS
     #define OGLWRAP_STOP_AFTER_X_ERRORS 0

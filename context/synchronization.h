@@ -8,6 +8,15 @@
 
 #include "../define_internal_macros.h"
 
+#if defined(MemoryBarrier) && defined(glMemoryBarrier)
+  // If you don't like this new name, rename that macro before including oglwrap
+  inline void MicrosoftMemoryBarrier(void) {
+    MemoryBarrier ();
+  }
+  #undef MemoryBarrier
+  #warning The MemoryBarrier macro (that Winnt.h defines for example) has been renamed by oglwrap to ::MicrosoftMemoryBarrier.
+#endif
+
 namespace OGLWRAP_NAMESPACE_NAME {
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glMemoryBarrier)
