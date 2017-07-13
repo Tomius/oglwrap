@@ -264,6 +264,27 @@ inline bool IsActive(const Program& prog) {
 }
 #endif
 
+/// Binds a value. When the variable goes
+/// out of the scope, unbinds the value;
+template <typename T>
+class TemporaryBind {
+	//int valueBefore; //TODO
+	T const& val;
+public:
+	TemporaryBind(T const& val) :val(val) {
+		Bind(val);
+	}
+
+	~TemporaryBind() {
+		Unbind(val);
+	}
+};
+
+template <typename T>
+inline TemporaryBind<T> MakeTemporaryBind (T const& val) {
+	return TemporaryBind<T>(val);
+}
+
 }  // namespace oglwrap
 
 #include "../undefine_internal_macros.h"
