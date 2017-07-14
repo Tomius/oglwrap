@@ -27,9 +27,22 @@ class Program {
   /// Creates an empty program object.
   Program() = default;
 
+  /// Moves a program object.
+  Program(Program&&) = default;
+
+  /// Moves a program object.
+  Program& operator=(Program&&) noexcept = default;
+
   /// Wrappes an existing OpenGL program into an oglwrap Program
-  explicit Program(GLuint handle, State state = kNotLinked)
-      : program_{handle}, state_{state} {}
+  explicit Program(GLuint handle) : program_{handle} {
+    GLint status;
+    gl(GetProgramiv(program_, GL_LINK_STATUS, &status));
+    if (status == GL_FALSE) {
+      state_ = kNotLinked;
+    } else {
+      state_ = kLinkSuccessful;
+    }
+  }
 
   template <typename... Shaders>
   /// Creates a program with the given set of shaders
@@ -45,8 +58,10 @@ class Program {
    * @see glDetachShader, glDeleteShader
    */
   ~Program() {
-    for (size_t i = 0; i < shaders_.size(); i++) {
-      gl(DetachShader(program_, shaders_[i]));
+    if (program_.hasOwnership()) {
+      for (size_t i = 0; i < shaders_.size(); i++) {
+        gl(DetachShader(program_, shaders_[i]));
+      }
     }
   }
 

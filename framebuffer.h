@@ -32,6 +32,12 @@ class FramebufferObject {
   /// Creates a new framebuffer
   FramebufferObject() = default;
 
+  /// Moves a framebuffer
+  FramebufferObject(FramebufferObject&&) noexcept = default;
+
+  /// Moves a framebuffer
+  FramebufferObject& operator=(FramebufferObject&&) noexcept = default;
+
   /// Wrappes an existing OpenGL framebuffer into an oglwrap FramebufferObject
   explicit FramebufferObject(GLuint handle) : framebuffer_{handle} {}
 

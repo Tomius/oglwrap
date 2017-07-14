@@ -33,6 +33,12 @@ class Shader {
   mutable State state_ = kNotCompiled;
 
  public:
+  /// Moves a shader object
+  Shader(Shader&&) = default;
+
+  /// Moves a shader object
+  Shader& operator=(Shader&&) = default;
+
   /// Creates the an empty shader object.
   explicit Shader(ShaderType shader_t)
       : shader_(shader_t), shader_t_(shader_t), filename_("Unnamed shader") { }

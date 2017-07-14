@@ -32,6 +32,12 @@ class TransformFeedback {
   /// Creates a new transform feedback
   TransformFeedback() = default;
 
+  /// Moves transform feedback
+  TransformFeedback(TransformFeedback&&) noexcept = default;
+
+  /// Moves transform feedback
+  TransformFeedback& operator=(TransformFeedback&&) noexcept = default;
+
   /// Wrappes an existing OpenGL transform feedback into an oglwrap TransformFeedback
   explicit TransformFeedback(GLuint handle) : tfb_{handle} {}
 

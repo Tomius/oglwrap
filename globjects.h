@@ -40,6 +40,8 @@ class glObject {
     return *this;
   }
 
+  bool hasOwnership() const { return ownership_; }
+
  protected:
   /// The C handle for the object.
   GLuint handle_ = 0;

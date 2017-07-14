@@ -44,6 +44,12 @@ class TextureBase {
   /// Creates a new texture
   TextureBase() = default;
 
+  /// Moves a texture
+  TextureBase(TextureBase&&) noexcept = default;
+
+  /// Moves a texture
+  TextureBase& operator=(TextureBase&&) noexcept = default;
+
   /// Wrappes an existing OpenGL texture into an oglwrap TextureBase
   explicit TextureBase(GLuint handle) : texture_{handle} {}
 

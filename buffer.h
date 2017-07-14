@@ -40,6 +40,12 @@ class BufferObject {
   /// Creates a new buffer
   BufferObject() = default;
 
+  /// Moves a buffer object
+  BufferObject(BufferObject&&) = default;
+
+  /// Moves a buffer object
+  BufferObject& operator=(BufferObject&&) noexcept = default;
+
   /// Wrappes an existing OpenGL buffer into an oglwrap BufferObject
   explicit BufferObject(GLuint handle) : buffer_{handle} {}
 
@@ -182,7 +188,7 @@ using TextureBuffer = BufferObject<BufferType::kTextureBuffer>;
 #endif  // GL_TEXTURE_BUFFER
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glBindBufferBase)
-template<IndexedBufferType BUFFER_TYPE>
+template<IndexedBufferType BUFFER_TYPE, GLuint index>
 /// Buffer objects that have an array of binding targets, like UniformBuffers.
 /** Buffer Objects are OpenGL Objects that store an array
   * of unformatted memory allocated by the OpenGL context (aka: the GPU).
@@ -192,13 +198,15 @@ class IndexedBufferObject : public BufferObject<BufferType(BUFFER_TYPE)> {};
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_UNIFORM_BUFFER)
 /// An indexed buffer binding for buffers used as storage for uniform blocks.
 /** @see GL_UNIFORM_BUFFER */
-using UniformBuffer = IndexedBufferObject<IndexedBufferType::kUniformBuffer>;
+template <GLuint index>
+using UniformBuffer = IndexedBufferObject<IndexedBufferType::kUniformBuffer, index>;
 #endif  // GL_UNIFORM_BUFFER
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(GL_TRANSFORM_FEEDBACK_BUFFER)
 /// An indexed buffer binding for buffers used in Transform Feedback operations.
 /** @see GL_TRANSFORM_FEEDBACK_BUFFER */
-using TransformFeedbackBuffer = IndexedBufferObject<IndexedBufferType::kTransformFeedbackBuffer> ;
+template <GLuint index>
+using TransformFeedbackBuffer = IndexedBufferObject<IndexedBufferType::kTransformFeedbackBuffer, index>;
 #endif  // GL_TRANSFORM_FEEDBACK_BUFFER
 
 #endif  // glBindBufferBase

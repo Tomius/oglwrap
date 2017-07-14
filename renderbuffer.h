@@ -26,6 +26,12 @@ class Renderbuffer {
   /// Creates a new renderbuffer
   Renderbuffer() = default;
 
+  /// Moves a renderbuffer
+  Renderbuffer(Renderbuffer&&) noexcept = default;
+
+  /// Moves a renderbuffer
+  Renderbuffer& operator=(Renderbuffer&&) noexcept = default;
+
   /// Wrappes an existing OpenGL renderbuffer into an oglwrap Renderbuffer
   explicit Renderbuffer(GLuint handle) : renderbuffer_{handle} {}
 

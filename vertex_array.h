@@ -37,6 +37,12 @@ class VertexArray {
   /// Creates a new vertex array
   VertexArray() = default;
 
+  /// Moves a vertex array
+  VertexArray(VertexArray&&) noexcept = default;
+
+  /// Moves a vertex array
+  VertexArray& operator=(VertexArray&&) noexcept = default;
+
   /// Wrappes an existing OpenGL vertex array into an oglwrap VertexArray
   explicit VertexArray(GLuint handle) : vao_{handle} {}
 
