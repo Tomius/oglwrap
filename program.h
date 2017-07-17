@@ -35,12 +35,16 @@ class Program {
 
   /// Wrappes an existing OpenGL program into an oglwrap Program
   explicit Program(GLuint handle) : program_{handle} {
-    GLint status;
-    gl(GetProgramiv(program_, GL_LINK_STATUS, &status));
-    if (status == GL_FALSE) {
+    if (handle == 0) {
       state_ = kNotLinked;
     } else {
-      state_ = kLinkSuccessful;
+      GLint status;
+      gl(GetProgramiv(program_, GL_LINK_STATUS, &status));
+      if (status == GL_FALSE) {
+        state_ = kNotLinked;
+      } else {
+        state_ = kLinkSuccessful;
+      }
     }
   }
 
