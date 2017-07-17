@@ -15,9 +15,6 @@
 
 namespace OGLWRAP_NAMESPACE_NAME {
 
-template<class T>
-struct CurrentlyBoundObject;
-
 // Buffer
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glBindBuffer)
 template<BufferType BUFFER_TYPE>
@@ -44,14 +41,12 @@ bool IsBound(const BufferObject<BUFFER_TYPE>& buffer) {
 }
 
 template<BufferType BUFFER_TYPE>
-struct CurrentlyBoundObject<BufferObject<BUFFER_TYPE>> {
-  static GLuint Get() {
-    GLint currently_bound_buffer;
-    gl(GetIntegerv(GLenum(GetBindingTarget(BUFFER_TYPE)),
-                   &currently_bound_buffer));
-    return currently_bound_buffer;
-  }
-};
+GLuint GetCurrentlyBoundObject(const BufferObject<BUFFER_TYPE>&) {
+  GLint currently_bound_buffer;
+  gl(GetIntegerv(GLenum(GetBindingTarget(BUFFER_TYPE)),
+                 &currently_bound_buffer));
+  return currently_bound_buffer;
+}
 #endif
 
 // IndexedBuffer
@@ -87,14 +82,12 @@ bool IsBound(const IndexedBufferObject<BUFFER_TYPE, index>& buffer) {
 }
 
 template<IndexedBufferType BUFFER_TYPE, GLuint index>
-struct CurrentlyBoundObject<IndexedBufferObject<BUFFER_TYPE, index>> {
-  static GLuint Get() {
-    GLint currently_bound_buffer;
-    gl(GetIntegeri_v(GLenum(GetBindingTarget(BUFFER_TYPE)), index,
-                     &currently_bound_buffer));
-    return currently_bound_buffer;
-  }
-};
+GLuint GetCurrentlyBoundObject(const IndexedBufferObject<BUFFER_TYPE, index>&) {
+  GLint currently_bound_buffer;
+  gl(GetIntegeri_v(GLenum(GetBindingTarget(BUFFER_TYPE)), index,
+                   &currently_bound_buffer));
+  return currently_bound_buffer;
+}
 #endif
 
 // Renderbuffer
@@ -118,15 +111,12 @@ inline bool IsBound(const Renderbuffer& buffer) {
   return buffer.expose() == GLuint(currently_bound_buffer);
 }
 
-template<>
-struct CurrentlyBoundObject<Renderbuffer> {
-  static GLuint Get() {
-    GLint currently_bound_buffer;
-    gl(GetIntegerv(GLenum(GetBindingTarget(RenderbufferType::kRenderbuffer)),
-                   &currently_bound_buffer));
-    return currently_bound_buffer;
-  }
-};
+inline GLuint GetCurrentlyBoundObject(const Renderbuffer&) {
+  GLint currently_bound_buffer;
+  gl(GetIntegerv(GLenum(GetBindingTarget(RenderbufferType::kRenderbuffer)),
+                 &currently_bound_buffer));
+  return currently_bound_buffer;
+}
 #endif  // glBindRenderbuffer
 
 // Framebuffer
@@ -153,13 +143,11 @@ bool IsBound(const FramebufferObject<FBO_TYPE>& fbo) {
 }
 
 template<FramebufferType FBO_TYPE>
-struct CurrentlyBoundObject<FramebufferObject<FBO_TYPE>> {
-  static GLuint Get() {
-    GLint currently_bound_buffer;
-    gl(GetIntegerv(GLenum(GetBindingTarget(FBO_TYPE)), &currently_bound_buffer));
-    return currently_bound_buffer;
-  }
-};
+GLuint GetCurrentlyBoundObject(const FramebufferObject<FBO_TYPE>&) {
+  GLint currently_bound_buffer;
+  gl(GetIntegerv(GLenum(GetBindingTarget(FBO_TYPE)), &currently_bound_buffer));
+  return currently_bound_buffer;
+}
 #endif
 
 
@@ -184,15 +172,12 @@ inline bool IsBound(const TransformFeedback& tfb)  {
   return tfb.expose() == GLuint(currently_bound_tfb);
 }
 
-template<>
-struct CurrentlyBoundObject<TransformFeedback> {
-  static GLuint Get() {
-    GLint currently_bound_tfb;
-    gl(GetIntegerv(GLenum(GetBindingTarget(TransformFeedbackType::kTransformFeedback)),
-                   &currently_bound_tfb));
-    return currently_bound_tfb;
-  }
-};
+inline GLuint GetCurrentlyBoundObject(const TransformFeedback&) {
+  GLint currently_bound_tfb;
+  gl(GetIntegerv(GLenum(GetBindingTarget(TransformFeedbackType::kTransformFeedback)),
+                 &currently_bound_tfb));
+  return currently_bound_tfb;
+}
 #endif
 
 
@@ -217,15 +202,12 @@ inline bool IsBound(const VertexArray& vao) {
   return vao.expose() == GLuint(currently_bound_vao);
 }
 
-template<>
-struct CurrentlyBoundObject<VertexArray> {
-  static GLuint Get() {
-    GLint currently_bound_vao;
-    gl(GetIntegerv(GLenum(GetBindingTarget(VertexArrayType::kVertexArray)),
-                   &currently_bound_vao));
-    return currently_bound_vao;
-  }
-};
+inline GLuint GetCurrentlyBoundObject(const VertexArray&) {
+  GLint currently_bound_vao;
+  gl(GetIntegerv(GLenum(GetBindingTarget(VertexArrayType::kVertexArray)),
+                 &currently_bound_vao));
+  return currently_bound_vao;
+}
 #endif
 
 // Texture
@@ -272,13 +254,11 @@ bool IsBound(const TextureBase<TEXTURE_TYPE>& tex) {
 }
 
 template <TextureType TEXTURE_TYPE>
-struct CurrentlyBoundObject<TextureBase<TEXTURE_TYPE>> {
-  static GLuint Get() {
-    GLint currently_bound_texture;
-    gl(GetIntegerv(GLenum(GetBindingTarget(TEXTURE_TYPE)), &currently_bound_texture));
-    return currently_bound_texture;
-  }
-};
+GLuint GetCurrentlyBoundObject(const TextureBase<TEXTURE_TYPE>&) {
+  GLint currently_bound_texture;
+  gl(GetIntegerv(GLenum(GetBindingTarget(TEXTURE_TYPE)), &currently_bound_texture));
+  return currently_bound_texture;
+}
 
 // Program
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glUseProgram)
@@ -329,15 +309,17 @@ inline bool IsActive(const Program& prog) {
   return IsBound(prog);
 }
 
-template <>
-struct CurrentlyBoundObject<Program> {
-  static GLuint Get() {
-    GLint current_program;
-    gl(GetIntegerv(GL_CURRENT_PROGRAM, &current_program));
-    return current_program;
-  }
-};
+inline GLuint GetCurrentlyBoundObject(const Program&) {
+  GLint current_program;
+  gl(GetIntegerv(GL_CURRENT_PROGRAM, &current_program));
+  return current_program;
+}
 #endif
+
+template <typename T>
+GLuint GetCurrentlyBoundObject() {
+  return GetCurrentlyBoundObject(std::declval<T>());
+}
 
 /// Binds a value. When the variable goes
 /// out of the scope, unbinds the value;
@@ -346,7 +328,7 @@ class TemporaryBind {
 public:
   TemporaryBind(T const& object_to_bind)
       : object_to_bind_{object_to_bind.expose()}
-      , previously_bound_object_{CurrentlyBoundObject<T>::Get()} {
+      , previously_bound_object_{GetCurrentlyBoundObject(object_to_bind)} {
     Bind(object_to_bind);
   }
 
