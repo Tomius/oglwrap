@@ -41,7 +41,7 @@ bool IsBound(const BufferObject<BUFFER_TYPE>& buffer) {
 }
 
 template<BufferType BUFFER_TYPE>
-GLuint GetCurrentlyBoundObject(const BufferObject<BUFFER_TYPE>*) {
+BufferObject<BUFFER_TYPE> GetCurrentlyBoundObject(const BufferObject<BUFFER_TYPE>*) {
   GLint currently_bound_buffer;
   gl(GetIntegerv(GLenum(GetBindingTarget(BUFFER_TYPE)),
                  &currently_bound_buffer));
@@ -82,7 +82,7 @@ bool IsBound(const IndexedBufferObject<BUFFER_TYPE, index>& buffer) {
 }
 
 template<IndexedBufferType BUFFER_TYPE, GLuint index>
-GLuint GetCurrentlyBoundObject(const IndexedBufferObject<BUFFER_TYPE, index>*) {
+IndexedBufferObject<BUFFER_TYPE, index> GetCurrentlyBoundObject(const IndexedBufferObject<BUFFER_TYPE, index>*) {
   GLint currently_bound_buffer;
   gl(GetIntegeri_v(GLenum(GetBindingTarget(BUFFER_TYPE)), index,
                    &currently_bound_buffer));
@@ -111,7 +111,7 @@ inline bool IsBound(const Renderbuffer& buffer) {
   return buffer.expose() == GLuint(currently_bound_buffer);
 }
 
-inline GLuint GetCurrentlyBoundObject(const Renderbuffer*) {
+inline Renderbuffer GetCurrentlyBoundObject(const Renderbuffer*) {
   GLint currently_bound_buffer;
   gl(GetIntegerv(GLenum(GetBindingTarget(RenderbufferType::kRenderbuffer)),
                  &currently_bound_buffer));
@@ -143,7 +143,7 @@ bool IsBound(const FramebufferObject<FBO_TYPE>& fbo) {
 }
 
 template<FramebufferType FBO_TYPE>
-GLuint GetCurrentlyBoundObject(const FramebufferObject<FBO_TYPE>*) {
+FramebufferObject<FBO_TYPE> GetCurrentlyBoundObject(const FramebufferObject<FBO_TYPE>*) {
   GLint currently_bound_buffer;
   gl(GetIntegerv(GLenum(GetBindingTarget(FBO_TYPE)), &currently_bound_buffer));
   return currently_bound_buffer;
@@ -172,7 +172,7 @@ inline bool IsBound(const TransformFeedback& tfb)  {
   return tfb.expose() == GLuint(currently_bound_tfb);
 }
 
-inline GLuint GetCurrentlyBoundObject(const TransformFeedback*) {
+inline TransformFeedback GetCurrentlyBoundObject(const TransformFeedback*) {
   GLint currently_bound_tfb;
   gl(GetIntegerv(GLenum(GetBindingTarget(TransformFeedbackType::kTransformFeedback)),
                  &currently_bound_tfb));
@@ -202,7 +202,7 @@ inline bool IsBound(const VertexArray& vao) {
   return vao.expose() == GLuint(currently_bound_vao);
 }
 
-inline GLuint GetCurrentlyBoundObject(const VertexArray*) {
+inline VertexArray GetCurrentlyBoundObject(const VertexArray*) {
   GLint currently_bound_vao;
   gl(GetIntegerv(GLenum(GetBindingTarget(VertexArrayType::kVertexArray)),
                  &currently_bound_vao));
@@ -254,7 +254,7 @@ bool IsBound(const TextureBase<TEXTURE_TYPE>& tex) {
 }
 
 template <TextureType TEXTURE_TYPE>
-GLuint GetCurrentlyBoundObject(const TextureBase<TEXTURE_TYPE>*) {
+TextureBase<TEXTURE_TYPE> GetCurrentlyBoundObject(const TextureBase<TEXTURE_TYPE>*) {
   GLint currently_bound_texture;
   gl(GetIntegerv(GLenum(GetBindingTarget(TEXTURE_TYPE)), &currently_bound_texture));
   return currently_bound_texture;
@@ -309,7 +309,7 @@ inline bool IsActive(const Program& prog) {
   return IsBound(prog);
 }
 
-inline GLuint GetCurrentlyBoundObject(const Program*) {
+inline Program GetCurrentlyBoundObject(const Program*) {
   GLint current_program;
   gl(GetIntegerv(GL_CURRENT_PROGRAM, &current_program));
   return current_program;
@@ -327,25 +327,19 @@ template <typename T>
 class TemporaryBind {
 public:
   TemporaryBind(T const& object_to_bind)
-      : object_to_bind_{object_to_bind.expose()}
-      , previously_bound_object_{GetCurrentlyBoundObject<T>()} {
+      : previously_bound_object_{GetCurrentlyBoundObject<T>()} {
     Bind(object_to_bind);
   }
 
   ~TemporaryBind() {
-    if (previously_bound_object_ == 0) {
-      Unbind(T{object_to_bind_});
-    } else {
-      Bind(T{previously_bound_object_});
-    }
+      Bind(previously_bound_object_);
   }
 
   TemporaryBind(TemporaryBind&&) = default;
   TemporaryBind& operator=(TemporaryBind&&) = default;
 
 private:
-  GLuint object_to_bind_;
-  GLuint previously_bound_object_;
+  decltype(GetCurrentlyBoundObject<T>()) previously_bound_object_;
 
   TemporaryBind(const TemporaryBind&) = delete;
   TemporaryBind& operator=(const TemporaryBind&) = delete;
