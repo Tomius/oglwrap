@@ -45,7 +45,7 @@ BufferObject<BUFFER_TYPE> GetCurrentlyBoundObject(const BufferObject<BUFFER_TYPE
   GLint currently_bound_buffer;
   gl(GetIntegerv(GLenum(GetBindingTarget(BUFFER_TYPE)),
                  &currently_bound_buffer));
-  return BufferObject<BUFFER_TYPE>{currently_bound_buffer};
+  return BufferObject<BUFFER_TYPE>{GLuint(currently_bound_buffer)};
 }
 #endif
 
@@ -115,7 +115,7 @@ inline Renderbuffer GetCurrentlyBoundObject(const Renderbuffer*) {
   GLint currently_bound_buffer;
   gl(GetIntegerv(GLenum(GetBindingTarget(RenderbufferType::kRenderbuffer)),
                  &currently_bound_buffer));
-  return Renderbuffer{currently_bound_buffer};
+  return Renderbuffer{GLuint(currently_bound_buffer)};
 }
 #endif  // glBindRenderbuffer
 
@@ -146,7 +146,7 @@ template<FramebufferType FBO_TYPE>
 FramebufferObject<FBO_TYPE> GetCurrentlyBoundObject(const FramebufferObject<FBO_TYPE>*) {
   GLint currently_bound_buffer;
   gl(GetIntegerv(GLenum(GetBindingTarget(FBO_TYPE)), &currently_bound_buffer));
-  return FramebufferObject<FBO_TYPE>{currently_bound_buffer};
+  return FramebufferObject<FBO_TYPE>{GLuint(currently_bound_buffer)};
 }
 #endif
 
@@ -176,7 +176,7 @@ inline TransformFeedback GetCurrentlyBoundObject(const TransformFeedback*) {
   GLint currently_bound_tfb;
   gl(GetIntegerv(GLenum(GetBindingTarget(TransformFeedbackType::kTransformFeedback)),
                  &currently_bound_tfb));
-  return TransformFeedback{currently_bound_tfb};
+  return TransformFeedback{GLuint(currently_bound_tfb)};
 }
 #endif
 
@@ -206,7 +206,7 @@ inline VertexArray GetCurrentlyBoundObject(const VertexArray*) {
   GLint currently_bound_vao;
   gl(GetIntegerv(GLenum(GetBindingTarget(VertexArrayType::kVertexArray)),
                  &currently_bound_vao));
-  return VertexArray{currently_bound_vao};
+  return VertexArray{ GLuint(currently_bound_vao)};
 }
 #endif
 
@@ -257,7 +257,7 @@ template <TextureType TEXTURE_TYPE>
 TextureBase<TEXTURE_TYPE> GetCurrentlyBoundObject(const TextureBase<TEXTURE_TYPE>*) {
   GLint currently_bound_texture;
   gl(GetIntegerv(GLenum(GetBindingTarget(TEXTURE_TYPE)), &currently_bound_texture));
-  return TextureBase<TEXTURE_TYPE>{currently_bound_texture};
+  return TextureBase<TEXTURE_TYPE>{GLuint(currently_bound_texture)};
 }
 
 // Program
@@ -312,7 +312,7 @@ inline bool IsActive(const Program& prog) {
 inline Program GetCurrentlyBoundObject(const Program*) {
   GLint current_program;
   gl(GetIntegerv(GL_CURRENT_PROGRAM, &current_program));
-  return Program{current_program};
+  return Program{GLuint(current_program)};
 }
 #endif
 
