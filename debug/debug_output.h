@@ -234,6 +234,10 @@ class DebugOutput {
     std::stringstream sstream;
 
     size_t func_name_len = function_call.find_first_of('(');
+    if (func_name_len == std::string::npos) {
+        func_name_len = function_call.size();
+    }
+
     std::string funcName =
       std::string(function_call.begin(), function_call.begin() + func_name_len);
 
