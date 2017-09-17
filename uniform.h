@@ -59,7 +59,7 @@ class UniformObject {
   /** It finds the appropriate glUniform* using template specialization.
     * @param values - The value to set the uniform.
     * @see glUniform* */
-  void set(const ArrayOfGLType& values) {
+  auto set(const ArrayOfGLType& values) -> std::enable_if<sizeof(std::end(values) - std::begin(values)) != 0, void> {
     auto begin_iter = std::begin(values);
     auto end_iter   = std::end(values);
 
