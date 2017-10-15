@@ -5,6 +5,8 @@
 
 #include "./texture_base.h"
 #include "../context/binding.h"
+#include "../debug/bind_checking.h"
+#include "../debug/texture_state_checking.h"
 
 #include "../define_internal_macros.h"
 
@@ -14,6 +16,7 @@ namespace OGLWRAP_NAMESPACE_NAME {
 template <TextureType texture_t>
 void TextureBase<texture_t>::generateMipmap() {
   OGLWRAP_CHECK_BINDING();
+  OGLWRAP_CHECK_BINDLESS_TEXTURE_MODIFIED(bindless_handle_);
   gl(GenerateMipmap(GLenum(texture_t)));
 }
 #endif
@@ -119,6 +122,7 @@ template <TextureType texture_t>
 void TextureBase<texture_t>::buffer(PixelDataInternalFormat internal_format,
                                     const TextureBuffer& buffer) {
   OGLWRAP_CHECK_BINDING();
+  OGLWRAP_CHECK_BINDLESS_TEXTURE_MODIFIED(bindless_handle_);
   gl(TexBuffer(GLenum(texture_t), GLenum(internal_format), buffer.expose()));
 }
 #endif
@@ -133,6 +137,29 @@ template <TextureType texture_t>
 void TextureBase<texture_t>::compareFunc(enums::CompareFunc func) {
   OGLWRAP_CHECK_BINDING();
   gl(TexParameteri(GLenum(texture_t), GL_TEXTURE_COMPARE_FUNC, GLenum(func)));
+}
+
+template <TextureType texture_t>
+void TextureBase<texture_t>::makeBindless() {
+  OGLWRAP_CHECK_TEXTURE_ALREADY_BINDLESS(bindless_handle_);
+  bindless_handle_ = gl(GetTextureHandleARB(expose()));
+}
+
+template <TextureType texture_t>
+void TextureBase<texture_t>::makeResident() {
+  OGLWRAP_CHECK_NON_BINDLESS_TEXTURE_RESIDENCY_CHANGE(bindless_handle_);
+  gl(MakeTextureHandleResidentARB(bindless_handle_));
+}
+
+template <TextureType texture_t>
+void TextureBase<texture_t>::makeNonResident() {
+  OGLWRAP_CHECK_NON_BINDLESS_TEXTURE_RESIDENCY_CHANGE(bindless_handle_);
+  gl(glMakeTextureHandleNonResidentARB(bindless_handle_));
+}
+
+template <TextureType texture_t>
+GLuint64 TextureBase<texture_t>::bindless_handle() const {
+  return bindless_handle_;
 }
 
 }  // namespace oglwrap

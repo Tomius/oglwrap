@@ -5,6 +5,7 @@
 
 #include "./buffer.h"
 #include "context/binding.h"
+#include "debug/bind_checking.h"
 
 #include "./define_internal_macros.h"
 

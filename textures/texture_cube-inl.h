@@ -18,6 +18,7 @@ inline void TextureCube::upload(TextureCubeTarget target,
                                 PixelDataFormat format, PixelDataType type,
                                 const void *data) {
   OGLWRAP_CHECK_BINDING();
+  OGLWRAP_CHECK_BINDLESS_TEXTURE_MODIFIED(this->bindless_handle_);
   gl(TexImage2D(GLenum(target), 0, GLenum(internal_format), width, height,
                 0, GLenum(format), GLenum(type), data));
 }
@@ -29,6 +30,7 @@ inline void TextureCube::uploadMipmap(TextureCubeTarget target, GLint level,
                                       PixelDataType type,
                                       const void *data) {
   OGLWRAP_CHECK_BINDING();
+  OGLWRAP_CHECK_BINDLESS_TEXTURE_MODIFIED(this->bindless_handle_);
   gl(TexImage2D(GLenum(target), level, GLenum(internal_format), width, height,
                 0, GLenum(format), GLenum(type), data));
 }
@@ -58,6 +60,7 @@ inline void TextureCube::storage(TextureCubeTarget target, GLsizei levels,
                                  GLenum internal_format, GLsizei width,
                                  GLsizei height) {
   OGLWRAP_CHECK_BINDING();
+  OGLWRAP_CHECK_BINDLESS_TEXTURE_MODIFIED(this->bindless_handle_);
   gl(TexStorage2D(GLenum(target), levels, GLenum(internal_format),
                   width, height));
 }
@@ -67,8 +70,8 @@ inline void TextureCube::copy(TextureCubeTarget target,
                               PixelDataInternalFormat internal_format, GLint x,
                               GLint y, GLsizei width, GLsizei height) {
   OGLWRAP_CHECK_BINDING();
-   gl(CopyTexImage2D(GLenum(target), 0, GLenum(internal_format),
-                     x, y, width, height, 0));
+  gl(CopyTexImage2D(GLenum(target), 0, GLenum(internal_format),
+                    x, y, width, height, 0));
 }
 
 inline void TextureCube::copyMipmap(TextureCubeTarget target, GLint level,

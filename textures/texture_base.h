@@ -144,12 +144,30 @@ class TextureBase {
     * @see glTexParameteri, GL_TEXTURE_COMPARE_FUNC */
   void compareFunc(enums::CompareFunc func);
 
+  /// Generates a handle for the texture to be used bindless.
+  /** @see glGetTextureHandleARB */
+  void makeBindless();
+
+  /// Make the texture memory resident
+  /** @see glMakeTextureHandleResidentARB */
+  void makeResident();
+
+  /// Make the texture non-resident
+  /** @see glMakeTextureHandleNonResidentARB */
+  void makeNonResident();
+
+  /// Returns the bindless handle if any, or zero
+  GLuint64 bindless_handle() const;
+
   /// Returns the handle for the texture.
   const glObject& expose() const { return texture_; }
 
  protected:
   /// The handle for the texture.
   globjects::Texture texture_;
+
+  /// The bindless handle for the texture.
+  GLuint64 bindless_handle_ = 0;
 };
 
 } // namespace oglwrap

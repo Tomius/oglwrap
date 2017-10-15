@@ -15,6 +15,7 @@ void Texture2DBase<texture_t>::upload(
     PixelDataInternalFormat internal_format, GLsizei width, GLsizei height,
     PixelDataFormat format, PixelDataType type, const void *data) {
   OGLWRAP_CHECK_BINDING();
+  OGLWRAP_CHECK_BINDLESS_TEXTURE_MODIFIED(this->bindless_handle_);
   gl(TexImage2D(GLenum(texture_t), 0, GLenum(internal_format),
                 width, height, 0, GLenum(format), GLenum(type), data));
 }
@@ -25,6 +26,7 @@ void Texture2DBase<texture_t>::uploadMipmap(
     GLsizei height, PixelDataFormat format, PixelDataType type,
     const void *data) {
   OGLWRAP_CHECK_BINDING();
+  OGLWRAP_CHECK_BINDLESS_TEXTURE_MODIFIED(this->bindless_handle_);
   gl(TexImage2D(GLenum(texture_t), level, GLenum(internal_format),
                 width, height, 0, GLenum(format), GLenum(type), data));
 }
@@ -52,6 +54,7 @@ template<Texture2DType texture_t>
 void Texture2DBase<texture_t>::storage(GLsizei levels, GLenum internal_format,
                                        GLsizei width, GLsizei height) {
   OGLWRAP_CHECK_BINDING();
+  OGLWRAP_CHECK_BINDLESS_TEXTURE_MODIFIED(this->bindless_handle_);
   gl(TexStorage2D(GLenum(texture_t), levels, GLenum(internal_format),
                   width, height));
 }

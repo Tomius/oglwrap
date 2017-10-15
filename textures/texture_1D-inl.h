@@ -18,6 +18,7 @@ inline void Texture1D::upload(PixelDataInternalFormat internal_format,
                               GLsizei width, PixelDataFormat format,
                               PixelDataType type, const void *data) {
   OGLWRAP_CHECK_BINDING();
+  OGLWRAP_CHECK_BINDLESS_TEXTURE_MODIFIED(this->bindless_handle_);
   gl(TexImage1D(GL_TEXTURE_1D, 0, GLenum(internal_format), width,
                 0, GLenum(format), GLenum(type), data));
 }
@@ -27,6 +28,7 @@ inline void Texture1D::uploadMipmap(GLint level,
                                     GLsizei width, PixelDataFormat format,
                                     PixelDataType type, const void *data) {
   OGLWRAP_CHECK_BINDING();
+  OGLWRAP_CHECK_BINDLESS_TEXTURE_MODIFIED(this->bindless_handle_);
   gl(TexImage1D(GL_TEXTURE_1D, level, GLenum(internal_format), width,
                 0, GLenum(format), GLenum(type), data));
 }
@@ -52,6 +54,7 @@ inline void Texture1D::subUploadMipmap(GLint level, GLint x_offset,
 inline void Texture1D::storage(GLsizei levels, GLenum internal_format,
                                GLsizei width) {
   OGLWRAP_CHECK_BINDING();
+  OGLWRAP_CHECK_BINDLESS_TEXTURE_MODIFIED(this->bindless_handle_);
   gl(TexStorage1D(GL_TEXTURE_1D, levels, GLenum(internal_format), width));
 }
 #endif  // glTexStorage1D

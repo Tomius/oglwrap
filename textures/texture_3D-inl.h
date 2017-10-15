@@ -20,6 +20,7 @@ void Texture3DBase<texture_t>::upload(PixelDataInternalFormat internal_format,
                                       PixelDataType type,
                                       const void *data) {
   OGLWRAP_CHECK_BINDING();
+  OGLWRAP_CHECK_BINDLESS_TEXTURE_MODIFIED(this->bindless_handle_);
   gl(TexImage3D(GLenum(texture_t), 0, GLenum(internal_format), width, height,
                 depth, 0, GLenum(format), GLenum(type), data));
 }
@@ -30,6 +31,7 @@ void Texture3DBase<texture_t>::uploadMipmap(
     GLsizei height, GLsizei depth, PixelDataFormat format, PixelDataType type,
     const void *data) {
   OGLWRAP_CHECK_BINDING();
+  OGLWRAP_CHECK_BINDLESS_TEXTURE_MODIFIED(this->bindless_handle_);
   gl(TexImage3D(GLenum(texture_t), level, GLenum(internal_format), width,
                 height, depth, 0, GLenum(format), GLenum(type), data));
 }
@@ -84,6 +86,7 @@ void Texture3DBase<texture_t>::storage(
     GLsizei levels, PixelDataInternalFormat internal_format, GLsizei width,
     GLsizei height, GLsizei depth) {
   OGLWRAP_CHECK_BINDING();
+  OGLWRAP_CHECK_BINDLESS_TEXTURE_MODIFIED(this->bindless_handle_);
   gl(TexStorage3D(GLenum(texture_t), levels, GLenum(internal_format), width,
                   height, depth));
 }

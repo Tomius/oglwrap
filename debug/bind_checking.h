@@ -1,14 +1,11 @@
 // Copyright (c) Tamas Csala
 
 /** @file bind_checking.h
-    @brief Implements enums casts to help binding checks.
+    @brief Implements functions that check if the currently used object is actually bound
 */
 
 #ifndef OGLWRAP_DEBUG_BIND_CHECKING_H_
 #define OGLWRAP_DEBUG_BIND_CHECKING_H_
-
-#include <string>
-#include <iostream>
 
 #include "./error_checking.h"
 
