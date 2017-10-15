@@ -154,7 +154,7 @@ void TextureBase<texture_t>::makeResident() {
 template <TextureType texture_t>
 void TextureBase<texture_t>::makeNonResident() {
   OGLWRAP_CHECK_NON_BINDLESS_TEXTURE_RESIDENCY_CHANGE(bindless_handle_);
-  gl(glMakeTextureHandleNonResidentARB(bindless_handle_));
+  gl(MakeTextureHandleNonResidentARB(bindless_handle_));
 }
 
 template <TextureType texture_t>
