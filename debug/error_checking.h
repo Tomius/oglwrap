@@ -73,21 +73,19 @@ namespace OGLWRAP_NAMESPACE_NAME {
 inline void OGLWRAP_CheckError(const char *file,
                                const char *func,
                                int line,
-                               const char* glfunc = nullptr) {
+                               const char* glfunc = "") {
   DebugOutput::LastError() = GetError();
   if (DebugOutput::LastError() != ErrorType::kNoError) {
     std::string title;
 
-    #define OGLWRAP_CHECK_ENUM(X, Y) case ErrorType::X: title = Y; break;
-
     switch (DebugOutput::LastError()) {
-      OGLWRAP_CHECK_ENUM(kInvalidEnum, "Invalid Enum")
-      OGLWRAP_CHECK_ENUM(kInvalidValue, "Invalid Value")
-      OGLWRAP_CHECK_ENUM(kInvalidOperation, "Invalid Operation")
-      OGLWRAP_CHECK_ENUM(kStackOverflow, "Stack Overflow")
-      OGLWRAP_CHECK_ENUM(kStackUnderflow, "Stack Underflow")
-      OGLWRAP_CHECK_ENUM(kOutOfMemory, "Out of Memory")
-      OGLWRAP_CHECK_ENUM(kInvalidFramebufferOperation, "Invalid Framebuffer Operation")
+      case ErrorType::kInvalidEnum: title = "Invalid Enum"; break;
+      case ErrorType::kInvalidValue: title = "Invalid Value"; break;
+      case ErrorType::kInvalidOperation: title = "Invalid Operation"; break;
+      case ErrorType::kStackOverflow: title = "Stack Overflow"; break;
+      case ErrorType::kStackUnderflow: title = "Stack Underflow"; break;
+      case ErrorType::kOutOfMemory: title = "Out of Memory"; break;
+      case ErrorType::kInvalidFramebufferOperation: title = "Invalid Framebuffer Operation"; break;
       default:
         break;
     };
