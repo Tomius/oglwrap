@@ -139,23 +139,29 @@ void TextureBase<texture_t>::compareFunc(enums::CompareFunc func) {
   gl(TexParameteri(GLenum(texture_t), GL_TEXTURE_COMPARE_FUNC, GLenum(func)));
 }
 
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glGetTextureHandleARB)
 template <TextureType texture_t>
 void TextureBase<texture_t>::makeBindless() {
   OGLWRAP_CHECK_TEXTURE_ALREADY_BINDLESS(bindless_handle_);
   bindless_handle_ = gl(GetTextureHandleARB(expose()));
 }
+#endif
 
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glMakeTextureHandleResidentARB)
 template <TextureType texture_t>
 void TextureBase<texture_t>::makeResident() {
   OGLWRAP_CHECK_NON_BINDLESS_TEXTURE_RESIDENCY_CHANGE(bindless_handle_);
   gl(MakeTextureHandleResidentARB(bindless_handle_));
 }
+#endif
 
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glMakeTextureHandleNonResidentARB)
 template <TextureType texture_t>
 void TextureBase<texture_t>::makeNonResident() {
   OGLWRAP_CHECK_NON_BINDLESS_TEXTURE_RESIDENCY_CHANGE(bindless_handle_);
   gl(MakeTextureHandleNonResidentARB(bindless_handle_));
 }
+#endif
 
 template <TextureType texture_t>
 GLuint64 TextureBase<texture_t>::bindless_handle() const {
