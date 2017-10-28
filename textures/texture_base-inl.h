@@ -16,7 +16,6 @@ namespace OGLWRAP_NAMESPACE_NAME {
 template <TextureType texture_t>
 void TextureBase<texture_t>::generateMipmap() {
   OGLWRAP_CHECK_BINDING();
-  OGLWRAP_CHECK_BINDLESS_TEXTURE_MODIFIED(bindless_handle_);
   gl(GenerateMipmap(GLenum(texture_t)));
 }
 #endif
