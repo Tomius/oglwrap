@@ -110,6 +110,10 @@ Has generated the error because one of the following(s) were true:
 
 This lets you know, that the source of the GL_INVALID_VALUE was a glDrawArrays call in the main() function (the first one in the call stack that is not in the oglwrap namespace), where the count parameter was negative. Imagine how useful this information could be in a 100 000+ lines project.
 
+Getting started:
+---------------
+
+See [oglwrap_examples](https://github.com/Tomius/oglwrap_examples).
 
 
 Notes about using oglwrap:
