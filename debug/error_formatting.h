@@ -23,7 +23,11 @@ namespace OGLWRAP_NAMESPACE_NAME {
  *        oglwrap, but looks ugly).
  */
 inline std::string cut_end_of_pretty_func(const std::string& func) {
-  return func.substr(0, func.find(")") + 1) + ';';
+  if (func.find(")") == std::string::npos) {
+    return func;
+  } else {
+    return func.substr(0, func.find(")") + 1) + ';';
+  }
 }
 
 inline void OGLWRAP_PrintStackTrace(std::ostream& os) {
@@ -83,7 +87,9 @@ inline void OGLWRAP_PrintError(const ErrorMessage& error) {
   if (!error.call_string.empty()) {
     sstream << "Caused by " << error.call_string << std::endl;
   }
-  sstream << "In function: " << cut_end_of_pretty_func(error.function) + '\n';
+  if (!error.function.empty()) {
+    sstream << "In function: " << cut_end_of_pretty_func(error.function) + '\n';
+  }
   sstream << "In '" << error.file << "' at line " << error.line << "\n\n";
 
   OGLWRAP_PrintStackTrace(sstream);
