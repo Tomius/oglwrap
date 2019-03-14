@@ -46,7 +46,7 @@ class BufferObject {
   /// Moves a buffer object
   BufferObject& operator=(BufferObject&&) noexcept = default;
 
-  /// Wrappes an existing OpenGL buffer into an oglwrap BufferObject
+  /// Wraps an existing OpenGL buffer into an oglwrap BufferObject
   explicit BufferObject(GLuint handle) : buffer_{handle} {}
 
 #if OGLWRAP_DEFINE_EVERYTHING || defined(glBufferData)
