@@ -60,7 +60,7 @@ void Bind(const IndexedBufferObject<BUFFER_TYPE, index>& buffer) {
 template<IndexedBufferType BUFFER_TYPE, GLuint index>
 void BindRange(const IndexedBufferObject<BUFFER_TYPE, index>& buffer,
                GLintptr offset, GLsizeiptr size) {
-  gl(BindBufferRange(GLenum(BUFFER_TYPE), index, offset, size, buffer.expose()));
+  gl(BindBufferRange(GLenum(BUFFER_TYPE), index, buffer.expose(), offset, size));
 }
 #endif
 
