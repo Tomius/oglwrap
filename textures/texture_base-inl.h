@@ -169,7 +169,7 @@ void TextureBase<texture_t>::getTextImage(GLint level,
                                           GLenum type,
                                           void* pixels) {
   OGLWRAP_CHECK_BINDING();
-  gl(GetTextImage(GLenum(texture_t), format, type, pixels));
+  gl(GetTextImage(GLenum(texture_t), level, format, type, pixels));
 }
 #endif
 
