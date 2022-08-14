@@ -162,6 +162,17 @@ void TextureBase<texture_t>::makeNonResident() {
 }
 #endif
 
+#if OGLWRAP_DEFINE_EVERYTHING || defined(glGetTexImage)
+template <TextureType texture_t>
+void TextureBase<texture_t>::getTextImage(GLint level,
+                                          GLenum format,
+                                          GLenum type,
+                                          void* pixels) {
+  OGLWRAP_CHECK_BINDING();
+  gl(GetTextImage(GLenum(texture_t), format, type, pixels));
+}
+#endif
+
 template <TextureType texture_t>
 GLuint64 TextureBase<texture_t>::bindless_handle() const {
   return bindless_handle_;
