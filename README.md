@@ -119,3 +119,4 @@ See [oglwrap_examples](https://github.com/Tomius/oglwrap_examples).
 Notes about using oglwrap:
 -------------
 - You have to load OpenGL extensions before including oglwrap with your preferred extension loader. If you don't have a preferred one, I recommend using [GLEW](https://github.com/nigels-com/glew).
+- When using [GLAD](https://glad.dav1d.de/), you should choose gl Version >= 4.1 and Compatibility Profile.

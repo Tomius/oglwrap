@@ -115,7 +115,9 @@ class VertexAttribObject {
     switch (type) {
       case DataType::kFloat:
       case DataType::kHalfFloat:
+#if OGLWRAP_DEFINE_EVERYTHING || defined(GL_FIXED)
       case DataType::kFixed:
+#endif
         pointer(values_per_vertex, type, false, stride, offset_pointer);
         break;
       case DataType::kDouble:
