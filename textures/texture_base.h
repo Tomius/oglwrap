@@ -162,7 +162,6 @@ class TextureBase {
   void makeNonResident();
 #endif
 
-#if OGLWRAP_DEFINE_EVERYTHING || defined(glGetTexImage)
   /// return a texture image
   /** @param level - Specifies the level-of-detail number of the desired image. Level 0 is the base image level. Level n is the nth mipmap reduction image.
     * @param format - Specifies a pixel format for the returned data. The supported formats are GL_STENCIL_INDEX, GL_DEPTH_COMPONENT, GL_DEPTH_STENCIL, GL_RED, GL_GREEN, GL_BLUE, GL_RG, GL_RGB, GL_RGBA, GL_BGR, GL_BGRA, GL_RED_INTEGER, GL_GREEN_INTEGER, GL_BLUE_INTEGER, GL_RG_INTEGER, GL_RGB_INTEGER, GL_RGBA_INTEGER, GL_BGR_INTEGER, GL_BGRA_INTEGER.
@@ -173,7 +172,6 @@ class TextureBase {
                     GLenum format,
                     GLenum type,
                     void* pixels);
-#endif
 
   /// Returns the bindless handle if any, or zero
   GLuint64 bindless_handle() const;
